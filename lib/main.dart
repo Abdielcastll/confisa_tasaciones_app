@@ -3,6 +3,7 @@ import 'package:confisa_tasaciones_app/core/routes.dart';
 import 'package:confisa_tasaciones_app/core/shared_preferences.dart';
 import 'package:confisa_tasaciones_app/core/theme.dart';
 import 'package:confisa_tasaciones_app/views/login/login_view.dart';
+import 'package:confisa_tasaciones_app/views/reporte/reporte_view.dart';
 import 'package:confisa_tasaciones_app/widgets/no_scale_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         title: 'Confisa Tasaciones App',
         debugShowCheckedModeBanner: false,
         routes: router,
-        initialRoute: LoginView.routeName,
+        initialRoute: ReporteView.routeName,
         theme: myTheme,
         builder: (context, child) {
           return NoScaleTextWidget(
