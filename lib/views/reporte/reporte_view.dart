@@ -1,7 +1,10 @@
 import 'package:confisa_tasaciones_app/constants.dart';
+import 'package:confisa_tasaciones_app/core/theme.dart';
+import 'package:confisa_tasaciones_app/views/reporte/widgets/pie_chart.dart';
 import 'package:confisa_tasaciones_app/widgets/appbar_example.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:pie_chart/pie_chart.dart';
 
 class ReporteView extends StatelessWidget {
   static const routeName = 'reporte';
@@ -25,7 +28,7 @@ class ReporteView extends StatelessWidget {
                 height: size.height * .1,
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(25)),
+                    borderRadius: BorderRadius.circular(15)),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
                   child: Row(
@@ -82,18 +85,20 @@ class ReporteView extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 16.0,
-                childAspectRatio: 1.5,
+                crossAxisSpacing: 4.0,
+                mainAxisSpacing: 9.0,
+                childAspectRatio: 2.0,
                 children: List.generate(6, (index) {
                   int rand = Random().nextInt(100);
                   return Center(
                     child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
                       padding: const EdgeInsets.all(8),
                       alignment: AlignmentDirectional.bottomStart,
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(25)),
+                          borderRadius: BorderRadius.circular(15)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -110,17 +115,27 @@ class ReporteView extends StatelessWidget {
                           const SizedBox(
                             height: 5,
                           ),
-                          LinearProgressIndicator(
-                              minHeight: 7,
-                              value: rand / 100,
-                              color: Colors.primaries[
-                                  Random().nextInt(Colors.primaries.length)]),
+                          Container(
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15)),
+                            child: LinearProgressIndicator(
+                                minHeight: 7,
+                                value: rand / 100,
+                                backgroundColor: AppColors.grey,
+                                color: Colors.primaries[
+                                    Random().nextInt(Colors.primaries.length)]),
+                          ),
                         ],
                       ),
                     ),
                   );
                 }),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              const PieChartWidget(),
             ],
           ),
         ),

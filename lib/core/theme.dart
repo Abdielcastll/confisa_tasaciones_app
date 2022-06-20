@@ -6,6 +6,7 @@ class AppColors {
   static const green = Color(0xFFA8C638);
   static const orange = Color(0xFFFE9301);
   static const bronce = Color.fromRGBO(235, 219, 206, 1);
+  static const grey = Color.fromRGBO(230, 230, 230, 1);
 }
 
 final myTheme = ThemeData(

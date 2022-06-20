@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -22,7 +23,11 @@ class AppbarExample extends StatelessWidget implements PreferredSizeWidget {
           const SizedBox(
             width: 10,
           ),
-          Text(titulo, style: appTitulo),
+          AutoSizeText(
+            titulo,
+            style: appTitulo,
+            maxLines: 1,
+          ),
         ],
       ),
       actions: [
