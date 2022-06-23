@@ -16,6 +16,7 @@ class ReporteView extends StatelessWidget {
     return Scaffold(
       appBar: const AppbarExample(
         titulo: "Reporte",
+        textSize: 22,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),

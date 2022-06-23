@@ -7,8 +7,10 @@ class AppbarExample extends StatelessWidget implements PreferredSizeWidget {
   const AppbarExample({
     Key? key,
     required this.titulo,
+    required this.textSize,
   }) : super(key: key);
   final String titulo;
+  final double textSize;
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -25,7 +27,10 @@ class AppbarExample extends StatelessWidget implements PreferredSizeWidget {
           ),
           AutoSizeText(
             titulo,
-            style: appTitulo,
+            style: TextStyle(
+              fontSize: textSize,
+              fontWeight: FontWeight.normal,
+            ),
             maxLines: 1,
           ),
         ],

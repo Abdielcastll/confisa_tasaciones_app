@@ -6,5 +6,5 @@ import 'package:flutter/material.dart';
 final Map<String, Widget Function(dynamic)> router = {
   LoginView.routeName: (_) => const LoginView(),
   ReporteView.routeName: (_) => const ReporteView(),
-  ListaTasacionesView.routeName: (_) => const ListaTasacionesView()
+  ListaTasacionesView.routeName: (_) => ListaTasacionesView()
 };

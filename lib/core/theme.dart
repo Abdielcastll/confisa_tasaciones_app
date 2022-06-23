@@ -10,6 +10,16 @@ class AppColors {
 }
 
 final myTheme = ThemeData(
+  cardTheme: CardTheme(
+    color: AppColors.grey,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15.0),
+      side: const BorderSide(
+        color: AppColors.grey,
+        width: .5,
+      ),
+    ),
+  ),
   scaffoldBackgroundColor: AppColors.bronce,
   iconTheme: const IconThemeData(size: 30),
   appBarTheme: const AppBarTheme(
