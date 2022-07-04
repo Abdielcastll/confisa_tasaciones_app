@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/providers.dart';
@@ -9,6 +10,10 @@ import 'package:tasaciones_app/views/login/login_view.dart';
 import 'package:tasaciones_app/widgets/no_scale_widget.dart';
 
 void main() async {
+  /* Quitar barra de notificaciones */
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.light));
   WidgetsFlutterBinding.ensureInitialized();
   await LocatorInjector.setupLocator();
   DependencyInjection.initialize();
