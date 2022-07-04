@@ -1,15 +1,12 @@
 import 'package:tasaciones_app/core/base/base_view_model.dart';
+import 'package:tasaciones_app/core/models/sign_in_response.dart';
 
 class HomeViewModel extends BaseViewModel {
-  int _counter;
+  late SignInData _user;
 
-  HomeViewModel({int counter = 0}) : _counter = counter;
-
-  int get counter => _counter;
-  set counter(int value) {
-    _counter = value;
+  SignInData get user => _user;
+  set user(SignInData value) {
+    _user = value;
     notifyListeners();
   }
-
-  void increment() => counter += 1;
 }

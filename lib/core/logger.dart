@@ -2,7 +2,7 @@
 import 'package:logger/logger.dart';
 
 class SimpleLogPrinter extends LogPrinter {
-  static int counter = 0;
+  // static int counter = 0;
   final String className;
 
   SimpleLogPrinter(this.className);

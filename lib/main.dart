@@ -11,6 +11,7 @@ import 'package:tasaciones_app/widgets/no_scale_widget.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocatorInjector.setupLocator();
+  DependencyInjection.initialize();
   final prefs = Preferencias();
   await prefs.initPrefs();
   runApp(const MainApplication());

@@ -1,9 +1,9 @@
 part of home_view;
 
 class _HomeMobile extends StatelessWidget {
-  final HomeViewModel viewModel;
+  final HomeViewModel vm;
 
-  const _HomeMobile(this.viewModel);
+  const _HomeMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -16,21 +16,17 @@ class _HomeMobile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times: ',
-              style: TextStyle(fontSize: 14),
+            Text(
+              vm.user.nombreCompleto,
+              style: const TextStyle(fontSize: 18),
             ),
             Text(
-              '${viewModel.counter}',
-              // style: Theme.of(context).textTheme.display1,
+              vm.user.email,
+              style: const TextStyle(fontSize: 18),
             ),
+            ...vm.user.role.map((e) => Text(e)),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: viewModel.increment,
-        backgroundColor: Colors.black,
       ),
     );
   }
