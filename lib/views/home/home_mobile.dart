@@ -8,6 +8,7 @@ class _HomeMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: GlobalDrawerDartDesktop(),
       appBar: AppBar(
         title: const Text('Mobile'),
         backgroundColor: Colors.black,

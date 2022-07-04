@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tasaciones_app/views/login/login_view.dart';
+
+import '../core/locator.dart';
+import '../core/provider/user_data_provider.dart';
+import '../core/services/navigator_service.dart';
 
 class GlobalDrawerDartDesktop extends StatelessWidget {
-  const GlobalDrawerDartDesktop({Key? key}) : super(key: key);
+  GlobalDrawerDartDesktop({Key? key}) : super(key: key);
+  final _navigationService = locator<NavigatorService>();
 
   /* Falta llevar los textstyle a un archivo de constantes para la reutilizacion y
   crear el modal de rol claims y eliminar el ejemplo de aca*/
 
   @override
   Widget build(BuildContext context) {
+    var dataUser = context.read<UserProvider>().user.data;
     Size size = MediaQuery.of(context).size;
     /* Ejemplo para ver opciones, esto deberia tomarse de un provider al igual que los datos del usuario*/
     List<Rol> list = <Rol>[
@@ -37,14 +45,15 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          'Nombre y Apellido',
-                          style: TextStyle(fontSize: 25, color: Colors.white),
+                          dataUser.nombreCompleto,
+                          style: const TextStyle(
+                              fontSize: 25, color: Colors.white),
                         ),
                         Text(
-                          'Correoejemplo@gmail.com',
-                          style: TextStyle(
+                          dataUser.email,
+                          style: const TextStyle(
                               fontSize: 13,
                               color: Colors.white60,
                               fontStyle: FontStyle.italic),
@@ -55,7 +64,9 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                         right: 10,
                         bottom: 10,
                         child: IconButton(
-                            onPressed: () {},
+                            onPressed: () => _navigationService
+                                .navigateToPageWithReplacement(
+                                    LoginView.routeName),
                             icon: const Icon(
                               Icons.exit_to_app,
                               color: Colors.white,

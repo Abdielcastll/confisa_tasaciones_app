@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/core/provider/user_data_provider.dart';
+import '../../widgets/global_drawer_widget.dart';
 import 'home_view_model.dart';
 
 part 'home_mobile.dart';
