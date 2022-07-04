@@ -27,9 +27,19 @@ class _LoginMobile extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AppTextField(text: 'Email', controller: vm.tcEmail),
+                  AppTextField(
+                    text: 'Email',
+                    controller: vm.tcEmail,
+                    obscureText: false,
+                    iconButton: const SizedBox(),
+                  ),
                   const SizedBox(height: 25),
-                  AppTextField(text: 'Password', controller: vm.tcPassword),
+                  AppTextField(
+                    text: 'Password',
+                    controller: vm.tcPassword,
+                    obscureText: vm.obscurePassword,
+                    iconButton: AppObscureTextIcon(vm: vm),
+                  ),
                   const SizedBox(height: 25),
                   AppButtonLogin(
                     text: 'INGRESAR',

@@ -18,6 +18,7 @@ class LoginViewModel extends BaseViewModel {
   final _logger = Logger();
   TextEditingController tcEmail = TextEditingController();
   TextEditingController tcPassword = TextEditingController();
+  bool obscurePassword = true;
 
   Future<void> signIn(BuildContext context) async {
     ProgressDialog.show(context);
@@ -40,6 +41,11 @@ class LoginViewModel extends BaseViewModel {
         description: resp.messages,
       );
     }
+  }
+
+  void changeObscure() {
+    obscurePassword = !obscurePassword;
+    notifyListeners();
   }
 
   @override

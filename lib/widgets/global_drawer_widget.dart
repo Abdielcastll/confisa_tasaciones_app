@@ -17,6 +17,7 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
   Widget build(BuildContext context) {
     var dataUser = context.read<UserProvider>().user.data;
     Size size = MediaQuery.of(context).size;
+
     /* Ejemplo para ver opciones, esto deberia tomarse de un provider al igual que los datos del usuario*/
     List<Rol> list = <Rol>[
       Rol(id: "1", descripcion: "Visualizar Usuarios"),
@@ -75,6 +76,7 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                 ),
               ),
             ),
+
             /* Opciones del menu */
             Padding(
                 padding: const EdgeInsets.only(
