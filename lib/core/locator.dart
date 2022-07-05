@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
 import 'package:tasaciones_app/core/api/http.dart';
+import 'package:tasaciones_app/core/api/roles_api.dart';
 
 import '../core/logger.dart';
 import '../core/services/navigator_service.dart';
@@ -26,5 +27,7 @@ abstract class DependencyInjection {
     Http http = Http(dio: dio, logger: logger, logsEnabled: true);
     final AuthenticationAPI authenticationAPI = AuthenticationAPI(http);
     GetIt.instance.registerSingleton<AuthenticationAPI>(authenticationAPI);
+    final RolesAPI rolesAPI = RolesAPI(http);
+    GetIt.instance.registerSingleton<RolesAPI>(rolesAPI);
   }
 }

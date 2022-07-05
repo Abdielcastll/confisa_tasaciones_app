@@ -17,6 +17,12 @@ class _HomeMobile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ElevatedButton(
+                child: Text("Prueba"),
+                onPressed: () {
+                  final _rolesAPI = GetIt.instance<RolesAPI>();
+                  var resp = _rolesAPI.getRoles(token: vm.user.token);
+                }),
             Text(
               vm.user.nombreCompleto,
               style: const TextStyle(fontSize: 18),
