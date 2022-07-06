@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
+import 'package:tasaciones_app/core/authentication_client.dart';
 
 import '../core/logger.dart';
 import '../core/services/navigator_service.dart';
@@ -21,13 +23,19 @@ class LocatorInjector {
 }
 
 abstract class DependencyInjection {
-  static void initialize() {
+  static Future<void> initialize() async {
     final Dio dio = Dio(BaseOptions(baseUrl: server));
     Logger logger = Logger();
     Http http = Http(dio: dio, logger: logger, logsEnabled: true);
-    final AuthenticationAPI authenticationAPI = AuthenticationAPI(http);
-    GetIt.instance.registerSingleton<AuthenticationAPI>(authenticationAPI);
-    final RolesAPI rolesAPI = RolesAPI(http);
-    GetIt.instance.registerSingleton<RolesAPI>(rolesAPI);
+    final storage = await SharedPreferences.getInstance();
+
+    final authenticationAPI = AuthenticationAPI(http);
+    final rolesAPI = RolesAPI(http);
+    final authenticationClient =
+        AuthenticationClient(storage, authenticationAPI);
+
+    locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
+    locator.registerSingleton<RolesAPI>(rolesAPI);
+    locator.registerSingleton<AuthenticationClient>(authenticationClient);
   }
 }

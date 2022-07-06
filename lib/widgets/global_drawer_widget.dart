@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/views/login/login_view.dart';
 
 import '../core/locator.dart';
-import '../core/provider/user_data_provider.dart';
 import '../core/services/navigator_service.dart';
 
 class GlobalDrawerDartDesktop extends StatelessWidget {
   GlobalDrawerDartDesktop({Key? key}) : super(key: key);
   final _navigationService = locator<NavigatorService>();
+  final _authenticationClient = locator<AuthenticationClient>();
 
   /* Falta llevar los textstyle a un archivo de constantes para la reutilizacion y
   crear el modal de rol claims y eliminar el ejemplo de aca*/
 
   @override
   Widget build(BuildContext context) {
-    var dataUser = context.read<UserProvider>().user.data;
+    var dataUser = _authenticationClient.loadSession;
     Size size = MediaQuery.of(context).size;
 
     /* Ejemplo para ver opciones, esto deberia tomarse de un provider al igual que los datos del usuario*/
@@ -62,16 +62,20 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                       ],
                     ),
                     Positioned(
-                        right: 10,
-                        bottom: 10,
-                        child: IconButton(
-                            onPressed: () => _navigationService
-                                .navigateToPageWithReplacement(
-                                    LoginView.routeName),
-                            icon: const Icon(
-                              Icons.exit_to_app,
-                              color: Colors.white,
-                            )))
+                      right: 10,
+                      bottom: 10,
+                      child: IconButton(
+                        onPressed: () async {
+                          await _authenticationClient.signOut();
+                          _navigationService.navigateToPageWithReplacement(
+                              LoginView.routeName);
+                        },
+                        icon: const Icon(
+                          Icons.exit_to_app,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

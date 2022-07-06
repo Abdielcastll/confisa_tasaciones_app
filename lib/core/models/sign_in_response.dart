@@ -1,28 +1,19 @@
-import 'dart:convert';
-
-SignInResponse signInResponseFromJson(String str) =>
-    SignInResponse.fromJson(json.decode(str));
-
-String signInResponseToJson(SignInResponse data) => json.encode(data.toJson());
-
 class SignInResponse {
   SignInResponse({
     required this.data,
   });
 
-  SignInData data;
+  Session data;
 
   factory SignInResponse.fromJson(Map<String, dynamic> json) => SignInResponse(
-        data: SignInData.fromJson(json["data"]),
+        data: Session.fromJson(json["data"]),
       );
 
-  Map<String, dynamic> toJson() => {
-        "data": data.toJson(),
-      };
+  Map<String, dynamic> toJson() => {"data": data.toJson()};
 }
 
-class SignInData {
-  SignInData({
+class Session {
+  Session({
     required this.token,
     required this.refreshToken,
     required this.refreshTokenExpiryTime,
@@ -38,7 +29,7 @@ class SignInData {
   String nombreCompleto;
   List<String> role;
 
-  factory SignInData.fromJson(Map<String, dynamic> json) => SignInData(
+  factory Session.fromJson(Map<String, dynamic> json) => Session(
         token: json["token"] ?? '',
         refreshToken: json["refreshToken"] ?? '',
         refreshTokenExpiryTime:

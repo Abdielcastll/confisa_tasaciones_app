@@ -5,7 +5,6 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/providers.dart';
 import 'package:tasaciones_app/core/router.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
-import 'package:tasaciones_app/core/shared_prefereces.dart';
 import 'package:tasaciones_app/views/login/login_view.dart';
 import 'package:tasaciones_app/widgets/no_scale_widget.dart';
 
@@ -16,9 +15,7 @@ void main() async {
       statusBarBrightness: Brightness.light));
   WidgetsFlutterBinding.ensureInitialized();
   await LocatorInjector.setupLocator();
-  DependencyInjection.initialize();
-  final prefs = Preferencias();
-  await prefs.initPrefs();
+  await DependencyInjection.initialize();
   runApp(const MainApplication());
 }
 

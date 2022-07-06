@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-class Success {
-  Map<String, dynamic> response;
+class Success<T> {
+  final T response;
   Success({
     required this.response,
   });

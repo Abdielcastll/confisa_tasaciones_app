@@ -18,11 +18,15 @@ class _HomeMobile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                child: Text("Prueba"),
+                child: const Text("Prueba"),
                 onPressed: () {
-                  final _rolesAPI = GetIt.instance<RolesAPI>();
-                  var resp = _rolesAPI.getRoles(token: vm.user.token);
+                  final _rolesAPI = locator<RolesAPI>();
+                  _rolesAPI.getRoles(token: vm.user.token);
                 }),
+            ElevatedButton(
+              child: const Text("Token"),
+              onPressed: vm.accesToken,
+            ),
             Text(
               vm.user.nombreCompleto,
               style: const TextStyle(fontSize: 18),
