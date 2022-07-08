@@ -18,11 +18,7 @@ class _HomeMobile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                child: const Text("Prueba"),
-                onPressed: () {
-                  final _rolesAPI = locator<RolesAPI>();
-                  _rolesAPI.getRoles(token: vm.user.token);
-                }),
+                child: const Text("Prueba"), onPressed: vm.accesPermisos),
             ElevatedButton(
               child: const Text("Token"),
               onPressed: vm.accesToken,

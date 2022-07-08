@@ -10,14 +10,14 @@ class RolResponse {
     required this.data,
   });
 
-  RolData data;
+  List<RolData> data;
 
   factory RolResponse.fromJson(Map<String, dynamic> json) => RolResponse(
-        data: RolData.fromJson(json["data"]),
+        data: json["data"].map<RolData>((e) => RolData.fromJson(e)).toList(),
       );
 
   Map<String, dynamic> toJson() => {
-        "data": data.toJson(),
+        "data": data.map((e) => e.toJson()),
       };
 }
 

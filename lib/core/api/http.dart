@@ -50,7 +50,7 @@ class Http {
       );
       if (e is DioError) {
         if (_logsEnabled) _logger.e(e.response?.data);
-        data = Failure.fromJson(e.response?.data);
+        if (e.response?.data != null) data = Failure.fromJson(e.response?.data);
       }
       return data;
     }
