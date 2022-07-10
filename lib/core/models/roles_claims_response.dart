@@ -32,7 +32,7 @@ class RolClaimsData {
   String descripcion;
 
   factory RolClaimsData.fromJson(Map<String, dynamic> json) => RolClaimsData(
-        id: json["id"] ?? '',
+        id: json["id"] ?? 0,
         descripcion: json["descripcion"] ?? '',
       );
 

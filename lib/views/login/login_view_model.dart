@@ -23,8 +23,10 @@ class LoginViewModel extends BaseViewModel {
 
   late Session _user;
 
-  TextEditingController tcEmail = TextEditingController();
-  TextEditingController tcPassword = TextEditingController();
+  TextEditingController tcEmail =
+      TextEditingController(text: "anibalvc1999@gmail.com");
+  TextEditingController tcPassword =
+      TextEditingController(text: "123Pa\$\$word!");
   bool obscurePassword = true;
 
   Future<void> signIn(BuildContext context) async {
@@ -38,7 +40,6 @@ class LoginViewModel extends BaseViewModel {
       _autenticationClient.saveSession(resp.response.data);
       _user = resp.response.data;
       await getRoles(context);
-      _navigationService.navigateToPageWithReplacement(HomeView.routeName);
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
       Dialogs.alert(
@@ -55,7 +56,7 @@ class LoginViewModel extends BaseViewModel {
     if (resp is Success<RolResponse>) {
       for (var rolUser in _user.role) {
         for (var rolData in resp.response.data) {
-          await getPermisos(context, rolUser, rolData);
+          await getPermisos(context, rolUser, rolData, resp.response);
         }
       }
     } else if (resp is Failure) {
@@ -68,16 +69,17 @@ class LoginViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> getPermisos(
-      BuildContext context, String rolUser, RolData data) async {
+  Future<void> getPermisos(BuildContext context, String rolUser, RolData data,
+      RolResponse response) async {
     if (rolUser == data.description) {
       var resp =
           await _rolesAPI.getRolesClaims(idRol: data.id, token: _user.token);
       if (resp is Success<RolClaimsResponse>) {
         ProgressDialog.dissmiss(context);
+        _navigationService.navigateToPageWithReplacement(HomeView.routeName);
         for (var rolData in resp.response.data) {
-          Provider.of<PermisosProvider>(context, listen: false).permiso =
-              rolData;
+          Provider.of<PermisosUserProvider>(context, listen: false)
+              .permisoUser = rolData;
         }
       } else if (resp is Failure) {
         ProgressDialog.dissmiss(context);

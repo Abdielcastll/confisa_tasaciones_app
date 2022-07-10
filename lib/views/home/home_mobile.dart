@@ -18,6 +18,24 @@ class _HomeMobile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
+                child: const Text("Prueba Permisos"),
+                onPressed: () async {
+                  final _permisosAPI = locator<PermisosAPI>();
+                  ProgressDialog.show(context);
+                  var resp =
+                      await _permisosAPI.getPermisos(token: vm.user.token);
+                  if (resp is Success<PermisosResponse>) {
+                    ProgressDialog.dissmiss(context);
+                  } else if (resp is Failure) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.alert(
+                      context,
+                      tittle: 'Error',
+                      description: resp.messages,
+                    );
+                  }
+                }),
+            ElevatedButton(
                 child: const Text("Prueba"), onPressed: vm.accesPermisos),
             ElevatedButton(
               child: const Text("Token"),

@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
 import 'package:tasaciones_app/core/api/http.dart';
+import 'package:tasaciones_app/core/api/permisos_api.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 
@@ -31,11 +32,13 @@ abstract class DependencyInjection {
 
     final authenticationAPI = AuthenticationAPI(http);
     final rolesAPI = RolesAPI(http);
+    final permisosAPI = PermisosAPI(http);
     final authenticationClient =
         AuthenticationClient(storage, authenticationAPI);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
+    locator.registerSingleton<PermisosAPI>(permisosAPI);
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
   }
 }
