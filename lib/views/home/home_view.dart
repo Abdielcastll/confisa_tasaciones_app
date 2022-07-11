@@ -1,17 +1,10 @@
 library home_view;
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
-import 'package:tasaciones_app/core/api/roles_api.dart';
-import 'package:tasaciones_app/core/locator.dart';
-import 'package:tasaciones_app/core/logger.dart';
-import 'package:tasaciones_app/core/models/roles_response.dart';
-import '../../core/api/api_status.dart';
-import '../../core/models/sign_in_response.dart';
+import 'package:tasaciones_app/widgets/progress_widget.dart';
 import '../../core/providers/permisos_provider.dart';
-import '../../widgets/app_dialogs.dart';
 import '../../widgets/global_drawer_widget.dart';
 import 'home_view_model.dart';
 
@@ -25,14 +18,10 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var permisos =
         Provider.of<PermisosProvider>(context, listen: false).permisos;
-    HomeViewModel viewModel = HomeViewModel();
-
-    viewModel.permisos = permisos;
+    HomeViewModel viewModel = HomeViewModel(permisos);
     return ViewModelBuilder<HomeViewModel>.reactive(
         viewModelBuilder: () => viewModel,
-        onModelReady: (viewModel) {
-          viewModel.onInit();
-        },
+        onModelReady: (viewModel) => viewModel.onInit(context),
         builder: (context, viewModel, child) {
           return _HomeMobile(viewModel);
         });

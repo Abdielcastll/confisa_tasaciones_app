@@ -7,32 +7,31 @@ class _HomeMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: GlobalDrawerDartDesktop(),
-      appBar: AppBar(
-        title: const Text('Mobile'),
-        backgroundColor: Colors.black,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-                child: const Text("Prueba"), onPressed: vm.accesPermisos),
-            ElevatedButton(
-              child: const Text("Token"),
-              onPressed: vm.accesToken,
-            ),
-            Text(
-              vm.user.nombreCompleto,
-              style: const TextStyle(fontSize: 18),
-            ),
-            Text(
-              vm.user.email,
-              style: const TextStyle(fontSize: 18),
-            ),
-            ...vm.user.role.map((e) => Text(e)),
-          ],
+    return ProgressWidget(
+      inAsyncCall: vm.loading,
+      child: Scaffold(
+        drawer: GlobalDrawerDartDesktop(),
+        appBar: AppBar(
+          title: const Text('Mobile'),
+          backgroundColor: Colors.black,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                  child: const Text("Prueba"), onPressed: vm.accesPermisos),
+              Text(
+                vm.user.nombreCompleto,
+                style: const TextStyle(fontSize: 18),
+              ),
+              Text(
+                vm.user.email,
+                style: const TextStyle(fontSize: 18),
+              ),
+              ...vm.user.role.map((e) => Text(e)),
+            ],
+          ),
         ),
       ),
     );

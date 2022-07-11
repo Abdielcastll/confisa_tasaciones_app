@@ -22,10 +22,13 @@ class RolesAPI {
   Future<Object> getRolesClaims(
       {required String idRol, required String token}) {
     return _http.request(
-      '/api/rolesclaims/get/$idRol',
+      '/api/rolesclaims/get',
       method: 'GET',
       headers: {
         'Authorization': 'Bearer $token',
+      },
+      queryParameters: {
+        "idRol": idRol,
       },
       parser: (data) {
         return RolClaimsResponse.fromJson(data);

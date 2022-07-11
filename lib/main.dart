@@ -5,8 +5,10 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/providers.dart';
 import 'package:tasaciones_app/core/router.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
-import 'package:tasaciones_app/views/login/login_view.dart';
+import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/no_scale_widget.dart';
+
+import 'views/auth/login/login_view.dart';
 
 void main() async {
   /* Quitar barra de notificaciones */
@@ -32,6 +34,7 @@ class MainApplication extends StatelessWidget {
         navigatorKey: locator<NavigatorService>().navigatorKey,
         onGenerateRoute: generateRoute,
         initialRoute: LoginView.routeName,
+        theme: theme,
         builder: (context, child) {
           return NoScaleTextWidget(
             child: child!,

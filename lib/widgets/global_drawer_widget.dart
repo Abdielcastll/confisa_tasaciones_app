@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
-import 'package:tasaciones_app/views/login/login_view.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';
+import '../views/auth/login/login_view.dart';
 
 class GlobalDrawerDartDesktop extends StatelessWidget {
   GlobalDrawerDartDesktop({Key? key}) : super(key: key);

@@ -17,11 +17,10 @@ class AppButtonLogin extends StatelessWidget {
       onPressed: onPressed,
       minWidth: MediaQuery.of(context).size.width * .60,
       child: Text(text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-          )),
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              ?.copyWith(color: Colors.white)),
       color: color,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
