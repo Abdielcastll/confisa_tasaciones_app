@@ -3,19 +3,16 @@ import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 
-import '../../../core/api/Usuarios_api.dart';
+import '../../../core/api/usuarios_api.dart';
 import '../../../core/api/api_status.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/usuarios_response.dart';
-import '../../../widgets/app_dialogs.dart';
 
-class PaginatedTableUsuarios extends StatelessWidget {
-  const PaginatedTableUsuarios({Key? key, required this.source})
-      : super(key: key);
-  final AdvancedDataTableSource<dynamic> source;
-  @override
-  Widget build(BuildContext context) {
+class PaginatedTableUsuarios {
+  late BuildContext context;
+  PaginatedTableUsuarios({required this.context});
+  Widget table() {
     return AdvancedPaginatedDataTable(
       loadingWidget: () => const Center(child: CircularProgressIndicator()),
       source: TableUsuarios(pageSize: 12),
@@ -46,6 +43,7 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
   final user = locator<AuthenticationClient>().loadSession;
   final _usuariosAPI = locator<UsuariosAPI>();
   int pageSize;
+
   @override
   DataRow? getRow(int index) {
     final currentRowData = lastDetails!.rows[index];
@@ -67,7 +65,12 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                     child: Text(e),
                   ))
               .toList())),
-      DataCell(IconButton(onPressed: () {}, icon: const Icon(Icons.person))),
+      DataCell(IconButton(
+          onPressed: () {
+            _usuariosAPI.getUsuario(
+                token: user.token, id: currentRowData.id.toString());
+          },
+          icon: const Icon(Icons.person))),
     ]);
   }
 

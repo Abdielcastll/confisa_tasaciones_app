@@ -30,6 +30,8 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
 
   late List<PermisosData> _dataPermisos = [];
 
+  late Function buttonAdd = () {};
+
   Widget dataTable = Container();
 
   String _dropdownvalue = 'Acciones';
@@ -58,14 +60,14 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onDropDownChange(String opcion) {
+  void onDropDownChange(String opcion, BuildContext context) {
     dataTable = Container();
     switch (opcion) {
       case "Permisos":
-        dataTable = PaginatedTablePermisos(source: TablePermisos(pageSize: 12));
+        dataTable = PaginatedTablePermisos(context: context).table();
         break;
       case "Usuarios":
-        dataTable = PaginatedTableUsuarios(source: TablePermisos(pageSize: 12));
+        dataTable = PaginatedTableUsuarios(context: context).table();
         break;
       default:
     }

@@ -44,7 +44,7 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
                               }).toList(),
                               onChanged: (String? newValue) {
                                 vm.dropdownvalue = newValue!;
-                                vm.onDropDownChange(newValue);
+                                vm.onDropDownChange(newValue, context);
                               },
                               value: vm.dropdownvalue,
 

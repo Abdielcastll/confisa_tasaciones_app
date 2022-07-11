@@ -1,23 +1,21 @@
 import 'package:advanced_datatable/advanced_datatable_source.dart';
 import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/api_status.dart';
 import '../../../core/api/permisos_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/permisos_response.dart';
+import '../../../widgets/app_dialogs.dart';
 
-class PaginatedTablePermisos extends StatelessWidget {
-  const PaginatedTablePermisos({Key? key, required this.source})
-      : super(key: key);
-  final AdvancedDataTableSource<dynamic> source;
-  @override
-  Widget build(BuildContext context) {
+class PaginatedTablePermisos {
+  late BuildContext context;
+  PaginatedTablePermisos({required this.context});
+  AdvancedPaginatedDataTable table() {
     return AdvancedPaginatedDataTable(
       loadingWidget: () => const Center(child: CircularProgressIndicator()),
-      source: TablePermisos(pageSize: 12),
+      source: TablePermisos(pageSize: 12, context: context),
       columns: const [
         DataColumn(
           label: Text('Indice'),
@@ -36,10 +34,14 @@ class PaginatedTablePermisos extends StatelessWidget {
 }
 
 class TablePermisos extends AdvancedDataTableSource<PermisosData> {
-  TablePermisos({required this.pageSize});
+  TablePermisos({required this.pageSize, required this.context});
+  late BuildContext context;
   final user = locator<AuthenticationClient>().loadSession;
   final _permisosAPI = locator<PermisosAPI>();
   int pageSize;
+  @override
+  // TODO: implement forceRemoteReload
+  bool get forceRemoteReload => super.forceRemoteReload = true;
 
   @override
   DataRow? getRow(int index) {
@@ -52,7 +54,12 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
       DataCell(
         Text(currentRowData.descripcion),
       ),
-      DataCell(IconButton(onPressed: () {}, icon: const Icon(Icons.cached))),
+      DataCell(IconButton(
+          onPressed: () {
+            Dialogs.alert(context,
+                tittle: "tittle", description: ["description"]);
+          },
+          icon: const Icon(Icons.cached))),
       DataCell(IconButton(
           onPressed: () {}, icon: const Icon(Icons.cancel_outlined))),
     ]);
