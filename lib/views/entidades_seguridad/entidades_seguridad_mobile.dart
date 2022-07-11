@@ -44,7 +44,8 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
                               }).toList(),
                               onChanged: (String? newValue) {
                                 vm.dropdownvalue = newValue!;
-                                vm.onDropDownChange(newValue, context);
+                                vm.onDropDownChangeButtons(newValue, context);
+                                vm.onDropDownChangeTable(newValue, context);
                               },
                               value: vm.dropdownvalue,
 
@@ -57,38 +58,9 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
                           ))),
                     ),
                     Expanded(child: Container()),
-                    Container(
-                        alignment: Alignment.center,
-                        height: 35,
-                        width: 35,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.green,
-                        ),
-                        child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                            ))),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                        height: 35,
-                        width: 35,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.brownLight,
-                        ),
-                        child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ))),
+                    Row(
+                      children: vm.buttons,
+                    )
                   ],
                 ),
               ),

@@ -38,10 +38,9 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
   late BuildContext context;
   final user = locator<AuthenticationClient>().loadSession;
   final _permisosAPI = locator<PermisosAPI>();
-  int pageSize;
   @override
-  // TODO: implement forceRemoteReload
   bool get forceRemoteReload => super.forceRemoteReload = true;
+  int pageSize;
 
   @override
   DataRow? getRow(int index) {
@@ -56,12 +55,34 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
       ),
       DataCell(IconButton(
           onPressed: () {
-            Dialogs.alert(context,
-                tittle: "tittle", description: ["description"]);
+            currentPage = 0;
+            offset = 0;
+            totalCount = 0;
+            data = [];
+            setNextView();
           },
           icon: const Icon(Icons.cached))),
       DataCell(IconButton(
-          onPressed: () {}, icon: const Icon(Icons.cancel_outlined))),
+          onPressed: () async {
+            ProgressDialog.show(context);
+            var resp = await _permisosAPI.deletePermisos(
+                token: user.token, id: currentRowData.id);
+            if (resp is Success<PermisosPOSTResponse>) {
+              ProgressDialog.dissmiss(context);
+              Dialogs.alert(context,
+                  tittle: "Eliminado con exito", description: ["description"]);
+              currentPage = 0;
+              offset = 0;
+              totalCount = 0;
+              data = [];
+              setNextView();
+            } else if (resp is Failure) {
+              ProgressDialog.dissmiss(context);
+              Dialogs.alert(context,
+                  tittle: "Eliminacion fallida", description: ["description"]);
+            }
+          },
+          icon: const Icon(Icons.cancel_outlined))),
     ]);
   }
 
@@ -95,9 +116,12 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
         currentPage = currentPage + 1;
         return RemoteDataSourceDetails(
             resp.response.totalCount, resp.response.data);
-      } else {
-        throw Exception('Unable to query remote server');
+      } else if (resp is Failure) {
+        Dialogs.alert(context,
+            tittle: "Error de Conexion",
+            description: ["Fallo al conectar a la red"]);
       }
+      throw Exception('Unable to query remote server');
     }
   }
 }

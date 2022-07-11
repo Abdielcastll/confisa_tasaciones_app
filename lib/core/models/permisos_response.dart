@@ -80,3 +80,22 @@ class PermisosData {
         "idRecurso": idRecurso,
       };
 }
+
+PermisosResponse permisosPOSTResponseFromJson(String str) =>
+    PermisosResponse.fromJson(json.decode(str));
+
+String permisosPOSTResponseToJson(PermisosResponse data) =>
+    json.encode(data.toJson());
+
+class PermisosPOSTResponse {
+  PermisosPOSTResponse({required this.data});
+
+  bool data;
+
+  factory PermisosPOSTResponse.fromJson(Map<String, dynamic> json) =>
+      PermisosPOSTResponse(data: json["data"]);
+
+  Map<String, dynamic> toJson() => {
+        "data": data,
+      };
+}

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
@@ -11,9 +10,7 @@ import 'package:tasaciones_app/views/home/home_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../core/api/roles_api.dart';
-import '../../core/models/roles_claims_response.dart';
 import '../../core/models/roles_response.dart';
-import '../../core/providers/permisos_provider.dart';
 
 class LoginViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();
@@ -72,9 +69,11 @@ class LoginViewModel extends BaseViewModel {
   Future<void> getPermisos(BuildContext context, String rolUser, RolData data,
       RolResponse response) async {
     if (rolUser == data.description) {
-      var resp =
-          await _rolesAPI.getRolesClaims(idRol: data.id, token: _user.token);
-      if (resp is Success<RolClaimsResponse>) {
+      ProgressDialog.dissmiss(context);
+      _navigationService.navigateToPageWithReplacement(HomeView.routeName);
+      /* var resp =
+          await _rolesAPI.getRolesClaims(idRol: data.id, token: _user.token); */
+      /* if (resp is Success<RolClaimsResponse>) {
         ProgressDialog.dissmiss(context);
         _navigationService.navigateToPageWithReplacement(HomeView.routeName);
         for (var rolData in resp.response.data) {
@@ -88,7 +87,7 @@ class LoginViewModel extends BaseViewModel {
           tittle: 'Error',
           description: resp.messages,
         );
-      }
+      } */
     }
   }
 

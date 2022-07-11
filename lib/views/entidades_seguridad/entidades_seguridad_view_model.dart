@@ -1,6 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
+import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/button_permisos_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_permisos_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_usuarios_widget.dart';
 
@@ -34,6 +36,8 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
 
   Widget dataTable = Container();
 
+  List<Widget> buttons = [];
+
   String _dropdownvalue = 'Acciones';
 
   List<PermisosData> get dataPermisos => _dataPermisos;
@@ -60,7 +64,24 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onDropDownChange(String opcion, BuildContext context) {
+  void onDropDownChangeButtons(String opcion, BuildContext context) {
+    buttons = [];
+    switch (opcion) {
+      case "Permisos":
+        buttons.add(PermisosButton(
+            color: AppColors.green,
+            icon: Icons.add,
+            onPressed: () => Dialog(
+                  child: Text("Hola"),
+                )).build(context));
+        break;
+      case "Usuarios":
+        break;
+      default:
+    }
+  }
+
+  void onDropDownChangeTable(String opcion, BuildContext context) {
     dataTable = Container();
     switch (opcion) {
       case "Permisos":

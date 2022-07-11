@@ -73,13 +73,13 @@ class PermisosAPI {
 
   Future<Object> deletePermisos({required String token, required int id}) {
     return _http.request(
-      '/api/permisos/delete/?id=$id',
+      '/api/permisos/delete/$id',
       method: 'POST',
       headers: {
         'Authorization': 'Bearer $token',
       },
       parser: (data) {
-        return PermisosResponse.fromJson(data);
+        return PermisosPOSTResponse.fromJson(data);
       },
     );
   }
