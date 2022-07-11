@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/button_permisos_widget.dart';
+import 'package:tasaciones_app/widgets/app_circle_icon_button.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_permisos_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_usuarios_widget.dart';
 
@@ -36,7 +36,9 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
 
   Widget dataTable = Container();
 
-  List<Widget> buttons = [];
+  late Widget button1 = Container();
+
+  late Widget button2 = Container();
 
   String _dropdownvalue = 'Acciones';
 
@@ -65,15 +67,20 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
   }
 
   void onDropDownChangeButtons(String opcion, BuildContext context) {
-    buttons = [];
     switch (opcion) {
       case "Permisos":
-        buttons.add(PermisosButton(
+        button1 = CircleIconButton(
             color: AppColors.green,
             icon: Icons.add,
-            onPressed: () => Dialog(
-                  child: Text("Hola"),
-                )).build(context));
+            onPressed: () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      content: Text("Hola"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ));
+                }));
         break;
       case "Usuarios":
         break;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class PermisosButton extends StatelessWidget {
+class CircleIconButton extends StatelessWidget {
   final void Function() onPressed;
   final Color color;
   final IconData icon;
-  const PermisosButton(
+  const CircleIconButton(
       {Key? key,
       required this.color,
       required this.icon,
