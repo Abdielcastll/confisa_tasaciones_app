@@ -12,6 +12,8 @@ import '../core/services/navigator_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
+import 'api/Usuarios_api.dart';
+
 GetIt locator = GetIt.instance;
 
 class LocatorInjector {
@@ -33,12 +35,14 @@ abstract class DependencyInjection {
     final authenticationAPI = AuthenticationAPI(http);
     final rolesAPI = RolesAPI(http);
     final permisosAPI = PermisosAPI(http);
+    final usuariosAPI = UsuariosAPI(http);
     final authenticationClient =
         AuthenticationClient(storage, authenticationAPI);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
     locator.registerSingleton<PermisosAPI>(permisosAPI);
+    locator.registerSingleton<UsuariosAPI>(usuariosAPI);
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
   }
 }

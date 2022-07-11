@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_permisos_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_usuarios_widget.dart';
 
 import '../../core/authentication_client.dart';
 import '../../core/locator.dart';
@@ -62,6 +63,9 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
     switch (opcion) {
       case "Permisos":
         dataTable = PaginatedTablePermisos(source: TablePermisos(pageSize: 12));
+        break;
+      case "Usuarios":
+        dataTable = PaginatedTableUsuarios(source: TablePermisos(pageSize: 12));
         break;
       default:
     }

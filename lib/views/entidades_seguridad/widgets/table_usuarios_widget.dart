@@ -1,23 +1,24 @@
 import 'package:advanced_datatable/advanced_datatable_source.dart';
 import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/widgets/app_dialogs.dart';
+import 'package:tasaciones_app/core/models/usuarios_response.dart';
 
+import '../../../core/api/Usuarios_api.dart';
 import '../../../core/api/api_status.dart';
-import '../../../core/api/permisos_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/locator.dart';
-import '../../../core/models/permisos_response.dart';
+import '../../../core/models/usuarios_response.dart';
+import '../../../widgets/app_dialogs.dart';
 
-class PaginatedTablePermisos extends StatelessWidget {
-  const PaginatedTablePermisos({Key? key, required this.source})
+class PaginatedTableUsuarios extends StatelessWidget {
+  const PaginatedTableUsuarios({Key? key, required this.source})
       : super(key: key);
   final AdvancedDataTableSource<dynamic> source;
   @override
   Widget build(BuildContext context) {
     return AdvancedPaginatedDataTable(
       loadingWidget: () => const Center(child: CircularProgressIndicator()),
-      source: TablePermisos(pageSize: 12),
+      source: TableUsuarios(pageSize: 12),
       columns: const [
         DataColumn(
           label: Text('Indice'),
@@ -25,8 +26,13 @@ class PaginatedTablePermisos extends StatelessWidget {
         DataColumn(
           label: Text('Nombre'),
         ),
-        DataColumn(label: Text('Actualizar')),
-        DataColumn(label: Text('Eliminar'))
+        DataColumn(
+          label: Text('Correo'),
+        ),
+        DataColumn(
+          label: Text('Rol'),
+        ),
+        DataColumn(label: Text('Actualizar'))
       ],
       columnSpacing: 30,
       rowsPerPage: 12,
@@ -35,12 +41,11 @@ class PaginatedTablePermisos extends StatelessWidget {
   }
 }
 
-class TablePermisos extends AdvancedDataTableSource<PermisosData> {
-  TablePermisos({required this.pageSize});
+class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
+  TableUsuarios({required this.pageSize});
   final user = locator<AuthenticationClient>().loadSession;
-  final _permisosAPI = locator<PermisosAPI>();
+  final _usuariosAPI = locator<UsuariosAPI>();
   int pageSize;
-
   @override
   DataRow? getRow(int index) {
     final currentRowData = lastDetails!.rows[index];
@@ -50,11 +55,19 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
             .toString()),
       ),
       DataCell(
-        Text(currentRowData.descripcion),
+        Text(currentRowData.nombreCompleto),
       ),
-      DataCell(IconButton(onPressed: () {}, icon: const Icon(Icons.cached))),
-      DataCell(IconButton(
-          onPressed: () {}, icon: const Icon(Icons.cancel_outlined))),
+      DataCell(
+        Text(currentRowData.email),
+      ),
+      DataCell(Column(
+          children: currentRowData.roles
+              .map((e) => Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Text(e),
+                  ))
+              .toList())),
+      DataCell(IconButton(onPressed: () {}, icon: const Icon(Icons.person))),
     ]);
   }
 
@@ -63,9 +76,9 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
   int currentPage = 0;
   int offset = 0;
   int totalCount = 0;
-  List<PermisosData> data = [];
+  List<UsuariosData> data = [];
   @override
-  Future<RemoteDataSourceDetails<PermisosData>> getNextPage(
+  Future<RemoteDataSourceDetails<UsuariosData>> getNextPage(
       NextPageRequest pageRequest) async {
     if (offset > pageRequest.offset) {
       currentPage = currentPage - 1;
@@ -75,22 +88,32 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
       offset = pageRequest.offset;
       return RemoteDataSourceDetails(totalCount, dataList);
     } else {
-      var resp = await _permisosAPI.getPermisos(
+      var resp = await _usuariosAPI.getUsuarios(
           token: user.token,
           pageNumber: currentPage + 1,
           pageSize: pageRequest.pageSize);
-      if (resp is Success<PermisosResponse>) {
+      if (resp is Success<UsuariosResponse>) {
         for (var element in resp.response.data) {
           data.add(element);
         }
-        offset = pageRequest.offset;
-        totalCount = resp.response.totalCount;
-        currentPage = currentPage + 1;
+        for (var element in resp.response.data) {
+          var resp2 = await _usuariosAPI.getRolUsuario(
+              token: user.token, id: element.id);
+          if (resp2 is Success<RolUsuarioResponse>) {
+            for (var element2 in resp2.response.data) {
+              element.roles.add(element2.description);
+              element.idRoles.add(element2.roleId);
+            }
+            offset = pageRequest.offset;
+            totalCount = resp.response.totalCount;
+            currentPage = currentPage + 1;
+          }
+        }
         return RemoteDataSourceDetails(
             resp.response.totalCount, resp.response.data);
-      } else {
-        throw Exception('Unable to query remote server');
-      }
+      } else if (resp is Failure) {}
     }
+
+    throw Exception('Unable to query remote server');
   }
 }
