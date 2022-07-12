@@ -1,3 +1,5 @@
+import 'package:tasaciones_app/views/home/home_view.dart';
+
 import '../../core/base/base_service.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,13 @@ class NavigatorService extends BaseService {
     log.i('navigateToPageWithReplacement: '
         'routeName: $routeName');
     return navigatorKey.currentState?.pushReplacementNamed(routeName);
+  }
+
+  Future<dynamic> navigateToPageAndRemoveUntilToHome(String routeName) async {
+    log.i('navigateToPageAndRemoveUntilToHome: '
+        'routeName: $routeName');
+    return navigatorKey.currentState?.restorablePushNamedAndRemoveUntil(
+        routeName, ModalRoute.withName(HomeView.routeName));
   }
 
   void pop<T>([T? result]) {

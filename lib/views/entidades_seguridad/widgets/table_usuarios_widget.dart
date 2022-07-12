@@ -1,0 +1,130 @@
+import 'package:advanced_datatable/advanced_datatable_source.dart';
+import 'package:advanced_datatable/datatable.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:tasaciones_app/core/models/usuarios_response.dart';
+
+import '../../../core/api/usuarios_api.dart';
+import '../../../core/api/api_status.dart';
+import '../../../core/authentication_client.dart';
+import '../../../core/locator.dart';
+import '../../../core/models/usuarios_response.dart';
+import '../../../theme/theme.dart';
+
+class PaginatedTableUsuarios {
+  late BuildContext context;
+  PaginatedTableUsuarios({required this.context});
+  Widget table() {
+    return AdvancedPaginatedDataTable(
+      loadingWidget: () => Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .30),
+        child: const SpinKitFadingCircle(
+          color: AppColors.brownDark,
+          size: 90.0,
+        ),
+      ),
+      source: TableUsuarios(pageSize: 12),
+      columns: const [
+        DataColumn(
+          label: Text('Indice'),
+        ),
+        DataColumn(
+          label: Text('Nombre'),
+        ),
+        DataColumn(
+          label: Text('Correo'),
+        ),
+        DataColumn(
+          label: Text('Rol'),
+        ),
+        DataColumn(label: Text('Actualizar'))
+      ],
+      columnSpacing: 30,
+      rowsPerPage: 12,
+      showCheckboxColumn: false,
+    );
+  }
+}
+
+class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
+  TableUsuarios({required this.pageSize});
+  final user = locator<AuthenticationClient>().loadSession;
+  final _usuariosAPI = locator<UsuariosAPI>();
+  int pageSize;
+
+  @override
+  DataRow? getRow(int index) {
+    final currentRowData = lastDetails!.rows[index];
+    return DataRow(cells: [
+      DataCell(
+        Text((data.indexWhere((element) => element == currentRowData) + 1)
+            .toString()),
+      ),
+      DataCell(
+        Text(currentRowData.nombreCompleto),
+      ),
+      DataCell(
+        Text(currentRowData.email),
+      ),
+      DataCell(Column(
+          children: currentRowData.roles
+              .map((e) => Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Text(e),
+                  ))
+              .toList())),
+      DataCell(IconButton(
+          onPressed: () {
+            _usuariosAPI.getUsuario(
+                token: user.token, id: currentRowData.id.toString());
+          },
+          icon: const Icon(Icons.person))),
+    ]);
+  }
+
+  @override
+  int get selectedRowCount => 0;
+  int currentPage = 0;
+  int offset = 0;
+  int totalCount = 0;
+  List<UsuariosData> data = [];
+  @override
+  Future<RemoteDataSourceDetails<UsuariosData>> getNextPage(
+      NextPageRequest pageRequest) async {
+    if (offset > pageRequest.offset) {
+      currentPage = currentPage - 1;
+      data.removeRange(offset, offset + pageSize);
+      var dataPerRange = data.getRange(pageRequest.offset, offset);
+      var dataList = dataPerRange.map((e) => e).toList();
+      offset = pageRequest.offset;
+      return RemoteDataSourceDetails(totalCount, dataList);
+    } else {
+      var resp = await _usuariosAPI.getUsuarios(
+          token: user.token,
+          pageNumber: currentPage + 1,
+          pageSize: pageRequest.pageSize);
+      if (resp is Success<UsuariosResponse>) {
+        for (var element in resp.response.data) {
+          data.add(element);
+        }
+        for (var element in resp.response.data) {
+          var resp2 = await _usuariosAPI.getRolUsuario(
+              token: user.token, id: element.id);
+          if (resp2 is Success<RolUsuarioResponse>) {
+            for (var element2 in resp2.response.data) {
+              element.roles.add(element2.description);
+              element.idRoles.add(element2.roleId);
+            }
+            offset = pageRequest.offset;
+            totalCount = resp.response.totalCount;
+            currentPage = currentPage + 1;
+          }
+        }
+        return RemoteDataSourceDetails(
+            resp.response.totalCount, resp.response.data);
+      } else if (resp is Failure) {}
+    }
+
+    throw Exception('Unable to query remote server');
+  }
+}

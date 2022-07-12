@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/theme/theme.dart';
 
 class Http {
   late Dio _dio;
@@ -25,15 +26,17 @@ class Http {
     T Function(dynamic data)? parser,
   }) async {
     try {
-      final response = await _dio.request<Map<String, dynamic>>(
-        path,
-        options: Options(
-          method: method,
-          headers: headers,
-        ),
-        queryParameters: queryParameters,
-        data: data,
-      );
+      final response = await _dio
+          .request<Map<String, dynamic>>(
+            path,
+            options: Options(
+              method: method,
+              headers: headers,
+            ),
+            queryParameters: queryParameters,
+            data: data,
+          )
+          .timeout(durationLoading);
       if (_logsEnabled) _logger.i(response.data);
       if (parser != null) {
         return Success<T>(response: parser(response.data));

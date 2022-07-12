@@ -6,12 +6,12 @@ import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
+import 'package:tasaciones_app/core/providers/permisos_provider.dart';
 
-import '../../core/api/api_status.dart';
-import '../../core/api/roles_api.dart';
-import '../../core/models/roles_response.dart';
-import '../../core/providers/permisos_provider.dart';
-import '../../widgets/app_dialogs.dart';
+import '../../../core/api/api_status.dart';
+import '../../../core/api/roles_api.dart';
+import '../../../core/models/roles_response.dart';
+import '../../../widgets/app_dialogs.dart';
 
 class HomeViewModel extends BaseViewModel {
   final _authenticationClient = locator<AuthenticationClient>();
@@ -45,11 +45,11 @@ class HomeViewModel extends BaseViewModel {
     loading = true;
     var resp = await _rolesAPI.getRoles(token: _user.token);
     if (resp is Success<RolResponse>) {
-      for (var rolUser in _user.role) {
-        for (var rolData in resp.response.data) {
-          await getPermisos(context, rolUser, rolData);
-        }
-      }
+      // for (var rolUser in _user.role) {
+      //   for (var rolData in resp.response.data) {
+      //     // await getPermisos(context, rolUser, rolData);
+      //   }
+      // }
       loading = false;
     } else if (resp is Failure) {
       Dialogs.alert(
@@ -68,8 +68,8 @@ class HomeViewModel extends BaseViewModel {
           await _rolesAPI.getRolesClaims(idRol: data.id, token: _user.token);
       if (resp is Success<RolClaimsResponse>) {
         for (var rolData in resp.response.data) {
-          Provider.of<PermisosProvider>(context, listen: false).permiso =
-              rolData;
+          Provider.of<PermisosUserProvider>(context, listen: false)
+              .permisoUser = rolData;
         }
       } else if (resp is Failure) {
         Dialogs.alert(

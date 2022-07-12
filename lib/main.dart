@@ -34,7 +34,7 @@ class MainApplication extends StatelessWidget {
         navigatorKey: locator<NavigatorService>().navigatorKey,
         onGenerateRoute: generateRoute,
         initialRoute: LoginView.routeName,
-        theme: theme,
+        theme: myTheme,
         builder: (context, child) {
           return NoScaleTextWidget(
             child: child!,

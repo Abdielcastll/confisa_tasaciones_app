@@ -7,8 +7,8 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
-import 'package:tasaciones_app/views/home/home_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
+import 'package:tasaciones_app/views/home/home_view.dart';
 
 class LoginViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();

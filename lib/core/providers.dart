@@ -19,6 +19,6 @@ class ProviderInjector {
   static final List<SingleChildWidget> _dependentServices = [];
 
   static final List<SingleChildWidget> _consumableServices = [
-    ChangeNotifierProvider(create: (context) => PermisosProvider())
+    ChangeNotifierProvider(create: (context) => PermisosUserProvider())
   ];
 }
