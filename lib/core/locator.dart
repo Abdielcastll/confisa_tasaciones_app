@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tasaciones_app/core/api/acciones_api.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
 import 'package:tasaciones_app/core/api/http.dart';
@@ -12,6 +13,7 @@ import '../core/services/navigator_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
+import 'api/recursos_api.dart';
 import 'api/usuarios_api.dart';
 
 GetIt locator = GetIt.instance;
@@ -36,13 +38,17 @@ abstract class DependencyInjection {
     final rolesAPI = RolesAPI(http);
     final permisosAPI = PermisosAPI(http);
     final usuariosAPI = UsuariosAPI(http);
+    final accionesAPI = AccionesAPI(http);
+    final recursosAPI = RecursosAPI(http);
     final authenticationClient =
         AuthenticationClient(storage, authenticationAPI);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
+    locator.registerSingleton<AccionesAPI>(accionesAPI);
     locator.registerSingleton<PermisosAPI>(permisosAPI);
     locator.registerSingleton<UsuariosAPI>(usuariosAPI);
+    locator.registerSingleton<RecursosAPI>(recursosAPI);
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
   }
 }

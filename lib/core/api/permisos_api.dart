@@ -6,7 +6,7 @@ class PermisosAPI {
   PermisosAPI(this._http);
 
   Future<Object> getPermisos(
-      {required String token, int pageNumber = 1, int pageSize = 12}) {
+      {required String token, int pageNumber = 1, int pageSize = 100}) {
     return _http.request(
       '/api/permisos/get?PageSize=$pageSize&PageNumber=$pageNumber',
       method: 'GET',
