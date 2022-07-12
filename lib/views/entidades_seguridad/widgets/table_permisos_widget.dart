@@ -15,6 +15,7 @@ class PaginatedTablePermisos {
   AdvancedPaginatedDataTable table() {
     return AdvancedPaginatedDataTable(
       loadingWidget: () => const Center(child: CircularProgressIndicator()),
+      errorWidget: () => const Center(child: CircularProgressIndicator()),
       source: TablePermisos(pageSize: 12, context: context),
       columns: const [
         DataColumn(
