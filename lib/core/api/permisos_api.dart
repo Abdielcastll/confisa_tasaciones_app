@@ -1,17 +1,19 @@
 import 'package:tasaciones_app/core/api/http.dart';
+import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/models/permisos_response.dart';
 
 class PermisosAPI {
   final Http _http;
-  PermisosAPI(this._http);
+  final AuthenticationClient _authenticationClient;
+  PermisosAPI(this._http, this._authenticationClient);
 
-  Future<Object> getPermisos(
-      {required String token, int pageNumber = 1, int pageSize = 12}) {
+  Future<Object> getPermisos({int pageNumber = 1, int pageSize = 100}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/permisos/get?PageSize=$pageSize&PageNumber=$pageNumber',
       method: 'GET',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return PermisosResponse.fromJson(data);
@@ -20,38 +22,36 @@ class PermisosAPI {
   }
 
   Future<Object> createPermisos(
-      {required String token,
-      required int id,
-      required String descripcion,
+      {required String descripcion,
       required int idAccion,
       required int idRecurso,
-      required int esBasico}) {
+      required int esBasico}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/permisos/create',
       method: 'POST',
       data: {
-        "id": id,
         "descripcion": descripcion,
         "idAccion": idAccion,
         "idRecurso": idRecurso,
         "esBasico": esBasico
       },
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
-        return PermisosResponse.fromJson(data);
+        return PermisosData.fromJson(data);
       },
     );
   }
 
   Future<Object> updatePermisos(
-      {required String token,
-      required int id,
+      {required int id,
       required String descripcion,
       required int idAccion,
       required int idRecurso,
-      required int esBasico}) {
+      required int esBasico}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/permisos/update',
       method: 'POST',
@@ -63,7 +63,7 @@ class PermisosAPI {
         "esBasico": esBasico
       },
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return PermisosResponse.fromJson(data);
@@ -71,12 +71,13 @@ class PermisosAPI {
     );
   }
 
-  Future<Object> deletePermisos({required String token, required int id}) {
+  Future<Object> deletePermisos({required int id}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/permisos/delete/$id',
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return PermisosPOSTResponse.fromJson(data);

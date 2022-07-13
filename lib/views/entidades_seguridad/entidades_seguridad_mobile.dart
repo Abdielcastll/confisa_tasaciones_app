@@ -54,9 +54,9 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
                       ))),
                 ),
                 Expanded(child: Container()),
-                Row(
-                  children: vm.buttons,
-                )
+                // Row(
+                //   children: vm.buttons,
+                // )
               ],
             ),
             vm.dataTable

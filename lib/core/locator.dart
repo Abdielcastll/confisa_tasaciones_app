@@ -14,6 +14,7 @@ import '../core/services/navigator_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
+import 'api/recursos_api.dart';
 import 'api/usuarios_api.dart';
 
 GetIt locator = GetIt.instance;
@@ -35,18 +36,21 @@ abstract class DependencyInjection {
     final storage = await SharedPreferences.getInstance();
 
     final authenticationAPI = AuthenticationAPI(http);
-    final rolesAPI = RolesAPI(http);
-    final permisosAPI = PermisosAPI(http);
-    final usuariosAPI = UsuariosAPI(http);
+
     final authenticationClient =
         AuthenticationClient(storage, authenticationAPI);
     final personalApi = PersonalApi(http, authenticationClient);
     final accionesApi = AccionesApi(http, authenticationClient);
+    final rolesAPI = RolesAPI(http, authenticationClient);
+    final permisosAPI = PermisosAPI(http, authenticationClient);
+    final usuariosAPI = UsuariosAPI(http, authenticationClient);
+    final recursosAPI = RecursosAPI(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
     locator.registerSingleton<PermisosAPI>(permisosAPI);
     locator.registerSingleton<UsuariosAPI>(usuariosAPI);
+    locator.registerSingleton<RecursosAPI>(recursosAPI);
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
     locator.registerSingleton<PersonalApi>(personalApi);
     locator.registerSingleton<AccionesApi>(accionesApi);

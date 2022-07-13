@@ -10,6 +10,7 @@ import '../../../core/authentication_client.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/usuarios_response.dart';
 import '../../../theme/theme.dart';
+import '../../../widgets/app_dialogs.dart';
 
 class PaginatedTableUsuarios {
   late BuildContext context;
@@ -23,7 +24,7 @@ class PaginatedTableUsuarios {
           size: 90.0,
         ),
       ),
-      source: TableUsuarios(pageSize: 12),
+      source: TableUsuarios(pageSize: 12, context: context),
       columns: const [
         DataColumn(
           label: Text('Indice'),
@@ -47,10 +48,13 @@ class PaginatedTableUsuarios {
 }
 
 class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
-  TableUsuarios({required this.pageSize});
+  TableUsuarios({required this.pageSize, required this.context});
+  late BuildContext context;
   final user = locator<AuthenticationClient>().loadSession;
   final _usuariosAPI = locator<UsuariosAPI>();
   int pageSize;
+  @override
+  bool get forceRemoteReload => super.forceRemoteReload = true;
 
   @override
   DataRow? getRow(int index) {
@@ -75,8 +79,7 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
               .toList())),
       DataCell(IconButton(
           onPressed: () {
-            _usuariosAPI.getUsuario(
-                token: user.token, id: currentRowData.id.toString());
+            _usuariosAPI.getUsuario(id: currentRowData.id.toString());
           },
           icon: const Icon(Icons.person))),
     ]);
@@ -100,16 +103,13 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
       return RemoteDataSourceDetails(totalCount, dataList);
     } else {
       var resp = await _usuariosAPI.getUsuarios(
-          token: user.token,
-          pageNumber: currentPage + 1,
-          pageSize: pageRequest.pageSize);
+          pageNumber: currentPage + 1, pageSize: pageRequest.pageSize);
       if (resp is Success<UsuariosResponse>) {
         for (var element in resp.response.data) {
           data.add(element);
         }
         for (var element in resp.response.data) {
-          var resp2 = await _usuariosAPI.getRolUsuario(
-              token: user.token, id: element.id);
+          var resp2 = await _usuariosAPI.getRolUsuario(id: element.id);
           if (resp2 is Success<RolUsuarioResponse>) {
             for (var element2 in resp2.response.data) {
               element.roles.add(element2.description);
@@ -118,11 +118,21 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
             offset = pageRequest.offset;
             totalCount = resp.response.totalCount;
             currentPage = currentPage + 1;
+          } else if (resp2 is Failure) {
+            Dialogs.alert(context,
+                tittle: "Error de Conexion",
+                description: ["Fallo al conectar a la red"]);
+            throw Exception('Unable to query remote server');
           }
         }
         return RemoteDataSourceDetails(
             resp.response.totalCount, resp.response.data);
-      } else if (resp is Failure) {}
+      } else if (resp is Failure) {
+        Dialogs.alert(context,
+            tittle: "Error de Conexion",
+            description: ["Fallo al conectar a la red"]);
+        throw Exception('Unable to query remote server');
+      }
     }
 
     throw Exception('Unable to query remote server');

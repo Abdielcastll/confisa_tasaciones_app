@@ -1,4 +1,5 @@
 import '../authentication_client.dart';
+import '../models/acciones_response.dart';
 import 'http.dart';
 
 class AccionesApi {
@@ -18,9 +19,9 @@ class AccionesApi {
         "PageSize": pageSize,
         "PageNumber": pageNumber,
       },
-      // parser: (data) {
-      //   return ProfileResponse.fromJson(data);
-      // },
+      parser: (data) {
+        return AccionesResponse.fromJson(data);
+      },
     );
   }
 }

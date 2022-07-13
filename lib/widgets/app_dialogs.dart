@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
@@ -41,9 +42,37 @@ abstract class Dialogs {
       ),
     );
   }
+
+  static confirm(
+    BuildContext context, {
+    required String tittle,
+    required String description,
+    required Function confirm,
+  }) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text(tittle),
+              content: Text(description),
+              actions: [
+                // The "Yes" button
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(_);
+                      confirm();
+                    },
+                    child: const Text('Si')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(_);
+                    },
+                    child: const Text('No'))
+              ],
+            ));
+  }
 }
 
-/*abstract class ProgressDialog {
+abstract class ProgressDialog {
   static show(BuildContext context) {
     showCupertinoModalPopup(
         context: context,
@@ -65,4 +94,4 @@ abstract class Dialogs {
   static dissmiss(BuildContext context) {
     Navigator.pop(context);
   }
-}*/
+}
