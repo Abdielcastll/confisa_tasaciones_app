@@ -43,7 +43,7 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> getRoles(BuildContext context) async {
     loading = true;
-    var resp = await _rolesAPI.getRoles(token: _user.token);
+    var resp = await _rolesAPI.getRoles();
     if (resp is Success<RolResponse>) {
       // for (var rolUser in _user.role) {
       //   for (var rolData in resp.response.data) {
