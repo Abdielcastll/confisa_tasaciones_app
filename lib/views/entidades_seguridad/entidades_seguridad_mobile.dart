@@ -54,9 +54,15 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
                       ))),
                 ),
                 Expanded(child: Container()),
-                // Row(
-                //   children: vm.buttons,
-                // )
+                Row(
+                  children: [
+                    vm.button1,
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    vm.button2
+                  ],
+                )
               ],
             ),
             vm.dataTable
