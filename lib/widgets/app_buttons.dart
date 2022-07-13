@@ -28,3 +28,32 @@ class AppButtonLogin extends StatelessWidget {
     );
   }
 }
+
+class AppButton extends StatelessWidget {
+  final String text;
+  final void Function() onPressed;
+  final Color color;
+  const AppButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+    required this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: onPressed,
+      minWidth: MediaQuery.of(context).size.width * .35,
+      child: Text(text,
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              ?.copyWith(color: Colors.white)),
+      color: color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
+  }
+}

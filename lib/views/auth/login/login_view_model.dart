@@ -15,8 +15,10 @@ class LoginViewModel extends BaseViewModel {
   final _authenticationAPI = locator<AuthenticationAPI>();
   final _autenticationClient = locator<AuthenticationClient>();
   bool _loading = false;
-  TextEditingController tcEmail = TextEditingController();
-  TextEditingController tcPassword = TextEditingController();
+  TextEditingController tcEmail =
+      TextEditingController(text: 'abdielcastll@gmail.com');
+  TextEditingController tcPassword =
+      TextEditingController(text: '123Pa\$\$word!');
   bool obscurePassword = true;
 
   bool get loading => _loading;

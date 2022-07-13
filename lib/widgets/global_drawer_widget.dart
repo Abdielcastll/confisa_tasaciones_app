@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
+import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/entidades_seguridad_view.dart';
+import 'package:tasaciones_app/views/home/home_view.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';
@@ -90,24 +92,36 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
             padding:
                 const EdgeInsets.only(top: 15, left: 8, right: 8, bottom: 8),
             child: Column(
-              /* Recorrido de la lista de role claims que devuelve las opciones del menu */
-              children: list
-                  .map(
-                    (e) => ListTile(
-                      title: Text(
-                        e.descripcion,
-                        style: const TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w500),
-                      ),
-                      onTap: () {
-                        _navigationService.pop();
-                        _navigationService.navigateToPageAndRemoveUntilToHome(
-                            EntidadesSeguridadView.routeName);
-                      },
+                /* Recorrido de la lista de role claims que devuelve las opciones del menu */
+                children: [
+                  ...list
+                      .map(
+                        (e) => ListTile(
+                          title: Text(
+                            e.descripcion,
+                            style: const TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.w500),
+                          ),
+                          onTap: () {
+                            _navigationService.pop();
+                            _navigationService.navigateToPage(
+                                EntidadesSeguridadView.routeName);
+                          },
+                        ),
+                      )
+                      .toList(),
+                  ListTile(
+                    title: const Text(
+                      'Perfil',
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                     ),
-                  )
-                  .toList(),
-            ),
+                    onTap: () {
+                      _navigationService.pop();
+                      _navigationService.navigateToPage(PerfilView.routeName);
+                    },
+                  ),
+                ]),
           )
         ],
       ),

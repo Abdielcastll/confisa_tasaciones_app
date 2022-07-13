@@ -7,7 +7,9 @@ import '../theme/theme.dart';
 class ProgressWidget extends StatelessWidget {
   final Widget child;
   final bool inAsyncCall;
+  final bool opacity;
   const ProgressWidget({
+    this.opacity = true,
     required this.child,
     required this.inAsyncCall,
     Key? key,
@@ -22,7 +24,7 @@ class ProgressWidget extends StatelessWidget {
         color: AppColors.brownDark,
         size: 90.0,
       ),
-      opacity: 0.3,
+      opacity: opacity ? 0.3 : 1.0,
       color: Colors.white,
       child: child,
     );

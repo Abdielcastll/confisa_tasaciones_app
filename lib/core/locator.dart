@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tasaciones_app/core/api/acciones_api.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/api/permisos_api.dart';
+import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 
@@ -38,11 +40,15 @@ abstract class DependencyInjection {
     final usuariosAPI = UsuariosAPI(http);
     final authenticationClient =
         AuthenticationClient(storage, authenticationAPI);
+    final personalApi = PersonalApi(http, authenticationClient);
+    final accionesApi = AccionesApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
     locator.registerSingleton<PermisosAPI>(permisosAPI);
     locator.registerSingleton<UsuariosAPI>(usuariosAPI);
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
+    locator.registerSingleton<PersonalApi>(personalApi);
+    locator.registerSingleton<AccionesApi>(accionesApi);
   }
 }

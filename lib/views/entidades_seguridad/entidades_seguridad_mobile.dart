@@ -9,7 +9,7 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      drawer: GlobalDrawerDartDesktop(),
+      // drawer: GlobalDrawerDartDesktop(),
       backgroundColor: Colors.white,
       appBar: const Appbar(titulo: "Configuración de Seguridad", textSize: 13),
       body: SingleChildScrollView(

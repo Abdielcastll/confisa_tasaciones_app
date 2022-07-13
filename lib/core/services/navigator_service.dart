@@ -18,10 +18,16 @@ class NavigatorService extends BaseService {
     return navigatorKey.currentState?.pushReplacementNamed(routeName);
   }
 
+  Future<dynamic> navigateToHome() async {
+    log.i('navigateToPageWithReplacement: '
+        'routeName: HOME');
+    return navigatorKey.currentState?.pushReplacementNamed(HomeView.routeName);
+  }
+
   Future<dynamic> navigateToPageAndRemoveUntilToHome(String routeName) async {
     log.i('navigateToPageAndRemoveUntilToHome: '
         'routeName: $routeName');
-    return navigatorKey.currentState?.restorablePushNamedAndRemoveUntil(
+    return navigatorKey.currentState?.pushNamedAndRemoveUntil(
         routeName, ModalRoute.withName(HomeView.routeName));
   }
 
