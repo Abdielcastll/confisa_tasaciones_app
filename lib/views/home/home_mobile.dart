@@ -22,8 +22,7 @@ class _HomeMobile extends StatelessWidget {
                 onPressed: () async {
                   final _permisosAPI = locator<PermisosAPI>();
                   ProgressDialog.show(context);
-                  var resp =
-                      await _permisosAPI.getPermisos(token: vm.user.token);
+                  var resp = await _permisosAPI.getPermisos();
                   if (resp is Success<PermisosResponse>) {
                     ProgressDialog.dissmiss(context);
                   } else if (resp is Failure) {

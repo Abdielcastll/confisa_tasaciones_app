@@ -1,17 +1,20 @@
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 
+import '../authentication_client.dart';
+
 class UsuariosAPI {
   final Http _http;
-  UsuariosAPI(this._http);
+  final AuthenticationClient _authenticationClient;
+  UsuariosAPI(this._http, this._authenticationClient);
 
-  Future<Object> getUsuarios(
-      {required String token, int pageNumber = 1, int pageSize = 100}) {
+  Future<Object> getUsuarios({int pageNumber = 1, int pageSize = 100}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/users/get?PageSize=$pageSize&PageNumber=$pageNumber',
       method: 'GET',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return UsuariosResponse.fromJson(data);
@@ -19,12 +22,13 @@ class UsuariosAPI {
     );
   }
 
-  Future<Object> getUsuario({required String token, required String id}) {
+  Future<Object> getUsuario({required String id}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/users/get/$id',
       method: 'GET',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return UsuariosResponse.fromJson(data);
@@ -32,12 +36,13 @@ class UsuariosAPI {
     );
   }
 
-  Future<Object> getRolUsuario({required String token, required String id}) {
+  Future<Object> getRolUsuario({required String id}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/users/get/$id/roles',
       method: 'GET',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return RolUsuarioResponse.fromJson(data);
@@ -46,12 +51,12 @@ class UsuariosAPI {
   }
 
   Future<Object> createUsuarios(
-      {required String token,
-      required int id,
+      {required int id,
       required String descripcion,
       required int idAccion,
       required int idRecurso,
-      required int esBasico}) {
+      required int esBasico}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/Usuarios/create',
       method: 'POST',
@@ -63,7 +68,7 @@ class UsuariosAPI {
         "esBasico": esBasico
       },
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return UsuariosResponse.fromJson(data);
@@ -72,12 +77,12 @@ class UsuariosAPI {
   }
 
   Future<Object> updateUsuarios(
-      {required String token,
-      required int id,
+      {required int id,
       required String descripcion,
       required int idAccion,
       required int idRecurso,
-      required int esBasico}) {
+      required int esBasico}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/Usuarios/update',
       method: 'POST',
@@ -89,7 +94,7 @@ class UsuariosAPI {
         "esBasico": esBasico
       },
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return UsuariosResponse.fromJson(data);
@@ -97,12 +102,13 @@ class UsuariosAPI {
     );
   }
 
-  Future<Object> deleteUsuarios({required String token, required int id}) {
+  Future<Object> deleteUsuarios({required int id}) async {
+    String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/Usuarios/delete/?id=$id',
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return UsuariosResponse.fromJson(data);

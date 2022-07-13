@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/permisos_api.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/core/models/acciones_response.dart';
 import 'package:tasaciones_app/core/models/recursos_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/formCrearPermiso.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_permiso.dart';
 import 'package:tasaciones_app/widgets/app_circle_icon_button.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_permisos_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_usuarios_widget.dart';
@@ -33,6 +34,7 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
 
   final _accionesApi = locator<AccionesAPI>();
   final _recursosApi = locator<RecursosAPI>();
+  final _permisosApi = locator<PermisosAPI>();
 
   late Session _user;
 
@@ -80,14 +82,14 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
       String opcion, BuildContext context) async {
     switch (opcion) {
       case "Permisos":
-        String firstName = "";
-        String lastName = "";
-        String bodyTemp = "";
-        var measure;
+        String descripcion = "";
+        Map<String, dynamic> accion = {};
+        Map<String, dynamic> recurso = {};
+        dynamic opcion;
         ProgressDialog.show(context);
-        var resp = await _accionesApi.getAcciones(token: user.token);
+        var resp = await _accionesApi.getAcciones();
         if (resp is Success<AccionesResponse>) {
-          var resp2 = await _recursosApi.getRecursos(token: user.token);
+          var resp2 = await _recursosApi.getRecursos();
           if (resp2 is Success<RecursosResponse>) {
             ProgressDialog.dissmiss(context);
             final GlobalKey<FormState> _formKey = GlobalKey();
@@ -100,14 +102,34 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
                       return AlertDialog(
                           clipBehavior: Clip.none,
                           content: formCrearPermiso(
-                              _formKey,
-                              firstName,
-                              lastName,
-                              bodyTemp,
-                              measure,
-                              () {},
-                              resp.response.data,
-                              resp2.response.data),
+                            _formKey,
+                            descripcion,
+                            recurso,
+                            accion,
+                            (String descripcionf) async {
+                              ProgressDialog.show(context);
+                              var creacion = await _permisosApi.createPermisos(
+                                  descripcion: descripcionf,
+                                  idAccion: accion["id"],
+                                  idRecurso: recurso["id"],
+                                  esBasico: 1);
+                              if (creacion is Success<PermisosData>) {
+                                ProgressDialog.dissmiss(context);
+                                Dialogs.alert(context,
+                                    tittle: "Creacion exitosa",
+                                    description: ["Permiso creado con exito"]);
+                                _formKey.currentState?.reset();
+                              } else if (creacion is Failure) {
+                                ProgressDialog.dissmiss(context);
+                                Dialogs.alert(context,
+                                    tittle: creacion.supportMessage,
+                                    description: creacion.messages);
+                              }
+                            },
+                            opcion,
+                            resp.response.data,
+                            resp2.response.data,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ));

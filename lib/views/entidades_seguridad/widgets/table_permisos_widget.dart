@@ -65,23 +65,30 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
           icon: const Icon(Icons.cached))),
       DataCell(IconButton(
           onPressed: () async {
-            ProgressDialog.show(context);
-            var resp = await _permisosAPI.deletePermisos(
-                token: user.token, id: currentRowData.id);
-            if (resp is Success<PermisosPOSTResponse>) {
-              ProgressDialog.dissmiss(context);
-              Dialogs.alert(context,
-                  tittle: "Eliminado con exito", description: ["description"]);
-              currentPage = 0;
-              offset = 0;
-              totalCount = 0;
-              data = [];
-              setNextView();
-            } else if (resp is Failure) {
-              ProgressDialog.dissmiss(context);
-              Dialogs.alert(context,
-                  tittle: "Eliminacion fallida", description: ["description"]);
-            }
+            Dialogs.confirm(context,
+                tittle: "Eliminar Permiso",
+                description: "Esta seguro que desea eliminar el permiso?",
+                confirm: () async {
+              ProgressDialog.show(context);
+              var resp =
+                  await _permisosAPI.deletePermisos(id: currentRowData.id);
+              if (resp is Success<PermisosPOSTResponse>) {
+                ProgressDialog.dissmiss(context);
+                Dialogs.alert(context,
+                    tittle: "Eliminado con exito",
+                    description: ["description"]);
+                currentPage = 0;
+                offset = 0;
+                totalCount = 0;
+                data = [];
+                setNextView();
+              } else if (resp is Failure) {
+                ProgressDialog.dissmiss(context);
+                Dialogs.alert(context,
+                    tittle: "Eliminacion fallida",
+                    description: ["description"]);
+              }
+            });
           },
           icon: const Icon(Icons.cancel_outlined))),
     ]);
@@ -105,9 +112,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
       return RemoteDataSourceDetails(totalCount, dataList);
     } else {
       var resp = await _permisosAPI.getPermisos(
-          token: user.token,
-          pageNumber: currentPage + 1,
-          pageSize: pageRequest.pageSize);
+          pageNumber: currentPage + 1, pageSize: pageRequest.pageSize);
       if (resp is Success<PermisosResponse>) {
         for (var element in resp.response.data) {
           data.add(element);

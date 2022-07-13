@@ -35,13 +35,14 @@ abstract class DependencyInjection {
     final storage = await SharedPreferences.getInstance();
 
     final authenticationAPI = AuthenticationAPI(http);
-    final rolesAPI = RolesAPI(http);
-    final permisosAPI = PermisosAPI(http);
-    final usuariosAPI = UsuariosAPI(http);
-    final accionesAPI = AccionesAPI(http);
-    final recursosAPI = RecursosAPI(http);
+
     final authenticationClient =
         AuthenticationClient(storage, authenticationAPI);
+    final rolesAPI = RolesAPI(http, authenticationClient);
+    final permisosAPI = PermisosAPI(http, authenticationClient);
+    final usuariosAPI = UsuariosAPI(http, authenticationClient);
+    final accionesAPI = AccionesAPI(http, authenticationClient);
+    final recursosAPI = RecursosAPI(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);

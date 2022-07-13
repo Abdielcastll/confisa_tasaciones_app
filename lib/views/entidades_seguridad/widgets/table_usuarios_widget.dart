@@ -72,8 +72,7 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
               .toList())),
       DataCell(IconButton(
           onPressed: () {
-            _usuariosAPI.getUsuario(
-                token: user.token, id: currentRowData.id.toString());
+            _usuariosAPI.getUsuario(id: currentRowData.id.toString());
           },
           icon: const Icon(Icons.person))),
     ]);
@@ -97,16 +96,13 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
       return RemoteDataSourceDetails(totalCount, dataList);
     } else {
       var resp = await _usuariosAPI.getUsuarios(
-          token: user.token,
-          pageNumber: currentPage + 1,
-          pageSize: pageRequest.pageSize);
+          pageNumber: currentPage + 1, pageSize: pageRequest.pageSize);
       if (resp is Success<UsuariosResponse>) {
         for (var element in resp.response.data) {
           data.add(element);
         }
         for (var element in resp.response.data) {
-          var resp2 = await _usuariosAPI.getRolUsuario(
-              token: user.token, id: element.id);
+          var resp2 = await _usuariosAPI.getRolUsuario(id: element.id);
           if (resp2 is Success<RolUsuarioResponse>) {
             for (var element2 in resp2.response.data) {
               element.roles.add(element2.description);
