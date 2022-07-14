@@ -3,6 +3,8 @@ import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_permiso.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/mostrar_informacion_widget.dart';
 
 import '../../../core/api/usuarios_api.dart';
 import '../../../core/api/api_status.dart';
@@ -32,7 +34,7 @@ class PaginatedTableUsuarios {
               EdgeInsets.only(top: MediaQuery.of(context).size.height * .30),
           child: const CircularProgressIndicator(color: AppColors.brownDark),
         ),
-        source: TableUsuarios(pageSize: 10, context: context),
+        source: TableUsuarios(pageSize: 12, context: context),
         columns: const [
           DataColumn(
             label: Text('Nombre'),
@@ -43,8 +45,7 @@ class PaginatedTableUsuarios {
           DataColumn(label: Text('Actualizar'))
         ],
         columnSpacing: 30,
-        dataRowHeight: 60,
-        rowsPerPage: 10,
+        rowsPerPage: 12,
         showCheckboxColumn: false,
       ),
     );
@@ -56,12 +57,14 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
   late BuildContext context;
   final user = locator<AuthenticationClient>().loadSession;
   final _usuariosAPI = locator<UsuariosAPI>();
+
   int pageSize;
   @override
   bool get forceRemoteReload => super.forceRemoteReload = true;
 
   @override
   DataRow? getRow(int index) {
+    Size size = MediaQuery.of(context).size;
     final currentRowData = lastDetails!.rows[index];
     return DataRow(cells: [
       DataCell(
@@ -69,14 +72,79 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(currentRowData.nombreCompleto),
-            Column(
-              children: currentRowData.roles
-                  .map((e) => Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Text(e),
-                      ))
-                  .toList(),
+            TextButton(
+              child: Text(currentRowData.nombreCompleto),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: const BorderSide(
+                                color: AppColors.darkOrange, width: 6)),
+                        contentPadding: EdgeInsets.zero,
+                        content: dialogMostrarInformacion(
+                            Container(
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.grey,
+                              ),
+                              height: 100,
+                              width: 100,
+                              child: const Icon(
+                                Icons.person,
+                                size: 70,
+                              ),
+                            ),
+                            [
+                              Text(currentRowData.nombreCompleto,
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.darkOrange)),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(currentRowData.email,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.darkOrange)),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text("Suplidor ${currentRowData.nombreSuplidor}",
+                                  style: appDropdown),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text("Roles ${currentRowData.nombreSuplidor}",
+                                  style: appDropdown),
+                              Column(
+                                children: currentRowData.roles
+                                    .map((e) => Text(e, style: appDropdown))
+                                    .toList(),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                "Telefono ${currentRowData.phoneNumber}",
+                                style: appDropdown,
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              currentRowData.isActive
+                                  ? Text("Estado Activo", style: appDropdown)
+                                  : Text("Estado Inactivo", style: appDropdown)
+                            ],
+                            size),
+                      );
+                    });
+              },
             ),
           ],
         ),
