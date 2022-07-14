@@ -152,3 +152,22 @@ class RolUsuarioData {
         "enabled": enabled,
       };
 }
+
+UsuariosResponse usuarioPOSTResponseFromJson(String str) =>
+    UsuariosResponse.fromJson(json.decode(str));
+
+String usuarioPOSTResponseToJson(UsuariosResponse data) =>
+    json.encode(data.toJson());
+
+class UsuarioPOSTResponse {
+  UsuarioPOSTResponse({required this.data});
+
+  bool data;
+
+  factory UsuarioPOSTResponse.fromJson(Map<String, dynamic> json) =>
+      UsuarioPOSTResponse(data: json["data"]);
+
+  Map<String, dynamic> toJson() => {
+        "data": data,
+      };
+}

@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/theme/theme.dart';
-
-import '../../../core/models/recursos_response.dart';
-import '../../../core/models/acciones_response.dart';
 
 Widget dialogMostrarInformacion(
   Widget imagen,

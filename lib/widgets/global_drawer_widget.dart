@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/entidades_seguridad_view.dart';
-import 'package:tasaciones_app/views/home/home_view.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';

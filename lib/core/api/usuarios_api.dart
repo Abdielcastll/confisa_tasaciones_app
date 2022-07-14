@@ -77,27 +77,69 @@ class UsuariosAPI {
   }
 
   Future<Object> updateUsuarios(
-      {required int id,
-      required String descripcion,
-      required int idAccion,
-      required int idRecurso,
-      required int esBasico}) async {
+      {required String id,
+      required String fullName,
+      required String phoneNumber,
+      required String email}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/Usuarios/update',
-      method: 'POST',
+      '/api/users/update',
+      method: 'PUT',
       data: {
         "id": id,
-        "descripcion": descripcion,
-        "idAccion": idAccion,
-        "idRecurso": idRecurso,
-        "esBasico": esBasico
+        "fullName": fullName,
+        "phoneNumber": phoneNumber,
+        "email": email
       },
       headers: {
         'Authorization': 'Bearer $_token',
       },
       parser: (data) {
-        return UsuariosResponse.fromJson(data);
+        return UsuarioPOSTResponse.fromJson(data);
+      },
+    );
+  }
+
+  Future<Object> updateStatusUsuario(
+      {required String id, required bool status}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/users/change-status',
+      method: 'POST',
+      data: {
+        "activateUser": status,
+        "userId": id,
+      },
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      parser: (data) {
+        return UsuarioPOSTResponse.fromJson(data);
+      },
+    );
+  }
+
+  Future<Object> updateRolUsuario(
+      {required String id, required Map<String, dynamic> rol}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/users/update/$id/roles',
+      method: 'PUT',
+      data: {
+        "userRoles": [
+          {
+            "roleId": rol["id"],
+            "roleName": rol["nombre"],
+            "description": rol["description"],
+            "enabled": true,
+          }
+        ]
+      },
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      parser: (data) {
+        return UsuarioPOSTResponse.fromJson(data);
       },
     );
   }
