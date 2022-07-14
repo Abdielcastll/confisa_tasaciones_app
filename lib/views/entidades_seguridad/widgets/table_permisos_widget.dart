@@ -19,29 +19,35 @@ import '../../../widgets/app_dialogs.dart';
 class PaginatedTablePermisos {
   late BuildContext context;
   PaginatedTablePermisos({required this.context});
-  AdvancedPaginatedDataTable table() {
-    return AdvancedPaginatedDataTable(
-      loadingWidget: () => Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .30),
-        child: const SpinKitFadingCircle(
-          color: AppColors.brownDark,
-          size: 90.0,
+
+  Widget table() {
+    GlobalKey key = GlobalKey();
+    key.currentState?.dispose;
+    return SingleChildScrollView(
+      child: AdvancedPaginatedDataTable(
+        key: key,
+        loadingWidget: () => Padding(
+          padding:
+              EdgeInsets.only(top: MediaQuery.of(context).size.height * .325),
+          child: const CircularProgressIndicator(color: AppColors.brownDark),
         ),
+        errorWidget: () => Padding(
+          padding:
+              EdgeInsets.only(top: MediaQuery.of(context).size.height * .30),
+          child: const CircularProgressIndicator(color: AppColors.brownDark),
+        ),
+        source: TablePermisos(pageSize: 12, context: context),
+        columns: const [
+          DataColumn(
+            label: Text('Nombre'),
+          ),
+          DataColumn(label: Text('Actualizar')),
+          DataColumn(label: Text('Eliminar'))
+        ],
+        columnSpacing: 25,
+        rowsPerPage: 12,
+        showCheckboxColumn: false,
       ),
-      source: TablePermisos(pageSize: 12, context: context),
-      columns: const [
-        DataColumn(
-          label: Text('Indice'),
-        ),
-        DataColumn(
-          label: Text('Nombre'),
-        ),
-        DataColumn(label: Text('Actualizar')),
-        DataColumn(label: Text('Eliminar'))
-      ],
-      columnSpacing: 25,
-      rowsPerPage: 12,
-      showCheckboxColumn: false,
     );
   }
 }
@@ -53,18 +59,17 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
   final _accionesApi = locator<AccionesApi>();
   final _recursosApi = locator<RecursosAPI>();
   final _permisosApi = locator<PermisosAPI>();
+
   @override
   bool get forceRemoteReload => super.forceRemoteReload = true;
+
   int pageSize;
 
   @override
   DataRow? getRow(int index) {
+    final Size size = MediaQuery.of(context).size;
     final currentRowData = lastDetails!.rows[index];
     return DataRow(cells: [
-      DataCell(
-        Text((data.indexWhere((element) => element == currentRowData) + 1)
-            .toString()),
-      ),
       DataCell(
         Text(currentRowData.descripcion),
       ),
@@ -86,40 +91,62 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                          clipBehavior: Clip.none,
+                          contentPadding: EdgeInsets.zero,
                           content: formCrearPermiso(
-                            _formKey,
-                            descripcion,
-                            recurso,
-                            accion,
-                            (String descripcionf) async {
-                              ProgressDialog.show(context);
-                              var creacion = await _permisosApi.createPermisos(
-                                  descripcion: descripcionf,
-                                  idAccion: accion["id"],
-                                  idRecurso: recurso["id"],
-                                  esBasico: 1);
-                              if (creacion is Success<PermisosData>) {
-                                ProgressDialog.dissmiss(context);
-                                Dialogs.alert(context,
-                                    tittle: "Modificacion exitosa",
-                                    description: [
-                                      "Permiso modificado con exito"
-                                    ]);
-                                _formKey.currentState?.reset();
-                              } else if (creacion is Failure) {
-                                ProgressDialog.dissmiss(context);
-                                Dialogs.alert(context,
-                                    tittle: creacion.supportMessage,
-                                    description: creacion.messages);
-                              }
-                            },
-                            opcion,
-                            resp.response.data,
-                            resp2.response.data,
-                          ),
+                              "Modificacion de Permiso",
+                              _formKey,
+                              descripcion,
+                              recurso,
+                              accion, (String descripcionf) async {
+                            ProgressDialog.show(context);
+                            var creacion = await _permisosApi.updatePermisos(
+                                id: currentRowData.id,
+                                descripcion: descripcionf,
+                                idAccion: accion["id"] ?? 0,
+                                idRecurso: recurso["id"] ?? 0,
+                                esBasico: 1);
+                            if (creacion is Success<PermisosPOSTResponse>) {
+                              ProgressDialog.dissmiss(context);
+                              Dialogs.alert(context,
+                                  tittle: "Modificacion exitosa",
+                                  description: [
+                                    "Permiso modificado con exito"
+                                  ]);
+                              currentPage = 0;
+                              offset = 0;
+                              totalCount = 0;
+                              data = [];
+                              _formKey.currentState?.reset();
+                              setNextView();
+                            } else if (creacion is Failure) {
+                              ProgressDialog.dissmiss(context);
+                              Dialogs.alert(context,
+                                  tittle: creacion.supportMessage,
+                                  description: creacion.messages);
+                            }
+                          },
+                              opcion,
+                              resp.response.data,
+                              resp2.response.data,
+                              [
+                                Text("Permiso: ${currentRowData.descripcion}",
+                                    style: appDropdown),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text("Accion: ${currentRowData.accionNombre}",
+                                    style: appDropdown),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text("Recurso: ${currentRowData.recursoNombre}",
+                                    style: appDropdown)
+                              ],
+                              size,
+                              true,
+                              "Modificar"),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(10),
                           ));
                     });
               } else if (resp2 is Failure) {
@@ -180,31 +207,34 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
   @override
   Future<RemoteDataSourceDetails<PermisosData>> getNextPage(
       NextPageRequest pageRequest) async {
+    var resp;
     if (offset > pageRequest.offset) {
       currentPage = currentPage - 1;
-      data.removeRange(offset, offset + pageSize);
-      var dataPerRange = data.getRange(pageRequest.offset, offset);
-      var dataList = dataPerRange.map((e) => e).toList();
-      offset = pageRequest.offset;
-      return RemoteDataSourceDetails(totalCount, dataList);
-    } else {
-      var resp = await _permisosApi.getPermisos(
+      resp = await _permisosApi.getPermisos(
+          pageNumber: currentPage, pageSize: pageRequest.pageSize);
+    } else if (currentPage != 0) {
+      resp = await _permisosApi.getPermisos(
           pageNumber: currentPage + 1, pageSize: pageRequest.pageSize);
-      if (resp is Success<PermisosResponse>) {
-        for (var element in resp.response.data) {
-          data.add(element);
-        }
-        offset = pageRequest.offset;
-        totalCount = resp.response.totalCount;
-        currentPage = currentPage + 1;
-        return RemoteDataSourceDetails(
-            resp.response.totalCount, resp.response.data);
-      } else if (resp is Failure) {
-        Dialogs.alert(context,
-            tittle: "Error de Conexion",
-            description: ["Fallo al conectar a la red"]);
-      }
-      throw Exception('Unable to query remote server');
+      currentPage = currentPage + 1;
+    } else {
+      resp = await _permisosApi.getPermisos(
+          pageNumber: currentPage + 1, pageSize: pageRequest.pageSize);
+      currentPage = currentPage + 1;
     }
+
+    if (resp is Success<PermisosResponse>) {
+      for (var element in resp.response.data) {
+        data.add(element);
+      }
+      offset = pageRequest.offset;
+      totalCount = resp.response.totalCount;
+      return RemoteDataSourceDetails(
+          resp.response.totalCount, resp.response.data);
+    } else if (resp is Failure) {
+      Dialogs.alert(context,
+          tittle: "Error de Conexion",
+          description: ["Fallo al conectar a la red"]);
+    }
+    throw Exception('Unable to query remote server');
   }
 }

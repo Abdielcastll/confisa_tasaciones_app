@@ -9,6 +9,7 @@ class AppColors {
   static const brownLight2 = Color(0xFFAC6D3A);
   static const brownLight = Color(0xFF98470A);
   static const brownDark = Color(0xFF442A19);
+  static const white = Colors.white;
 }
 
 // final theme = ThemeData(

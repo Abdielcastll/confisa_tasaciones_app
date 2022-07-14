@@ -1,6 +1,7 @@
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/models/permisos_response.dart';
+import 'package:tasaciones_app/theme/theme.dart';
 
 class PermisosAPI {
   final Http _http;
@@ -51,7 +52,8 @@ class PermisosAPI {
       required int idAccion,
       required int idRecurso,
       required int esBasico}) async {
-    String _token = await _authenticationClient.accessToken;
+    String _token =
+        await _authenticationClient.accessToken.timeout(durationLoading);
     return _http.request(
       '/api/permisos/update',
       method: 'POST',
@@ -66,7 +68,7 @@ class PermisosAPI {
         'Authorization': 'Bearer $_token',
       },
       parser: (data) {
-        return PermisosResponse.fromJson(data);
+        return PermisosPOSTResponse.fromJson(data);
       },
     );
   }

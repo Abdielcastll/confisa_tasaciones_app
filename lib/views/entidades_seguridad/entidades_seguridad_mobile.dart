@@ -12,7 +12,7 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
       // drawer: GlobalDrawerDartDesktop(),
       backgroundColor: Colors.white,
       appBar: const Appbar(titulo: "Configuración de Seguridad", textSize: 13),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -65,7 +65,11 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
                 )
               ],
             ),
-            vm.dataTable
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Container(height: size.height * .82, child: vm.dataTable),
+              physics: const BouncingScrollPhysics(),
+            )
           ],
         ),
       ),

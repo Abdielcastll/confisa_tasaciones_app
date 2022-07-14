@@ -81,6 +81,7 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
 
   Future<void> onDropDownChangeButtons(
       String opcion, BuildContext context) async {
+    Size size = MediaQuery.of(context).size;
     switch (opcion) {
       case "Permisos":
         String descripcion = "";
@@ -101,38 +102,35 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                          clipBehavior: Clip.none,
+                          contentPadding: EdgeInsets.zero,
                           content: formCrearPermiso(
-                            _formKey,
-                            descripcion,
-                            recurso,
-                            accion,
-                            (String descripcionf) async {
-                              ProgressDialog.show(context);
-                              var creacion = await _permisosApi.createPermisos(
-                                  descripcion: descripcionf,
-                                  idAccion: accion["id"],
-                                  idRecurso: recurso["id"],
-                                  esBasico: 1);
-                              if (creacion is Success<PermisosData>) {
-                                ProgressDialog.dissmiss(context);
-                                Dialogs.alert(context,
-                                    tittle: "Creacion exitosa",
-                                    description: ["Permiso creado con exito"]);
-                                _formKey.currentState?.reset();
-                              } else if (creacion is Failure) {
-                                ProgressDialog.dissmiss(context);
-                                Dialogs.alert(context,
-                                    tittle: creacion.supportMessage,
-                                    description: creacion.messages);
-                              }
-                            },
-                            opcion,
-                            resp.response.data,
-                            resp2.response.data,
-                          ),
+                              "Nuevo Permiso",
+                              _formKey,
+                              descripcion,
+                              recurso,
+                              accion, (String descripcionf) async {
+                            ProgressDialog.show(context);
+                            var creacion = await _permisosApi.createPermisos(
+                                descripcion: descripcionf,
+                                idAccion: accion["id"],
+                                idRecurso: recurso["id"],
+                                esBasico: 1);
+                            if (creacion is Success<PermisosData>) {
+                              ProgressDialog.dissmiss(context);
+                              Dialogs.alert(context,
+                                  tittle: "Creacion exitosa",
+                                  description: ["Permiso creado con exito"]);
+                              _formKey.currentState?.reset();
+                            } else if (creacion is Failure) {
+                              ProgressDialog.dissmiss(context);
+                              Dialogs.alert(context,
+                                  tittle: creacion.supportMessage,
+                                  description: creacion.messages);
+                            }
+                          }, opcion, resp.response.data, resp2.response.data,
+                              [], size, false, "Crear"),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(10),
                           ));
                     }));
             notifyListeners();
