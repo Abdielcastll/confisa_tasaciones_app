@@ -38,7 +38,7 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> onInit(BuildContext context) async {
     user = _authenticationClient.loadSession;
-    await getRoles(context);
+    // await getRoles(context);
   }
 
   Future<void> getRoles(BuildContext context) async {

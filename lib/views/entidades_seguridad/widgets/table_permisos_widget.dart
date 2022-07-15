@@ -43,9 +43,10 @@ class PaginatedTablePermisos {
           DataColumn(label: Text('Actualizar')),
           DataColumn(label: Text('Eliminar'))
         ],
-        columnSpacing: 25,
+        columnSpacing: 20,
         rowsPerPage: 12,
         showCheckboxColumn: false,
+        dataRowHeight: (MediaQuery.of(context).size.height - 260) / 12,
       ),
     );
   }
@@ -120,7 +121,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                             } else if (creacion is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.alert(context,
-                                  tittle: creacion.supportMessage,
+                                  tittle: creacion.messages[0],
                                   description: creacion.messages);
                             }
                           },
