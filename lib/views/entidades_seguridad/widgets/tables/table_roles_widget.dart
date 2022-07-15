@@ -202,8 +202,9 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                                               icon: Icons.add,
                                                                               onPressed: () async {
                                                                                 if (selectedPermisos2.isNotEmpty) {
-                                                                                  var respAsignacion = await _rolesApi.assingPermisosRol(currentRowData.id, selectedPermisos2);
                                                                                   ProgressDialog.show(context);
+                                                                                  var respAsignacion = await _rolesApi.assingPermisosRol(currentRowData.id, selectedPermisos2);
+
                                                                                   if (respAsignacion is Success<RolPOSTResponse>) {
                                                                                     ProgressDialog.dissmiss(context);
                                                                                     Dialogs.alert(context, tittle: "Asignacion exitosa", description: [""]);
