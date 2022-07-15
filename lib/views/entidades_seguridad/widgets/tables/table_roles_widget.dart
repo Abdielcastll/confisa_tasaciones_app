@@ -39,7 +39,7 @@ class PaginatedTableRoles {
               EdgeInsets.only(top: MediaQuery.of(context).size.height * .30),
           child: const CircularProgressIndicator(color: AppColors.brownDark),
         ),
-        source: TablePermisos(pageSize: 12, context: context),
+        source: TableRoles(pageSize: 12, context: context),
         columns: const [
           DataColumn(label: Text('Nombre')),
           DataColumn(label: Text('Descripcion')),
@@ -54,8 +54,8 @@ class PaginatedTableRoles {
   }
 }
 
-class TablePermisos extends AdvancedDataTableSource<RolData> {
-  TablePermisos({required this.pageSize, required this.context});
+class TableRoles extends AdvancedDataTableSource<RolData> {
+  TableRoles({required this.pageSize, required this.context});
   late BuildContext context;
   final user = locator<AuthenticationClient>().loadSession;
 /*   final _accionesApi = locator<AccionesApi>();

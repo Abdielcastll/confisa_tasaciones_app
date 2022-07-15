@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/core/models/endpoints_response.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_actualizar_rol.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_endpoint.dart';
 import 'package:tasaciones_app/widgets/app_circle_icon_button.dart';
 
 import '../../../core/api/acciones_api.dart';
 import '../../../core/api/api_status.dart';
+import '../../../core/api/endpoints_api.dart';
 import '../../../core/api/permisos_api.dart';
 import '../../../core/api/recursos_api.dart';
 import '../../../core/api/roles_api.dart';
@@ -20,6 +23,64 @@ class ChangeButtons {
   late BuildContext context;
   final Size size;
   ChangeButtons({required this.context, required this.size});
+  Future<Widget> addButtonEndpoints() async {
+    final _endpointsApi = locator<EndpointsApi>();
+    String controlador = "";
+    String nombre = "";
+    String metodo = "";
+    String httpVerbo = "";
+    final GlobalKey<FormState> _formKey = GlobalKey();
+    String titulo = "Crear Endpoint";
+    bool validator = true;
+    String buttonTittle = "Crear";
+
+    return CircleIconButton(
+        color: AppColors.green,
+        icon: Icons.add,
+        onPressed: () => showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.zero,
+                content: CrearEndpointForm(
+                    formKey: _formKey,
+                    size: size,
+                    titulo: titulo,
+                    informacion: const [],
+                    validator: validator,
+                    modificar:
+                        (nombref, controladorf, metodof, httpVerbof) async {
+                      ProgressDialog.show(context);
+                      var resp = await _endpointsApi.createEndpoint(
+                          controlador: controladorf,
+                          nombre: nombref,
+                          metodo: metodof,
+                          httpVerbo: httpVerbof);
+                      if (resp is Success<EndpointsResponse>) {
+                        ProgressDialog.dissmiss(context);
+                        Dialogs.alert(context,
+                            tittle: "Creacion de endpoint exitosa",
+                            description: [
+                              "Se ha creado el  endpoint con exito"
+                            ]);
+                      } else if (resp is Failure) {
+                        ProgressDialog.dissmiss(context);
+                        Dialogs.alert(context,
+                            tittle: "Creacion fallida",
+                            description: resp.messages);
+                      }
+                    },
+                    controlador: controlador,
+                    httpVerbo: httpVerbo,
+                    metodo: metodo,
+                    buttonTittle: buttonTittle,
+                    nombre: nombre),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              );
+            }));
+  }
+
   Future<Widget> addButtonRol() async {
     final _rolesApi = locator<RolesAPI>();
     String descripcion = "";

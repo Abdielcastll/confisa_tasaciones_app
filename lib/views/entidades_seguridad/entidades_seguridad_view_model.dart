@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/change_buttons.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_endpoints_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_permisos_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_roles_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_usuarios_widget.dart';
@@ -76,6 +77,10 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
         button1 = await ChangeButtons(context: context, size: size)
             .addButtonPermisos();
         break;
+      case "Endpoints":
+        button1 = await ChangeButtons(context: context, size: size)
+            .addButtonEndpoints();
+        break;
       case "Roles":
         button1 =
             await ChangeButtons(context: context, size: size).addButtonRol();
@@ -96,6 +101,9 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
         break;
       case "Roles":
         dataTable = PaginatedTableRoles(context: context).table();
+        break;
+      case "Endpoints":
+        dataTable = PaginatedTableEndpoints(context: context).table();
         break;
       default:
     }
