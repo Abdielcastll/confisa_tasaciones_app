@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
+import 'app_buttons.dart';
+
 abstract class Dialogs {
   static alert(
     BuildContext context, {
@@ -51,23 +53,67 @@ abstract class Dialogs {
   }) {
     showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-              title: Text(tittle),
-              content: Text(description),
-              actions: [
-                // The "Yes" button
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(_);
-                      confirm();
-                    },
-                    child: const Text('Si')),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(_);
-                    },
-                    child: const Text('No'))
-              ],
+        builder: (_) => Dialog(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(
+                    width: 2,
+                    color: AppColors.orange,
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      color: AppColors.orange,
+                      child: Text(
+                        tittle.toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 25),
+                          child: Text(
+                            description,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        AppButton(
+                            text: 'NO',
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            color: AppColors.orange),
+                        AppButton(
+                            text: 'SI',
+                            onPressed: () {
+                              Navigator.pop(_);
+                              confirm();
+                            },
+                            color: Colors.green),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
             ));
   }
 }

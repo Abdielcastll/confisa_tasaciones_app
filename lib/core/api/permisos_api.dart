@@ -11,13 +11,17 @@ class PermisosAPI {
   Future<Object> getPermisos({int pageNumber = 1, int pageSize = 100}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/permisos/get?PageSize=$pageSize&PageNumber=$pageNumber',
+      '/api/permisos/get',
       method: 'GET',
       headers: {
         'Authorization': 'Bearer $_token',
       },
       parser: (data) {
         return PermisosResponse.fromJson(data);
+      },
+      queryParameters: {
+        'PageSize': pageSize,
+        'PageNumber': pageNumber,
       },
     );
   }

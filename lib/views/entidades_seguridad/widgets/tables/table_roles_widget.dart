@@ -275,7 +275,8 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                 ProgressDialog.dissmiss(
                                                     context);
                                                 Dialogs.alert(context,
-                                                    tittle: respPermisos.source,
+                                                    tittle: respPermisos
+                                                        .supportMessage,
                                                     description:
                                                         respPermisos.messages);
                                               }

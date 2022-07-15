@@ -6,6 +6,8 @@ import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_en
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_permisos_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_roles_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_usuarios_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_acciones_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_recursos_widget.dart';
 
 // import '../../core/api/acciones_api.dart';
 import '../../core/authentication_client.dart';
@@ -14,15 +16,7 @@ import '../../core/models/permisos_response.dart';
 import '../../core/models/sign_in_response.dart';
 
 class EntidadesSeguridadViewModel extends BaseViewModel {
-  List<String> items = [
-    'Acciones',
-    'Módulos',
-    'Recursos',
-    'Permisos',
-    'Usuarios',
-    'Roles',
-    'Endpoints',
-  ];
+  List<String> items = [];
 
   final _authenticationClient = locator<AuthenticationClient>();
 
@@ -42,11 +36,10 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
 
   late Widget button2 = Container();
 
-  String _dropdownvalue = 'Acciones';
+  String? _dropdownvalue;
+  String get dropdownvalue => _dropdownvalue ?? items.first;
 
   List<PermisosData> get dataPermisos => _dataPermisos;
-
-  String get dropdownvalue => _dropdownvalue;
 
   PermisosResponse get permisos => _permisos;
 
@@ -68,11 +61,50 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void onInit(BuildContext context) {
+    user = _authenticationClient.loadSession;
+    initMenu();
+    initTable(context);
+  }
+
+  void initMenu() {
+    if (user.role.contains('Administrador')) {
+      items.addAll([
+        'Acciones',
+        'Módulos',
+        'Recursos',
+        'Permisos',
+        'Usuarios',
+        'Roles',
+        'Endpoints',
+      ]);
+    }
+    if (user.role.contains('Aprobador Tasaciones')) {
+      items.addAll([
+        'Usuarios',
+      ]);
+    }
+  }
+
+  void initTable(BuildContext context) async {
+    onDropDownChangeTable(items.first, context);
+    onDropDownChangeButtons(items.first, context);
+  }
+
   Future<void> onDropDownChangeButtons(
       String opcion, BuildContext context) async {
     button1 = SizedBox();
     Size size = MediaQuery.of(context).size;
+    button1 = const SizedBox();
     switch (opcion) {
+      case "Acciones":
+        button1 = await ChangeButtons(context: context, size: size)
+            .addButtonAcciones();
+        break;
+      case "Recursos":
+        button1 = await ChangeButtons(context: context, size: size)
+            .addButtonRecursos();
+        break;
       case "Permisos":
         button1 = await ChangeButtons(context: context, size: size)
             .addButtonPermisos();
@@ -91,8 +123,14 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
   }
 
   void onDropDownChangeTable(String opcion, BuildContext context) {
-    dataTable = Container();
+    dataTable = const SizedBox();
     switch (opcion) {
+      case "Acciones":
+        dataTable = PaginatedTableAcciones(context: context).table();
+        break;
+      case "Recursos":
+        dataTable = PaginatedTableRecursos(context: context).table();
+        break;
       case "Permisos":
         dataTable = PaginatedTablePermisos(context: context).table();
         break;
@@ -108,9 +146,5 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
       default:
     }
     notifyListeners();
-  }
-
-  void onInit() {
-    user = _authenticationClient.loadSession;
   }
 }

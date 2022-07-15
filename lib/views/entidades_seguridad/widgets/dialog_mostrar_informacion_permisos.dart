@@ -12,7 +12,7 @@ Widget dialogMostrarInformacionPermisos(
     children: [
       imagen,
       Padding(
-        padding: EdgeInsets.only(top: 70),
+        padding: const EdgeInsets.only(top: 70),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: SingleChildScrollView(

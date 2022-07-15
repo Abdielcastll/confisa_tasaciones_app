@@ -8,7 +8,8 @@ class CardProfileWidget extends StatelessWidget {
   const CardProfileWidget({required this.profile, Key? key}) : super(key: key);
 
   final Profile? profile;
-  final TextStyle styleContent = const TextStyle(color: Colors.white);
+  final TextStyle styleContent =
+      const TextStyle(color: Colors.white, fontSize: 16);
 
   @override
   Widget build(BuildContext context) {
@@ -21,30 +22,63 @@ class CardProfileWidget extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(25, 50, 25, 0),
       child: Column(
         children: [
+          _noImage(context),
+          const SizedBox(height: 20),
           Row(
             children: [
-              _noImage(context),
               const SizedBox(width: 15),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      profile?.nombreCompleto ?? '',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
+                    SizedBox(
+                      height: 30,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              profile?.nombreCompleto ?? '',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit_note_sharp,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      profile?.email ?? '',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        // fontWeight: FontWeight.w600,
+                    SizedBox(
+                      height: 30,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              profile?.email ?? '',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                // fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit_note_sharp,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -59,47 +93,43 @@ class CardProfileWidget extends StatelessWidget {
           ),
           Text('Información',
               style: styleContent.copyWith(
-                  fontSize: 16, fontWeight: FontWeight.w600)),
+                  fontSize: 22, fontWeight: FontWeight.w600)),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _infoItem('Empresa', 'xxxxxx'),
-                      _infoItem('Teléfono', profile?.phoneNumber ?? ''),
-                      _infoItem('Cédula', 'xxxxxxx'),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _infoItem('Status', 'xxxxxxxx'),
-                      _infoItem('Dirección', 'xxxxxxxx'),
-                      Center(
-                        child: IconButton(
+                if (profile?.phoneNumber != null)
+                  SizedBox(
+                    height: 30,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: _infoItem(
+                                'Teléfono', profile?.phoneNumber ?? '')),
+                        IconButton(
                           icon: const Icon(
                             Icons.edit_note_sharp,
                             color: Colors.white,
                           ),
                           onPressed: () {},
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                )
+                SizedBox(
+                  child: _infoItem('Empresa', 'xxxxxx'),
+                  height: 30,
+                ),
+                SizedBox(
+                  child: _infoItem('Estado',
+                      profile?.isActive == true ? 'Activo' : 'Inactivo'),
+                  height: 30,
+                ),
               ],
             ),
           ),
           const SizedBox(height: 10),
-          AppButtonLogin(
-              text: 'Permisos', onPressed: () {}, color: AppColors.orange),
           AppButtonLogin(
               text: 'Cambiar Contraseña',
               onPressed: () {},

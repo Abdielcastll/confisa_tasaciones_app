@@ -23,7 +23,7 @@ class AppButtonLogin extends StatelessWidget {
               ?.copyWith(color: Colors.white)),
       color: color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(5),
       ),
     );
   }
@@ -52,7 +52,7 @@ class AppButton extends StatelessWidget {
               ?.copyWith(color: Colors.white)),
       color: color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(5),
       ),
     );
   }
