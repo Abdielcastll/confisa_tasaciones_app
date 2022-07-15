@@ -3,17 +3,17 @@ import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_permiso.dart';
 
-import '../../../core/api/acciones_api.dart';
-import '../../../core/api/api_status.dart';
-import '../../../core/api/permisos_api.dart';
-import '../../../core/api/recursos_api.dart';
-import '../../../core/authentication_client.dart';
-import '../../../core/locator.dart';
-import '../../../core/models/acciones_response.dart';
-import '../../../core/models/permisos_response.dart';
-import '../../../theme/theme.dart';
-import '../../../core/models/recursos_response.dart';
-import '../../../widgets/app_dialogs.dart';
+import '../../../../core/api/acciones_api.dart';
+import '../../../../core/api/api_status.dart';
+import '../../../../core/api/permisos_api.dart';
+import '../../../../core/api/recursos_api.dart';
+import '../../../../core/authentication_client.dart';
+import '../../../../core/locator.dart';
+import '../../../../core/models/acciones_response.dart';
+import '../../../../core/models/permisos_response.dart';
+import '../../../../theme/theme.dart';
+import '../../../../core/models/recursos_response.dart';
+import '../../../../widgets/app_dialogs.dart';
 
 class PaginatedTablePermisos {
   late BuildContext context;

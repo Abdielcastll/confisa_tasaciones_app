@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_actualizar_rol.dart';
 import 'package:tasaciones_app/widgets/app_circle_icon_button.dart';
 
 import '../../../core/api/acciones_api.dart';
 import '../../../core/api/api_status.dart';
 import '../../../core/api/permisos_api.dart';
 import '../../../core/api/recursos_api.dart';
+import '../../../core/api/roles_api.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/acciones_response.dart';
 import '../../../core/models/permisos_response.dart';
 import '../../../core/models/recursos_response.dart';
+import '../../../core/models/roles_response.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/app_dialogs.dart';
 import 'form_crear_permiso.dart';
@@ -17,6 +20,53 @@ class ChangeButtons {
   late BuildContext context;
   final Size size;
   ChangeButtons({required this.context, required this.size});
+  Future<Widget> addButtonRol() async {
+    final _rolesApi = locator<RolesAPI>();
+    String descripcion = "";
+    final GlobalKey<FormState> _formKey = GlobalKey();
+    String titulo = "Crear rol";
+    bool validator = true;
+    String buttonTittle = "Crear";
+    String nombre = "";
+    return CircleIconButton(
+        color: AppColors.green,
+        icon: Icons.add,
+        onPressed: () => showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.zero,
+                content: ActualizarRolForm(
+                    formKey: _formKey,
+                    size: size,
+                    titulo: titulo,
+                    informacion: const [],
+                    validator: validator,
+                    modificar: (nombref, descripcionf) async {
+                      ProgressDialog.show(context);
+                      var resp =
+                          await _rolesApi.createRoles(nombref, descripcionf);
+                      if (resp is Success<RolPOSTResponse>) {
+                        ProgressDialog.dissmiss(context);
+                        Dialogs.alert(context,
+                            tittle: "Creacion de rol exitosa",
+                            description: ["Se ha creado el rol con exito"]);
+                      } else if (resp is Failure) {
+                        ProgressDialog.dissmiss(context);
+                        Dialogs.alert(context,
+                            tittle: "Creacion fallida",
+                            description: resp.messages);
+                      }
+                    },
+                    descripcion: descripcion,
+                    buttonTittle: buttonTittle,
+                    nombre: nombre),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              );
+            }));
+  }
+
   Future<Widget> addButtonPermisos() async {
     final _accionesApi = locator<AccionesApi>();
     final _recursosApi = locator<RecursosAPI>();

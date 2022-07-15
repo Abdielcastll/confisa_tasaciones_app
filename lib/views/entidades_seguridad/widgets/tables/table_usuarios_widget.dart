@@ -6,14 +6,14 @@ import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/actualizar_informacion.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/mostrar_informacion_widget.dart';
 
-import '../../../core/api/roles_api.dart';
-import '../../../core/api/usuarios_api.dart';
-import '../../../core/api/api_status.dart';
-import '../../../core/authentication_client.dart';
-import '../../../core/locator.dart';
-import '../../../core/models/usuarios_response.dart';
-import '../../../theme/theme.dart';
-import '../../../widgets/app_dialogs.dart';
+import '../../../../core/api/roles_api.dart';
+import '../../../../core/api/usuarios_api.dart';
+import '../../../../core/api/api_status.dart';
+import '../../../../core/authentication_client.dart';
+import '../../../../core/locator.dart';
+import '../../../../core/models/usuarios_response.dart';
+import '../../../../theme/theme.dart';
+import '../../../../widgets/app_dialogs.dart';
 
 class PaginatedTableUsuarios {
   late BuildContext context;
@@ -70,114 +70,107 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
     final currentRowData = lastDetails!.rows[index];
     return DataRow(cells: [
       DataCell(
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextButton(
-              child: Text(currentRowData.nombreCompleto),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(
-                                color: AppColors.darkOrange, width: 6)),
-                        contentPadding: EdgeInsets.zero,
-                        content: dialogMostrarInformacion(
-                            Container(
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.grey,
-                              ),
-                              height: 100,
-                              width: 100,
-                              child: const Icon(
-                                Icons.person,
-                                size: 70,
-                              ),
-                            ),
-                            [
-                              Text(currentRowData.nombreCompleto,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.darkOrange)),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Text(currentRowData.email,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.darkOrange)),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Text("Suplidor ${currentRowData.nombreSuplidor}",
-                                  style: appDropdown),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Text("Roles", style: appDropdown),
-                              Column(
-                                children: currentRowData.roles
-                                    .map((e) => Text(e, style: appDropdown))
-                                    .toList(),
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Text(
-                                "Telefono ${currentRowData.phoneNumber}",
-                                style: appDropdown,
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              currentRowData.isActive
-                                  ? Text("Estado Activo", style: appDropdown)
-                                  : Text("Estado Inactivo", style: appDropdown),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: AppColors.green,
-                                    minimumSize: const Size.fromHeight(60)),
-                                onPressed: () async {
-                                  ProgressDialog.show(context);
-                                  var creacion =
-                                      await _usuariosAPI.updateStatusUsuario(
-                                          id: currentRowData.id,
-                                          status: !currentRowData.isActive);
-                                  if (creacion
-                                      is Success<UsuarioPOSTResponse>) {
-                                    ProgressDialog.dissmiss(context);
-                                    Dialogs.alert(context,
-                                        tittle: "Estado actualizado",
-                                        description: [
-                                          "Se ha actualizado el estado de forma exitosa"
-                                        ]);
-                                  } else if (creacion is Failure) {
-                                    ProgressDialog.dissmiss(context);
-                                    Dialogs.alert(context,
-                                        tittle: creacion.supportMessage,
-                                        description: creacion.messages);
-                                  }
-                                },
-                                child: const Text("Cambiar Estado"),
-                              ),
-                            ],
-                            size),
-                      );
-                    });
-              },
-            ),
-          ],
+        TextButton(
+          child: Text(currentRowData.nombreCompleto),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(
+                            color: AppColors.darkOrange, width: 6)),
+                    contentPadding: EdgeInsets.zero,
+                    content: dialogMostrarInformacion(
+                        Container(
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.grey,
+                          ),
+                          height: 100,
+                          width: 100,
+                          child: const Icon(
+                            Icons.person,
+                            size: 70,
+                          ),
+                        ),
+                        [
+                          Text(currentRowData.nombreCompleto,
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.darkOrange)),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text(currentRowData.email,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.darkOrange)),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text("Suplidor ${currentRowData.nombreSuplidor}",
+                              style: appDropdown),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text("Roles", style: appDropdown),
+                          Column(
+                            children: currentRowData.roles
+                                .map((e) => Text(e, style: appDropdown))
+                                .toList(),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            "Telefono ${currentRowData.phoneNumber}",
+                            style: appDropdown,
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          currentRowData.isActive
+                              ? Text("Estado Activo", style: appDropdown)
+                              : Text("Estado Inactivo", style: appDropdown),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: AppColors.green,
+                                minimumSize: const Size.fromHeight(60)),
+                            onPressed: () async {
+                              ProgressDialog.show(context);
+                              var creacion =
+                                  await _usuariosAPI.updateStatusUsuario(
+                                      id: currentRowData.id,
+                                      status: !currentRowData.isActive);
+                              if (creacion is Success<UsuarioPOSTResponse>) {
+                                ProgressDialog.dissmiss(context);
+                                Dialogs.alert(context,
+                                    tittle: "Estado actualizado",
+                                    description: [
+                                      "Se ha actualizado el estado de forma exitosa"
+                                    ]);
+                              } else if (creacion is Failure) {
+                                ProgressDialog.dissmiss(context);
+                                Dialogs.alert(context,
+                                    tittle: creacion.supportMessage,
+                                    description: creacion.messages);
+                              }
+                            },
+                            child: const Text("Cambiar Estado"),
+                          ),
+                        ],
+                        size),
+                  );
+                });
+          },
         ),
       ),
       DataCell(

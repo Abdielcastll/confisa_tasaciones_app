@@ -64,8 +64,9 @@ class HomeViewModel extends BaseViewModel {
   Future<void> getPermisos(
       BuildContext context, String rolUser, RolData data) async {
     if (rolUser == data.description) {
-      var resp =
-          await _rolesAPI.getRolesClaims(idRol: data.id, token: _user.token);
+      var resp = await _rolesAPI.getRolesClaims(
+        idRol: data.id,
+      );
       if (resp is Success<RolClaimsResponse>) {
         for (var rolData in resp.response.data) {
           Provider.of<PermisosUserProvider>(context, listen: false)

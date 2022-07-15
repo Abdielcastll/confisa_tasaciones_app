@@ -40,3 +40,21 @@ class RolData {
         "description": description,
       };
 }
+
+RolResponse rolPOSTResponseFromJson(String str) =>
+    RolResponse.fromJson(json.decode(str));
+
+String rolPOSTResponseToJson(RolResponse data) => json.encode(data.toJson());
+
+class RolPOSTResponse {
+  RolPOSTResponse({required this.data});
+
+  bool data;
+
+  factory RolPOSTResponse.fromJson(Map<String, dynamic> json) =>
+      RolPOSTResponse(data: json["data"]);
+
+  Map<String, dynamic> toJson() => {
+        "data": data,
+      };
+}

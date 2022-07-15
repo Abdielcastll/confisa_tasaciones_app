@@ -104,7 +104,7 @@ Widget dialogActualizarInformacion(
                               telefono != "")) {
                         if (value == null ||
                             value.isEmpty ||
-                            value.length < 8) {
+                            value.length < 9) {
                           return 'Debe ingresar un telefono valido';
                         }
                       }

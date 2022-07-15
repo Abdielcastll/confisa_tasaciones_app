@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/change_buttons.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_permisos_widget.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_usuarios_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_permisos_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_roles_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_usuarios_widget.dart';
 
 // import '../../core/api/acciones_api.dart';
 import '../../core/authentication_client.dart';
@@ -68,20 +69,20 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
 
   Future<void> onDropDownChangeButtons(
       String opcion, BuildContext context) async {
+    button1 = SizedBox();
     Size size = MediaQuery.of(context).size;
     switch (opcion) {
       case "Permisos":
         button1 = await ChangeButtons(context: context, size: size)
             .addButtonPermisos();
-        if (button1 is Container) {
-          onDropDownChangeButtons("", context);
-        }
-        notifyListeners();
         break;
-      case "Usuarios":
+      case "Roles":
+        button1 =
+            await ChangeButtons(context: context, size: size).addButtonRol();
         break;
       default:
     }
+    notifyListeners();
   }
 
   void onDropDownChangeTable(String opcion, BuildContext context) {
@@ -92,6 +93,9 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
         break;
       case "Usuarios":
         dataTable = PaginatedTableUsuarios(context: context).table();
+        break;
+      case "Roles":
+        dataTable = PaginatedTableRoles(context: context).table();
         break;
       default:
     }
