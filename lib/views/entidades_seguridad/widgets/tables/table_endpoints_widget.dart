@@ -3,18 +3,11 @@ import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/endpoints_api.dart';
 import 'package:tasaciones_app/core/models/endpoints_response.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_permiso.dart';
 
-import '../../../../core/api/acciones_api.dart';
 import '../../../../core/api/api_status.dart';
-import '../../../../core/api/permisos_api.dart';
-import '../../../../core/api/recursos_api.dart';
 import '../../../../core/authentication_client.dart';
 import '../../../../core/locator.dart';
-import '../../../../core/models/acciones_response.dart';
-import '../../../../core/models/permisos_response.dart';
 import '../../../../theme/theme.dart';
-import '../../../../core/models/recursos_response.dart';
 import '../../../../widgets/app_dialogs.dart';
 
 class PaginatedTableEndpoints {
@@ -69,7 +62,6 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
 
   @override
   DataRow? getRow(int index) {
-    final Size size = MediaQuery.of(context).size;
     final currentRowData = lastDetails!.rows[index];
     return DataRow(cells: [
       DataCell(

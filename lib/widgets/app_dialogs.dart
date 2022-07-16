@@ -86,6 +86,7 @@ abstract class Dialogs {
                               horizontal: 10, vertical: 25),
                           child: Text(
                             description,
+                            textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

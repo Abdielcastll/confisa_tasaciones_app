@@ -93,7 +93,7 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
 
   Future<void> onDropDownChangeButtons(
       String opcion, BuildContext context) async {
-    button1 = SizedBox();
+    button1 = const SizedBox();
     Size size = MediaQuery.of(context).size;
     button1 = const SizedBox();
     switch (opcion) {
