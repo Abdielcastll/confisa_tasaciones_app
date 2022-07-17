@@ -19,13 +19,13 @@ class _RecoveryPasswordMobile extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 20),
             width: size.width * .80,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(5),
               color: AppColors.brownLight.withOpacity(0.7),
             ),
             child: Column(
               children: [
                 Text(
-                  'Recibirá un link a su correo',
+                  'Escriba su correo',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headline5?.copyWith(
                         color: Colors.white,
@@ -41,15 +41,15 @@ class _RecoveryPasswordMobile extends StatelessWidget {
             ),
           ),
           AppButtonLogin(
-            text: 'SIGUIENTE',
+            text: 'Siguiente',
             onPressed: () => vm.forgotPassword(context),
-            color: AppColors.green,
+            color: AppColors.brownLight,
           ),
           const SizedBox(height: 10),
           AppButtonLogin(
-            text: 'ANTERIOR',
+            text: 'Anterior',
             onPressed: vm.goBack,
-            color: AppColors.orange,
+            color: AppColors.brownLight,
           )
         ],
       )),
