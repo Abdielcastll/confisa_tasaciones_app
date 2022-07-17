@@ -3,6 +3,7 @@ import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/endpoints_api.dart';
 import 'package:tasaciones_app/core/models/endpoints_response.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_endpoint.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_permiso.dart';
 
 import '../../../../core/api/acciones_api.dart';
@@ -76,10 +77,111 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
         Text(currentRowData.nombre),
       ),
       DataCell(Text(currentRowData.permiso.descripcion)),
-      DataCell(
-          IconButton(onPressed: () async {}, icon: const Icon(Icons.cached))),
       DataCell(IconButton(
-          onPressed: () async {}, icon: const Icon(Icons.cancel_outlined))),
+          onPressed: () async {
+            final GlobalKey<FormState> _formKey = GlobalKey();
+            bool validator = false;
+            String buttonTittle = "Modificar";
+            String controlador = "";
+            String nombre = "";
+            String httpVerbo = "";
+            String metodo = "";
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    content: CrearEndpointForm(
+                        formKey: _formKey,
+                        size: size,
+                        titulo: "Modificar Endpoint",
+                        informacion: [
+                          Text("Nombre: ${currentRowData.nombre}",
+                              style: appDropdown),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text("Controlador: ${currentRowData.controlador}",
+                              style: appDropdown),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text("Metodo: ${currentRowData.metodo}",
+                              style: appDropdown),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text("Verbo HTTP: ${currentRowData.httpVerbo}",
+                              style: appDropdown),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          currentRowData.estado
+                              ? Text("Estado Activo", style: appDropdown)
+                              : Text("Estado Inactivo", style: appDropdown)
+                        ],
+                        validator: validator,
+                        modificar:
+                            (nombref, controladorf, metodof, httpVerbof) async {
+                          ProgressDialog.show(context);
+                          var resp = await _endpointApi.updateEndpoint(
+                              id: currentRowData.id,
+                              controlador: controladorf,
+                              nombre: nombref,
+                              metodo: metodof,
+                              httpVerbo: httpVerbof);
+                          if (resp is Success<EndpointsPOSTResponse>) {
+                            ProgressDialog.dissmiss(context);
+                            Dialogs.alert(context,
+                                tittle: "Modificacion de endpoint exitosa",
+                                description: [
+                                  "Se ha modificado el  endpoint con exito"
+                                ]);
+                          } else if (resp is Failure) {
+                            ProgressDialog.dissmiss(context);
+                            Dialogs.alert(context,
+                                tittle: "Modificacion fallida",
+                                description: resp.messages);
+                          }
+                        },
+                        controlador: controlador,
+                        buttonTittle: buttonTittle,
+                        nombre: nombre,
+                        httpVerbo: httpVerbo,
+                        metodo: metodo),
+                  );
+                });
+          },
+          icon: const Icon(Icons.cached))),
+      DataCell(IconButton(
+          onPressed: () async {
+            Dialogs.confirm(context,
+                tittle: "Eliminar Permiso",
+                description: "Esta seguro que desea eliminar el permiso?",
+                confirm: () async {
+              ProgressDialog.show(context);
+              var resp =
+                  await _endpointApi.deleteEndpoint(id: currentRowData.id);
+              if (resp is Success<EndpointsPOSTResponse>) {
+                ProgressDialog.dissmiss(context);
+                Dialogs.alert(context,
+                    tittle: "Eliminado con exito",
+                    description: ["Endpoint eliminado."]);
+                currentPage = 0;
+                offset = 0;
+                totalCount = 0;
+                setNextView();
+              } else if (resp is Failure) {
+                ProgressDialog.dissmiss(context);
+                Dialogs.alert(context,
+                    tittle: "Eliminacion fallida", description: resp.messages);
+              }
+            });
+          },
+          icon: const Icon(Icons.cancel_outlined))),
     ]);
   }
 

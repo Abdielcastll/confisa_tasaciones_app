@@ -53,4 +53,45 @@ class EndpointsApi {
       },
     );
   }
+
+  Future<Object> deleteEndpoint({required int id}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/endpoints/delete/$id',
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      parser: (data) {
+        return EndpointsPOSTResponse.fromJson(data);
+      },
+    );
+  }
+
+  Future<Object> updateEndpoint(
+      {required int id,
+      required String nombre,
+      required String controlador,
+      required String metodo,
+      required String httpVerbo}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/endpoints/update',
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      data: {
+        "id": id,
+        "nombre": nombre,
+        "controlador": controlador,
+        "metodo": metodo,
+        "httpVerbo": httpVerbo,
+        "estado": true,
+      },
+      parser: (data) {
+        return EndpointsPOSTResponse.fromJson(data);
+      },
+    );
+  }
 }

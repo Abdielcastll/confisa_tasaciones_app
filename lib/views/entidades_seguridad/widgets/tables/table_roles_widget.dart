@@ -204,10 +204,11 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                                                 if (selectedPermisos2.isNotEmpty) {
                                                                                   ProgressDialog.show(context);
                                                                                   var respAsignacion = await _rolesApi.assingPermisosRol(currentRowData.id, selectedPermisos2);
-
                                                                                   if (respAsignacion is Success<RolPOSTResponse>) {
                                                                                     ProgressDialog.dissmiss(context);
                                                                                     Dialogs.alert(context, tittle: "Asignacion exitosa", description: [""]);
+                                                                                    ProgressDialog.dissmiss(context);
+                                                                                    ProgressDialog.dissmiss(context);
                                                                                     setState(
                                                                                       () {},
                                                                                     );
@@ -313,7 +314,33 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                   },
                                                 ),
                                                 DataCell(IconButton(
-                                                    onPressed: () {},
+                                                    onPressed: () async {
+                                                      ProgressDialog.show(
+                                                          context);
+                                                      var resp = await _rolesApi
+                                                          .updatePermisoRol(
+                                                              currentRowData.id,
+                                                              selectedPermisos);
+                                                      if (resp is Success<
+                                                          RolPOSTResponse>) {
+                                                        ProgressDialog.dissmiss(
+                                                            context);
+                                                        Dialogs.alert(context,
+                                                            tittle:
+                                                                "Actualizado con exito",
+                                                            description: [""]);
+                                                        notifyListeners();
+                                                      } else if (resp
+                                                          is Failure) {
+                                                        ProgressDialog.dissmiss(
+                                                            context);
+                                                        Dialogs.alert(context,
+                                                            tittle:
+                                                                "Actualizacion fallida",
+                                                            description:
+                                                                resp.messages);
+                                                      }
+                                                    },
                                                     icon: const Icon(
                                                         Icons.cached))),
                                                 DataCell(IconButton(

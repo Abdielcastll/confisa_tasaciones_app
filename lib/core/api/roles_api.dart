@@ -73,7 +73,7 @@ class RolesAPI {
   }
 
   Future<Object> updatePermisoRol(
-      String id, List<PermisosData> permisos) async {
+      String id, List<RolClaimsData> permisos) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/rolesclaims/update',
