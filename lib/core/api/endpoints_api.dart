@@ -48,7 +48,7 @@ class EndpointsApi {
         "estado": true,
       },
       parser: (data) {
-        return EndpointsResponse.fromJson(data);
+        return EndpointsData.fromJson(data["data"]);
       },
     );
   }

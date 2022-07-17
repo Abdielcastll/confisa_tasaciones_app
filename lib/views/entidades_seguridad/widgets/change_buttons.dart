@@ -57,7 +57,7 @@ class ChangeButtons {
                           nombre: nombref,
                           metodo: metodof,
                           httpVerbo: httpVerbof);
-                      if (resp is Success<EndpointsResponse>) {
+                      if (resp is Success<EndpointsData>) {
                         ProgressDialog.dissmiss(context);
                         Dialogs.alert(context,
                             tittle: "Creacion de endpoint exitosa",

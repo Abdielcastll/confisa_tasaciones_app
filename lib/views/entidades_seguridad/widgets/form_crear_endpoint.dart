@@ -133,7 +133,7 @@ class CrearEndpointForm extends StatelessWidget {
                           ),
                           border: OutlineInputBorder()),
                       onSaved: (value) {
-                        controlador = value!;
+                        metodo = value!;
                       },
                       validator: (value) {
                         if (value == null ||
@@ -158,7 +158,7 @@ class CrearEndpointForm extends StatelessWidget {
                           ),
                           border: OutlineInputBorder()),
                       onSaved: (value) {
-                        controlador = value!;
+                        httpVerbo = value!;
                       },
                       validator: (value) {
                         if (value == null ||
