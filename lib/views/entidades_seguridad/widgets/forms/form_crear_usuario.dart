@@ -1,9 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/usuarios_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/roles_response.dart';
+import 'package:tasaciones_app/core/models/suplidores_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -24,14 +26,21 @@ Future<dynamic> dialogCrearUsuario(
   var dropdown,
   String buttonTittle,
   Map<String, dynamic> rol1,
+  Map<String, dynamic> suplidor,
+  String password,
 ) {
   List<Widget> permisoRol = [];
   rol1['id'] = "";
   rol1["nombre"] = "";
   rol1["description"] = "";
+  suplidor['codigoRelacional'] = 0;
+  suplidor["nombre"] = "";
+  suplidor["identificacion"] = "";
   int codSuplidor = 0;
   final _usuariosApi = locator<UsuariosAPI>();
+  final _suplidoresApi = locator<SuplidoresAPI>();
   final user = locator<AuthenticationClient>().loadSession;
+  List<SuplidorData> suplidores = [];
   return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -79,7 +88,7 @@ Future<dynamic> dialogCrearUsuario(
                                       ))
                                   .toList(),
                               hint: const Text("Rol"),
-                              onChanged: (value) {
+                              onChanged: (value) async {
                                 setState(
                                   () => permisoRol = [],
                                 );
@@ -97,154 +106,286 @@ Future<dynamic> dialogCrearUsuario(
                                 if (rol1["description"] ==
                                         "Aprobrador Tasaciones" ||
                                     rol1["description"] == "Tasador") {
-                                  setState(
-                                    () async {
-                                      for (var element in user.role) {
-                                        if (element == "Aprobador Tasaciones") {
-                                          ProgressDialog.show(context);
-                                          var resp = await _usuariosApi
-                                              .getUsuarios(email: user.email);
-                                          if (resp
-                                              is Success<UsuariosResponse>) {
-                                            codSuplidor = resp
-                                                .response.data.first.idSuplidor;
-                                            ProgressDialog.dissmiss(context);
-                                            permisoRol.add(
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                            );
-                                            permisoRol.add(
-                                              Text(
-                                                  "Suplidor ${resp.response.data.first.nombreSuplidor}",
-                                                  style: appDropdown),
-                                            );
-                                          } else if (resp is Failure) {
-                                            ProgressDialog.dissmiss(context);
-                                            Dialogs.alert(context,
-                                                tittle: "Error",
-                                                description: resp.messages);
-                                          }
-                                        }
+                                  for (var element in user.role) {
+                                    if (element == "Aprobador Tasaciones") {
+                                      ProgressDialog.show(context);
+                                      var resp = await _usuariosApi.getUsuarios(
+                                          email: user.email);
+                                      if (resp is Success<UsuariosResponse>) {
+                                        codSuplidor =
+                                            resp.response.data.first.idSuplidor;
+                                        ProgressDialog.dissmiss(context);
+                                        permisoRol.add(
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                        );
+                                        permisoRol.add(
+                                          Text(
+                                              "Suplidor ${resp.response.data.first.nombreSuplidor}",
+                                              style: appDropdown),
+                                        );
+                                      } else if (resp is Failure) {
+                                        ProgressDialog.dissmiss(context);
+                                        Dialogs.error(msg: resp.messages[0]);
                                       }
-                                      permisoRol = [
-                                        TextFormField(
-                                          decoration: const InputDecoration(
-                                              labelText: 'Nombre Completo',
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(20.0)),
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey,
-                                                    width: 0.0),
-                                              ),
-                                              border: OutlineInputBorder()),
-                                          onSaved: (value) {
-                                            nombreCompleto = value!;
-                                          },
-                                          validator: (value) {
-                                            if (validator &&
-                                                (email != "" ||
-                                                    nombreCompleto != "" ||
-                                                    telefono != "")) {
-                                              if (value == null ||
-                                                  value.isEmpty ||
-                                                  value.length < 8) {
-                                                return 'Debe ingresar un nombre valido';
-                                              }
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        TextFormField(
-                                          keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                              labelText: 'Telefono',
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(20.0)),
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey,
-                                                    width: 0.0),
-                                              ),
-                                              border: OutlineInputBorder()),
-                                          onSaved: (value) {
-                                            telefono = value!;
-                                          },
-                                          validator: (value) {
-                                            if (validator &&
-                                                (email != "" ||
-                                                    nombreCompleto != "" ||
-                                                    telefono != "")) {
-                                              if (value == null ||
-                                                  value.isEmpty ||
-                                                  value.length < 9) {
-                                                return 'Debe ingresar un telefono valido';
-                                              }
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        TextFormField(
-                                          decoration: const InputDecoration(
-                                              labelText: 'Email',
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(20.0)),
-                                                borderSide: BorderSide(
-                                                    color: Colors.grey,
-                                                    width: 0.0),
-                                              ),
-                                              border: OutlineInputBorder()),
-                                          onSaved: (value) {
-                                            email = value!;
-                                          },
-                                          validator: (value) {
-                                            if (validator &&
-                                                (email != "" ||
-                                                    nombreCompleto != "" ||
-                                                    telefono != "")) {
-                                              if (value == null ||
-                                                  value.isEmpty ||
-                                                  value.length < 8 ||
-                                                  !EmailValidator.validate(
-                                                      value, true, true)) {
-                                                return 'Debe ingresar un email valido';
-                                              }
-                                            }
+                                    }
+                                    if (codSuplidor == 0) {
+                                      ProgressDialog.show(context);
+                                      var resp =
+                                          await _suplidoresApi.getSuplidores();
+                                      if (resp is Success<SuplidoresResponse>) {
+                                        ProgressDialog.dissmiss(context);
+                                        suplidores = resp.response.data;
+                                        setState((() {
+                                          permisoRol = [
+                                            TextFormField(
+                                              decoration: const InputDecoration(
+                                                  labelText: 'Nombre Completo',
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0)),
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey,
+                                                        width: 0.0),
+                                                  ),
+                                                  border: OutlineInputBorder()),
+                                              onSaved: (value) {
+                                                nombreCompleto = value!;
+                                              },
+                                              validator: (value) {
+                                                if (validator &&
+                                                    (email != "" ||
+                                                        nombreCompleto != "" ||
+                                                        telefono != "")) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 8) {
+                                                    return 'Debe ingresar un nombre valido';
+                                                  }
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            TextFormField(
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                  labelText: 'Telefono',
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0)),
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey,
+                                                        width: 0.0),
+                                                  ),
+                                                  border: OutlineInputBorder()),
+                                              onSaved: (value) {
+                                                telefono = value!;
+                                              },
+                                              validator: (value) {
+                                                if (validator &&
+                                                    (email != "" ||
+                                                        nombreCompleto != "" ||
+                                                        telefono != "")) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 9) {
+                                                    return 'Debe ingresar un telefono valido';
+                                                  }
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            TextFormField(
+                                              decoration: const InputDecoration(
+                                                  labelText: 'Email',
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0)),
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey,
+                                                        width: 0.0),
+                                                  ),
+                                                  border: OutlineInputBorder()),
+                                              onSaved: (value) {
+                                                email = value!;
+                                              },
+                                              validator: (value) {
+                                                if (validator &&
+                                                    (email != "" ||
+                                                        nombreCompleto != "" ||
+                                                        telefono != "")) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 8 ||
+                                                      !EmailValidator.validate(
+                                                          value, true, true)) {
+                                                    return 'Debe ingresar un email valido';
+                                                  }
+                                                }
 
-                                            return null;
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              primary: AppColors.green,
-                                              minimumSize:
-                                                  const Size.fromHeight(60)),
-                                          onPressed: () {
-                                            // Validate returns true if the form is valid, or false otherwise.
-                                            _formKey.currentState?.save();
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              _formKey.currentState?.save();
-                                              modificar(nombreCompleto, email,
-                                                  telefono);
-                                            }
-                                          },
-                                          child: Text(buttonTittle),
-                                        ),
-                                      ];
-                                    },
-                                  );
+                                                return null;
+                                              },
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            TextFormField(
+                                              decoration: const InputDecoration(
+                                                  labelText: 'Contraseña',
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0)),
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey,
+                                                        width: 0.0),
+                                                  ),
+                                                  border: OutlineInputBorder()),
+                                              onSaved: (value) {
+                                                password = value!;
+                                              },
+                                              validator: (value) {
+                                                RegExp regex = RegExp(
+                                                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                                                if (validator &&
+                                                    (email != "" ||
+                                                        nombreCompleto != "" ||
+                                                        telefono != "")) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 8) {
+                                                    return 'Debe ingresar un email valido';
+                                                  } else if (!regex
+                                                      .hasMatch(value)) {
+                                                    return "La contraseña debe tener por lo menos, un numero, una mayuscula, una minuscula y un simbolo especial";
+                                                  }
+                                                }
+
+                                                return null;
+                                              },
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            codSuplidor == 0
+                                                ? DropdownButtonFormField(
+                                                    validator: (value) => value ==
+                                                            null
+                                                        ? 'Debe escojer un suplidor'
+                                                        : null,
+                                                    isExpanded: true,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            contentPadding:
+                                                                EdgeInsets.only(
+                                                                    left: 8),
+                                                            enabledBorder:
+                                                                OutlineInputBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          20.0)),
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                      color:
+                                                                          Colors
+                                                                              .grey,
+                                                                      width:
+                                                                          0.0),
+                                                            ),
+                                                            border:
+                                                                OutlineInputBorder()),
+                                                    items: suplidores
+                                                        .map((e) =>
+                                                            DropdownMenuItem(
+                                                              child: Text(
+                                                                e.nombre,
+                                                                style:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                              ),
+                                                              value: e
+                                                                  .codigoRelacionado,
+                                                            ))
+                                                        .toList(),
+                                                    hint: const Text(
+                                                        "Suplidores"),
+                                                    onChanged: (value) {
+                                                      dropdown = value;
+                                                      suplidor[
+                                                              'codigoRelacional'] =
+                                                          value;
+                                                      suplidor["nombre"] = suplidores
+                                                          .firstWhere((element) =>
+                                                              element
+                                                                  .codigoRelacionado ==
+                                                              value)
+                                                          .nombre;
+
+                                                      suplidor[
+                                                              "identificacion"] =
+                                                          suplidores
+                                                              .firstWhere(
+                                                                  (element) =>
+                                                                      element
+                                                                          .codigoRelacionado ==
+                                                                      value)
+                                                              .identificacion;
+                                                    },
+                                                  )
+                                                : Container(),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: AppColors.green,
+                                                  minimumSize:
+                                                      const Size.fromHeight(
+                                                          60)),
+                                              onPressed: () {
+                                                // Validate returns true if the form is valid, or false otherwise.
+                                                _formKey.currentState?.save();
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  _formKey.currentState?.save();
+                                                  modificar(
+                                                      nombreCompleto,
+                                                      email,
+                                                      telefono,
+                                                      codSuplidor);
+                                                }
+                                              },
+                                              child: Text(buttonTittle),
+                                            ),
+                                          ];
+                                        }));
+                                      } else if (resp is Failure) {
+                                        ProgressDialog.dissmiss(context);
+                                        Dialogs.error(msg: resp.messages[0]);
+                                      }
+                                    }
+                                  }
                                 } else if (rol1["description"] ==
                                         "Administrador" ||
                                     rol1["description"] ==
@@ -333,12 +474,21 @@ Future<dynamic> dialogCrearUsuario(
                                                               .fromHeight(60)),
                                                   onPressed: () {
                                                     // Validate returns true if the form is valid, or false otherwise.
-
-                                                    modificar(
-                                                        resp.response
-                                                            .nombreCompleto,
-                                                        resp.response.email,
-                                                        resp.response.telefono);
+                                                    _formKey.currentState
+                                                        ?.save();
+                                                    if (_formKey.currentState!
+                                                        .validate()) {
+                                                      _formKey.currentState
+                                                          ?.save();
+                                                      print("x");
+                                                      modificar(
+                                                          resp.response
+                                                              .nombreCompleto,
+                                                          resp.response.email,
+                                                          resp.response
+                                                              .telefono,
+                                                          codSuplidor);
+                                                    }
                                                   },
                                                   child: const Text("Guardar"),
                                                 ),

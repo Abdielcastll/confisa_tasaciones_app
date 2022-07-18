@@ -40,11 +40,13 @@ class ChangeButtons {
     String nombre = "";
     String telefono = "";
     String email = "";
+    String password = "";
     final GlobalKey<FormState> _formKey = GlobalKey();
     String titulo = "Crear Usuario";
     bool validator = true;
     String buttonTittle = "Crear";
     Map<String, dynamic> rol1 = {};
+    Map<String, dynamic> suplidor = {};
     List<RolData> roles = [];
     var rolElegido;
     var resp = await _rolesApi.getRoles();
@@ -66,35 +68,40 @@ class ChangeButtons {
       return CircleIconButton(
           color: AppColors.green,
           icon: Icons.add,
-          onPressed: () => dialogCrearUsuario(
-                  titulo,
-                  size,
-                  context,
-                  _formKey,
-                  resp.response.data,
-                  nombre,
-                  telefono,
-                  email,
-                  validator, (nombref, emailf, telefonof) async {
+          onPressed: () => dialogCrearUsuario(titulo, size, context, _formKey,
+                  resp.response.data, nombre, telefono, email, validator,
+                  (nombref, emailf, telefonof, codigoSuplidorf) async {
                 ProgressDialog.show(context);
-                var creacion = await _usuariosApi.createUsuarios(
-                  email: emailf,
-                  phoneNumber: telefonof,
-                  fullName: nombref,
-                  roleId: rol1['id'],
-                );
-                if (creacion is Success<UsuarioPOSTResponse>) {
-                  ProgressDialog.dissmiss(context);
-                  Dialogs.alert(context,
-                      tittle: "Creacion de usuario exitosa",
-                      description: ["Exito al crear usuario"]);
-                } else if (creacion is Failure) {
-                  ProgressDialog.dissmiss(context);
-                  Dialogs.alert(context,
-                      tittle: "Error al crear usuario",
-                      description: creacion.messages);
+                if (codigoSuplidorf == 0) {
+                  var creacion = await _usuariosApi.createUsuarios(
+                      email: emailf,
+                      phoneNumber: telefonof,
+                      fullName: nombref,
+                      roleId: rol1['id'],
+                      codigoSuplidor: suplidor["codigoRelacional"]);
+                  if (creacion is Success<UsuarioPOSTResponse>) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.success(msg: "Creacion de usuario exitosa");
+                  } else if (creacion is Failure) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.error(msg: creacion.messages[0]);
+                  }
+                } else {
+                  var creacion = await _usuariosApi.createUsuarios(
+                      email: emailf,
+                      phoneNumber: telefonof,
+                      fullName: nombref,
+                      roleId: rol1['id'],
+                      codigoSuplidor: codigoSuplidorf);
+                  if (creacion is Success<UsuarioPOSTResponse>) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.success(msg: "Creacion de usuario exitosa");
+                  } else if (creacion is Failure) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.error(msg: creacion.messages[0]);
+                  }
                 }
-              }, rolElegido, buttonTittle, rol1));
+              }, rolElegido, buttonTittle, rol1, suplidor, password));
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
       Dialogs.alert(context,
