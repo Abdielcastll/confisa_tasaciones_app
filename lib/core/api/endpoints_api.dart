@@ -1,7 +1,6 @@
 import 'package:tasaciones_app/core/models/endpoints_response.dart';
 
 import '../authentication_client.dart';
-import '../models/acciones_response.dart';
 import 'http.dart';
 
 class EndpointsApi {
