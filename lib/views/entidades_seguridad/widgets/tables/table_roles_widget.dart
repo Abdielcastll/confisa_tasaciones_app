@@ -15,9 +15,7 @@ import '../../../../theme/theme.dart';
 import '../../../../widgets/app_circle_icon_button.dart';
 import '../../../../widgets/app_dialogs.dart';
 import '../dialog_mostrar_informacion_permisos.dart';
-import '../form_actualizar_rol.dart';
-import '../form_crear_permiso.dart';
-import '../mostrar_informacion_widget.dart';
+import '../forms/form_actualizar_rol.dart';
 
 class PaginatedTableRoles {
   late BuildContext context;
@@ -58,9 +56,6 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
   TableRoles({required this.pageSize, required this.context});
   late BuildContext context;
   final user = locator<AuthenticationClient>().loadSession;
-/*   final _accionesApi = locator<AccionesApi>();
-  final _recursosApi = locator<RecursosAPI>();
-  final _permisosApi = locator<PermisosAPI>(); */
   final _rolesApi = locator<RolesAPI>();
   final _permisosApi = locator<PermisosAPI>();
 
@@ -146,8 +141,6 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                     context: context,
                                                     builder:
                                                         (BuildContext context) {
-                                                      List<RolClaimsData>
-                                                          selectedPermisos = [];
                                                       List<PermisosData>
                                                           selectedPermisos2 =
                                                           [];
@@ -309,9 +302,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                   Text(
                                                     e.descripcion,
                                                   ),
-                                                  onTap: () {
-                                                    print("");
-                                                  },
+                                                  onTap: () {},
                                                 ),
                                                 DataCell(IconButton(
                                                     onPressed: () async {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/theme.dart';
+import '../../../../theme/theme.dart';
 
-class ActualizarRolForm extends StatelessWidget {
-  ActualizarRolForm(
+class CrearEndpointForm extends StatelessWidget {
+  CrearEndpointForm(
       {Key? key,
       required GlobalKey<FormState> formKey,
       required this.size,
@@ -11,9 +11,11 @@ class ActualizarRolForm extends StatelessWidget {
       required this.informacion,
       required this.validator,
       required this.modificar,
-      required this.descripcion,
+      required this.controlador,
       required this.buttonTittle,
-      required this.nombre})
+      required this.nombre,
+      required this.httpVerbo,
+      required this.metodo})
       : _formKey = formKey,
         super(key: key);
 
@@ -23,7 +25,9 @@ class ActualizarRolForm extends StatelessWidget {
   final List<Widget> informacion;
   final bool validator;
   final Function modificar;
-  late String descripcion;
+  late String controlador;
+  late String metodo;
+  late String httpVerbo;
   final String buttonTittle;
   late String nombre;
 
@@ -95,7 +99,7 @@ class ActualizarRolForm extends StatelessWidget {
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
-                          labelText: "Descripcion",
+                          labelText: "Controlador",
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
@@ -104,13 +108,63 @@ class ActualizarRolForm extends StatelessWidget {
                           ),
                           border: OutlineInputBorder()),
                       onSaved: (value) {
-                        descripcion = value!;
+                        controlador = value!;
                       },
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
                             value.length < 5) {
-                          return 'Debe ingresar una descripcion valida';
+                          return 'Debe ingresar un controlador valido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: "Metodo",
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 0.0),
+                          ),
+                          border: OutlineInputBorder()),
+                      onSaved: (value) {
+                        metodo = value!;
+                      },
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 5) {
+                          return 'Debe ingresar un metodo valido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: "Verbo HTTP",
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 0.0),
+                          ),
+                          border: OutlineInputBorder()),
+                      onSaved: (value) {
+                        httpVerbo = value!;
+                      },
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 3) {
+                          return 'Debe ingresar un verbo http valudo';
                         }
                         return null;
                       },
@@ -126,7 +180,7 @@ class ActualizarRolForm extends StatelessWidget {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState?.save();
-                          modificar(nombre, descripcion);
+                          modificar(nombre, controlador, metodo, httpVerbo);
                         }
                       },
                       child: Text(buttonTittle),

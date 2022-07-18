@@ -3,8 +3,6 @@ import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/endpoints_api.dart';
 import 'package:tasaciones_app/core/models/endpoints_response.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_endpoint.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_permiso.dart';
 
 import '../../../../core/api/acciones_api.dart';
 import '../../../../core/api/api_status.dart';
@@ -17,6 +15,7 @@ import '../../../../core/models/permisos_response.dart';
 import '../../../../theme/theme.dart';
 import '../../../../core/models/recursos_response.dart';
 import '../../../../widgets/app_dialogs.dart';
+import '../forms/form_crear_endpoint.dart';
 
 class PaginatedTableEndpoints {
   late BuildContext context;

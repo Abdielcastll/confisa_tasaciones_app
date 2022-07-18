@@ -85,6 +85,10 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
         button1 =
             await ChangeButtons(context: context, size: size).addButtonRol();
         break;
+      case "Usuarios":
+        button1 = await ChangeButtons(context: context, size: size)
+            .addButtonUsuario();
+        break;
       default:
     }
     notifyListeners();

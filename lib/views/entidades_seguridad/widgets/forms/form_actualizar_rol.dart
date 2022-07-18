@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/theme.dart';
+import '../../../../theme/theme.dart';
 
-class CrearEndpointForm extends StatelessWidget {
-  CrearEndpointForm(
+class ActualizarRolForm extends StatelessWidget {
+  ActualizarRolForm(
       {Key? key,
       required GlobalKey<FormState> formKey,
       required this.size,
@@ -11,11 +11,9 @@ class CrearEndpointForm extends StatelessWidget {
       required this.informacion,
       required this.validator,
       required this.modificar,
-      required this.controlador,
+      required this.descripcion,
       required this.buttonTittle,
-      required this.nombre,
-      required this.httpVerbo,
-      required this.metodo})
+      required this.nombre})
       : _formKey = formKey,
         super(key: key);
 
@@ -25,9 +23,7 @@ class CrearEndpointForm extends StatelessWidget {
   final List<Widget> informacion;
   final bool validator;
   final Function modificar;
-  late String controlador;
-  late String metodo;
-  late String httpVerbo;
+  late String descripcion;
   final String buttonTittle;
   late String nombre;
 
@@ -99,7 +95,7 @@ class CrearEndpointForm extends StatelessWidget {
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
-                          labelText: "Controlador",
+                          labelText: "Descripcion",
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
@@ -108,63 +104,13 @@ class CrearEndpointForm extends StatelessWidget {
                           ),
                           border: OutlineInputBorder()),
                       onSaved: (value) {
-                        controlador = value!;
+                        descripcion = value!;
                       },
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
                             value.length < 5) {
-                          return 'Debe ingresar un controlador valido';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                          labelText: "Metodo",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 0.0),
-                          ),
-                          border: OutlineInputBorder()),
-                      onSaved: (value) {
-                        metodo = value!;
-                      },
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.length < 5) {
-                          return 'Debe ingresar un metodo valido';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                          labelText: "Verbo HTTP",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 0.0),
-                          ),
-                          border: OutlineInputBorder()),
-                      onSaved: (value) {
-                        httpVerbo = value!;
-                      },
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.length < 3) {
-                          return 'Debe ingresar un verbo http valudo';
+                          return 'Debe ingresar una descripcion valida';
                         }
                         return null;
                       },
@@ -180,7 +126,7 @@ class CrearEndpointForm extends StatelessWidget {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState?.save();
-                          modificar(nombre, controlador, metodo, httpVerbo);
+                          modificar(nombre, descripcion);
                         }
                       },
                       child: Text(buttonTittle),

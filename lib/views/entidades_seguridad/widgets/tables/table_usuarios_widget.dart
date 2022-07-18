@@ -3,7 +3,7 @@ import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/roles_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/actualizar_informacion.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/forms/form_update_usuario.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/mostrar_informacion_widget.dart';
 
 import '../../../../core/api/roles_api.dart';

@@ -8,10 +8,11 @@ class UsuariosAPI {
   final AuthenticationClient _authenticationClient;
   UsuariosAPI(this._http, this._authenticationClient);
 
-  Future<Object> getUsuarios({int pageNumber = 1, int pageSize = 100}) async {
+  Future<Object> getUsuarios(
+      {int pageNumber = 1, int pageSize = 100, String email = ""}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/users/get?PageSize=$pageSize&PageNumber=$pageNumber',
+      '/api/users/get?PageSize=$pageSize&PageNumber=$pageNumber&Email=$email',
       method: 'GET',
       headers: {
         'Authorization': 'Bearer $_token',
@@ -36,6 +37,20 @@ class UsuariosAPI {
     );
   }
 
+  Future<Object> getUsuarioDomain({required String email}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/usersdomain/get/$email',
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      parser: (data) {
+        return UsuarioDomainData.fromJson(data);
+      },
+    );
+  }
+
   Future<Object> getRolUsuario({required String id}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
@@ -51,27 +66,29 @@ class UsuariosAPI {
   }
 
   Future<Object> createUsuarios(
-      {required int id,
-      required String descripcion,
-      required int idAccion,
-      required int idRecurso,
-      required int esBasico}) async {
+      {required String fullName,
+      required String email,
+      required String roleId,
+      required String phoneNumber,
+      int codigoSuplidor = 0,
+      String password = ""}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/Usuarios/create',
+      '/api/users/create',
       method: 'POST',
       data: {
-        "id": id,
-        "descripcion": descripcion,
-        "idAccion": idAccion,
-        "idRecurso": idRecurso,
-        "esBasico": esBasico
+        "fullName": fullName,
+        "email": email,
+        "roleId": roleId,
+        "codigoSuplidor": codigoSuplidor,
+        "phoneNumber": phoneNumber,
+        "password": password,
       },
       headers: {
         'Authorization': 'Bearer $_token',
       },
       parser: (data) {
-        return UsuariosResponse.fromJson(data);
+        return UsuarioPOSTResponse.fromJson(data);
       },
     );
   }

@@ -112,6 +112,35 @@ class UsuariosData {
       };
 }
 
+class UsuarioDomainData {
+  UsuarioDomainData({
+    required this.departamento,
+    required this.email,
+    required this.puesto,
+    required this.telefono,
+    required this.nombreCompleto,
+  });
+
+  String puesto, departamento, email, telefono, nombreCompleto;
+
+  factory UsuarioDomainData.fromJson(Map<String, dynamic> json) =>
+      UsuarioDomainData(
+        departamento: json["data"]["departamento"] ?? '',
+        telefono: json["data"]["telefono"] ?? '',
+        email: json["data"]["email"] ?? '',
+        puesto: json["data"]["puesto"] ?? '',
+        nombreCompleto: json["data"]["nombreCompleto"] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        "email": email,
+        "departamento": departamento,
+        "telefono": telefono,
+        "nombreCompleto": nombreCompleto,
+        "puesto": puesto
+      };
+}
+
 class RolUsuarioResponse {
   RolUsuarioResponse({required this.data});
 
