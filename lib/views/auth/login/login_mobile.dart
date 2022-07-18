@@ -10,40 +10,49 @@ class _LoginMobile extends StatelessWidget {
     return ProgressWidget(
       inAsyncCall: vm.loading,
       child: AuthPageWidget(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppTextField(
-              text: 'Email',
-              controller: vm.tcEmail,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 25),
-            AppTextField(
-              text: 'Contraseña',
-              controller: vm.tcPassword,
-              obscureText: vm.obscurePassword,
-              keyboardType: TextInputType.visiblePassword,
-              iconButton: AppObscureTextIcon(
-                icon: vm.obscurePassword
-                    ? Icons.visibility_off
-                    : Icons.visibility,
-                onPressed: vm.changeObscure,
+        child: Form(
+          key: vm.formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AppTextField(
+                text: 'Usuario',
+                controller: vm.tcEmail,
+                keyboardType: TextInputType.emailAddress,
+                validator: emailValidator,
               ),
-            ),
-            const SizedBox(height: 25),
-            AppButtonLogin(
-              text: 'INGRESAR',
-              onPressed: () => vm.signIn(context),
-              color: AppColors.green,
-            ),
-            const SizedBox(height: 10),
-            AppButtonLogin(
-              text: 'RECUPERAR CONTRASEÑA',
-              onPressed: () => vm.goToRecoveryPassword(),
-              color: AppColors.orange,
-            )
-          ],
+              const SizedBox(height: 25),
+              AppTextField(
+                text: 'Contraseña',
+                validator: passwordValidator,
+                controller: vm.tcPassword,
+                obscureText: vm.obscurePassword,
+                keyboardType: TextInputType.visiblePassword,
+                iconButton: AppObscureTextIcon(
+                  icon: vm.obscurePassword
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                  onPressed: vm.changeObscure,
+                ),
+              ),
+              const SizedBox(height: 25),
+              AppButtonLogin(
+                text: 'Iniciar Sesión',
+                onPressed: () => vm.signIn(context),
+                color: AppColors.brownLight,
+              ),
+              const SizedBox(height: 10),
+              TextButton(
+                child: Text(
+                  '¿Olvido su contraseña?',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                ),
+
+                onPressed: () => vm.goToRecoveryPassword(),
+                // color: AppColors.orange,
+              )
+            ],
+          ),
         ),
       ),
     );

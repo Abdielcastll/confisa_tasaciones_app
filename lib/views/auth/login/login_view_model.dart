@@ -14,6 +14,7 @@ class LoginViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();
   final _authenticationAPI = locator<AuthenticationAPI>();
   final _autenticationClient = locator<AuthenticationClient>();
+  final GlobalKey<FormState> formKey = GlobalKey();
   bool _loading = false;
   TextEditingController tcEmail =
       TextEditingController(text: 'abdielcastll@gmail.com');
@@ -28,22 +29,22 @@ class LoginViewModel extends BaseViewModel {
   }
 
   Future<void> signIn(BuildContext context) async {
-    loading = true;
-    var resp = await _authenticationAPI.signIn(
-      email: tcEmail.text,
-      password: tcPassword.text,
-    );
-    if (resp is Success<SignInResponse>) {
-      loading = false;
-      _autenticationClient.saveSession(resp.response.data);
-      _navigationService.navigateToPageWithReplacement(HomeView.routeName);
-    } else if (resp is Failure) {
-      loading = false;
-      Dialogs.alert(
-        context,
-        tittle: 'Error',
-        description: resp.messages,
+    if (formKey.currentState!.validate()) {
+      loading = true;
+      var resp = await _authenticationAPI.signIn(
+        email: tcEmail.text,
+        password: tcPassword.text,
       );
+      if (resp is Success<SignInResponse>) {
+        loading = false;
+        _autenticationClient.saveSession(resp.response.data);
+        _navigationService.navigateToPageWithReplacement(HomeView.routeName);
+      } else if (resp is Failure) {
+        loading = false;
+        Dialogs.error(
+          msg: resp.messages[0],
+        );
+      }
     }
   }
 
