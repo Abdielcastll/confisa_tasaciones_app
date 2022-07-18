@@ -199,7 +199,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                                                   var respAsignacion = await _rolesApi.assingPermisosRol(currentRowData.id, selectedPermisos2);
                                                                                   if (respAsignacion is Success<RolPOSTResponse>) {
                                                                                     ProgressDialog.dissmiss(context);
-                                                                                    Dialogs.alert(context, tittle: "Asignacion exitosa", description: [""]);
+                                                                                    Dialogs.success(msg: "Asignacion exitosa");
                                                                                     ProgressDialog.dissmiss(context);
                                                                                     ProgressDialog.dissmiss(context);
                                                                                     setState(
@@ -209,7 +209,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                                                   } else {
                                                                                     if (respAsignacion is Failure) {
                                                                                       ProgressDialog.dissmiss(context);
-                                                                                      Dialogs.alert(context, tittle: "Asignacion fallida", description: respAsignacion.messages);
+                                                                                      Dialogs.error(msg: respAsignacion.messages.first);
                                                                                     }
                                                                                   }
                                                                                 }
@@ -269,10 +269,9 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                   is Failure) {
                                                 ProgressDialog.dissmiss(
                                                     context);
-                                                Dialogs.alert(context,
-                                                    tittle: respPermisos.source,
-                                                    description:
-                                                        respPermisos.messages);
+                                                Dialogs.error(
+                                                    msg: respPermisos
+                                                        .messages.first);
                                               }
                                             })
                                       ],
@@ -316,20 +315,18 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                           RolPOSTResponse>) {
                                                         ProgressDialog.dissmiss(
                                                             context);
-                                                        Dialogs.alert(context,
-                                                            tittle:
-                                                                "Actualizado con exito",
-                                                            description: [""]);
+                                                        Dialogs.success(
+                                                            msg:
+                                                                "Actualizado con exito");
+
                                                         notifyListeners();
                                                       } else if (resp
                                                           is Failure) {
                                                         ProgressDialog.dissmiss(
                                                             context);
-                                                        Dialogs.alert(context,
-                                                            tittle:
-                                                                "Actualizacion fallida",
-                                                            description:
-                                                                resp.messages);
+                                                        Dialogs.error(
+                                                            msg: resp.messages
+                                                                .first);
                                                       }
                                                     },
                                                     icon: const Icon(
@@ -354,12 +351,9 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                           ProgressDialog
                                                               .dissmiss(
                                                                   context);
-                                                          Dialogs.alert(context,
-                                                              tittle:
-                                                                  "Eliminado con exito",
-                                                              description: [
-                                                                ""
-                                                              ]);
+                                                          Dialogs.success(
+                                                              msg:
+                                                                  "Eliminado con exito");
                                                           setState(
                                                             () {},
                                                           );
@@ -369,11 +363,9 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                                           ProgressDialog
                                                               .dissmiss(
                                                                   context);
-                                                          Dialogs.alert(context,
-                                                              tittle:
-                                                                  "Eliminacion fallida",
-                                                              description: resp
-                                                                  .messages);
+                                                          Dialogs.error(
+                                                              msg: resp.messages
+                                                                  .first);
                                                         }
                                                       });
                                                     },
@@ -388,8 +380,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                   });
             } else if (resp is Failure) {
               ProgressDialog.dissmiss(context);
-              Dialogs.alert(context,
-                  tittle: "Error de conexion", description: resp.messages);
+              Dialogs.error(msg: resp.messages.first);
             }
           },
         ),
@@ -422,11 +413,8 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                                 currentRowData.id, nombref, descripcionf);
                             if (resp is Success<RolPOSTResponse>) {
                               ProgressDialog.dissmiss(context);
-                              Dialogs.alert(context,
-                                  tittle: "Modificacion Exitosa",
-                                  description: [
-                                    "Se ha modificado el rol con exito"
-                                  ]);
+                              Dialogs.success(msg: "Modificacion Exitosa");
+
                               currentPage = 0;
                               offset = 0;
                               totalCount = 0;
@@ -434,9 +422,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                               setNextView();
                             } else if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
-                              Dialogs.alert(context,
-                                  tittle: "Modificacion fallida",
-                                  description: resp.messages);
+                              Dialogs.error(msg: resp.messages.first);
                             }
                           },
                           descripcion: descripcion,
@@ -458,9 +444,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
               var resp = await _rolesApi.deleteRol(currentRowData.id);
               if (resp is Success<RolPOSTResponse>) {
                 ProgressDialog.dissmiss(context);
-                Dialogs.alert(context,
-                    tittle: "Eliminado con exito",
-                    description: ["Eliminacion realizada"]);
+                Dialogs.success(msg: "Eliminado con exito");
                 currentPage = 0;
                 offset = 0;
                 totalCount = 0;
@@ -468,8 +452,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                 setNextView();
               } else if (resp is Failure) {
                 ProgressDialog.dissmiss(context);
-                Dialogs.alert(context,
-                    tittle: "Eliminacion fallida", description: resp.messages);
+                Dialogs.error(msg: resp.messages.first);
               }
             });
           },
@@ -494,9 +477,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
       return RemoteDataSourceDetails(
           resp.response.data.length, resp.response.data);
     } else if (resp is Failure) {
-      Dialogs.alert(context,
-          tittle: "Error de Conexion",
-          description: ["Fallo al conectar a la red"]);
+      Dialogs.error(msg: resp.messages.first);
     }
     throw Exception('Unable to query remote server');
   }

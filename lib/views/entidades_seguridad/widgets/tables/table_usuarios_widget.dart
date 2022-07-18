@@ -152,16 +152,9 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                                       status: !currentRowData.isActive);
                               if (creacion is Success<UsuarioPOSTResponse>) {
                                 ProgressDialog.dissmiss(context);
-                                Dialogs.alert(context,
-                                    tittle: "Estado actualizado",
-                                    description: [
-                                      "Se ha actualizado el estado de forma exitosa"
-                                    ]);
+                                Dialogs.success(msg: "Estado actualizado");
                               } else if (creacion is Failure) {
-                                ProgressDialog.dissmiss(context);
-                                Dialogs.alert(context,
-                                    tittle: creacion.supportMessage,
-                                    description: creacion.messages);
+                                Dialogs.error(msg: creacion.messages.first);
                               }
                             },
                             child: const Text("Cambiar Estado"),
@@ -267,15 +260,12 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                               id: currentRowData.id, rol: rol1);
                           if (creacion is Success<UsuarioPOSTResponse>) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: "Rol asignado",
-                                description: ["Rol asignado de forma exitosa"]);
+                            Dialogs.success(msg: "Rol asignado");
+
                             _key.currentState?.reset();
                           } else if (creacion is Failure) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: creacion.supportMessage,
-                                description: creacion.messages);
+                            Dialogs.error(msg: creacion.messages.first);
                           }
                         }
                         if (rol2["id"] != "") {
@@ -284,15 +274,11 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                               id: currentRowData.id, rol: rol2);
                           if (creacion is Success<UsuarioPOSTResponse>) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: "Rol asignado",
-                                description: ["Rol asignado de forma exitosa"]);
+                            Dialogs.success(msg: "Rol asignado");
                             _key.currentState?.reset();
                           } else if (creacion is Failure) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: creacion.supportMessage,
-                                description: creacion.messages);
+                            Dialogs.error(msg: creacion.messages.first);
                           }
                         }
                         if (nombref != "" || emailf != "" || telefonof != "") {
@@ -304,15 +290,12 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                               fullName: nombref);
                           if (creacion is Success<UsuarioPOSTResponse>) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: "Modificacion de datos exitosa",
-                                description: ["Exito al modificar usuario"]);
+                            Dialogs.success(
+                                msg: "Modificacion de datos exitosa");
                             _key.currentState?.reset();
                           } else if (creacion is Failure) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: creacion.supportMessage,
-                                description: creacion.messages);
+                            Dialogs.error(msg: creacion.messages.first);
                           }
                         }
                       }, dropdown, "Modificar", rol1, rol2),
@@ -320,8 +303,7 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                   });
             } else if (resp is Failure) {
               ProgressDialog.dissmiss(context);
-              Dialogs.alert(context,
-                  tittle: resp.supportMessage, description: resp.messages);
+              Dialogs.error(msg: resp.messages.first);
             }
           },
           icon: const Icon(Icons.person))),
@@ -364,9 +346,7 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
             element.idRoles.add(element2.roleId);
           }
         } else if (resp2 is Failure) {
-          Dialogs.alert(context,
-              tittle: "Error de Conexion",
-              description: ["Fallo al conectar a la red"]);
+          Dialogs.error(msg: resp2.messages.first);
           throw Exception('Unable to query remote server');
         }
       }
@@ -375,9 +355,7 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
       return RemoteDataSourceDetails(
           resp.response.totalCount, resp.response.data);
     } else if (resp is Failure) {
-      Dialogs.alert(context,
-          tittle: "Error de Conexion",
-          description: ["Fallo al conectar a la red"]);
+      Dialogs.error(msg: resp.messages.first);
       throw Exception('Unable to query remote server');
     }
 

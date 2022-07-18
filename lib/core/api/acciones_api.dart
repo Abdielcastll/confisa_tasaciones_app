@@ -7,7 +7,8 @@ class AccionesApi {
   final AuthenticationClient _authenticationClient;
   AccionesApi(this._http, this._authenticationClient);
 
-  Future<Object> getAcciones({int pageNumber = 1, int pageSize = 12}) async {
+  Future<Object> getAcciones(
+      {int pageNumber = 1, int pageSize = 12, String id = ''}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/acciones/get',
@@ -15,12 +16,55 @@ class AccionesApi {
         'Authorization': 'Bearer $_token',
       },
       queryParameters: {
-        // "id": "ac4ded05-a7ea-43d3-b01a-b0a8c55dae73",
+        "id": id,
         "PageSize": pageSize,
         "PageNumber": pageNumber,
       },
       parser: (data) {
         return AccionesResponse.fromJson(data);
+      },
+    );
+  }
+
+  Future<Object> createAcciones({required String name}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/acciones/create',
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      data: {
+        "nombre": name,
+      },
+    );
+  }
+
+  Future<Object> updateAcciones({required String name, required int id}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/acciones/update',
+      method: "PUT",
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      data: {
+        "id": id,
+        "nombre": name,
+      },
+    );
+  }
+
+  Future<Object> deleteAcciones({required int id}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/acciones/update',
+      method: "DELETE",
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      queryParameters: {
+        "id": id,
       },
     );
   }

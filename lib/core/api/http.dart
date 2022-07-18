@@ -43,17 +43,24 @@ class Http {
       }
       return Success(response: response.data!);
     } catch (e) {
+      _logger.e(e);
       Failure data = Failure(
         messages: ['No Internet'],
-        source: '',
-        exception: '',
-        errorId: '',
         supportMessage: '',
         statusCode: 0,
       );
       if (e is DioError) {
-        if (_logsEnabled) _logger.e(e.response?.data);
-        if (e.response?.data != null) data = Failure.fromJson(e.response?.data);
+        if (_logsEnabled) _logger.e(e.response?.data ?? 'DioError Null');
+        if (e.response?.data != null) {
+          try {
+            data = Failure.fromJson(e.response?.data);
+          } catch (e) {
+            data = Failure(
+                messages: ['Error desconocido'],
+                supportMessage: 'Error',
+                statusCode: 0);
+          }
+        }
       }
       return data;
     }
