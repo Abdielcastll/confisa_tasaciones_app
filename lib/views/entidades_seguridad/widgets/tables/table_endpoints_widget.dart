@@ -3,6 +3,7 @@ import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/endpoints_api.dart';
 import 'package:tasaciones_app/core/models/endpoints_response.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/forms/form_asignar_permiso.dart';
 
 import '../../../../core/api/acciones_api.dart';
 import '../../../../core/api/api_status.dart';
@@ -61,6 +62,7 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
   late BuildContext context;
   final user = locator<AuthenticationClient>().loadSession;
   final _endpointApi = locator<EndpointsApi>();
+  final _permisosApi = locator<PermisosAPI>();
 
   @override
   bool get forceRemoteReload => super.forceRemoteReload = true;
@@ -73,9 +75,68 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
     final currentRowData = lastDetails!.rows[index];
     return DataRow(cells: [
       DataCell(
-        Text(currentRowData.nombre),
+        TextButton(
+          child: Text(currentRowData.nombre),
+          onPressed: () async {
+            final GlobalKey<FormState> _formKey = GlobalKey();
+            bool validator = true;
+            String buttonTittle = "Asignar";
+            Map<String, dynamic> permiso = {};
+            var opcion;
+            ProgressDialog.show(context);
+            var resp = await _permisosApi.getPermisos(pageSize: 999);
+            if (resp is Success<PermisosResponse>) {
+              ProgressDialog.dissmiss(context);
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      content: formAsignarPermiso(
+                        "Asignar Permiso",
+                        _formKey,
+                        permiso,
+                        () async {
+                          ProgressDialog.show(context);
+                          var resp = await _endpointApi.assignPermisoEndpoint(
+                              endpointId: currentRowData.id,
+                              permisoId: permiso["id"]);
+                          if (resp is Success<EndpointsPOSTResponse>) {
+                            ProgressDialog.dissmiss(context);
+                            Dialogs.alert(context,
+                                tittle: "Asignacion de Permiso exitosa",
+                                description: [
+                                  "Se ha asignado el permiso con exito"
+                                ]);
+                            currentPage = 0;
+                            offset = 0;
+                            totalCount = 0;
+                            setNextView();
+                          } else if (resp is Failure) {
+                            ProgressDialog.dissmiss(context);
+                            Dialogs.alert(context,
+                                tittle: "Asignacion fallida",
+                                description: resp.messages);
+                          }
+                        },
+                        opcion,
+                        resp.response.data,
+                        size,
+                        validator,
+                        "Asignar",
+                      ),
+                    );
+                  });
+            }
+          },
+        ),
       ),
-      DataCell(Text(currentRowData.permiso.descripcion)),
+      DataCell(Text(
+        currentRowData.permiso.descripcion,
+      )),
       DataCell(IconButton(
           onPressed: () async {
             final GlobalKey<FormState> _formKey = GlobalKey();

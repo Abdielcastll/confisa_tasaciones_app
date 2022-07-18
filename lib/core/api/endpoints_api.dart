@@ -68,6 +68,24 @@ class EndpointsApi {
     );
   }
 
+  Future<Object> assignPermisoEndpoint(
+      {required int endpointId,
+      required int permisoId,
+      bool estado = true}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/endpoints/assign-permiso',
+      method: 'POST',
+      data: {"id": 0, "endpointId": endpointId, "permisoId": permisoId},
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      parser: (data) {
+        return EndpointsPOSTResponse.fromJson(data);
+      },
+    );
+  }
+
   Future<Object> updateEndpoint(
       {required int id,
       required String nombre,
