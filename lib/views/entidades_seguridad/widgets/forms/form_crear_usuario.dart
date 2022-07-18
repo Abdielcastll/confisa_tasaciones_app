@@ -496,9 +496,8 @@ Future<dynamic> dialogCrearUsuario(
                                             }));
                                           } else if (resp is Failure) {
                                             ProgressDialog.dissmiss(context);
-                                            Dialogs.alert(context,
-                                                tittle: "Error de Conexion",
-                                                description: resp.messages);
+                                            Dialogs.error(
+                                                msg: resp.messages[0]);
                                           }
                                         }
                                       },

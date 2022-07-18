@@ -231,7 +231,7 @@ class TableRecursos extends AdvancedDataTableSource<RecursosData> {
       return RemoteDataSourceDetails(
           resp.response.totalCount, resp.response.data);
     } else if (resp is Failure) {
-      Dialogs.alert(context, tittle: "Error", description: resp.messages);
+      Dialogs.error(msg: resp.messages.first);
     }
     throw Exception('Unable to query remote server');
   }

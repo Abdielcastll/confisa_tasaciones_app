@@ -104,8 +104,7 @@ class ChangeButtons {
               }, rolElegido, buttonTittle, rol1, suplidor, password));
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
-      Dialogs.alert(context,
-          tittle: resp.messages[0], description: resp.messages);
+      Dialogs.error(msg: resp.messages.first);
     }
     return Container();
   }
@@ -145,16 +144,10 @@ class ChangeButtons {
                           httpVerbo: httpVerbof);
                       if (resp is Success<EndpointsData>) {
                         ProgressDialog.dissmiss(context);
-                        Dialogs.alert(context,
-                            tittle: "Creacion de endpoint exitosa",
-                            description: [
-                              "Se ha creado el  endpoint con exito"
-                            ]);
+                        Dialogs.success(msg: "Creacion de endpoint exitosa");
                       } else if (resp is Failure) {
                         ProgressDialog.dissmiss(context);
-                        Dialogs.alert(context,
-                            tittle: "Creacion fallida",
-                            description: resp.messages);
+                        Dialogs.error(msg: resp.messages.first);
                       }
                     },
                     controlador: controlador,
@@ -196,14 +189,10 @@ class ChangeButtons {
                           await _rolesApi.createRoles(nombref, descripcionf);
                       if (resp is Success<RolPOSTResponse>) {
                         ProgressDialog.dissmiss(context);
-                        Dialogs.alert(context,
-                            tittle: "Creacion de rol exitosa",
-                            description: ["Se ha creado el rol con exito"]);
+                        Dialogs.success(msg: "Creacion de rol exitosa");
                       } else if (resp is Failure) {
                         ProgressDialog.dissmiss(context);
-                        Dialogs.alert(context,
-                            tittle: "Creacion fallida",
-                            description: resp.messages);
+                        Dialogs.error(msg: resp.messages.first);
                       }
                     },
                     descripcion: descripcion,
@@ -223,7 +212,6 @@ class ChangeButtons {
     Map<String, dynamic> accion = {};
     Map<String, dynamic> recurso = {};
     dynamic opcion;
-
     var resp = await _accionesApi.getAcciones();
     if (resp is Success<AccionesResponse>) {
       var resp2 = await _recursosApi.getRecursos();
@@ -243,23 +231,19 @@ class ChangeButtons {
                           descripcion,
                           recurso,
                           accion, (String descripcionf) async {
-                        // ProgressDialog.show(context);
+                        ProgressDialog.show(context);
                         var creacion = await _permisosApi.createPermisos(
                             descripcion: descripcionf,
                             idAccion: accion["id"],
                             idRecurso: recurso["id"],
                             esBasico: 1);
                         if (creacion is Success<PermisosData>) {
-                          // ProgressDialog.dissmiss(context);
-                          Dialogs.alert(context,
-                              tittle: "Creacion exitosa",
-                              description: ["Permiso creado con exito"]);
+                          ProgressDialog.dissmiss(context);
+                          Dialogs.success(msg: "Creacion exitosa");
                           _formKey.currentState?.reset();
                         } else if (creacion is Failure) {
-                          // ProgressDialog.dissmiss(context);
-                          Dialogs.alert(context,
-                              tittle: creacion.messages[0],
-                              description: creacion.messages);
+                          ProgressDialog.dissmiss(context);
+                          Dialogs.error(msg: creacion.messages.first);
                         }
                       }, opcion, resp.response.data, resp2.response.data, [],
                           size, false, "Crear"),
@@ -268,20 +252,10 @@ class ChangeButtons {
                       ));
                 }));
       } else if (resp2 is Failure) {
-        // ProgressDialog.dissmiss(context);
-        Dialogs.alert(
-          context,
-          tittle: 'Error',
-          description: resp2.messages,
-        );
+        Dialogs.error(msg: resp2.messages.first);
       }
     } else if (resp is Failure) {
-      // ProgressDialog.dissmiss(context);
-      Dialogs.alert(
-        context,
-        tittle: 'Error',
-        description: resp.messages,
-      );
+      Dialogs.error(msg: resp.messages.first);
     }
     return Container();
   }

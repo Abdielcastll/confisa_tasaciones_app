@@ -52,11 +52,7 @@ class HomeViewModel extends BaseViewModel {
       // }
       loading = false;
     } else if (resp is Failure) {
-      Dialogs.alert(
-        context,
-        tittle: 'Error',
-        description: resp.messages,
-      );
+      Dialogs.error(msg: resp.messages.first);
       loading = false;
     }
   }
@@ -73,11 +69,7 @@ class HomeViewModel extends BaseViewModel {
               .permisoUser = rolData;
         }
       } else if (resp is Failure) {
-        Dialogs.alert(
-          context,
-          tittle: 'Error',
-          description: resp.messages,
-        );
+        Dialogs.error(msg: resp.messages.first);
       }
     }
   }

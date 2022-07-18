@@ -102,20 +102,15 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
                               permisoId: permiso["id"]);
                           if (resp is Success<EndpointsPOSTResponse>) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: "Asignacion de Permiso exitosa",
-                                description: [
-                                  "Se ha asignado el permiso con exito"
-                                ]);
+                            Dialogs.success(
+                                msg: "Asignacion de Permiso exitosa");
                             currentPage = 0;
                             offset = 0;
                             totalCount = 0;
                             setNextView();
                           } else if (resp is Failure) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: "Asignacion fallida",
-                                description: resp.messages);
+                            Dialogs.error(msg: resp.messages[0]);
                           }
                         },
                         opcion,
@@ -191,16 +186,11 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
                               httpVerbo: httpVerbof);
                           if (resp is Success<EndpointsPOSTResponse>) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: "Modificacion de endpoint exitosa",
-                                description: [
-                                  "Se ha modificado el  endpoint con exito"
-                                ]);
+                            Dialogs.success(
+                                msg: "Modificacion de endpoint exitosa");
                           } else if (resp is Failure) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.alert(context,
-                                tittle: "Modificacion fallida",
-                                description: resp.messages);
+                            Dialogs.error(msg: resp.messages[0]);
                           }
                         },
                         controlador: controlador,
@@ -223,17 +213,14 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
                   await _endpointApi.deleteEndpoint(id: currentRowData.id);
               if (resp is Success<EndpointsPOSTResponse>) {
                 ProgressDialog.dissmiss(context);
-                Dialogs.alert(context,
-                    tittle: "Eliminado con exito",
-                    description: ["Endpoint eliminado."]);
+                Dialogs.success(msg: "Eliminado con exito");
                 currentPage = 0;
                 offset = 0;
                 totalCount = 0;
                 setNextView();
               } else if (resp is Failure) {
                 ProgressDialog.dissmiss(context);
-                Dialogs.alert(context,
-                    tittle: "Eliminacion fallida", description: resp.messages);
+                Dialogs.error(msg: resp.messages.first);
               }
             });
           },
@@ -270,8 +257,7 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
       return RemoteDataSourceDetails(
           resp.response.totalCount, resp.response.data);
     } else if (resp is Failure) {
-      Dialogs.alert(context,
-          tittle: "Error de Conexion", description: resp.messages);
+      Dialogs.error(msg: resp.messages.first);
     }
     throw Exception('Unable to query remote server');
   }

@@ -107,11 +107,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                                 esBasico: 1);
                             if (creacion is Success<PermisosPOSTResponse>) {
                               ProgressDialog.dissmiss(context);
-                              Dialogs.alert(context,
-                                  tittle: "Modificacion exitosa",
-                                  description: [
-                                    "Permiso modificado con exito"
-                                  ]);
+                              Dialogs.success(msg: "Modificacion exitosa");
                               currentPage = 0;
                               offset = 0;
                               totalCount = 0;
@@ -120,9 +116,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                               setNextView();
                             } else if (creacion is Failure) {
                               ProgressDialog.dissmiss(context);
-                              Dialogs.alert(context,
-                                  tittle: creacion.messages[0],
-                                  description: creacion.messages);
+                              Dialogs.error(msg: creacion.messages.first);
                             }
                           },
                               opcion,
@@ -151,19 +145,11 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                     });
               } else if (resp2 is Failure) {
                 ProgressDialog.dissmiss(context);
-                Dialogs.alert(
-                  context,
-                  tittle: 'Error',
-                  description: resp2.messages,
-                );
+                Dialogs.error(msg: resp2.messages.first);
               }
             } else if (resp is Failure) {
               ProgressDialog.dissmiss(context);
-              Dialogs.alert(
-                context,
-                tittle: 'Error',
-                description: resp.messages,
-              );
+              Dialogs.error(msg: resp.messages.first);
             }
           },
           icon: const Icon(Icons.cached))),
@@ -178,9 +164,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                   await _permisosApi.deletePermisos(id: currentRowData.id);
               if (resp is Success<PermisosPOSTResponse>) {
                 ProgressDialog.dissmiss(context);
-                Dialogs.alert(context,
-                    tittle: "Eliminado con exito",
-                    description: ["description"]);
+                Dialogs.success(msg: "Eliminado con exito");
                 currentPage = 0;
                 offset = 0;
                 totalCount = 0;
@@ -188,9 +172,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                 setNextView();
               } else if (resp is Failure) {
                 ProgressDialog.dissmiss(context);
-                Dialogs.alert(context,
-                    tittle: "Eliminacion fallida",
-                    description: ["description"]);
+                Dialogs.error(msg: resp.messages.first);
               }
             });
           },
@@ -231,9 +213,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
       return RemoteDataSourceDetails(
           resp.response.totalCount, resp.response.data);
     } else if (resp is Failure) {
-      Dialogs.alert(context,
-          tittle: "Error de Conexion",
-          description: ["Fallo al conectar a la red"]);
+      Dialogs.error(msg: resp.messages.first);
     }
     throw Exception('Unable to query remote server');
   }
