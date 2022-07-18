@@ -26,7 +26,7 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
           id: "1",
           descripcion: "Configuracion de Seguridad",
           path: "entidades_seguridad"),
-      // Rol(id: "3", descripcion: "Buscar Usuarios", path: ""),
+      Rol(id: "3", descripcion: "Buscar Usuarios", path: ""),
     ];
 
     return Drawer(

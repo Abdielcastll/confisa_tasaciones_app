@@ -15,7 +15,6 @@ import '../core/services/navigator_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import 'api/modulos_api.dart';
 import 'api/recursos_api.dart';
 import 'api/usuarios_api.dart';
 
@@ -48,7 +47,6 @@ abstract class DependencyInjection {
     final usuariosAPI = UsuariosAPI(http, authenticationClient);
     final recursosAPI = RecursosAPI(http, authenticationClient);
     final endpointsAPI = EndpointsApi(http, authenticationClient);
-    final modulosAPI = ModulosApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
@@ -59,6 +57,5 @@ abstract class DependencyInjection {
     locator.registerSingleton<PersonalApi>(personalApi);
     locator.registerSingleton<AccionesApi>(accionesApi);
     locator.registerSingleton<EndpointsApi>(endpointsAPI);
-    locator.registerSingleton<ModulosApi>(modulosAPI);
   }
 }

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tasaciones_app/theme/theme.dart';
 
 class AuthPageWidget extends StatelessWidget {
   const AuthPageWidget({
@@ -13,60 +11,25 @@ class AuthPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(
-              height: 190,
-              child: SvgPicture.asset(
-                'assets/img/fondo.svg',
-                fit: BoxFit.cover,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Image.asset('assets/img/logo-confisa.png'),
+              height: 150,
+              child: Image.asset('assets/img/header.png', fit: BoxFit.none),
             ),
             Container(
-                height: MediaQuery.of(context).size.height - 388.05,
-                color: Colors.white,
+                height: MediaQuery.of(context).size.height - 300,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/img/fondo.png'),
+                      fit: BoxFit.cover),
+                ),
                 child: child),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              color: AppColors.brownDark,
-              height: 140,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const SizedBox(width: 20),
-                  Image.asset(
-                    'assets/img/Contacts17.png',
-                    height: 18,
-                  ),
-                  const SizedBox(width: 20),
-                  Image.asset(
-                    'assets/img/Email-1.png',
-                    height: 22,
-                  ),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/img/Facebook-17.png',
-                          height: 22,
-                        ),
-                        const SizedBox(width: 10),
-                        Image.asset('assets/img/Instagram-17.png', height: 22),
-                      ],
-                    ),
-                  )),
-                ],
-              ),
+            SizedBox(
+              height: 150,
+              child: Image.asset('assets/img/footer.png', fit: BoxFit.cover),
             )
           ],
         ),

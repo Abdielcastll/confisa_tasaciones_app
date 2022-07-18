@@ -7,13 +7,9 @@ class AppTextField extends StatelessWidget {
   final bool? obscureText;
   final Widget? iconButton;
   final TextInputType? keyboardType;
-  final String? Function(String?)? validator;
-  final Color? colorError;
   const AppTextField({
     required this.text,
     required this.controller,
-    this.validator,
-    this.colorError,
     this.obscureText,
     this.iconButton,
     this.keyboardType,
@@ -22,28 +18,28 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      alignment: Alignment.center,
       width: MediaQuery.of(context).size.width * .80,
-      child: TextFormField(
-        validator: validator,
+      child: TextField(
         keyboardType: keyboardType,
         controller: controller,
         style: Theme.of(context).textTheme.headline6?.copyWith(
               color: AppColors.brownDark,
             ),
         decoration: InputDecoration(
+            constraints: const BoxConstraints(maxHeight: 50),
             border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderRadius: BorderRadius.all(Radius.circular(18)),
             ),
             filled: true,
             isDense: true,
-            errorStyle: TextStyle(color: colorError),
             fillColor: Colors.white,
             hintText: text,
             hintStyle: const TextStyle(
               color: Colors.grey,
               fontSize: 20,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
             suffixIcon: iconButton),
         obscureText: obscureText ?? false,

@@ -19,41 +19,37 @@ class _RecoveryPasswordMobile extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 20),
             width: size.width * .80,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(18),
               color: AppColors.brownLight.withOpacity(0.7),
             ),
-            child: Form(
-              key: vm.formKey,
-              child: Column(
-                children: [
-                  Text(
-                    'Escriba su correo',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline5?.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
-                  const SizedBox(height: 8),
-                  AppTextField(
-                    text: 'Email',
-                    controller: vm.tcEmail,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: emailValidator,
-                  ),
-                ],
-              ),
+            child: Column(
+              children: [
+                Text(
+                  'Recibirá un link a su correo',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline5?.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                AppTextField(
+                  text: 'Email',
+                  controller: vm.tcEmail,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ],
             ),
           ),
           AppButtonLogin(
-            text: 'Siguiente',
+            text: 'SIGUIENTE',
             onPressed: () => vm.forgotPassword(context),
-            color: AppColors.brownLight,
+            color: AppColors.green,
           ),
           const SizedBox(height: 10),
           AppButtonLogin(
-            text: 'Anterior',
+            text: 'ANTERIOR',
             onPressed: vm.goBack,
-            color: AppColors.brownLight,
+            color: AppColors.orange,
           )
         ],
       )),

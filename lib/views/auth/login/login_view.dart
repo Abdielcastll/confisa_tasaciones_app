@@ -2,7 +2,6 @@ library home_view;
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:tasaciones_app/core/utils/validators.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_buttons.dart';
 import 'package:tasaciones_app/widgets/app_textfield.dart';
