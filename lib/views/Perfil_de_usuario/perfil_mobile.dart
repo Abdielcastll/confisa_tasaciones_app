@@ -14,36 +14,21 @@ class _PerfilMobile extends StatelessWidget {
         appBar: const Appbar(titulo: 'Perfil de usuario', textSize: 20),
         body: Column(
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    vm.currentPage == 0
-                        ? CardProfileWidget(vm)
-                        : CardChangePasswordWidget(vm),
-                    // const Spacer(),
-                  ],
-                ),
-              ),
-            ),
+            CardProfileWidget(profile: vm.profile),
+            const Spacer(),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(bottom: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   AppButton(
                       text: 'Anterior',
-                      onPressed: () => vm.currentPage == 1
-                          ? vm.currentPage = 0
-                          : Navigator.of(context).pop(),
+                      onPressed: () => Navigator.of(context).pop(),
                       color: AppColors.orange),
                   AppButton(
-                    text: 'Guardar',
-                    onPressed: () => vm.currentPage == 0
-                        ? vm.guardarPerfil(context)
-                        : vm.updatePassword(context),
-                    color: AppColors.green,
-                  ),
+                      text: 'Guardar',
+                      onPressed: () => Navigator.of(context).pop(),
+                      color: AppColors.green),
                 ],
               ),
             )

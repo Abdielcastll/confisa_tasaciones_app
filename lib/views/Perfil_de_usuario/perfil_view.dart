@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view_model.dart';
-import 'package:tasaciones_app/views/Perfil_de_usuario/widgets/card_password_change.dart';
 import 'package:tasaciones_app/widgets/app_buttons.dart';
 import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';

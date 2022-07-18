@@ -41,7 +41,6 @@ class Profile {
     this.nombreCompleto,
     this.idSuplidor,
     this.nombreSuplidor,
-    this.empresa,
   });
 
   String? id;
@@ -56,7 +55,6 @@ class Profile {
   String? nombreCompleto;
   int? idSuplidor;
   String? nombreSuplidor;
-  String? empresa;
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
         id: json["id"] ?? '',

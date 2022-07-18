@@ -43,7 +43,7 @@ final myTheme = ThemeData(
       ),
     ),
   ),
-  scaffoldBackgroundColor: AppColors.white,
+  scaffoldBackgroundColor: AppColors.bronce,
   iconTheme: const IconThemeData(size: 30),
   appBarTheme: const AppBarTheme(
     elevation: 0,

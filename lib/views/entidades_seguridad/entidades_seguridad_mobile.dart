@@ -14,60 +14,65 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
       appBar: const Appbar(titulo: "Configuración de Seguridad", textSize: 13),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: AppColors.brownLight,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: SizedBox(
-                      width: size.width * .6,
-                      height: 35,
-                      child: DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButton(
-                          style: appDropdown,
-                          borderRadius: BorderRadius.circular(10),
-                          dropdownColor: AppColors.brownLight,
-                          items: vm.items.map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            vm.dropdownvalue = newValue!;
-                            vm.onDropDownChangeButtons(newValue, context);
-                            vm.onDropDownChangeTable(newValue, context);
-                          },
-                          value: vm.dropdownvalue,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.brownLight,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: SizedBox(
+                        width: size.width * .6,
+                        height: 35,
+                        child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton(
+                            style: appDropdown,
+                            borderRadius: BorderRadius.circular(10),
+                            dropdownColor: AppColors.brownLight,
+                            items: vm.items.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(items),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              vm.dropdownvalue = newValue!;
+                              vm.onDropDownChangeButtons(newValue, context);
+                              vm.onDropDownChangeTable(newValue, context);
+                            },
+                            value: vm.dropdownvalue,
 
-                          // Down Arrow Icon
-                          icon: const Icon(
-                            Icons.arrow_drop_down_outlined,
-                            color: Colors.white,
+                            // Down Arrow Icon
+                            icon: const Icon(
+                              Icons.arrow_drop_down_outlined,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ))),
-                ),
-                const Spacer(),
-                Row(
-                  children: [
-                    vm.button1,
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    vm.button2
-                  ],
-                )
-              ],
-            ),
-            const SizedBox(height: 5),
-            Expanded(child: vm.dataTable)
-          ],
+                        ))),
+                  ),
+                  Expanded(child: Container()),
+                  Row(
+                    children: [
+                      vm.button1,
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      vm.button2
+                    ],
+                  )
+                ],
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SizedBox(height: size.height * .82, child: vm.dataTable),
+                physics: const BouncingScrollPhysics(),
+              )
+            ],
+          ),
         ),
       ),
     );

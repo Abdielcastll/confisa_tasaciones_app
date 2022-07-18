@@ -15,8 +15,7 @@ class AppButtonLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: onPressed,
-      minWidth: MediaQuery.of(context).size.width * .80,
-      height: 50,
+      minWidth: MediaQuery.of(context).size.width * .60,
       child: Text(text,
           style: Theme.of(context)
               .textTheme
@@ -24,7 +23,7 @@ class AppButtonLogin extends StatelessWidget {
               ?.copyWith(color: Colors.white)),
       color: color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(10),
       ),
     );
   }
@@ -53,7 +52,7 @@ class AppButton extends StatelessWidget {
               ?.copyWith(color: Colors.white)),
       color: color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(10),
       ),
     );
   }

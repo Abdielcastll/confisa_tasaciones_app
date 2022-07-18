@@ -22,7 +22,7 @@ class EntidadesSeguridadView extends StatelessWidget {
     return ViewModelBuilder<EntidadesSeguridadViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          viewModel.onInit(context);
+          viewModel.onInit();
         },
         builder: (context, viewModel, child) {
           return _EntidadesSeguridadMobile(viewModel);

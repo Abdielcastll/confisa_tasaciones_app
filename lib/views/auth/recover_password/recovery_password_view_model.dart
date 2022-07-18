@@ -11,7 +11,6 @@ class RecoveryPasswordViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();
   final _authenticationAPI = locator<AuthenticationAPI>();
   TextEditingController tcEmail = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey();
   bool _loading = false;
 
   bool get loading => _loading;
@@ -21,20 +20,17 @@ class RecoveryPasswordViewModel extends BaseViewModel {
   }
 
   Future<void> forgotPassword(BuildContext context) async {
-    if (formKey.currentState!.validate()) {
-      loading = true;
-      var resp =
-          await _authenticationAPI.forgotPassword(email: tcEmail.text.trim());
-      if (resp is Success) {
-        Dialogs.success(msg: 'Email enviado');
-        goBack();
-      }
-      if (resp is Failure) {
-        Dialogs.error(msg: resp.messages[0]);
-      }
-
-      loading = false;
+    loading = true;
+    var resp =
+        await _authenticationAPI.forgotPassword(email: tcEmail.text.trim());
+    if (resp is Success) {
+      Dialogs.alert(context, tittle: '', description: ['Email enviado']);
     }
+    if (resp is Failure) {
+      Dialogs.alert(context, tittle: 'error', description: resp.messages);
+    }
+
+    loading = false;
   }
 
   void goBack() {

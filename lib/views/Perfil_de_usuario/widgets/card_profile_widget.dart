@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view_model.dart';
 
+import '../../../core/models/profile_response.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/app_buttons.dart';
 
 class CardProfileWidget extends StatelessWidget {
-  const CardProfileWidget(this.vm, {Key? key}) : super(key: key);
+  const CardProfileWidget({required this.profile, Key? key}) : super(key: key);
 
-  final PerfilViewModel vm;
-  final TextStyle styleContent =
-      const TextStyle(color: Colors.white, fontSize: 16);
+  final Profile? profile;
+  final TextStyle styleContent = const TextStyle(color: Colors.white);
 
   @override
   Widget build(BuildContext context) {
@@ -22,76 +21,30 @@ class CardProfileWidget extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(25, 50, 25, 0),
       child: Column(
         children: [
-          _noImage(context),
-          const SizedBox(height: 20),
           Row(
             children: [
+              _noImage(context),
               const SizedBox(width: 15),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      // height: 35,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: vm.editName
-                                ? _textFieldEdit(
-                                    fontSize: 20,
-                                    onChanged: vm.onChangedName,
-                                    keyboardType: TextInputType.name,
-                                  )
-                                : Text(
-                                    vm.profile?.nombreCompleto ?? '',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                          ),
-                          const SizedBox(width: 20),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.edit_note_sharp,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => vm.editName = !vm.editName,
-                          ),
-                        ],
+                    Text(
+                      profile?.nombreCompleto ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(
-                      height: 35,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: vm.editEmail
-                                ? _textFieldEdit(
-                                    fontSize: 18,
-                                    onChanged: vm.onChangedEmail,
-                                    keyboardType: TextInputType.emailAddress,
-                                  )
-                                : Text(
-                                    vm.profile?.email ?? '',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      // fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.edit_note_sharp,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => vm.editEmail = !vm.editEmail,
-                          ),
-                        ],
+                    Text(
+                      profile?.email ?? '',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        // fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -106,91 +59,52 @@ class CardProfileWidget extends StatelessWidget {
           ),
           Text('Información',
               style: styleContent.copyWith(
-                  fontSize: 22, fontWeight: FontWeight.w600)),
+                  fontSize: 16, fontWeight: FontWeight.w600)),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                if (vm.profile?.phoneNumber != null)
-                  SizedBox(
-                    height: 30,
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: vm.editPhone
-                                ? Row(
-                                    children: [
-                                      Text('Teléfono:  ',
-                                          style: styleContent.copyWith(
-                                              fontWeight: FontWeight.w600)),
-                                      Expanded(
-                                        child: _textFieldEdit(
-                                          fontSize: 16,
-                                          onChanged: vm.onChangedPhone,
-                                          keyboardType: TextInputType.phone,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : _infoItem(
-                                    'Teléfono', vm.profile?.phoneNumber ?? '')),
-                        IconButton(
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _infoItem('Empresa', 'xxxxxx'),
+                      _infoItem('Teléfono', profile?.phoneNumber ?? ''),
+                      _infoItem('Cédula', 'xxxxxxx'),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _infoItem('Status', 'xxxxxxxx'),
+                      _infoItem('Dirección', 'xxxxxxxx'),
+                      Center(
+                        child: IconButton(
                           icon: const Icon(
                             Icons.edit_note_sharp,
                             color: Colors.white,
                           ),
-                          onPressed: () => vm.editPhone = !vm.editPhone,
+                          onPressed: () {},
                         ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                if (vm.profile?.empresa != null)
-                  SizedBox(
-                    child: _infoItem('Empresa', 'xxxxxx'),
-                    height: 30,
-                  ),
-                SizedBox(
-                  child: _infoItem('Estado',
-                      vm.profile?.isActive == true ? 'Activo' : 'Inactivo'),
-                  height: 30,
-                ),
+                )
               ],
             ),
           ),
           const SizedBox(height: 10),
           AppButtonLogin(
+              text: 'Permisos', onPressed: () {}, color: AppColors.orange),
+          AppButtonLogin(
               text: 'Cambiar Contraseña',
-              onPressed: () {
-                vm.editEmail = false;
-                vm.editName = false;
-                vm.editPhone = false;
-                vm.currentPage = 1;
-              },
+              onPressed: () {},
               color: AppColors.brownDark),
         ],
-      ),
-    );
-  }
-
-  TextField _textFieldEdit({
-    required void Function(String)? onChanged,
-    required double fontSize,
-    required TextInputType keyboardType,
-  }) {
-    return TextField(
-      keyboardType: keyboardType,
-      onChanged: onChanged,
-      cursorColor: Colors.white,
-      decoration: const InputDecoration(
-        filled: true,
-        isDense: true,
-        border: InputBorder.none,
-      ),
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: fontSize,
-        fontWeight: FontWeight.w600,
       ),
     );
   }

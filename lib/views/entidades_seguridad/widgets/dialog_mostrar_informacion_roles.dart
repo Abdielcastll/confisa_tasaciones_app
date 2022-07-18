@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/widgets/app_circle_icon_button.dart';
+
+import '../../../theme/theme.dart';
 
 Widget dialogMostrarInformacionRoles(
   Widget imagen,
