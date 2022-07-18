@@ -9,8 +9,25 @@ String? emailValidator(String? email) {
 }
 
 String? passwordValidator(String? pass) {
-  if (pass!.isEmpty) {
-    return 'Contraseña inválida';
+  String textError =
+      'Al menos 8 carácteres, una letra mayúscula, una letra minúscula, un número y un caracter especial';
+  if (!minCharactersValidationRule(pass ?? '') ||
+      !uppercaseValidationRule(pass ?? '') ||
+      !lowercaseValidationRule(pass ?? '') ||
+      !digitValidationRule(pass ?? '') ||
+      !specialCharacterValidationRule(pass ?? '')) {
+    return textError;
   }
   return null;
 }
+
+bool minCharactersValidationRule(String text) => text.length < 8 ? false : true;
+
+bool uppercaseValidationRule(String text) => text.contains(RegExp(r'[A-Z]'));
+
+bool lowercaseValidationRule(String value) => value.contains(RegExp(r'[a-z]'));
+
+bool digitValidationRule(String value) => value.contains(RegExp(r'[0-9]'));
+
+bool specialCharacterValidationRule(String value) =>
+    value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));

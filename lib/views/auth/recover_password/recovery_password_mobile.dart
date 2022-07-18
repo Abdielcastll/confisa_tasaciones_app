@@ -22,22 +22,26 @@ class _RecoveryPasswordMobile extends StatelessWidget {
               borderRadius: BorderRadius.circular(5),
               color: AppColors.brownLight.withOpacity(0.7),
             ),
-            child: Column(
-              children: [
-                Text(
-                  'Escriba su correo',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline5?.copyWith(
-                        color: Colors.white,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                AppTextField(
-                  text: 'Email',
-                  controller: vm.tcEmail,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-              ],
+            child: Form(
+              key: vm.formKey,
+              child: Column(
+                children: [
+                  Text(
+                    'Escriba su correo',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headline5?.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  AppTextField(
+                    text: 'Email',
+                    controller: vm.tcEmail,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: emailValidator,
+                  ),
+                ],
+              ),
             ),
           ),
           AppButtonLogin(

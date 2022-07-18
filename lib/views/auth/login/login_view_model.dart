@@ -41,10 +41,8 @@ class LoginViewModel extends BaseViewModel {
         _navigationService.navigateToPageWithReplacement(HomeView.routeName);
       } else if (resp is Failure) {
         loading = false;
-        Dialogs.alert(
-          context,
-          tittle: 'Error',
-          description: resp.messages,
+        Dialogs.error(
+          msg: resp.messages[0],
         );
       }
     }

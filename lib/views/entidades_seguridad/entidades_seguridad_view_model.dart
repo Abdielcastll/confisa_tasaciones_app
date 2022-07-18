@@ -3,11 +3,12 @@ import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/change_buttons.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_endpoints_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_modulos_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_permisos_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_roles_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_usuarios_widget.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_acciones_widget.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/table_recursos_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_acciones_widget.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_recursos_widget.dart';
 
 // import '../../core/api/acciones_api.dart';
 import '../../core/authentication_client.dart';
@@ -101,6 +102,10 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
         button1 = await ChangeButtons(context: context, size: size)
             .addButtonAcciones();
         break;
+      case "Módulos":
+        button1 = await ChangeButtons(context: context, size: size)
+            .addButtonModulos();
+        break;
       case "Recursos":
         button1 = await ChangeButtons(context: context, size: size)
             .addButtonRecursos();
@@ -127,6 +132,9 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
     switch (opcion) {
       case "Acciones":
         dataTable = PaginatedTableAcciones(context: context).table();
+        break;
+      case "Módulos":
+        dataTable = PaginatedTableModulos(context: context).table();
         break;
       case "Recursos":
         dataTable = PaginatedTableRecursos(context: context).table();

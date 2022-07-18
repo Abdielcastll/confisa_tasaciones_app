@@ -23,7 +23,8 @@ class RecursosAPI {
     );
   }
 
-  Future<Object> createRecursos({required String name}) async {
+  Future<Object> createRecursos(
+      {required String name, required int idModulo}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/recursos/create',
@@ -33,6 +34,7 @@ class RecursosAPI {
       },
       data: {
         "nombre": name,
+        "idModulo": idModulo,
       },
     );
   }
