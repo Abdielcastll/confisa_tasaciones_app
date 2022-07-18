@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
 import 'app_buttons.dart';
@@ -42,6 +43,28 @@ abstract class Dialogs {
           ),
         ),
       ),
+    );
+  }
+
+  static success({required String msg}) {
+    Fluttertoast.showToast(
+      msg: msg,
+      backgroundColor: AppColors.green,
+      timeInSecForIosWeb: 1,
+      gravity: ToastGravity.BOTTOM,
+      fontSize: 18,
+      toastLength: Toast.LENGTH_LONG,
+    );
+  }
+
+  static error({required String msg}) {
+    Fluttertoast.showToast(
+      msg: msg,
+      backgroundColor: Colors.red[700],
+      gravity: ToastGravity.SNACKBAR,
+      timeInSecForIosWeb: 1,
+      fontSize: 18,
+      toastLength: Toast.LENGTH_LONG,
     );
   }
 

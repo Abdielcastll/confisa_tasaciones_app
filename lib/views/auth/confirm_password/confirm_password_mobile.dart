@@ -64,13 +64,13 @@ class _ConfirmPasswordMobile extends StatelessWidget {
         AppButtonLogin(
           text: 'SIGUIENTE',
           onPressed: () {},
-          color: AppColors.green,
+          color: AppColors.brownLight,
         ),
         const SizedBox(height: 10),
         AppButtonLogin(
           text: 'ANTERIOR',
           onPressed: vm.goBack,
-          color: AppColors.orange,
+          color: AppColors.brownLight,
         )
       ],
     ));

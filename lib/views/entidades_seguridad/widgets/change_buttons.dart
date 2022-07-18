@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/endpoints_response.dart';
+import 'package:tasaciones_app/core/models/modulos_response.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_actualizar_rol.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_endpoint.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_recurso.dart';
 import 'package:tasaciones_app/widgets/app_circle_icon_button.dart';
 
 import '../../../core/api/acciones_api.dart';
 import '../../../core/api/api_status.dart';
 import '../../../core/api/endpoints_api.dart';
+import '../../../core/api/modulos_api.dart';
 import '../../../core/api/permisos_api.dart';
 import '../../../core/api/recursos_api.dart';
 import '../../../core/api/roles_api.dart';
@@ -137,12 +140,11 @@ class ChangeButtons {
     Map<String, dynamic> accion = {};
     Map<String, dynamic> recurso = {};
     dynamic opcion;
-    // ProgressDialog.show(context);
+
     var resp = await _accionesApi.getAcciones();
     if (resp is Success<AccionesResponse>) {
       var resp2 = await _recursosApi.getRecursos();
       if (resp2 is Success<RecursosResponse>) {
-        // ProgressDialog.dissmiss(context);
         final GlobalKey<FormState> _formKey = GlobalKey();
         return CircleIconButton(
             color: AppColors.green,
@@ -282,16 +284,13 @@ class ChangeButtons {
                                               name: tcNewName.text.trim());
                                       if (resp is Success) {
                                         ProgressDialog.dissmiss(context);
-                                        Dialogs.alert(context,
-                                            tittle: '',
-                                            description: ['Acción Creada']);
+                                        Dialogs.success(msg: 'Acción Creada');
+                                        Navigator.of(context).pop();
                                       }
 
                                       if (resp is Failure) {
                                         ProgressDialog.dissmiss(context);
-                                        Dialogs.alert(context,
-                                            tittle: 'Error',
-                                            description: resp.messages);
+                                        Dialogs.error(msg: resp.messages[0]);
                                       }
                                     }
                                   },
@@ -308,8 +307,8 @@ class ChangeButtons {
         });
   }
 
-  Future<Widget> addButtonRecursos() async {
-    final _recursosAPI = locator<RecursosAPI>();
+  Future<Widget> addButtonModulos() async {
+    final _modulosApi = locator<ModulosApi>();
     TextEditingController tcNewName = TextEditingController();
     GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     return CircleIconButton(
@@ -340,7 +339,7 @@ class ChangeButtons {
                             alignment: Alignment.center,
                             color: AppColors.orange,
                             child: const Text(
-                              'Crear Recurso',
+                              'Crear Módulo',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -384,20 +383,17 @@ class ChangeButtons {
                                     if (_formKey.currentState!.validate()) {
                                       ProgressDialog.show(context);
                                       var resp =
-                                          await _recursosAPI.createRecursos(
+                                          await _modulosApi.createModulos(
                                               name: tcNewName.text.trim());
                                       if (resp is Success) {
                                         ProgressDialog.dissmiss(context);
-                                        Dialogs.alert(context,
-                                            tittle: '',
-                                            description: ['Recurso Creado']);
+                                        Dialogs.success(msg: 'Módulo Creado');
+                                        Navigator.of(context).pop();
                                       }
 
                                       if (resp is Failure) {
                                         ProgressDialog.dissmiss(context);
-                                        Dialogs.alert(context,
-                                            tittle: 'Error',
-                                            description: resp.messages);
+                                        Dialogs.error(msg: resp.messages[0]);
                                       }
                                     }
                                   },
@@ -412,5 +408,66 @@ class ChangeButtons {
                 );
               });
         });
+  }
+
+  Future<Widget> addButtonRecursos() async {
+    final _recursosAPI = locator<RecursosAPI>();
+    final _modulosAPI = locator<ModulosApi>();
+    final size = MediaQuery.of(context).size;
+    GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    ModulosData? modulo;
+    TextEditingController tcdescripcion = TextEditingController();
+    List<ModulosData> modulos = [];
+
+    var resp = await _modulosAPI.getModulos();
+
+    if (resp is Success) {
+      var response = resp.response as ModulosResponse;
+      modulos = response.data;
+      return CircleIconButton(
+        color: AppColors.green,
+        icon: Icons.add,
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                clipBehavior: Clip.antiAlias,
+                child: formCrearRecurso(
+                  _formKey,
+                  titulo: 'Nuevo Recurso',
+                  controller: tcdescripcion,
+                  modulos: modulos,
+                  modulo: modulo,
+                  size: size,
+                  crear: (modulo) async {
+                    ProgressDialog.show(context);
+                    var resp = await _recursosAPI.createRecursos(
+                      name: tcdescripcion.text.trim(),
+                      idModulo: modulo!.id,
+                    );
+                    if (resp is Failure) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.error(msg: resp.messages[0]);
+                    } else {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.success(msg: 'Recurso creado');
+                      tcdescripcion.clear();
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+              );
+            },
+          );
+        },
+      );
+    } else if (resp is Failure) {
+      modulos = [];
+      Dialogs.error(msg: resp.messages[0]);
+      return const SizedBox();
+    } else {
+      return const SizedBox();
+    }
   }
 }
