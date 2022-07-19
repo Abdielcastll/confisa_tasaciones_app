@@ -42,12 +42,11 @@ class RecursosAPI {
   Future<Object> updateRecursos({
     required int id,
     required String nombre,
-    required int estado,
     required int idModulo,
   }) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/acciones/update',
+      '/api/recursos/update',
       method: "PUT",
       headers: {
         'Authorization': 'Bearer $_token',
@@ -55,7 +54,6 @@ class RecursosAPI {
       data: {
         "id": id,
         "nombre": nombre,
-        "estado": estado,
         "idModulo": idModulo,
       },
     );
@@ -64,7 +62,7 @@ class RecursosAPI {
   Future<Object> deleteRecursos({required int id}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/recursos/update',
+      '/api/recursos/delete',
       method: "DELETE",
       headers: {
         'Authorization': 'Bearer $_token',

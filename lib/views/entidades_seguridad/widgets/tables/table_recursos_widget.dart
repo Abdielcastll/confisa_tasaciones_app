@@ -1,19 +1,23 @@
 import 'package:advanced_datatable/advanced_datatable_source.dart';
 import 'package:advanced_datatable/datatable.dart';
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_modificar_recurso.dart';
 import 'package:tasaciones_app/widgets/app_buttons.dart';
 
 import '../../../../core/api/api_status.dart';
+import '../../../../core/api/modulos_api.dart';
 import '../../../../core/api/recursos_api.dart';
 import '../../../../core/authentication_client.dart';
 import '../../../../core/locator.dart';
+import '../../../../core/models/modulos_response.dart';
 import '../../../../core/models/recursos_response.dart';
 import '../../../../theme/theme.dart';
 import '../../../../widgets/app_dialogs.dart';
 
 class PaginatedTableRecursos {
   late BuildContext context;
-  PaginatedTableRecursos({required this.context});
+  PaginatedTableRecursos({required this.context, required this.modulos});
+  List<ModulosData> modulos;
 
   Widget table() {
     GlobalKey key = GlobalKey();
@@ -31,7 +35,7 @@ class PaginatedTableRecursos {
               EdgeInsets.only(top: MediaQuery.of(context).size.height * .30),
           child: const CircularProgressIndicator(color: AppColors.brownDark),
         ),
-        source: TableRecursos(pageSize: 12, context: context),
+        source: TableRecursos(pageSize: 12, context: context, modulos: modulos),
         columns: const [
           DataColumn(label: Text('Nombre')),
           DataColumn(label: Text('Actualizar')),
@@ -47,10 +51,16 @@ class PaginatedTableRecursos {
 }
 
 class TableRecursos extends AdvancedDataTableSource<RecursosData> {
-  TableRecursos({required this.pageSize, required this.context});
-  late BuildContext context;
+  TableRecursos({
+    required this.pageSize,
+    required this.context,
+    required this.modulos,
+  });
+  final BuildContext context;
   final user = locator<AuthenticationClient>().loadSession;
   final _recursosApi = locator<RecursosAPI>();
+  List<ModulosData> modulos;
+  ModulosData? modulo;
 
   @override
   bool get forceRemoteReload => super.forceRemoteReload = true;
@@ -67,17 +77,47 @@ class TableRecursos extends AdvancedDataTableSource<RecursosData> {
       DataCell(
         Text(currentRowData.nombre),
       ),
-
-      // ACTUALIZAR ACCION:::
-
       DataCell(
         const Icon(Icons.cached),
         onTap: () {
           showDialog(
             context: context,
-            builder: (context) {
+            builder: (_) {
               return Dialog(
-                child: Container(
+                child: formModificarRecurso(
+                  _formKey,
+                  titulo: 'Actualizar Recurso',
+                  controller: tcNewName,
+                  labelDrop: modulos
+                      .firstWhere((e) => e.id == currentRowData.idModulo)
+                      .nombre,
+                  labelText: currentRowData.nombre,
+                  modulo: modulo,
+                  crear: (modulo) async {
+                    ProgressDialog.show(context);
+                    var resp = await _recursosApi.updateRecursos(
+                      id: currentRowData.id,
+                      nombre: tcNewName.text.trim().isEmpty
+                          ? currentRowData.nombre
+                          : tcNewName.text.trim(),
+                      idModulo:
+                          modulo == null ? currentRowData.idModulo : modulo.id,
+                    );
+                    if (resp is Failure) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.error(msg: resp.messages[0]);
+                    } else {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.success(msg: 'Recurso actualizado');
+                      tcNewName.clear();
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  modulos: modulos,
+                  size: MediaQuery.of(context).size,
+                ),
+
+                /* Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -144,7 +184,6 @@ class TableRecursos extends AdvancedDataTableSource<RecursosData> {
                                         await _recursosApi.updateRecursos(
                                       nombre: tcNewName.text,
                                       id: currentRowData.id,
-                                      estado: 0,
                                       idModulo: 0,
                                     );
                                     ProgressDialog.dissmiss(context);
@@ -169,7 +208,7 @@ class TableRecursos extends AdvancedDataTableSource<RecursosData> {
                       ],
                     ),
                   ),
-                ),
+                ),*/
               );
             },
           );

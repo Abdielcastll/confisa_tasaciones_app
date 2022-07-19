@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/modulos_api.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
+import 'package:tasaciones_app/core/models/modulos_response.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/change_buttons.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_endpoints_widget.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/tables/table_modulos_widget.dart';
@@ -20,6 +23,7 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
   List<String> items = [];
 
   final _authenticationClient = locator<AuthenticationClient>();
+  final _modulosApi = locator<ModulosApi>();
 
   late Session _user;
 
@@ -28,6 +32,7 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
   late PermisosResponse _permisos;
 
   late List<PermisosData> _dataPermisos = [];
+  List<ModulosData> modulos = [];
 
   late Function buttonAdd;
 
@@ -62,10 +67,23 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onInit(BuildContext context) {
+  void onInit(BuildContext context) async {
     user = _authenticationClient.loadSession;
     initMenu();
     initTable(context);
+    await loadModulos(context);
+  }
+
+  Future<void> loadModulos(BuildContext context) async {
+    // ProgressDialog.show(context);
+    var resp = await _modulosApi.getModulos();
+    if (resp is Success) {
+      var data = resp.response as ModulosResponse;
+      modulos = data.data;
+    } else {
+      modulos = [];
+    }
+    // ProgressDialog.dissmiss(context);
   }
 
   void initMenu() {
@@ -141,7 +159,8 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
         dataTable = PaginatedTableModulos(context: context).table();
         break;
       case "Recursos":
-        dataTable = PaginatedTableRecursos(context: context).table();
+        dataTable =
+            PaginatedTableRecursos(context: context, modulos: modulos).table();
         break;
       case "Permisos":
         dataTable = PaginatedTablePermisos(context: context).table();
