@@ -11,6 +11,9 @@ class AppColors {
   static const brownLight = Color(0xFF98470A);
   static const brownDark = Color(0xFF442A19);
   static const white = Colors.white;
+  static const gold = Color.fromRGBO(222, 158, 61, 1);
+  static const cream = Color.fromRGBO(255, 247, 235, 1);
+  static const lightGreen = Color.fromRGBO(46, 226, 146, 1);
 }
 
 // final theme = ThemeData(
