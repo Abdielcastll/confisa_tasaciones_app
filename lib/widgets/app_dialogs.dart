@@ -77,23 +77,30 @@ abstract class Dialogs {
     showDialog(
         context: context,
         builder: (_) => Dialog(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.5))),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    width: 2,
-                    color: AppColors.orange,
+                    width: 1,
+                    color: AppColors.gold,
                   ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
+                        color: AppColors.gold,
+                      ),
                       height: 80,
                       width: double.infinity,
                       alignment: Alignment.center,
-                      color: AppColors.orange,
                       child: Text(
                         tittle.toUpperCase(),
                         style: const TextStyle(
@@ -124,7 +131,7 @@ abstract class Dialogs {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            color: AppColors.orange),
+                            color: Colors.red),
                         AppButton(
                             text: 'SI',
                             onPressed: () {

@@ -128,10 +128,6 @@ class EntidadesSeguridadViewModel extends BaseViewModel {
         button1 = await ChangeButtons(context: context, size: size)
             .addButtonRecursos();
         break;
-      case "Permisos":
-        button1 = await ChangeButtons(context: context, size: size)
-            .addButtonPermisos();
-        break;
       case "Endpoints":
         button1 = await ChangeButtons(context: context, size: size)
             .addButtonEndpoints();

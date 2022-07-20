@@ -119,6 +119,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                               Dialogs.error(msg: creacion.messages.first);
                             }
                           },
+                              () {},
                               opcion,
                               resp.response.data,
                               resp2.response.data,
@@ -138,7 +139,8 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                               ],
                               size,
                               true,
-                              "Modificar"),
+                              "Modificar",
+                              false),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ));

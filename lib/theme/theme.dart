@@ -14,6 +14,7 @@ class AppColors {
   static const gold = Color.fromRGBO(222, 158, 61, 1);
   static const cream = Color.fromRGBO(255, 247, 235, 1);
   static const lightGreen = Color.fromRGBO(46, 226, 146, 1);
+  static const newBrownDark = Color.fromRGBO(109, 68, 32, 1);
 }
 
 final myTheme = ThemeData(

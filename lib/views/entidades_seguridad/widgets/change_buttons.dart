@@ -204,7 +204,7 @@ class ChangeButtons {
             }));
   }
 
-  Future<Widget> addButtonPermisos() async {
+  Future<void> addButtonPermisos() async {
     final _accionesApi = locator<AccionesApi>();
     final _recursosApi = locator<RecursosAPI>();
     final _permisosApi = locator<PermisosAPI>();
@@ -217,47 +217,40 @@ class ChangeButtons {
       var resp2 = await _recursosApi.getRecursos();
       if (resp2 is Success<RecursosResponse>) {
         final GlobalKey<FormState> _formKey = GlobalKey();
-        return CircleIconButton(
-            color: AppColors.green,
-            icon: Icons.add,
-            onPressed: () => showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                      contentPadding: EdgeInsets.zero,
-                      content: formCrearPermiso(
-                          "Nuevo Permiso",
-                          _formKey,
-                          descripcion,
-                          recurso,
-                          accion, (String descripcionf) async {
-                        ProgressDialog.show(context);
-                        var creacion = await _permisosApi.createPermisos(
-                            descripcion: descripcionf,
-                            idAccion: accion["id"],
-                            idRecurso: recurso["id"],
-                            esBasico: 1);
-                        if (creacion is Success<PermisosData>) {
-                          ProgressDialog.dissmiss(context);
-                          Dialogs.success(msg: "Creacion exitosa");
-                          _formKey.currentState?.reset();
-                        } else if (creacion is Failure) {
-                          ProgressDialog.dissmiss(context);
-                          Dialogs.error(msg: creacion.messages.first);
-                        }
-                      }, opcion, resp.response.data, resp2.response.data, [],
-                          size, false, "Crear"),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ));
-                }));
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  contentPadding: EdgeInsets.zero,
+                  content: formCrearPermiso(
+                      "Nuevo Permiso", _formKey, descripcion, recurso, accion,
+                      (String descripcionf) async {
+                    ProgressDialog.show(context);
+                    var creacion = await _permisosApi.createPermisos(
+                        descripcion: descripcionf,
+                        idAccion: accion["id"],
+                        idRecurso: recurso["id"],
+                        esBasico: 1);
+                    if (creacion is Success<PermisosData>) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.success(msg: "Creacion exitosa");
+                      _formKey.currentState?.reset();
+                    } else if (creacion is Failure) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.error(msg: creacion.messages.first);
+                    }
+                  }, () {}, opcion, resp.response.data, resp2.response.data, [],
+                      size, false, "Crear", false),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ));
+            });
       } else if (resp2 is Failure) {
         Dialogs.error(msg: resp2.messages.first);
       }
     } else if (resp is Failure) {
       Dialogs.error(msg: resp.messages.first);
     }
-    return Container();
   }
 
   // Boton Agregar Acciones

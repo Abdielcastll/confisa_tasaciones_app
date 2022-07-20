@@ -1,7 +1,14 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/roles_response.dart';
+import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+
+import '../../../../core/api/usuarios_api.dart';
+import '../../../../core/api/api_status.dart';
+import '../../../../core/locator.dart';
+import '../../../../core/services/navigator_service.dart';
+import '../../../../widgets/app_dialogs.dart';
 
 Widget dialogActualizarInformacion(
   Widget imagen,
@@ -15,17 +22,11 @@ Widget dialogActualizarInformacion(
   String email,
   bool validator,
   Function modificar,
-  var dropdown,
   String buttonTittle,
-  Map<String, dynamic> rol1,
-  Map<String, dynamic> rol2,
+  UsuariosData usuariosData,
+  Function changeStatus,
 ) {
-  rol1['id'] = "";
-  rol1["nombre"] = "";
-  rol1["description"] = "";
-  rol2['id'] = "";
-  rol2["nombre"] = "";
-  rol2["description"] = "";
+  final _navigationService = locator<NavigatorService>();
   return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -56,6 +57,7 @@ Widget dialogActualizarInformacion(
                     height: 10,
                   ),
                   TextFormField(
+                    initialValue: usuariosData.nombreCompleto,
                     decoration: const InputDecoration(
                         labelText: 'Nombre Completo',
                         enabledBorder: OutlineInputBorder(
@@ -85,6 +87,7 @@ Widget dialogActualizarInformacion(
                     height: 10,
                   ),
                   TextFormField(
+                    initialValue: usuariosData.phoneNumber,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                         labelText: 'Telefono',
@@ -115,6 +118,7 @@ Widget dialogActualizarInformacion(
                     height: 10,
                   ),
                   TextFormField(
+                    initialValue: usuariosData.email,
                     decoration: const InputDecoration(
                         labelText: 'Email',
                         enabledBorder: OutlineInputBorder(
@@ -145,80 +149,94 @@ Widget dialogActualizarInformacion(
                   const SizedBox(
                     height: 10,
                   ),
-                  DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          if (validator) {
+                            _formKey.currentState?.save();
+                            modificar(nombreCompleto, email, telefono);
+                          } else if (_formKey.currentState!.validate()) {
+                            _formKey.currentState?.save();
+                            modificar(nombreCompleto, email, telefono);
+                          }
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.save,
+                              color: AppColors.green,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Guardar"), // text
+                          ],
                         ),
-                        border: OutlineInputBorder()),
-                    items: roles
-                        .map((e) => DropdownMenuItem(
-                              child: Text(e.description),
-                              value: e.id,
-                            ))
-                        .toList(),
-                    hint: const Text("Rol"),
-                    onChanged: (value) {
-                      dropdown = value;
-                      rol1['id'] = value;
-                      rol1["nombre"] = roles
-                          .firstWhere((element) => element.id == value)
-                          .name;
-                      rol1["description"] = roles
-                          .firstWhere((element) => element.id == value)
-                          .description;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      TextButton(
+                        onPressed: () {
+                          _navigationService.pop();
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cached,
+                              color: AppColors.gold,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Roles"), // text
+                          ],
                         ),
-                        border: OutlineInputBorder()),
-                    items: roles
-                        .map((e) => DropdownMenuItem(
-                              child: Text(
-                                e.description,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              value: e.id,
-                            ))
-                        .toList(),
-                    hint: const Text("Segundo rol"),
-                    onChanged: (value) {
-                      dropdown = value;
-                      rol2['id'] = value;
-                      rol2["nombre"] = roles
-                          .firstWhere((element) => element.id == value)
-                          .description;
-                      rol2["description"] = roles
-                          .firstWhere((element) => element.id == value)
-                          .description;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: AppColors.green,
-                        minimumSize: const Size.fromHeight(60)),
-                    onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      _formKey.currentState?.save();
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState?.save();
-                        modificar(nombreCompleto, email, telefono);
-                      }
-                    },
-                    child: Text(buttonTittle),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      const Expanded(child: SizedBox()),
+                      TextButton(
+                        onPressed: () => changeStatus(),
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cached,
+                              color: AppColors.gold,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Estado"), // text
+                          ],
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      TextButton(
+                        onPressed: () {
+                          _navigationService.pop();
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Cancelar"), // text
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

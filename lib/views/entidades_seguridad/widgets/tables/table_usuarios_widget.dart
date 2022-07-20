@@ -119,11 +119,11 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                             height: 8,
                           ),
                           Text("Roles", style: appDropdown),
-                          Column(
+                          /* Column(
                             children: currentRowData.roles
                                 .map((e) => Text(e, style: appDropdown))
                                 .toList(),
-                          ),
+                          ), */
                           const SizedBox(
                             height: 8,
                           ),
@@ -180,7 +180,7 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
             var resp = await _rolesAPI.getRoles();
             if (resp is Success<RolResponse>) {
               ProgressDialog.dissmiss(context);
-              showDialog(
+              /* showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
@@ -227,11 +227,11 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                             ),
                             Text("Roles ${currentRowData.nombreSuplidor}",
                                 style: appDropdown),
-                            Column(
+                            /* Column(
                               children: currentRowData.roles
                                   .map((e) => Text(e, style: appDropdown))
                                   .toList(),
-                            ),
+                            ), */
                             const SizedBox(
                               height: 8,
                             ),
@@ -298,9 +298,10 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
                             Dialogs.error(msg: creacion.messages.first);
                           }
                         }
-                      }, dropdown, "Modificar", rol1, rol2),
+                      }, () {}, dropdown, "Modificar", false,
+                          currentRowData),
                     );
-                  });
+                  }); */
             } else if (resp is Failure) {
               ProgressDialog.dissmiss(context);
               Dialogs.error(msg: resp.messages.first);
@@ -342,8 +343,8 @@ class TableUsuarios extends AdvancedDataTableSource<UsuariosData> {
         var resp2 = await _usuariosAPI.getRolUsuario(id: element.id);
         if (resp2 is Success<RolUsuarioResponse>) {
           for (var element2 in resp2.response.data) {
-            element.roles.add(element2.description);
-            element.idRoles.add(element2.roleId);
+            /* element.roles.add(element2.description);
+            element.idRoles.add(element2.roleId); */
           }
         } else if (resp2 is Failure) {
           Dialogs.error(msg: resp2.messages.first);

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
+import '../../../../core/locator.dart';
 import '../../../../core/models/acciones_response.dart';
 import '../../../../core/models/recursos_response.dart';
+import '../../../../core/services/navigator_service.dart';
 
 Form formCrearPermiso(
     String titulo,
@@ -11,13 +13,16 @@ Form formCrearPermiso(
     Map<String, dynamic> recurso,
     Map<String, dynamic> accion,
     Function crear,
+    Function eliminar,
     var measure,
     List<AccionesData> acciones,
     List<RecursosData> recursos,
     List<Widget> informacion,
     Size size,
     bool validator,
-    String buttonTittle) {
+    String buttonTittle,
+    bool showEliminar) {
+  final _navigationService = locator<NavigatorService>();
   return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -29,7 +34,7 @@ Form formCrearPermiso(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
-                color: AppColors.orange,
+                color: AppColors.gold,
               ),
               child: Align(
                 alignment: Alignment.center,
@@ -136,21 +141,76 @@ Form formCrearPermiso(
                   const SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: AppColors.green,
-                        minimumSize: const Size.fromHeight(60)),
-                    onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      if (validator) {
-                        _formKey.currentState?.save();
-                        crear(descripcion);
-                      } else if (_formKey.currentState!.validate()) {
-                        _formKey.currentState?.save();
-                        crear(descripcion);
-                      }
-                    },
-                    child: Text(buttonTittle),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          if (validator) {
+                            _formKey.currentState?.save();
+                            crear(descripcion);
+                          } else if (_formKey.currentState!.validate()) {
+                            _formKey.currentState?.save();
+                            crear(descripcion);
+                          }
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.save,
+                              color: AppColors.green,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Guardar"), // text
+                          ],
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      TextButton(
+                        onPressed: () {
+                          _navigationService.pop();
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Cancelar"), // text
+                          ],
+                        ),
+                      ),
+                      showEliminar
+                          ? const Expanded(child: SizedBox())
+                          : const SizedBox(),
+                      showEliminar
+                          ? TextButton(
+                              onPressed: () => eliminar(), // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    Icons.delete,
+                                    color: AppColors.grey,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Eliminar"), // text
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
+                    ],
                   ),
                 ],
               ),

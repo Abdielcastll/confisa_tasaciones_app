@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:tasaciones_app/core/models/roles_claims_response.dart';
+import 'package:tasaciones_app/core/models/roles_response.dart';
+
 UsuariosResponse usuariosResponseFromJson(String str) =>
     UsuariosResponse.fromJson(json.decode(str));
 
@@ -61,8 +64,7 @@ class UsuariosData {
       required this.nombreSuplidor,
       required this.phoneNumber,
       required this.userName,
-      required this.roles,
-      required this.idRoles});
+      required this.roles});
 
   String id,
       userName,
@@ -73,8 +75,7 @@ class UsuariosData {
       imageUrl,
       nombreCompleto,
       nombreSuplidor;
-  List<String> roles;
-  List<String> idRoles;
+  List<RolData2> roles;
   bool isActive, emailConfirmed;
   int idSuplidor;
 
@@ -91,8 +92,8 @@ class UsuariosData {
         isActive: json["isActive"] ?? false,
         emailConfirmed: json["emailConfirmed"] ?? false,
         idSuplidor: json["idSuplidor"] ?? 0,
-        roles: json["roles"] ?? [],
-        idRoles: json["idRoles"] ?? [],
+        roles:
+            json["roles"].map<RolData2>((e) => RolData2.fromJson(e)).toList(),
       );
 
   Map<String, dynamic> toJson() => {

@@ -108,6 +108,18 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                     ),
                     ListTile(
                       title: const Text(
+                        'Vieja seguridad',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w500),
+                      ),
+                      onTap: () {
+                        _navigationService.pop();
+                        _navigationService
+                            .navigateToPage(EntidadesSeguridadView.routeName);
+                      },
+                    ),
+                    ListTile(
+                      title: const Text(
                         'Salir',
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.w500),
@@ -115,7 +127,7 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                       leading: const Icon(Icons.exit_to_app),
                       onTap: () {
                         _navigationService.pop();
-                        _navigationService.navigateToPage(PerfilView.routeName);
+                        _navigationService.navigateToPage(LoginView.routeName);
                       },
                     ),
                     const ListTile(

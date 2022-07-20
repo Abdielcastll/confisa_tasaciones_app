@@ -8,7 +8,7 @@ class PermisosAPI {
   final AuthenticationClient _authenticationClient;
   PermisosAPI(this._http, this._authenticationClient);
 
-  Future<Object> getPermisos({int pageNumber = 1, int pageSize = 100}) async {
+  Future<Object> getPermisos({int pageNumber = 1, int pageSize = 20}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/permisos/get',

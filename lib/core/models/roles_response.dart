@@ -58,3 +58,30 @@ class RolPOSTResponse {
         "data": data,
       };
 }
+
+class RolData2 {
+  RolData2(
+      {required this.roleId,
+      required this.roleName,
+      required this.description,
+      required this.enabled});
+
+  String roleId;
+  String roleName;
+  String description;
+  bool enabled;
+
+  factory RolData2.fromJson(Map<String, dynamic> json) => RolData2(
+        roleId: json["roleId"] ?? '',
+        roleName: json["roleName"] ?? '',
+        description: json["description"] ?? '',
+        enabled: json["enabled"] ?? false,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "roleId": roleId,
+        "roleName": roleName,
+        "description": description,
+        "enabled": enabled
+      };
+}
