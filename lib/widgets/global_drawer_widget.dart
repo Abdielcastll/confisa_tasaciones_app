@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
+import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/entidades_seguridad_view.dart';
 
@@ -30,99 +32,92 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
     ];
 
     return Drawer(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
-      ),
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          /* Header de informacion de usuario */
-          Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(topRight: Radius.circular(15)),
-              color: Color(0xFF98470A),
-            ),
-            height: size.height * .2,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        dataUser.nombreCompleto,
-                        style:
-                            const TextStyle(fontSize: 25, color: Colors.white),
-                      ),
-                      Text(
-                        dataUser.email,
-                        style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.white60,
-                            fontStyle: FontStyle.italic),
-                      ),
-                    ],
-                  ),
-                  Positioned(
-                    right: 10,
-                    bottom: 10,
-                    child: IconButton(
-                      onPressed: () async {
-                        await _authenticationClient.signOut();
-                        _navigationService
-                            .navigateToPageWithReplacement(LoginView.routeName);
-                      },
-                      icon: const Icon(
-                        Icons.exit_to_app,
-                        color: Colors.white,
-                      ),
+      child: Container(
+        color: AppColors.cream,
+        child: ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          children: [
+            /* Header de informacion de usuario */
+            Container(
+              decoration: const BoxDecoration(
+                color: AppColors.gold,
+              ),
+              height: size.height * .2,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      dataUser.nombreCompleto,
+                      style: const TextStyle(fontSize: 25, color: Colors.white),
                     ),
-                  )
-                ],
+                    Text(
+                      dataUser.email,
+                      style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.white60,
+                          fontStyle: FontStyle.italic),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          /* Opciones del menu */
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 15, left: 8, right: 8, bottom: 8),
-            child: Column(
-                /* Recorrido de la lista de role claims que devuelve las opciones del menu */
-                children: [
-                  ...list
-                      .map(
-                        (e) => ListTile(
-                          title: Text(
-                            e.descripcion,
-                            style: const TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w500),
-                          ),
-                          onTap: () {
-                            _navigationService.pop();
-                            _navigationService.navigateToPage(
-                                EntidadesSeguridadView.routeName);
-                          },
-                        ),
-                      )
-                      .toList(),
-                  ListTile(
-                    title: const Text(
-                      'Perfil',
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+            /* Opciones del menu */
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 15, left: 8, right: 8, bottom: 8),
+              child: Column(
+                  /* Recorrido de la lista de role claims que devuelve las opciones del menu */
+                  children: [
+                    ...menu(Menu(modulos: [
+                      Modulo(opciones: <MenuOpcion>[
+                        MenuOpcion(opcion: "Acciones", matenimiento: "General"),
+                        MenuOpcion(opcion: "Modulos", matenimiento: "General"),
+                        MenuOpcion(opcion: "Recursos", matenimiento: "General"),
+                        MenuOpcion(opcion: "Permisos", matenimiento: "General"),
+                        MenuOpcion(
+                            opcion: "Endpoints", matenimiento: "General"),
+                        MenuOpcion(opcion: "Roles", matenimiento: "General"),
+                        MenuOpcion(opcion: "Usuarios", matenimiento: "General"),
+                      ], nombre: "Seguridad")
+                    ])),
+                    ListTile(
+                      title: const Text(
+                        'Perfil',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w500),
+                      ),
+                      onTap: () {
+                        _navigationService.pop();
+                        _navigationService.navigateToPage(PerfilView.routeName);
+                      },
                     ),
-                    onTap: () {
-                      _navigationService.pop();
-                      _navigationService.navigateToPage(PerfilView.routeName);
-                    },
-                  ),
-                ]),
-          )
-        ],
+                    ListTile(
+                      title: const Text(
+                        'Salir',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w500),
+                      ),
+                      leading: const Icon(Icons.exit_to_app),
+                      onTap: () {
+                        _navigationService.pop();
+                        _navigationService.navigateToPage(PerfilView.routeName);
+                      },
+                    ),
+                    const ListTile(
+                      title: Text(
+                        "© 2022 CONFISA - App v1.0",
+                        style: TextStyle(color: AppColors.gold),
+                      ),
+                    )
+                  ]),
+            )
+          ],
+        ),
       ),
     );
   }
