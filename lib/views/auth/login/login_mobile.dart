@@ -39,7 +39,7 @@ class _LoginMobile extends StatelessWidget {
               AppButtonLogin(
                 text: 'Iniciar Sesión',
                 onPressed: () => vm.signIn(context),
-                color: AppColors.brownLight,
+                color: AppColors.brown,
               ),
               const SizedBox(height: 10),
               TextButton(

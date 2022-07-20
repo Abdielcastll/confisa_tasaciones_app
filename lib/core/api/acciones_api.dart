@@ -8,7 +8,7 @@ class AccionesApi {
   AccionesApi(this._http, this._authenticationClient);
 
   Future<Object> getAcciones(
-      {int pageNumber = 1, int pageSize = 12, String id = ''}) async {
+      {int pageNumber = 1, int pageSize = 20, String id = ''}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/acciones/get',

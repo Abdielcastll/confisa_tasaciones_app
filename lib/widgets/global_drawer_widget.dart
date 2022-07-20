@@ -73,18 +73,28 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
               child: Column(
                   /* Recorrido de la lista de role claims que devuelve las opciones del menu */
                   children: [
-                    ...menu(Menu(modulos: [
-                      Modulo(opciones: <MenuOpcion>[
-                        MenuOpcion(opcion: "Acciones", matenimiento: "General"),
-                        MenuOpcion(opcion: "Modulos", matenimiento: "General"),
-                        MenuOpcion(opcion: "Recursos", matenimiento: "General"),
-                        MenuOpcion(opcion: "Permisos", matenimiento: "General"),
-                        MenuOpcion(
-                            opcion: "Endpoints", matenimiento: "General"),
-                        MenuOpcion(opcion: "Roles", matenimiento: "General"),
-                        MenuOpcion(opcion: "Usuarios", matenimiento: "General"),
-                      ], nombre: "Seguridad")
-                    ])),
+                    ...menu(
+                      Menu(
+                        modulos: [
+                          Modulo(opciones: <MenuOpcion>[
+                            MenuOpcion(
+                                opcion: "Acciones", matenimiento: "General"),
+                            MenuOpcion(
+                                opcion: "Modulos", matenimiento: "General"),
+                            MenuOpcion(
+                                opcion: "Recursos", matenimiento: "General"),
+                            MenuOpcion(
+                                opcion: "Permisos", matenimiento: "General"),
+                            MenuOpcion(
+                                opcion: "Endpoints", matenimiento: "General"),
+                            MenuOpcion(
+                                opcion: "Roles", matenimiento: "General"),
+                            MenuOpcion(
+                                opcion: "Usuarios", matenimiento: "General"),
+                          ], nombre: "Seguridad")
+                        ],
+                      ),
+                    ),
                     ListTile(
                       title: const Text(
                         'Perfil',

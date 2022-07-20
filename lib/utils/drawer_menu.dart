@@ -12,13 +12,14 @@ List<Widget> menu(Menu menu) {
       leading: getIcon(element.nombre),
       title: Text(
         element.nombre,
-        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
       ),
       children: element.opciones
           .map((e) => ListTile(
                 title: Text(
                   e.opcion,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500),
                 ),
                 onTap: () {
                   _navigationService.pop();

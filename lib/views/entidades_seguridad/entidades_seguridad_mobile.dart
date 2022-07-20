@@ -20,7 +20,7 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: AppColors.brownLight,
+                      color: AppColors.brown,
                       borderRadius: BorderRadius.circular(10)),
                   child: SizedBox(
                       width: size.width * .6,
@@ -31,7 +31,7 @@ class _EntidadesSeguridadMobile extends StatelessWidget {
                         child: DropdownButton(
                           style: appDropdown,
                           borderRadius: BorderRadius.circular(10),
-                          dropdownColor: AppColors.brownLight,
+                          dropdownColor: AppColors.brown,
                           items: vm.items.map((String items) {
                             return DropdownMenuItem(
                               value: items,

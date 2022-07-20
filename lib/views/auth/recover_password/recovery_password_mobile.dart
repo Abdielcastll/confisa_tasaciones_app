@@ -20,7 +20,7 @@ class _RecoveryPasswordMobile extends StatelessWidget {
             width: size.width * .80,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              color: AppColors.brownLight.withOpacity(0.7),
+              color: AppColors.brown.withOpacity(0.7),
             ),
             child: Form(
               key: vm.formKey,
@@ -47,13 +47,13 @@ class _RecoveryPasswordMobile extends StatelessWidget {
           AppButtonLogin(
             text: 'Siguiente',
             onPressed: () => vm.forgotPassword(context),
-            color: AppColors.brownLight,
+            color: AppColors.brown,
           ),
           const SizedBox(height: 10),
           AppButtonLogin(
             text: 'Anterior',
             onPressed: vm.goBack,
-            color: AppColors.brownLight,
+            color: AppColors.brown,
           )
         ],
       )),

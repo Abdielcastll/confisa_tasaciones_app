@@ -7,43 +7,26 @@ class AppColors {
   static const orange = Color(0xFFFE9301);
   static const darkOrange = Color.fromRGBO(255, 135, 44, 1);
   static const green = Color(0xFFA8C638);
-  static const brownLight2 = Color(0xFFAC6D3A);
-  static const brownLight = Color(0xFF98470A);
-  static const brownDark = Color(0xFF442A19);
+  static const brownLight = Color(0xFFDE9E3D);
+  static const brown = Color(0xFFB06428);
+  static const brownDark = Color(0xFF6D4420);
   static const white = Colors.white;
   static const gold = Color.fromRGBO(222, 158, 61, 1);
   static const cream = Color.fromRGBO(255, 247, 235, 1);
   static const lightGreen = Color.fromRGBO(46, 226, 146, 1);
 }
 
-// final theme = ThemeData(
-//   primaryColor: AppColors.brownDark,
-//   colorScheme: const ColorScheme.light(
-//     primary: AppColors.brownDark,
-//     secondary: AppColors.brownLight,
-//   ),
-//   iconTheme: const IconThemeData(
-//     color: AppColors.brownLight,
-//   ),
-
-//   /*checkboxTheme: CheckboxThemeData(
-//     side: MaterialStateBorderSide.resolveWith(
-//         (_) => const BorderSide(width: 1.5, color: AppColors.blue)),
-//     fillColor: MaterialStateProperty.all(AppColors.blue),
-//     checkColor: MaterialStateProperty.all(Colors.white),
-//   ),*/
-// );
-/* Theme */
-
 final myTheme = ThemeData(
+  primaryColor: AppColors.brownDark,
+  colorScheme: const ColorScheme.light(
+    primary: AppColors.brownDark,
+    secondary: AppColors.brown,
+  ),
   cardTheme: CardTheme(
-    color: AppColors.grey,
+    color: Colors.white,
+    elevation: 4,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15.0),
-      side: const BorderSide(
-        color: AppColors.grey,
-        width: .5,
-      ),
+      borderRadius: BorderRadius.circular(5.0),
     ),
   ),
   scaffoldBackgroundColor: AppColors.white,
@@ -56,9 +39,6 @@ final myTheme = ThemeData(
       fontWeight: FontWeight.normal,
       color: Colors.white,
     ),
-  ),
-  colorScheme: const ColorScheme.light(
-    primary: AppColors.brownDark,
   ),
 );
 

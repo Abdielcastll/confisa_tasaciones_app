@@ -18,7 +18,7 @@ class _ConfirmPasswordMobile extends StatelessWidget {
           width: size.width * .80,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            color: AppColors.brownLight.withOpacity(0.7),
+            color: AppColors.brown.withOpacity(0.7),
           ),
           child: Column(
             children: [
@@ -64,13 +64,13 @@ class _ConfirmPasswordMobile extends StatelessWidget {
         AppButtonLogin(
           text: 'SIGUIENTE',
           onPressed: () {},
-          color: AppColors.brownLight,
+          color: AppColors.brown,
         ),
         const SizedBox(height: 10),
         AppButtonLogin(
           text: 'ANTERIOR',
           onPressed: vm.goBack,
-          color: AppColors.brownLight,
+          color: AppColors.brown,
         )
       ],
     ));

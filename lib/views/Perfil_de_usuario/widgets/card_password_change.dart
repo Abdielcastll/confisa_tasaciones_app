@@ -23,7 +23,7 @@ class CardChangePasswordWidget extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: AppColors.brownLight2,
+          color: AppColors.brownLight,
         ),
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.fromLTRB(25, 50, 25, 0),
