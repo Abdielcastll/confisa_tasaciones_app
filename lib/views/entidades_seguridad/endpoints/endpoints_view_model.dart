@@ -20,10 +20,14 @@ class EndpointsViewModel extends BaseViewModel {
   final listController = ScrollController();
   final _navigationService = locator<NavigatorService>();
 
+  TextEditingController tcBuscar = TextEditingController();
+
   List<EndpointsData> endpoints = [];
   int pageNumber = 1;
   bool _cargando = false;
+  bool _busqueda = false;
   bool hasNextPage = false;
+  late EndpointsResponse endpointsResponse;
 
   EndpointsViewModel() {
     listController.addListener(() {
@@ -41,6 +45,12 @@ class EndpointsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool get busqueda => _busqueda;
+  set busqueda(bool value) {
+    _busqueda = value;
+    notifyListeners();
+  }
+
   Future<void> onInit() async {
     cargando = true;
     endpoints = [];
@@ -49,9 +59,9 @@ class EndpointsViewModel extends BaseViewModel {
     var resp =
         await _endpointsApi.getEndpoints(pageNumber: pageNumber, pageSize: 20);
     if (resp is Success) {
-      var temp = resp.response as EndpointsResponse;
-      endpoints = temp.data;
-      hasNextPage = temp.hasNextPage;
+      endpointsResponse = resp.response as EndpointsResponse;
+      endpoints = endpointsResponse.data;
+      hasNextPage = endpointsResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -74,6 +84,35 @@ class EndpointsViewModel extends BaseViewModel {
       Dialogs.error(msg: resp.messages[0]);
       pageNumber -= 1;
     }
+  }
+
+  Future<void> buscarEndpoint(String query) async {
+    cargando = true;
+    var resp = await _endpointsApi.getEndpoints(
+      controlador: query,
+      pageSize: 0,
+    );
+    if (resp is Success) {
+      var temp = resp.response as EndpointsResponse;
+      endpoints = temp.data;
+      hasNextPage = temp.hasNextPage;
+      _busqueda = true;
+      notifyListeners();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    cargando = false;
+  }
+
+  void limpiarBusqueda() {
+    _busqueda = false;
+    endpoints = endpointsResponse.data;
+    if (endpoints.length >= 20) {
+      hasNextPage = true;
+    }
+    notifyListeners();
+    tcBuscar.clear();
   }
 
   Future<void> modificarEndpoint(

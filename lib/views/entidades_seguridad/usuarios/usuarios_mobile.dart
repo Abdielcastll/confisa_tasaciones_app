@@ -31,7 +31,7 @@ class _UsuariosMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscarPermiso,
+                        onSubmitted: vm.buscarUsuario,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,

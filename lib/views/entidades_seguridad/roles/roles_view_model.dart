@@ -69,7 +69,6 @@ class RolesViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
-      pageNumber -= 1;
     }
     cargando = false;
   }
