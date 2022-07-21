@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
-import 'package:tasaciones_app/core/models/acciones_response.dart';
+import 'package:tasaciones_app/core/api/modulos_api.dart';
+import 'package:tasaciones_app/core/models/modulos_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
-import '../../../core/api/acciones_api.dart';
+import '../../../core/api/recursos_api.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
+import '../../../core/models/recursos_response.dart';
 import '../../../theme/theme.dart';
 
-class AccionesViewModel extends BaseViewModel {
-  final _accionesApi = locator<AccionesApi>();
+class RecursosViewModel extends BaseViewModel {
+  final _recursosApi = locator<RecursosAPI>();
+  final _modulosApi = locator<ModulosApi>();
   final listController = ScrollController();
   TextEditingController tcNewName = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
-  List<AccionesData> acciones = [];
+  List<RecursosData> recursos = [];
+  List<ModulosData> modulos = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
-  late AccionesResponse accionesResponse;
+  late RecursosResponse recursosResponse;
+  ModulosData? modulo;
 
-  AccionesViewModel() {
+  RecursosViewModel() {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
-          cargarMasAcciones();
+          cargarMasRecursos();
         }
       }
     });
@@ -45,26 +50,33 @@ class AccionesViewModel extends BaseViewModel {
 
   Future<void> onInit() async {
     cargando = true;
-    var resp = await _accionesApi.getAcciones(pageNumber: pageNumber);
+    var resp = await _recursosApi.getRecursos(pageNumber: pageNumber);
     if (resp is Success) {
-      accionesResponse = resp.response as AccionesResponse;
-      acciones = accionesResponse.data;
-      hasNextPage = accionesResponse.hasNextPage;
-      notifyListeners();
+      recursosResponse = resp.response as RecursosResponse;
+      recursos = recursosResponse.data;
+      hasNextPage = recursosResponse.hasNextPage;
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    var modresp = await _modulosApi.getModulos();
+    if (modresp is Success) {
+      var data = modresp.response as ModulosResponse;
+      modulos = data.data;
+    }
+    if (modresp is Failure) {
+      Dialogs.error(msg: modresp.messages[0]);
+    }
     cargando = false;
   }
 
-  Future<void> cargarMasAcciones() async {
+  Future<void> cargarMasRecursos() async {
     pageNumber += 1;
-    var resp = await _accionesApi.getAcciones(pageNumber: pageNumber);
+    var resp = await _recursosApi.getRecursos(pageNumber: pageNumber);
     if (resp is Success) {
-      var temp = resp.response as AccionesResponse;
-      accionesResponse.data.addAll(temp.data);
-      acciones.addAll(temp.data);
+      var temp = resp.response as RecursosResponse;
+      recursosResponse.data.addAll(temp.data);
+      recursos.addAll(temp.data);
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -73,15 +85,15 @@ class AccionesViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> buscarAccion(String query) async {
+  Future<void> buscarRecursos(String query) async {
     cargando = true;
-    var resp = await _accionesApi.getAcciones(
+    var resp = await _recursosApi.getRecursos(
       name: query,
       pageSize: 0,
     );
     if (resp is Success) {
-      var temp = resp.response as AccionesResponse;
-      acciones = temp.data;
+      var temp = resp.response as RecursosResponse;
+      recursos = temp.data;
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -94,17 +106,18 @@ class AccionesViewModel extends BaseViewModel {
 
   void limpiarBusqueda() {
     _busqueda = false;
-    acciones = accionesResponse.data;
+    recursos = recursosResponse.data;
     notifyListeners();
     tcBuscar.clear();
   }
 
   Future<void> onRefresh() async {
-    var resp = await _accionesApi.getAcciones();
+    pageNumber = 1;
+    var resp = await _recursosApi.getRecursos();
     if (resp is Success) {
-      var temp = resp.response as AccionesResponse;
-      accionesResponse = temp;
-      acciones = temp.data;
+      var temp = resp.response as RecursosResponse;
+      recursosResponse = temp;
+      recursos = temp.data;
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -113,8 +126,8 @@ class AccionesViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> modificarAccion(BuildContext ctx, AccionesData accion) async {
-    tcNewName.text = accion.nombre;
+  Future<void> modificarRecurso(BuildContext ctx, RecursosData recurso) async {
+    tcNewName.text = recurso.nombre;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -136,7 +149,7 @@ class AccionesViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Modificar Acción',
+                      'Modificar Recurso',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -164,19 +177,50 @@ class AccionesViewModel extends BaseViewModel {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonFormField<ModulosData>(
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(5.0)),
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 0.0),
+                          ),
+                          border: OutlineInputBorder()),
+                      items: modulos
+                          .map((e) => DropdownMenuItem<ModulosData>(
+                                child: Text(e.nombre),
+                                value: e,
+                              ))
+                          .toList(),
+                      hint: Text(modulos
+                          .firstWhere((e) => e.id == recurso.idModulo)
+                          .nombre),
+                      onChanged: (value) {
+                        modulo = value;
+                      },
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            if (tcNewName.text.trim() != accion.nombre) {
+                            if (tcNewName.text.trim() != recurso.nombre ||
+                                modulo?.id != recurso.idModulo) {
                               ProgressDialog.show(context);
-                              var resp = await _accionesApi.updateAcciones(
-                                  name: tcNewName.text, id: accion.id);
+                              var resp = await _recursosApi.updateRecursos(
+                                idModulo: modulo == null
+                                    ? recurso.idModulo
+                                    : modulo!.id,
+                                nombre: tcNewName.text.trim(),
+                                id: recurso.id,
+                              );
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(msg: 'Acción Modificada');
+                                Dialogs.success(msg: 'Recurso actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -187,7 +231,7 @@ class AccionesViewModel extends BaseViewModel {
                               }
                               tcNewName.clear();
                             } else {
-                              Dialogs.success(msg: 'Acción Modificada');
+                              Dialogs.success(msg: 'Recurso actualizado');
                               Navigator.of(context).pop();
                             }
                           }
@@ -229,19 +273,19 @@ class AccionesViewModel extends BaseViewModel {
                         onPressed: () {
                           Navigator.pop(context);
                           Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Acción',
+                              tittle: 'Eliminar Recurso',
                               description:
-                                  '¿Esta seguro de eliminar la acción ${accion.nombre}?',
+                                  '¿Está seguro de eliminar el Recurso ${recurso.nombre}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
-                            var resp = await _accionesApi.deleteAcciones(
-                                id: accion.id);
+                            var resp = await _recursosApi.deleteRecursos(
+                                id: recurso.id);
                             ProgressDialog.dissmiss(ctx);
                             if (resp is Failure) {
                               Dialogs.error(msg: resp.messages[0]);
                             }
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Acción eliminada');
+                              Dialogs.success(msg: 'Recurso eliminado');
                               await onRefresh();
                             }
                           });
@@ -270,8 +314,9 @@ class AccionesViewModel extends BaseViewModel {
         });
   }
 
-  Future<void> crearAccion(BuildContext ctx) async {
+  Future<void> crearRecurso(BuildContext ctx) async {
     tcNewName.clear();
+    modulo = null;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -293,7 +338,7 @@ class AccionesViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Crear Acción',
+                      'Crear Recurso',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -321,6 +366,36 @@ class AccionesViewModel extends BaseViewModel {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonFormField<ModulosData>(
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Seleccione un módulo';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(5.0)),
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 0.0),
+                          ),
+                          border: OutlineInputBorder()),
+                      items: modulos
+                          .map((e) => DropdownMenuItem<ModulosData>(
+                                child: Text(e.nombre),
+                                value: e,
+                              ))
+                          .toList(),
+                      hint: const Text('Seleccione un Módulo'),
+                      onChanged: (value) {
+                        modulo = value;
+                      },
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -328,11 +403,13 @@ class AccionesViewModel extends BaseViewModel {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             ProgressDialog.show(context);
-                            var resp = await _accionesApi.createAcciones(
-                                name: tcNewName.text.trim());
+                            var resp = await _recursosApi.createRecursos(
+                              name: tcNewName.text.trim(),
+                              idModulo: modulo!.id,
+                            );
                             ProgressDialog.dissmiss(context);
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Acción Creada');
+                              Dialogs.success(msg: 'Recurso Creado');
                               Navigator.of(context).pop();
                               await onRefresh();
                             }
@@ -342,9 +419,6 @@ class AccionesViewModel extends BaseViewModel {
                               Dialogs.error(msg: resp.messages[0]);
                             }
                             tcNewName.clear();
-                          } else {
-                            Dialogs.success(msg: 'Acción Modificada');
-                            Navigator.of(context).pop();
                           }
                         }, // button pressed
                         child: Column(

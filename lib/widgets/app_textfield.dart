@@ -23,23 +23,25 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * .80,
+      width: MediaQuery.of(context).size.width * .85,
       child: TextFormField(
         validator: validator,
         keyboardType: keyboardType,
         controller: controller,
         style: Theme.of(context).textTheme.headline6?.copyWith(
-              color: AppColors.brownDark,
+              color: Colors.black,
             ),
         decoration: InputDecoration(
-            border: const OutlineInputBorder(
+            border: const UnderlineInputBorder(),
+            /*const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),
-            ),
-            filled: true,
+            */
+            // filled: true,
             isDense: true,
             errorStyle: TextStyle(color: colorError),
             fillColor: Colors.white,
-            hintText: text,
+            hintText: "Ingrese $text",
+            label: Text(text),
             hintStyle: const TextStyle(
               color: Colors.grey,
               fontSize: 20,

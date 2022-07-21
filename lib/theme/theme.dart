@@ -10,7 +10,7 @@ class AppColors {
   static const brownLight = Color(0xFFDE9E3D);
   static const brown = Color(0xFFB06428);
   static const brownDark = Color(0xFF6D4420);
-  static const white = Colors.white;
+  static const white = Color(0xfffff7eb);
   static const gold = Color.fromRGBO(222, 158, 61, 1);
   static const cream = Color.fromRGBO(255, 247, 235, 1);
   static const lightGreen = Color.fromRGBO(46, 226, 146, 1);
@@ -33,11 +33,12 @@ final myTheme = ThemeData(
   scaffoldBackgroundColor: AppColors.white,
   iconTheme: const IconThemeData(size: 30),
   appBarTheme: const AppBarTheme(
-    elevation: 0,
+    elevation: 3,
+    backgroundColor: AppColors.brownLight,
     iconTheme: IconThemeData(color: Colors.white),
     titleTextStyle: TextStyle(
-      fontSize: 15,
-      fontWeight: FontWeight.normal,
+      fontSize: 20,
+      fontWeight: FontWeight.w800,
       color: Colors.white,
     ),
   ),
@@ -52,4 +53,4 @@ TextStyle appDropdown = const TextStyle(
 
 /* Durations */
 
-Duration durationLoading = const Duration(seconds: 10);
+Duration durationLoading = const Duration(seconds: 20);

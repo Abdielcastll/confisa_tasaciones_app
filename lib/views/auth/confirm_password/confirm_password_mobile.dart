@@ -7,72 +7,67 @@ class _ConfirmPasswordMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return AuthPageWidget(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.only(bottom: 20),
-          width: size.width * .80,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            color: AppColors.brown.withOpacity(0.7),
-          ),
-          child: Column(
-            children: [
-              Text(
-                'Jose Perez',
-                style: Theme.of(context).textTheme.headline4?.copyWith(
-                      color: Colors.white,
-                    ),
-              ),
-              Text(
-                'Aprobador de facturas',
-                style: Theme.of(context).textTheme.headline5?.copyWith(
-                      color: Colors.white,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              AppTextField(
-                text: 'Nueva contraseña',
-                controller: vm.tcPassword,
-                obscureText: vm.obscurePassword,
-                iconButton: AppObscureTextIcon(
-                  icon: vm.obscurePassword
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                  onPressed: vm.onChangeObscure,
+    return Scaffold(
+        appBar: AppBar(title: const Text('Configurar Contraseña')),
+        body: Center(
+          child: Form(
+            key: vm.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 8),
+                AppTextField(
+                  text: 'Contraseña',
+                  controller: vm.tcPassword,
+                  obscureText: vm.obscurePassword,
+                  iconButton: AppObscureTextIcon(
+                    icon: vm.obscurePassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    onPressed: vm.onChangeObscure,
+                  ),
+                  validator: vm.validator,
                 ),
-              ),
-              const SizedBox(height: 20),
-              AppTextField(
-                text: 'Confirmar contraseña',
-                controller: vm.tcPasswordConfirm,
-                obscureText: vm.obscurePasswordConfirm,
-                iconButton: AppObscureTextIcon(
-                  icon: vm.obscurePasswordConfirm
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                  onPressed: vm.onChangeObscureConfirm,
+                const SizedBox(height: 20),
+                AppTextField(
+                  text: 'Confirmar contraseña',
+                  controller: vm.tcPasswordConfirm,
+                  obscureText: vm.obscurePasswordConfirm,
+                  iconButton: AppObscureTextIcon(
+                    icon: vm.obscurePasswordConfirm
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    onPressed: vm.onChangeObscureConfirm,
+                  ),
+                  validator: vm.validator,
                 ),
-              )
-            ],
+                const SizedBox(height: 10),
+                FlutterPwValidator(
+                  controller: vm.tcPasswordConfirm,
+                  minLength: 8,
+                  uppercaseCharCount: 1,
+                  numericCharCount: 1,
+                  specialCharCount: 1,
+                  width: MediaQuery.of(context).size.width * .90,
+                  height: 120,
+                  onSuccess: () => vm.isValidPassword = true,
+                  onFail: () => vm.isValidPassword = false,
+                  strings: FrenchStrings(),
+                ),
+                const SizedBox(height: 20),
+                AppButtonLogin(
+                  icon: Icons.lock_open,
+                  text: 'Reiniciar Contraseña',
+                  onPressed: () {
+                    if (vm.formKey.currentState!.validate()) {
+                      print('CONTRASEÑA VALIDA');
+                    }
+                  },
+                  color: AppColors.brownDark,
+                ),
+              ],
+            ),
           ),
-        ),
-        AppButtonLogin(
-          text: 'SIGUIENTE',
-          onPressed: () {},
-          color: AppColors.brown,
-        ),
-        const SizedBox(height: 10),
-        AppButtonLogin(
-          text: 'ANTERIOR',
-          onPressed: vm.goBack,
-          color: AppColors.brown,
-        )
-      ],
-    ));
+        ));
   }
 }

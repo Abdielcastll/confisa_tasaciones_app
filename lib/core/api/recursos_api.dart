@@ -9,13 +9,18 @@ class RecursosAPI {
   RecursosAPI(this._http, this._authenticationClient);
 
   Future<Object> getRecursos(
-      {int pageNumber = 1, int pageSize = 100, int estado = 1}) async {
+      {int pageNumber = 1, int pageSize = 20, String name = ''}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/recursos/get?PageSize=$pageSize&PageNumber=$pageNumber&Estado=$estado',
+      '/api/recursos/get',
       method: 'GET',
       headers: {
         'Authorization': 'Bearer $_token',
+      },
+      queryParameters: {
+        "Nombre": name,
+        "PageSize": pageSize,
+        "PageNumber": pageNumber,
       },
       parser: (data) {
         return RecursosResponse.fromJson(data);

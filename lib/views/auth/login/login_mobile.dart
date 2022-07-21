@@ -24,7 +24,13 @@ class _LoginMobile extends StatelessWidget {
               const SizedBox(height: 25),
               AppTextField(
                 text: 'Contraseña',
-                validator: passwordValidator,
+                validator: (pass) {
+                  if (pass!.trim().length < 8) {
+                    return 'Contraseña inválida';
+                  } else {
+                    return null;
+                  }
+                },
                 controller: vm.tcPassword,
                 obscureText: vm.obscurePassword,
                 keyboardType: TextInputType.visiblePassword,
@@ -35,21 +41,32 @@ class _LoginMobile extends StatelessWidget {
                   onPressed: vm.changeObscure,
                 ),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 40),
               AppButtonLogin(
+                icon: Icons.login_outlined,
                 text: 'Iniciar Sesión',
                 onPressed: () => vm.signIn(context),
                 color: AppColors.brown,
               ),
-              const SizedBox(height: 10),
-              TextButton(
-                child: Text(
-                  '¿Olvido su contraseña?',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                ),
+              const SizedBox(height: 40),
 
+              InkWell(
+                onTap: () => vm.goToConfigPassword(),
+                child: const Text(
+                  '¿Olvidaste tu contraseña?',
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+              // color: AppColors.orange,
+
+              AppButtonLogin(
+                text: 'Recuperar contraseña',
                 onPressed: () => vm.goToRecoveryPassword(),
-                // color: AppColors.orange,
+                color: AppColors.white,
+                textColor: Colors.black,
+                borderColor: AppColors.brown,
               )
             ],
           ),

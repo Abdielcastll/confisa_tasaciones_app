@@ -6,6 +6,7 @@ import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/views/home/home_view.dart';
@@ -62,5 +63,9 @@ class LoginViewModel extends BaseViewModel {
     tcEmail.dispose();
     tcPassword.dispose();
     super.dispose();
+  }
+
+  goToConfigPassword() {
+    _navigationService.navigateToPage(ConfirmPasswordView.routeName);
   }
 }

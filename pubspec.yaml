@@ -27,6 +27,7 @@ dependencies:
   flutter_svg: ^1.0.3
   fluttertoast: ^8.0.9
   email_validator: ^2.0.1
+  flutter_pw_validator: ^1.4.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
