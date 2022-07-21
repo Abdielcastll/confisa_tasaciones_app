@@ -1,9 +1,9 @@
-part of acciones_view;
+part of modulos_view;
 
-class _AccionesMobile extends StatelessWidget {
-  final AccionesViewModel vm;
+class _ModulosMobile extends StatelessWidget {
+  final ModulosViewModel vm;
 
-  const _AccionesMobile(this.vm);
+  const _ModulosMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class _AccionesMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Acciones',
+            'Modulos',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
@@ -30,7 +30,7 @@ class _AccionesMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscarAccion,
+                        onSubmitted: vm.buscarModulos,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -39,7 +39,7 @@ class _AccionesMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar acciones...',
+                          hintText: 'Buscar modulos...',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
@@ -59,7 +59,7 @@ class _AccionesMobile extends StatelessWidget {
                   ),
                 ),
                 MaterialButton(
-                  onPressed: () => vm.crearAccion(context),
+                  onPressed: () => vm.crearModulo(context),
                   color: Colors.white,
                   minWidth: 30,
                   height: 48,
@@ -83,10 +83,10 @@ class _AccionesMobile extends StatelessWidget {
                 onRefresh: () => vm.onRefresh(),
                 child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
-                    itemCount: vm.acciones.length + 1,
+                    itemCount: vm.modulos.length + 1,
                     controller: vm.listController,
                     itemBuilder: (context, i) {
-                      if (i >= vm.acciones.length) {
+                      if (i >= vm.modulos.length) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 30),
                           child: !vm.hasNextPage
@@ -95,11 +95,11 @@ class _AccionesMobile extends StatelessWidget {
                                   child: CircularProgressIndicator()),
                         );
                       }
-                      var accion = vm.acciones[i];
+                      var modulo = vm.modulos[i];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: MaterialButton(
-                          onPressed: () => vm.modificarAccion(context, accion),
+                          onPressed: () => vm.modificarModulo(context, modulo),
                           color: Colors.white,
                           elevation: 4,
                           shape: RoundedRectangleBorder(
@@ -109,7 +109,7 @@ class _AccionesMobile extends StatelessWidget {
                             height: 70,
                             padding: const EdgeInsets.all(10),
                             child: Text(
-                              accion.nombre,
+                              modulo.nombre,
                               style: const TextStyle(
                                 color: AppColors.brownDark,
                                 fontSize: 18,

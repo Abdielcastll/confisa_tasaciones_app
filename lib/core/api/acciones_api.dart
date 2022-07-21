@@ -7,8 +7,11 @@ class AccionesApi {
   final AuthenticationClient _authenticationClient;
   AccionesApi(this._http, this._authenticationClient);
 
-  Future<Object> getAcciones(
-      {int pageNumber = 1, int pageSize = 20, String id = ''}) async {
+  Future<Object> getAcciones({
+    int pageNumber = 1,
+    int pageSize = 20,
+    String name = '',
+  }) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/acciones/get',
@@ -16,7 +19,7 @@ class AccionesApi {
         'Authorization': 'Bearer $_token',
       },
       queryParameters: {
-        "id": id,
+        "Nombre": name,
         "PageSize": pageSize,
         "PageNumber": pageNumber,
       },

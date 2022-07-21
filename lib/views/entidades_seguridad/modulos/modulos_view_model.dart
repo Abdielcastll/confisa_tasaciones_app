@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
-import 'package:tasaciones_app/core/models/acciones_response.dart';
+import 'package:tasaciones_app/core/models/modulos_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
-import '../../../core/api/acciones_api.dart';
+import '../../../core/api/modulos_api.dart';
+import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 import '../../../theme/theme.dart';
 
-class AccionesViewModel extends BaseViewModel {
-  final _accionesApi = locator<AccionesApi>();
+class ModulosViewModel extends BaseViewModel {
+  final user = locator<AuthenticationClient>().loadSession;
+  final _modulosApi = locator<ModulosApi>();
   final listController = ScrollController();
   TextEditingController tcNewName = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
-  List<AccionesData> acciones = [];
+  List<ModulosData> modulos = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
-  late AccionesResponse accionesResponse;
+  late ModulosResponse modulosResponse;
 
-  AccionesViewModel() {
+  ModulosViewModel() {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
-          cargarMasAcciones();
+          cargarMasModulos();
         }
       }
     });
@@ -45,11 +47,11 @@ class AccionesViewModel extends BaseViewModel {
 
   Future<void> onInit() async {
     cargando = true;
-    var resp = await _accionesApi.getAcciones(pageNumber: pageNumber);
+    var resp = await _modulosApi.getModulos(pageNumber: pageNumber);
     if (resp is Success) {
-      accionesResponse = resp.response as AccionesResponse;
-      acciones = accionesResponse.data;
-      hasNextPage = accionesResponse.hasNextPage;
+      modulosResponse = resp.response as ModulosResponse;
+      modulos = modulosResponse.data;
+      hasNextPage = modulosResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -58,13 +60,13 @@ class AccionesViewModel extends BaseViewModel {
     cargando = false;
   }
 
-  Future<void> cargarMasAcciones() async {
+  Future<void> cargarMasModulos() async {
     pageNumber += 1;
-    var resp = await _accionesApi.getAcciones(pageNumber: pageNumber);
+    var resp = await _modulosApi.getModulos(pageNumber: pageNumber);
     if (resp is Success) {
-      var temp = resp.response as AccionesResponse;
-      accionesResponse.data.addAll(temp.data);
-      acciones.addAll(temp.data);
+      var temp = resp.response as ModulosResponse;
+      modulosResponse.data.addAll(temp.data);
+      modulos.addAll(temp.data);
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -73,15 +75,15 @@ class AccionesViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> buscarAccion(String query) async {
+  Future<void> buscarModulos(String query) async {
     cargando = true;
-    var resp = await _accionesApi.getAcciones(
+    var resp = await _modulosApi.getModulos(
       name: query,
       pageSize: 0,
     );
     if (resp is Success) {
-      var temp = resp.response as AccionesResponse;
-      acciones = temp.data;
+      var temp = resp.response as ModulosResponse;
+      modulos = temp.data;
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -94,17 +96,17 @@ class AccionesViewModel extends BaseViewModel {
 
   void limpiarBusqueda() {
     _busqueda = false;
-    acciones = accionesResponse.data;
+    modulos = modulosResponse.data;
     notifyListeners();
     tcBuscar.clear();
   }
 
   Future<void> onRefresh() async {
-    var resp = await _accionesApi.getAcciones();
+    var resp = await _modulosApi.getModulos();
     if (resp is Success) {
-      var temp = resp.response as AccionesResponse;
-      accionesResponse = temp;
-      acciones = temp.data;
+      var temp = resp.response as ModulosResponse;
+      modulosResponse = temp;
+      modulos = temp.data;
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -113,8 +115,8 @@ class AccionesViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> modificarAccion(BuildContext ctx, AccionesData accion) async {
-    tcNewName.text = accion.nombre;
+  Future<void> modificarModulo(BuildContext ctx, ModulosData modulo) async {
+    tcNewName.text = modulo.nombre;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -136,7 +138,7 @@ class AccionesViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Modificar Acción',
+                      'Modificar Módulo',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -170,13 +172,13 @@ class AccionesViewModel extends BaseViewModel {
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            if (tcNewName.text.trim() != accion.nombre) {
+                            if (tcNewName.text.trim() != modulo.nombre) {
                               ProgressDialog.show(context);
-                              var resp = await _accionesApi.updateAcciones(
-                                  name: tcNewName.text, id: accion.id);
+                              var resp = await _modulosApi.updateModulos(
+                                  name: tcNewName.text, id: modulo.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(msg: 'Acción Modificada');
+                                Dialogs.success(msg: 'Módulo Actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -187,7 +189,7 @@ class AccionesViewModel extends BaseViewModel {
                               }
                               tcNewName.clear();
                             } else {
-                              Dialogs.success(msg: 'Acción Modificada');
+                              Dialogs.success(msg: 'Módulo Actualizado');
                               Navigator.of(context).pop();
                             }
                           }
@@ -231,17 +233,17 @@ class AccionesViewModel extends BaseViewModel {
                           Dialogs.confirm(ctx,
                               tittle: 'Eliminar Acción',
                               description:
-                                  '¿Esta seguro de eliminar la acción ${accion.nombre}?',
+                                  '¿Esta seguro de eliminar la acción ${modulo.nombre}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
-                            var resp = await _accionesApi.deleteAcciones(
-                                id: accion.id);
+                            var resp =
+                                await _modulosApi.deleteModulos(id: modulo.id);
                             ProgressDialog.dissmiss(ctx);
                             if (resp is Failure) {
                               Dialogs.error(msg: resp.messages[0]);
                             }
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Acción eliminada');
+                              Dialogs.success(msg: 'Módulo eliminado');
                               await onRefresh();
                             }
                           });
@@ -270,7 +272,7 @@ class AccionesViewModel extends BaseViewModel {
         });
   }
 
-  Future<void> crearAccion(BuildContext ctx) async {
+  Future<void> crearModulo(BuildContext ctx) async {
     tcNewName.clear();
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
@@ -293,7 +295,7 @@ class AccionesViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Crear Acción',
+                      'Crear Módulo',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -328,11 +330,11 @@ class AccionesViewModel extends BaseViewModel {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             ProgressDialog.show(context);
-                            var resp = await _accionesApi.createAcciones(
+                            var resp = await _modulosApi.createModulos(
                                 name: tcNewName.text.trim());
                             ProgressDialog.dissmiss(context);
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Acción Creada');
+                              Dialogs.success(msg: 'Módulo Creado');
                               Navigator.of(context).pop();
                               await onRefresh();
                             }
@@ -342,9 +344,6 @@ class AccionesViewModel extends BaseViewModel {
                               Dialogs.error(msg: resp.messages[0]);
                             }
                             tcNewName.clear();
-                          } else {
-                            Dialogs.success(msg: 'Acción Modificada');
-                            Navigator.of(context).pop();
                           }
                         }, // button pressed
                         child: Column(
@@ -393,8 +392,8 @@ class AccionesViewModel extends BaseViewModel {
   @override
   void dispose() {
     listController.dispose();
-    tcNewName.dispose();
     tcBuscar.dispose();
+    tcNewName.dispose();
     super.dispose();
   }
 }

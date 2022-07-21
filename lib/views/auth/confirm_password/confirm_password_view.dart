@@ -8,7 +8,6 @@ import '../../../theme/theme.dart';
 import '../../../widgets/app_buttons.dart';
 import '../../../widgets/app_obscure_text_icon.dart';
 import '../../../widgets/app_textfield.dart';
-import '../widgets/auth_page_widget.dart';
 import 'confirm_password_view_model.dart';
 
 part 'confirm_password_mobile.dart';

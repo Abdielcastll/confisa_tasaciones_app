@@ -8,7 +8,9 @@ import 'package:tasaciones_app/views/entidades_seguridad/usuarios/usuarios_view.
 
 import '../views/Perfil_de_usuario/perfil_view.dart';
 import '../views/auth/login/login_view.dart';
+import '../views/entidades_seguridad/modulos/modulos_view.dart';
 import '../views/entidades_seguridad/permisos/permisos_view.dart';
+import '../views/entidades_seguridad/recursos/recursos_view.dart';
 import '../views/home/home_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -36,6 +38,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case AccionesView.routeName:
       return CupertinoPageRoute(builder: (context) => const AccionesView());
+
+    case ModulosView.routeName:
+      return CupertinoPageRoute(builder: (context) => const ModulosView());
+
+    case RecursosView.routeName:
+      return CupertinoPageRoute(builder: (context) => const RecursosView());
 
     case PermisosView.routeName:
       return CupertinoPageRoute(builder: (context) => const PermisosView());
