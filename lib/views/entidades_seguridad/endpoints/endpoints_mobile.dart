@@ -104,7 +104,10 @@ class _EndpointsMobile extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    "Permiso: " + endpoint.permiso.descripcion,
+                                    "Permiso: " +
+                                        (endpoint.permiso.descripcion.isEmpty
+                                            ? "Ninguno"
+                                            : endpoint.permiso.descripcion),
                                     style: const TextStyle(
                                         color: AppColors.brownDark,
                                         fontSize: 12),
