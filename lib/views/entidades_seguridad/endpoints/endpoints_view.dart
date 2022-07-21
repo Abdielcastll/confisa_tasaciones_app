@@ -3,10 +3,7 @@ library endpoints_view;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/change_buttons.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/forms/form_crear_permiso.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';
-import '../../../widgets/app_dialogs.dart';
 import 'endpoints_view_model.dart';
 
 part 'endpoints_mobile.dart';

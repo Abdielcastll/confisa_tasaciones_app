@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
-import 'package:tasaciones_app/core/models/permisos_response.dart';
+import 'package:tasaciones_app/core/models/roles_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/acciones_api.dart';
-import '../../../core/api/permisos_api.dart';
+import '../../../core/api/roles_api.dart';
 import '../../../core/api/recursos_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
@@ -13,30 +13,31 @@ import '../../../core/models/acciones_response.dart';
 import '../../../core/models/recursos_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
+import '../widgets/forms/form_actualizar_rol.dart';
 import '../widgets/forms/form_crear_permiso.dart';
 
-class PermisosViewModel extends BaseViewModel {
+class RolesViewModel extends BaseViewModel {
   final user = locator<AuthenticationClient>().loadSession;
-  final _permisosApi = locator<PermisosAPI>();
+  final _rolesApi = locator<RolesAPI>();
   final _accionesApi = locator<AccionesApi>();
   final _recursosApi = locator<RecursosAPI>();
   final listController = ScrollController();
   final _navigationService = locator<NavigatorService>();
-  TextEditingController tcNewName = TextEditingController();
+
   TextEditingController tcBuscar = TextEditingController();
 
-  List<PermisosData> permisos = [];
+  List<RolData> roles = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
-  late PermisosResponse permisosResponse;
+  late RolResponse rolesResponse;
 
-  PermisosViewModel() {
+  RolesViewModel() {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
-          cargarMasPermisos();
+          cargarMasRoles();
         }
       }
     });
@@ -56,30 +57,29 @@ class PermisosViewModel extends BaseViewModel {
 
   Future<void> onInit() async {
     cargando = true;
-    permisos = [];
+    roles = [];
     pageNumber = 1;
     hasNextPage = false;
-    var resp =
-        await _permisosApi.getPermisos(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _rolesApi.getRoles(pageNumber: pageNumber, pageSize: 20);
     if (resp is Success) {
-      permisosResponse = resp.response as PermisosResponse;
-      permisos = permisosResponse.data;
-      hasNextPage = permisosResponse.hasNextPage;
+      rolesResponse = resp.response as RolResponse;
+      roles = rolesResponse.data;
+      hasNextPage = rolesResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+      pageNumber -= 1;
     }
     cargando = false;
   }
 
-  Future<void> cargarMasPermisos() async {
+  Future<void> cargarMasRoles() async {
     pageNumber += 1;
-    var resp =
-        await _permisosApi.getPermisos(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _rolesApi.getRoles(pageNumber: pageNumber, pageSize: 20);
     if (resp is Success) {
-      var temp = resp.response as PermisosResponse;
-      permisos.addAll(temp.data);
+      var temp = resp.response as RolResponse;
+      roles.addAll(temp.data);
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -89,15 +89,15 @@ class PermisosViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> buscarPermiso(String query) async {
+  Future<void> buscarRol(String query) async {
     cargando = true;
-    var resp = await _permisosApi.getPermisos(
+    var resp = await _rolesApi.getRoles(
       descripcion: query,
       pageSize: 0,
     );
     if (resp is Success) {
-      var temp = resp.response as PermisosResponse;
-      permisos = temp.data;
+      var temp = resp.response as RolResponse;
+      roles = temp.data;
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -110,8 +110,8 @@ class PermisosViewModel extends BaseViewModel {
 
   void limpiarBusqueda() {
     _busqueda = false;
-    permisos = permisosResponse.data;
-    if (permisos.length >= 20) {
+    roles = rolesResponse.data;
+    if (roles.length >= 20) {
       hasNextPage = true;
     }
     notifyListeners();
@@ -120,6 +120,7 @@ class PermisosViewModel extends BaseViewModel {
 
   Future<void> modificarPermiso(String descripcion, int id, String accionNombre,
       String recursoNombre, BuildContext context) async {
+    /* String permisoDescripcion = descripcion;
     Map<String, dynamic> accion = {};
     Map<String, dynamic> recurso = {};
     dynamic opcion;
@@ -143,13 +144,13 @@ class PermisosViewModel extends BaseViewModel {
                       recurso,
                       accion, (String descripcionf) async {
                     ProgressDialog.show(context);
-                    var creacion = await _permisosApi.updatePermisos(
+                    var creacion = await _rolesApi.updateRol(
                         id: id,
                         descripcion: descripcionf,
                         idAccion: accion["id"] ?? 0,
                         idRecurso: recurso["id"] ?? 0,
                         esBasico: 1);
-                    if (creacion is Success<PermisosPOSTResponse>) {
+                    if (creacion is Success<RolesPOSTResponse>) {
                       ProgressDialog.dissmiss(context);
                       Dialogs.success(msg: "Modificacion exitosa");
                       _navigationService.pop();
@@ -165,8 +166,8 @@ class PermisosViewModel extends BaseViewModel {
                             "Esta seguro que desea eliminar el permiso?",
                         confirm: () async {
                       ProgressDialog.show(context);
-                      var resp = await _permisosApi.deletePermisos(id: id);
-                      if (resp is Success<PermisosPOSTResponse>) {
+                      var resp = await _rolesApi.deleteRoles(id: id);
+                      if (resp is Success<RolesPOSTResponse>) {
                         ProgressDialog.dissmiss(context);
                         Dialogs.success(msg: "Eliminado con exito");
                         _navigationService.pop();
@@ -206,62 +207,48 @@ class PermisosViewModel extends BaseViewModel {
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
       Dialogs.error(msg: resp.messages.first);
-    }
+    } */
   }
 
-  Future<void> crearPermiso(BuildContext context, Size size) async {
+  Future<void> crearRol(BuildContext context, Size size) async {
+    final _rolesApi = locator<RolesAPI>();
     String descripcion = "";
-    Map<String, dynamic> accion = {};
-    Map<String, dynamic> recurso = {};
-    dynamic opcion;
-    ProgressDialog.show(context);
-    var resp = await _accionesApi.getAcciones();
-    if (resp is Success<AccionesResponse>) {
-      var resp2 = await _recursosApi.getRecursos();
-      if (resp2 is Success<RecursosResponse>) {
-        ProgressDialog.dissmiss(context);
-        final GlobalKey<FormState> _formKey = GlobalKey();
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                  contentPadding: EdgeInsets.zero,
-                  content: formCrearPermiso(
-                      "Creacion de Permiso",
-                      _formKey,
-                      descripcion,
-                      recurso,
-                      accion, (String descripcionf) async {
-                    ProgressDialog.show(context);
-                    var creacion = await _permisosApi.createPermisos(
-                        descripcion: descripcionf,
-                        idAccion: accion["id"],
-                        idRecurso: recurso["id"],
-                        esBasico: 1);
-                    if (creacion is Success<PermisosData>) {
-                      ProgressDialog.dissmiss(context);
-                      Dialogs.success(msg: "Creacion exitosa");
-                      _formKey.currentState?.reset();
-                      _navigationService.pop();
-                      onInit();
-                    } else if (creacion is Failure) {
-                      ProgressDialog.dissmiss(context);
-                      Dialogs.error(msg: creacion.messages.first);
-                    }
-                  }, () {}, opcion, resp.response.data, resp2.response.data, [],
-                      size, false, "Crear", false),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ));
-            });
-      } else if (resp2 is Failure) {
-        ProgressDialog.dissmiss(context);
-        Dialogs.error(msg: resp2.messages.first);
-      }
-    } else if (resp is Failure) {
-      ProgressDialog.dissmiss(context);
-      Dialogs.error(msg: resp.messages.first);
-    }
+    final GlobalKey<FormState> _formKey = GlobalKey();
+    String titulo = "Crear rol";
+    bool validator = true;
+    String buttonTittle = "Crear";
+    String nombre = "";
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            content: ActualizarRolForm(
+                formKey: _formKey,
+                size: size,
+                titulo: titulo,
+                informacion: const [],
+                validator: validator,
+                modificar: (nombref, descripcionf) async {
+                  ProgressDialog.show(context);
+                  var resp = await _rolesApi.createRoles(nombref, descripcionf);
+                  if (resp is Success<RolPOSTResponse>) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.success(msg: "Creacion de rol exitosa");
+                    _navigationService.pop();
+                    onInit();
+                  } else if (resp is Failure) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.error(msg: resp.messages.first);
+                  }
+                },
+                descripcion: descripcion,
+                buttonTittle: buttonTittle,
+                nombre: nombre),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          );
+        });
   }
 
   @override
