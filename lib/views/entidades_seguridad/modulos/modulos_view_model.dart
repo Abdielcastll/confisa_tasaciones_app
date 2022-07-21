@@ -97,6 +97,9 @@ class ModulosViewModel extends BaseViewModel {
   void limpiarBusqueda() {
     _busqueda = false;
     modulos = modulosResponse.data;
+    if (modulos.length >= 20) {
+      hasNextPage = true;
+    }
     notifyListeners();
     tcBuscar.clear();
   }

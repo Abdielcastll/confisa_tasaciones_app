@@ -95,6 +95,9 @@ class AccionesViewModel extends BaseViewModel {
   void limpiarBusqueda() {
     _busqueda = false;
     acciones = accionesResponse.data;
+    if (acciones.length >= 20) {
+      hasNextPage = true;
+    }
     notifyListeners();
     tcBuscar.clear();
   }

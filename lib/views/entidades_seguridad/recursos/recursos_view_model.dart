@@ -107,6 +107,9 @@ class RecursosViewModel extends BaseViewModel {
   void limpiarBusqueda() {
     _busqueda = false;
     recursos = recursosResponse.data;
+    if (recursos.length >= 20) {
+      hasNextPage = true;
+    }
     notifyListeners();
     tcBuscar.clear();
   }
