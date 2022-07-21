@@ -101,7 +101,7 @@ class ChangeButtons {
                     Dialogs.error(msg: creacion.messages[0]);
                   }
                 }
-              }, rolElegido, buttonTittle, rol1, suplidor, password));
+              }, rolElegido, buttonTittle, rol1, suplidor));
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
       Dialogs.error(msg: resp.messages.first);
@@ -109,7 +109,7 @@ class ChangeButtons {
     return Container();
   }
 
-  Future<Widget> addButtonEndpoints() async {
+  /* Future<Widget> addButtonEndpoints() async {
     final _endpointsApi = locator<EndpointsApi>();
     String controlador = "";
     String nombre = "";
@@ -202,7 +202,7 @@ class ChangeButtons {
                     borderRadius: BorderRadius.circular(10)),
               );
             }));
-  }
+  } */
 
   Future<void> addButtonPermisos() async {
     final _accionesApi = locator<AccionesApi>();

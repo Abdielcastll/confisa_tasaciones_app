@@ -29,6 +29,23 @@ Widget dialogActualizarRolesUsuario(
       child: SingleChildScrollView(
         child: Column(
           children: [
+            Container(
+              height: size.height * .08,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                color: AppColors.gold,
+              ),
+              child: const Align(
+                alignment: Alignment.center,
+                child: Text("Asignar Rol",
+                    style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(

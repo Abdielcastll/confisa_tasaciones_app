@@ -49,7 +49,8 @@ class PermisosViewModel extends BaseViewModel {
     permisos = [];
     pageNumber = 1;
     hasNextPage = false;
-    var resp = await _permisosApi.getPermisos(pageNumber: pageNumber);
+    var resp =
+        await _permisosApi.getPermisos(pageNumber: pageNumber, pageSize: 20);
     if (resp is Success) {
       var temp = resp.response as PermisosResponse;
       permisos = temp.data;
@@ -64,7 +65,8 @@ class PermisosViewModel extends BaseViewModel {
 
   Future<void> cargarMasPermisos() async {
     pageNumber += 1;
-    var resp = await _permisosApi.getPermisos(pageNumber: pageNumber);
+    var resp =
+        await _permisosApi.getPermisos(pageNumber: pageNumber, pageSize: 20);
     if (resp is Success) {
       var temp = resp.response as PermisosResponse;
       permisos.addAll(temp.data);

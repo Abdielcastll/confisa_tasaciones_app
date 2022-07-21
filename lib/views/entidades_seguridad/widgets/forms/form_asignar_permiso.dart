@@ -23,7 +23,7 @@ Form formAsignarPermiso(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
-                color: AppColors.orange,
+                color: AppColors.gold,
               ),
               child: Align(
                 alignment: Alignment.center,
@@ -79,7 +79,7 @@ Form formAsignarPermiso(
                         minimumSize: const Size.fromHeight(60)),
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
-                      if (validator) {
+                      if (!validator) {
                         _formKey.currentState?.save();
                         crear();
                       } else if (_formKey.currentState!.validate()) {

@@ -13,22 +13,20 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import '../../../../core/authentication_client.dart';
 
 Future<dynamic> dialogCrearUsuario(
-  String titulo,
-  Size size,
-  BuildContext context,
-  GlobalKey<FormState> _formKey,
-  List<RolData> roles,
-  String nombreCompleto,
-  String telefono,
-  String email,
-  bool validator,
-  Function modificar,
-  var dropdown,
-  String buttonTittle,
-  Map<String, dynamic> rol1,
-  Map<String, dynamic> suplidor,
-  String password,
-) {
+    String titulo,
+    Size size,
+    BuildContext context,
+    GlobalKey<FormState> _formKey,
+    List<RolData> roles,
+    String nombreCompleto,
+    String telefono,
+    String email,
+    bool validator,
+    Function modificar,
+    var dropdown,
+    String buttonTittle,
+    Map<String, dynamic> rol1,
+    Map<String, dynamic> suplidor) {
   List<Widget> permisoRol = [];
   rol1['id'] = "";
   rol1["nombre"] = "";
@@ -237,46 +235,6 @@ Future<dynamic> dialogCrearUsuario(
                                                       !EmailValidator.validate(
                                                           value, true, true)) {
                                                     return 'Debe ingresar un email valido';
-                                                  }
-                                                }
-
-                                                return null;
-                                              },
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            TextFormField(
-                                              decoration: const InputDecoration(
-                                                  labelText: 'Contraseña',
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0)),
-                                                    borderSide: BorderSide(
-                                                        color: Colors.grey,
-                                                        width: 0.0),
-                                                  ),
-                                                  border: OutlineInputBorder()),
-                                              onSaved: (value) {
-                                                password = value!;
-                                              },
-                                              validator: (value) {
-                                                RegExp regex = RegExp(
-                                                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                                                if (validator &&
-                                                    (email != "" ||
-                                                        nombreCompleto != "" ||
-                                                        telefono != "")) {
-                                                  if (value == null ||
-                                                      value.isEmpty ||
-                                                      value.length < 8) {
-                                                    return 'Debe ingresar un email valido';
-                                                  } else if (!regex
-                                                      .hasMatch(value)) {
-                                                    return "La contraseña debe tener por lo menos, un numero, una mayuscula, una minuscula y un simbolo especial";
                                                   }
                                                 }
 

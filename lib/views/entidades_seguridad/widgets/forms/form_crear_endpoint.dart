@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/core/models/endpoints_response.dart';
 
+import '../../../../core/locator.dart';
+import '../../../../core/services/navigator_service.dart';
 import '../../../../theme/theme.dart';
 
 class CrearEndpointForm extends StatelessWidget {
@@ -8,29 +11,32 @@ class CrearEndpointForm extends StatelessWidget {
       required GlobalKey<FormState> formKey,
       required this.size,
       required this.titulo,
-      required this.informacion,
       required this.validator,
       required this.modificar,
+      required this.eliminar,
       required this.controlador,
       required this.buttonTittle,
       required this.nombre,
       required this.httpVerbo,
-      required this.metodo})
+      required this.metodo,
+      required this.endpointsData,
+      required this.showEliminar,
+      required this.asignarPermiso})
       : _formKey = formKey,
         super(key: key);
 
   final GlobalKey<FormState> _formKey;
   final Size size;
   final String titulo;
-  final List<Widget> informacion;
-  final bool validator;
-  final Function modificar;
+  final bool validator, showEliminar;
+  final Function modificar, eliminar, asignarPermiso;
   late String controlador;
   late String metodo;
   late String httpVerbo;
   final String buttonTittle;
+  final EndpointsData endpointsData;
   late String nombre;
-
+  final _navigationService = locator<NavigatorService>();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -44,7 +50,7 @@ class CrearEndpointForm extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10)),
-                  color: AppColors.orange,
+                  color: AppColors.gold,
                 ),
                 child: Align(
                   alignment: Alignment.center,
@@ -59,20 +65,8 @@ class CrearEndpointForm extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Column(
-                            children: informacion,
-                          ),
-                        ],
-                      ),
-                    ),
                     TextFormField(
+                      initialValue: endpointsData.nombre,
                       decoration: const InputDecoration(
                           labelText: "Nombre",
                           enabledBorder: OutlineInputBorder(
@@ -98,6 +92,7 @@ class CrearEndpointForm extends StatelessWidget {
                       height: 15,
                     ),
                     TextFormField(
+                      initialValue: endpointsData.controlador,
                       decoration: const InputDecoration(
                           labelText: "Controlador",
                           enabledBorder: OutlineInputBorder(
@@ -123,6 +118,7 @@ class CrearEndpointForm extends StatelessWidget {
                       height: 15,
                     ),
                     TextFormField(
+                      initialValue: endpointsData.metodo,
                       decoration: const InputDecoration(
                           labelText: "Metodo",
                           enabledBorder: OutlineInputBorder(
@@ -148,6 +144,7 @@ class CrearEndpointForm extends StatelessWidget {
                       height: 15,
                     ),
                     TextFormField(
+                      initialValue: endpointsData.httpVerbo,
                       decoration: const InputDecoration(
                           labelText: "Verbo HTTP",
                           enabledBorder: OutlineInputBorder(
@@ -172,19 +169,100 @@ class CrearEndpointForm extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: AppColors.green,
-                          minimumSize: const Size.fromHeight(60)),
-                      onPressed: () {
-                        // Validate returns true if the form is valid, or false otherwise.
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState?.save();
-                          modificar(nombre, controlador, metodo, httpVerbo);
-                        }
-                      },
-                      child: Text(buttonTittle),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState?.save();
+                              modificar(nombre, controlador, metodo, httpVerbo);
+                            }
+                          },
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Guardar"), // text
+                            ],
+                          ),
+                        ),
+                        showEliminar
+                            ? const Expanded(child: SizedBox())
+                            : const SizedBox(),
+                        showEliminar
+                            ? TextButton(
+                                onPressed: () =>
+                                    asignarPermiso(), // button pressed
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.cached,
+                                      color: AppColors.gold,
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ), // icon
+                                    Text("Permiso"), // text
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(
+                                width: 0,
+                              ),
+                        const Expanded(child: SizedBox()),
+                        TextButton(
+                          onPressed: () {
+                            _navigationService.pop();
+                          },
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                        showEliminar
+                            ? const Expanded(child: SizedBox())
+                            : const SizedBox(),
+                        showEliminar
+                            ? TextButton(
+                                onPressed: () => eliminar(), // button pressed
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.delete,
+                                      color: AppColors.grey,
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ), // icon
+                                    Text("Eliminar"), // text
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(
+                                width: 0,
+                              ),
+                      ],
+                    )
                   ],
                 ),
               ),

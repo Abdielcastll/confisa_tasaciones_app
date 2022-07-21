@@ -70,8 +70,7 @@ class UsuariosAPI {
       required String email,
       required String roleId,
       required String phoneNumber,
-      int codigoSuplidor = 0,
-      String password = ""}) async {
+      int codigoSuplidor = 0}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/users/create',
@@ -81,8 +80,7 @@ class UsuariosAPI {
         "email": email,
         "roleId": roleId,
         "codigoSuplidor": codigoSuplidor,
-        "phoneNumber": phoneNumber,
-        "password": password,
+        "phoneNumber": phoneNumber
       },
       headers: {
         'Authorization': 'Bearer $_token',
