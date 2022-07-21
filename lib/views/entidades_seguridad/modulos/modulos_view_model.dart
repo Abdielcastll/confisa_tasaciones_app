@@ -114,6 +114,7 @@ class ModulosViewModel extends BaseViewModel {
       notifyListeners();
     }
     if (resp is Failure) {
+      pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
   }

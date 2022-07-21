@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/core/models/endpoints_response.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/forms/form_actualizar_rol.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/forms/form_crear_usuario.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/forms/form_update_usuario.dart';
 import 'package:tasaciones_app/core/models/modulos_response.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/form_crear_recurso.dart';
 import 'package:tasaciones_app/widgets/app_circle_icon_button.dart';
 
 import '../../../core/api/acciones_api.dart';
 import '../../../core/api/api_status.dart';
-import '../../../core/api/endpoints_api.dart';
 import '../../../core/api/modulos_api.dart';
 import '../../../core/api/permisos_api.dart';
 import '../../../core/api/recursos_api.dart';
@@ -25,7 +21,6 @@ import '../../../core/models/usuarios_response.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/app_buttons.dart';
 import '../../../widgets/app_dialogs.dart';
-import 'forms/form_crear_endpoint.dart';
 import 'forms/form_crear_permiso.dart';
 
 class ChangeButtons {
@@ -40,7 +35,6 @@ class ChangeButtons {
     String nombre = "";
     String telefono = "";
     String email = "";
-    String password = "";
     final GlobalKey<FormState> _formKey = GlobalKey();
     String titulo = "Crear Usuario";
     bool validator = true;

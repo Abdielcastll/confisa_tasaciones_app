@@ -9,11 +9,17 @@ class UsuariosAPI {
   UsuariosAPI(this._http, this._authenticationClient);
 
   Future<Object> getUsuarios(
-      {int pageNumber = 1, int pageSize = 100, String email = ""}) async {
+      {int pageNumber = 1,
+      int pageSize = 100,
+      String email = "",
+      String nombreCompleto = ""}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/users/get?PageSize=$pageSize&PageNumber=$pageNumber&Email=$email',
       method: 'GET',
+      queryParameters: {
+        "NombreCompleto": nombreCompleto,
+      },
       headers: {
         'Authorization': 'Bearer $_token',
       },

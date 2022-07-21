@@ -22,15 +22,6 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
     var dataUser = _authenticationClient.loadSession;
     Size size = MediaQuery.of(context).size;
 
-    /* Ejemplo para ver opciones, esto deberia tomarse de un provider al igual que los datos del usuario*/
-    List<Rol> list = <Rol>[
-      Rol(
-          id: "1",
-          descripcion: "Configuracion de Seguridad",
-          path: "entidades_seguridad"),
-      // Rol(id: "3", descripcion: "Buscar Usuarios", path: ""),
-    ];
-
     return Drawer(
       child: Container(
         color: AppColors.cream,
@@ -160,11 +151,4 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
       ),
     );
   }
-}
-
-/* Clase ejemplo del model de rol */
-class Rol {
-  final String id, descripcion, path;
-
-  Rol({required this.id, required this.descripcion, required this.path});
 }

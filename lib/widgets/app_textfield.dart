@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/theme/theme.dart';
 
 class AppTextField extends StatelessWidget {
   final String text;

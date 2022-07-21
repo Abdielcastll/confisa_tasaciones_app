@@ -8,7 +8,8 @@ class PermisosAPI {
   final AuthenticationClient _authenticationClient;
   PermisosAPI(this._http, this._authenticationClient);
 
-  Future<Object> getPermisos({int pageNumber = 1, int pageSize = 20}) async {
+  Future<Object> getPermisos(
+      {int pageNumber = 1, int pageSize = 20, String descripcion = ""}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/permisos/get',
@@ -22,6 +23,7 @@ class PermisosAPI {
       queryParameters: {
         'PageSize': pageSize,
         'PageNumber': pageNumber,
+        'Descripcion': descripcion
       },
     );
   }
