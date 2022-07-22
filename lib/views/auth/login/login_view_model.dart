@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/core/locator.dart';
+import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
+import 'package:tasaciones_app/core/providers/menu_provider.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/views/home/home_view.dart';
 
+import '../../../core/api/recursos_api.dart';
+import '../../../core/providers/permisos_provider.dart';
+
 class LoginViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();
   final _authenticationAPI = locator<AuthenticationAPI>();
+  final _recursosAPI = locator<RecursosAPI>();
   final _autenticationClient = locator<AuthenticationClient>();
   final GlobalKey<FormState> formKey = GlobalKey();
   bool _loading = false;
@@ -37,15 +44,37 @@ class LoginViewModel extends BaseViewModel {
         password: tcPassword.text,
       );
       if (resp is Success<SignInResponse>) {
-        loading = false;
         _autenticationClient.saveSession(resp.response.data);
-        _navigationService.navigateToPageWithReplacement(HomeView.routeName);
+        var resp1 = await _recursosAPI.getMenu();
+        if (resp1 is Success<MenuResponse>) {
+          Provider.of<MenuProvider>(context, listen: false).menu =
+              resp1.response;
+          loading = false;
+          _navigationService.navigateToPageWithReplacement(HomeView.routeName);
+        } else if (resp1 is Failure) {
+          loading = false;
+          Dialogs.error(
+            msg: resp1.messages[0],
+          );
+        }
       } else if (resp is Failure) {
         loading = false;
         Dialogs.error(
           msg: resp.messages[0],
         );
       }
+    }
+  }
+
+  Future<void> getMenu(BuildContext context) async {
+    ProgressDialog.show(context);
+    var resp = await _recursosAPI.getMenu();
+    if (resp is Success<MenuResponse>) {
+      ProgressDialog.dissmiss(context);
+      Provider.of<MenuProvider>(context, listen: false).menu = resp.response;
+    } else if (resp is Failure) {
+      ProgressDialog.dissmiss(context);
+      Dialogs.error(msg: resp.messages.first);
     }
   }
 

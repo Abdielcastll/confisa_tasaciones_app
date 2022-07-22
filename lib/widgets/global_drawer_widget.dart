@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
+import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
@@ -10,12 +11,11 @@ import '../core/services/navigator_service.dart';
 import '../views/auth/login/login_view.dart';
 
 class GlobalDrawerDartDesktop extends StatelessWidget {
-  GlobalDrawerDartDesktop({Key? key}) : super(key: key);
+  GlobalDrawerDartDesktop({Key? key, required this.menuApp}) : super(key: key);
+
+  final MenuResponse menuApp;
   final _navigationService = locator<NavigatorService>();
   final _authenticationClient = locator<AuthenticationClient>();
-
-  /* Falta llevar los textstyle a un archivo de constantes para la reutilizacion y
-  crear el modal de rol claims y eliminar el ejemplo de aca*/
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,6 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
           shrinkWrap: true,
           padding: EdgeInsets.zero,
           children: [
-            /* Header de informacion de usuario */
             Container(
               decoration: const BoxDecoration(
                 color: AppColors.gold,
@@ -56,79 +55,58 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                 ),
               ),
             ),
-
-            /* Opciones del menu */
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: 15, left: 8, right: 8, bottom: 8),
-              child: Column(
-                  /* Recorrido de la lista de role claims que devuelve las opciones del menu */
-                  children: [
-                    ...menu(
-                      Menu(
-                        modulos: [
-                          Modulo(opciones: <MenuOpcion>[
-                            MenuOpcion(
-                                opcion: "Acciones", matenimiento: "General"),
-                            MenuOpcion(
-                                opcion: "Modulos", matenimiento: "General"),
-                            MenuOpcion(
-                                opcion: "Recursos", matenimiento: "General"),
-                            MenuOpcion(
-                                opcion: "Permisos", matenimiento: "General"),
-                            MenuOpcion(
-                                opcion: "Endpoints", matenimiento: "General"),
-                            MenuOpcion(
-                                opcion: "Roles", matenimiento: "General"),
-                            MenuOpcion(
-                                opcion: "Usuarios", matenimiento: "General"),
-                          ], nombre: "Seguridad")
-                        ],
-                      ),
-                    ),
-                    ListTile(
-                      title: const Text(
-                        'Perfil',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w500),
-                      ),
-                      onTap: () {
-                        _navigationService.pop();
-                        _navigationService.navigateToPage(PerfilView.routeName);
-                      },
-                    ),
-                    ListTile(
-                      title: const Text(
-                        'Vieja seguridad',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w500),
-                      ),
-                      onTap: () {
-                        _navigationService.pop();
-                        _navigationService
-                            .navigateToPage(EntidadesSeguridadView.routeName);
-                      },
-                    ),
-                    ListTile(
-                      title: const Text(
-                        'Salir',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w500),
-                      ),
-                      leading: const Icon(Icons.exit_to_app),
-                      onTap: () {
-                        _navigationService.pop();
-                        _navigationService.navigateToPage(LoginView.routeName);
-                      },
-                    ),
-                    const ListTile(
-                      title: Text(
-                        "© 2022 CONFISA - App v1.0",
-                        style: TextStyle(color: AppColors.gold),
-                      ),
-                    )
-                  ]),
-            )
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                children: [
+                  /* Opciones del menu */
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 15, left: 8, right: 8, bottom: 8),
+                    child: Column(
+                        /* Recorrido de la lista de role claims que devuelve las opciones del menu */
+                        children: [
+                          ...menu(menuApp),
+                          ListTile(
+                            leading: const Icon(Icons.person),
+                            title: const Text(
+                              'Perfil',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                            onTap: () {
+                              _navigationService.pop();
+                              _navigationService
+                                  .navigateToPage(PerfilView.routeName);
+                            },
+                          ),
+                          ListTile(
+                            title: const Text(
+                              'Salir',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                            leading: const Icon(Icons.exit_to_app),
+                            onTap: () {
+                              _navigationService.pop();
+                              _navigationService
+                                  .navigateToPage(LoginView.routeName);
+                            },
+                          ),
+                        ]),
+                  )
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                "© 2022 CONFISA - App v1.0",
+                style: TextStyle(
+                    color: AppColors.gold, fontWeight: FontWeight.bold),
+              ),
+            ),
           ],
         ),
       ),

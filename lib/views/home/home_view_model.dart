@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/core/locator.dart';
+import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/providers/permisos_provider.dart';
@@ -20,9 +21,11 @@ class HomeViewModel extends BaseViewModel {
   late Session _user;
   final logger = Logger();
   final List<RolClaimsData> _permisos;
-  HomeViewModel(this._permisos);
+  final MenuResponse _menu;
+  HomeViewModel(this._permisos, this._menu);
 
   List<RolClaimsData> get permisos => _permisos;
+  MenuResponse get menu => _menu;
 
   Session get user => _user;
   set user(Session value) {
