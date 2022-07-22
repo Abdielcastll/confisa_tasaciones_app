@@ -68,7 +68,6 @@ class UsuariosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
-      pageNumber -= 1;
     }
     cargando = false;
   }
@@ -84,11 +83,12 @@ class UsuariosViewModel extends BaseViewModel {
       notifyListeners();
     }
     if (resp is Failure) {
+      pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
   }
 
-  Future<void> buscarPermiso(String query) async {
+  Future<void> buscarUsuario(String query) async {
     cargando = true;
     var resp = await _usuariosApi.getUsuarios(
       nombreCompleto: query,

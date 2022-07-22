@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/core/models/roles_response.dart';
 
+import '../../../../core/locator.dart';
+import '../../../../core/services/navigator_service.dart';
 import '../../../../theme/theme.dart';
 
 class ActualizarRolForm extends StatelessWidget {
@@ -8,25 +11,28 @@ class ActualizarRolForm extends StatelessWidget {
       required GlobalKey<FormState> formKey,
       required this.size,
       required this.titulo,
-      required this.informacion,
       required this.validator,
       required this.modificar,
+      required this.changePermisos,
+      required this.eliminar,
       required this.descripcion,
       required this.buttonTittle,
-      required this.nombre})
+      required this.nombre,
+      required this.showEliminar,
+      required this.rol})
       : _formKey = formKey,
         super(key: key);
 
   final GlobalKey<FormState> _formKey;
   final Size size;
   final String titulo;
-  final List<Widget> informacion;
-  final bool validator;
-  final Function modificar;
+  final bool validator, showEliminar;
+  final Function modificar, changePermisos, eliminar;
   late String descripcion;
   final String buttonTittle;
+  final RolData rol;
   late String nombre;
-
+  final _navigationService = locator<NavigatorService>();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -40,7 +46,7 @@ class ActualizarRolForm extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10)),
-                  color: AppColors.orange,
+                  color: AppColors.gold,
                 ),
                 child: Align(
                   alignment: Alignment.center,
@@ -51,24 +57,15 @@ class ActualizarRolForm extends StatelessWidget {
                           fontWeight: FontWeight.bold)),
                 ),
               ),
+              const SizedBox(
+                height: 15,
+              ),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Column(
-                            children: informacion,
-                          ),
-                        ],
-                      ),
-                    ),
                     TextFormField(
+                      initialValue: rol.name,
                       decoration: const InputDecoration(
                           labelText: "Nombre",
                           enabledBorder: OutlineInputBorder(
@@ -94,6 +91,7 @@ class ActualizarRolForm extends StatelessWidget {
                       height: 15,
                     ),
                     TextFormField(
+                      initialValue: rol.description,
                       decoration: const InputDecoration(
                           labelText: "Descripcion",
                           enabledBorder: OutlineInputBorder(
@@ -118,18 +116,95 @@ class ActualizarRolForm extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: AppColors.green,
-                          minimumSize: const Size.fromHeight(60)),
-                      onPressed: () {
-                        // Validate returns true if the form is valid, or false otherwise.
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState?.save();
-                          modificar(nombre, descripcion);
-                        }
-                      },
-                      child: Text(buttonTittle),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState?.save();
+                              modificar(nombre, descripcion);
+                            }
+                          },
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Guardar"), // text
+                            ],
+                          ),
+                        ),
+                        showEliminar
+                            ? const Expanded(child: SizedBox())
+                            : const SizedBox(),
+                        showEliminar
+                            ? TextButton(
+                                onPressed: () => changePermisos(),
+                                // button pressed
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.cached,
+                                      color: AppColors.gold,
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ), // icon
+                                    Text("Permisos"), // text
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(),
+                        showEliminar
+                            ? const Expanded(child: SizedBox())
+                            : const SizedBox(),
+                        showEliminar
+                            ? TextButton(
+                                onPressed: () => eliminar(), // button pressed
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.delete,
+                                      color: AppColors.grey,
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ), // icon
+                                    Text("Eliminar"), // text
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(),
+                        const Expanded(child: SizedBox()),
+                        TextButton(
+                          onPressed: () {
+                            _navigationService.pop();
+                          },
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

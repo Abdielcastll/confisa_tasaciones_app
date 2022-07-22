@@ -71,9 +71,9 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
     return DataRow(cells: [
       DataCell(
         TextButton(
-          child: Text(currentRowData.name),
-          onPressed: () async {
-            ProgressDialog.show(context);
+            child: Text(currentRowData.name),
+            onPressed: () async {
+              /* ProgressDialog.show(context);
             var resp = await _rolesApi.getRolesClaims(idRol: currentRowData.id);
             if (resp is Success<RolClaimsResponse>) {
               bool isSelect = false;
@@ -382,21 +382,21 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
               ProgressDialog.dissmiss(context);
               Dialogs.error(msg: resp.messages.first);
             }
-          },
-        ),
+          }, */
+            }),
       ),
       DataCell(Text(currentRowData.description)),
       DataCell(IconButton(
           onPressed: () async {
             // GlobalKey<FormState> _key = GlobalKey();
-            String titulo = "Actualizar Rol";
+            /* String titulo = "Actualizar Rol";
             final GlobalKey<FormState> _formKey = GlobalKey();
             const String buttonTittle = "Modificar";
             String nombre = "";
             String descripcion = "";
             bool validator = true;
-            List<Widget> informacion = [];
-            showDialog(
+            List<Widget> informacion = []; */
+            /* showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
@@ -431,7 +431,7 @@ class TableRoles extends AdvancedDataTableSource<RolData> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ));
-                });
+                }); */
           },
           icon: const Icon(Icons.cached))),
       DataCell(IconButton(

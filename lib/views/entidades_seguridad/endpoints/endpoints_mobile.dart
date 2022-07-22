@@ -25,18 +25,35 @@ class _EndpointsMobile extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Card(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
+                        controller: vm.tcBuscar,
+                        onSubmitted: vm.buscarEndpoint,
+                        style: const TextStyle(
+                          color: AppColors.brownDark,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),
+                        textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar',
-                          suffixIcon: Icon(
-                            Icons.search_outlined,
-                            color: AppColors.brownDark,
-                          ),
+                          hintText: 'Buscar endpoint...',
+                          hintStyle: const TextStyle(
+                              color: Colors.grey, fontWeight: FontWeight.w700),
+                          suffixIcon: !vm.busqueda
+                              ? const Icon(
+                                  Icons.search_outlined,
+                                  color: AppColors.brownDark,
+                                )
+                              : IconButton(
+                                  onPressed: vm.limpiarBusqueda,
+                                  icon: const Icon(
+                                    Icons.clear_rounded,
+                                    color: AppColors.brownDark,
+                                  )),
                         ),
                       ),
                     ),
