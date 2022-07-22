@@ -29,7 +29,7 @@ Widget dialogActualizarInformacion(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(14.0),
               child: Column(
                 children: [
                   const SizedBox(
@@ -56,12 +56,7 @@ Widget dialogActualizarInformacion(
                     initialValue: usuariosData.nombreCompleto,
                     decoration: const InputDecoration(
                         labelText: 'Nombre Completo',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                        border: UnderlineInputBorder()),
                     onSaved: (value) {
                       nombreCompleto = value!;
                     },
@@ -86,13 +81,7 @@ Widget dialogActualizarInformacion(
                     initialValue: usuariosData.phoneNumber,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                        labelText: 'Telefono',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                        labelText: 'Telefono', border: UnderlineInputBorder()),
                     onSaved: (value) {
                       telefono = value!;
                     },
@@ -116,13 +105,7 @@ Widget dialogActualizarInformacion(
                   TextFormField(
                     initialValue: usuariosData.email,
                     decoration: const InputDecoration(
-                        labelText: 'Email',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                        labelText: 'Email', border: UnderlineInputBorder()),
                     onSaved: (value) {
                       email = value!;
                     },

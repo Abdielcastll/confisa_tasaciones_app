@@ -55,7 +55,7 @@ Future<dynamic> dialogCrearUsuario(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10)),
-                          color: AppColors.orange,
+                          color: AppColors.gold,
                         ),
                         child: Align(
                           alignment: Alignment.center,
@@ -67,18 +67,12 @@ Future<dynamic> dialogCrearUsuario(
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(14.0),
                         child: Column(
                           children: [
                             DropdownButtonFormField(
                               decoration: const InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    borderSide: BorderSide(
-                                        color: Colors.grey, width: 0.0),
-                                  ),
-                                  border: OutlineInputBorder()),
+                                  border: UnderlineInputBorder()),
                               items: roles
                                   .map((e) => DropdownMenuItem(
                                         child: Text(e.description),
@@ -140,17 +134,8 @@ Future<dynamic> dialogCrearUsuario(
                                             TextFormField(
                                               decoration: const InputDecoration(
                                                   labelText: 'Nombre Completo',
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0)),
-                                                    borderSide: BorderSide(
-                                                        color: Colors.grey,
-                                                        width: 0.0),
-                                                  ),
-                                                  border: OutlineInputBorder()),
+                                                  border:
+                                                      UnderlineInputBorder()),
                                               onSaved: (value) {
                                                 nombreCompleto = value!;
                                               },
@@ -176,17 +161,8 @@ Future<dynamic> dialogCrearUsuario(
                                                   TextInputType.number,
                                               decoration: const InputDecoration(
                                                   labelText: 'Telefono',
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0)),
-                                                    borderSide: BorderSide(
-                                                        color: Colors.grey,
-                                                        width: 0.0),
-                                                  ),
-                                                  border: OutlineInputBorder()),
+                                                  border:
+                                                      UnderlineInputBorder()),
                                               onSaved: (value) {
                                                 telefono = value!;
                                               },
@@ -210,17 +186,8 @@ Future<dynamic> dialogCrearUsuario(
                                             TextFormField(
                                               decoration: const InputDecoration(
                                                   labelText: 'Email',
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0)),
-                                                    borderSide: BorderSide(
-                                                        color: Colors.grey,
-                                                        width: 0.0),
-                                                  ),
-                                                  border: OutlineInputBorder()),
+                                                  border:
+                                                      UnderlineInputBorder()),
                                               onSaved: (value) {
                                                 email = value!;
                                               },
@@ -256,22 +223,8 @@ Future<dynamic> dialogCrearUsuario(
                                                             contentPadding:
                                                                 EdgeInsets.only(
                                                                     left: 8),
-                                                            enabledBorder:
-                                                                OutlineInputBorder(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          20.0)),
-                                                              borderSide:
-                                                                  BorderSide(
-                                                                      color:
-                                                                          Colors
-                                                                              .grey,
-                                                                      width:
-                                                                          0.0),
-                                                            ),
                                                             border:
-                                                                OutlineInputBorder()),
+                                                                UnderlineInputBorder()),
                                                     items: suplidores
                                                         .map((e) =>
                                                             DropdownMenuItem(
@@ -353,13 +306,7 @@ Future<dynamic> dialogCrearUsuario(
                                     TextFormField(
                                       decoration: const InputDecoration(
                                           labelText: 'Email',
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20.0)),
-                                            borderSide: BorderSide(
-                                                color: Colors.grey, width: 0.0),
-                                          ),
-                                          border: OutlineInputBorder()),
+                                          border: UnderlineInputBorder()),
                                       onSaved: (value) {
                                         email = value!;
                                       },

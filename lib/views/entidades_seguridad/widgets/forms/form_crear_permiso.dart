@@ -46,7 +46,7 @@ Form formCrearPermiso(
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(14.0),
               child: Column(
                 children: [
                   const SizedBox(
@@ -60,13 +60,11 @@ Form formCrearPermiso(
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                        labelText: 'Descripcion',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                      border: UnderlineInputBorder(),
+                      isDense: true,
+                      fillColor: Colors.white,
+                      label: Text('Descripcion'),
+                    ),
                     onSaved: (value) {
                       descripcion = value!;
                     },
@@ -85,13 +83,8 @@ Form formCrearPermiso(
                   DropdownButtonFormField(
                     validator: (value) =>
                         value == null ? 'Debe escojer una accion' : null,
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                    decoration:
+                        const InputDecoration(border: UnderlineInputBorder()),
                     items: acciones
                         .map((e) => DropdownMenuItem(
                               child: Text(e.nombre),
@@ -113,13 +106,8 @@ Form formCrearPermiso(
                   DropdownButtonFormField(
                     validator: (value) =>
                         value == null ? 'Debe escojer un recurso' : null,
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                    decoration:
+                        const InputDecoration(border: UnderlineInputBorder()),
                     items: recursos
                         .map((e) => DropdownMenuItem(
                               child: Text(
