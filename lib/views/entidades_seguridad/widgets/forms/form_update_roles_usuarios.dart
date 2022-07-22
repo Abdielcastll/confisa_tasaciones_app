@@ -46,20 +46,15 @@ Widget dialogActualizarRolesUsuario(
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(14.0),
               child: Column(
                 children: [
                   const SizedBox(
                     height: 15,
                   ),
                   DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                    decoration:
+                        const InputDecoration(border: UnderlineInputBorder()),
                     items: roles
                         .map((e) => DropdownMenuItem(
                               child: Text(e.description),
@@ -82,13 +77,8 @@ Widget dialogActualizarRolesUsuario(
                     height: 10,
                   ),
                   DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                    decoration:
+                        const InputDecoration(border: UnderlineInputBorder()),
                     items: roles
                         .map((e) => DropdownMenuItem(
                               child: Text(

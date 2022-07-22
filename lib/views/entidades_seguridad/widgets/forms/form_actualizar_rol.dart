@@ -61,20 +61,13 @@ class ActualizarRolForm extends StatelessWidget {
                 height: 15,
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(14),
                 child: Column(
                   children: [
                     TextFormField(
                       initialValue: rol.name,
                       decoration: const InputDecoration(
-                          labelText: "Nombre",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 0.0),
-                          ),
-                          border: OutlineInputBorder()),
+                          labelText: "Nombre", border: UnderlineInputBorder()),
                       onSaved: (value) {
                         nombre = value!;
                       },
@@ -94,13 +87,7 @@ class ActualizarRolForm extends StatelessWidget {
                       initialValue: rol.description,
                       decoration: const InputDecoration(
                           labelText: "Descripcion",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 0.0),
-                          ),
-                          border: OutlineInputBorder()),
+                          border: UnderlineInputBorder()),
                       onSaved: (value) {
                         descripcion = value!;
                       },

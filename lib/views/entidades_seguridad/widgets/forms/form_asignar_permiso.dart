@@ -46,12 +46,7 @@ Form formAsignarPermiso(
                         value == null ? 'Debe escojer un permiso' : null,
                     decoration: const InputDecoration(
                         contentPadding: EdgeInsets.only(left: 3),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          borderSide:
-                              BorderSide(color: Colors.grey, width: 0.0),
-                        ),
-                        border: OutlineInputBorder()),
+                        border: UnderlineInputBorder()),
                     items: permisos
                         .map((e) => DropdownMenuItem(
                               child: Text(

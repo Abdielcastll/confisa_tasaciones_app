@@ -62,20 +62,15 @@ class CrearEndpointForm extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(14),
                 child: Column(
                   children: [
                     TextFormField(
                       initialValue: endpointsData.nombre,
                       decoration: const InputDecoration(
-                          labelText: "Nombre",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 0.0),
-                          ),
-                          border: OutlineInputBorder()),
+                        labelText: "Nombre",
+                        border: UnderlineInputBorder(),
+                      ),
                       onSaved: (value) {
                         nombre = value!;
                       },
@@ -94,14 +89,9 @@ class CrearEndpointForm extends StatelessWidget {
                     TextFormField(
                       initialValue: endpointsData.controlador,
                       decoration: const InputDecoration(
-                          labelText: "Controlador",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 0.0),
-                          ),
-                          border: OutlineInputBorder()),
+                        labelText: "Controlador",
+                        border: UnderlineInputBorder(),
+                      ),
                       onSaved: (value) {
                         controlador = value!;
                       },
@@ -120,14 +110,9 @@ class CrearEndpointForm extends StatelessWidget {
                     TextFormField(
                       initialValue: endpointsData.metodo,
                       decoration: const InputDecoration(
-                          labelText: "Metodo",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 0.0),
-                          ),
-                          border: OutlineInputBorder()),
+                        labelText: "Metodo",
+                        border: UnderlineInputBorder(),
+                      ),
                       onSaved: (value) {
                         metodo = value!;
                       },
@@ -146,14 +131,9 @@ class CrearEndpointForm extends StatelessWidget {
                     TextFormField(
                       initialValue: endpointsData.httpVerbo,
                       decoration: const InputDecoration(
-                          labelText: "Verbo HTTP",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 0.0),
-                          ),
-                          border: OutlineInputBorder()),
+                        labelText: "Verbo HTTP",
+                        border: UnderlineInputBorder(),
+                      ),
                       onSaved: (value) {
                         httpVerbo = value!;
                       },
