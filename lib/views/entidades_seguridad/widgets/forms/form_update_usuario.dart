@@ -1,16 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/core/models/roles_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/widgets/forms/form_update_roles_usuarios.dart';
 
-import '../../../../core/api/roles_api.dart';
-import '../../../../core/api/usuarios_api.dart';
-import '../../../../core/api/api_status.dart';
 import '../../../../core/locator.dart';
 import '../../../../core/services/navigator_service.dart';
-import '../../../../widgets/app_dialogs.dart';
 
 Widget dialogActualizarInformacion(
   Widget imagen,
@@ -28,7 +22,6 @@ Widget dialogActualizarInformacion(
   Function changeStatus,
   Function changeRol,
 ) {
-  final _rolesApi = locator<RolesAPI>();
   final _navigationService = locator<NavigatorService>();
   return Form(
       key: _formKey,

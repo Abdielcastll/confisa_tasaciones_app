@@ -169,26 +169,6 @@ Form formCrearPermiso(
                           ],
                         ),
                       ),
-                      const Expanded(child: SizedBox()),
-                      TextButton(
-                        onPressed: () {
-                          _navigationService.pop();
-                        },
-                        // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
                       showEliminar
                           ? const Expanded(child: SizedBox())
                           : const SizedBox(),
@@ -210,6 +190,26 @@ Form formCrearPermiso(
                               ),
                             )
                           : const SizedBox(),
+                      const Expanded(child: SizedBox()),
+                      TextButton(
+                        onPressed: () {
+                          _navigationService.pop();
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Cancelar"), // text
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],

@@ -2,6 +2,7 @@ import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/models/recursos_response.dart';
 
 import '../authentication_client.dart';
+import '../models/menu_response.dart';
 
 class RecursosAPI {
   final Http _http;
@@ -24,6 +25,20 @@ class RecursosAPI {
       },
       parser: (data) {
         return RecursosResponse.fromJson(data);
+      },
+    );
+  }
+
+  Future<Object> getMenu() async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/recursos/get/menu',
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      parser: (data) {
+        return MenuResponse.fromJson(data);
       },
     );
   }

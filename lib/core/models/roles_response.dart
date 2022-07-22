@@ -6,18 +6,40 @@ RolResponse rolResponseFromJson(String str) =>
 String rolResponseToJson(RolResponse data) => json.encode(data.toJson());
 
 class RolResponse {
-  RolResponse({
-    required this.data,
-  });
+  RolResponse(
+      {required this.data,
+      required this.totalCount,
+      required this.totalPages,
+      required this.pageSize,
+      required this.currentPage,
+      required this.hasNextPage,
+      required this.hasPreviousPage,
+      required this.nextPageUrl});
 
   List<RolData> data;
+  String nextPageUrl;
+  int totalCount, pageSize, currentPage, totalPages;
+  bool hasNextPage, hasPreviousPage;
 
   factory RolResponse.fromJson(Map<String, dynamic> json) => RolResponse(
-        data: json["data"].map<RolData>((e) => RolData.fromJson(e)).toList(),
-      );
+      data: json["data"].map<RolData>((e) => RolData.fromJson(e)).toList(),
+      totalCount: json["meta"]["totalCount"],
+      totalPages: json["meta"]["totalPages"],
+      pageSize: json["meta"]["pageSize"],
+      currentPage: json["meta"]["currentPage"],
+      hasNextPage: json["meta"]["hasNextPage"],
+      hasPreviousPage: json["meta"]["hasPreviousPage"],
+      nextPageUrl: json["meta"]["nextPageUrl"]);
 
   Map<String, dynamic> toJson() => {
         "data": data.map((e) => e.toJson()),
+        "totalCount": totalCount,
+        "totalPage": totalPages,
+        "pageSize": pageSize,
+        "currentPage": currentPage,
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "nextPageUrl": totalCount,
       };
 }
 

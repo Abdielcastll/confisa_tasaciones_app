@@ -1,4 +1,5 @@
 import 'package:provider/single_child_widget.dart';
+import 'package:tasaciones_app/core/providers/menu_provider.dart';
 import 'package:tasaciones_app/core/providers/permisos_provider.dart';
 
 import '../core/locator.dart';
@@ -19,6 +20,7 @@ class ProviderInjector {
   static final List<SingleChildWidget> _dependentServices = [];
 
   static final List<SingleChildWidget> _consumableServices = [
-    ChangeNotifierProvider(create: (context) => PermisosUserProvider())
+    ChangeNotifierProvider(create: (context) => PermisosUserProvider()),
+    ChangeNotifierProvider(create: (context) => MenuProvider())
   ];
 }

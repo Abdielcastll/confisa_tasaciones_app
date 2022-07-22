@@ -22,11 +22,15 @@ class PermisosViewModel extends BaseViewModel {
   final _recursosApi = locator<RecursosAPI>();
   final listController = ScrollController();
   final _navigationService = locator<NavigatorService>();
+  TextEditingController tcNewName = TextEditingController();
+  TextEditingController tcBuscar = TextEditingController();
 
   List<PermisosData> permisos = [];
   int pageNumber = 1;
   bool _cargando = false;
+  bool _busqueda = false;
   bool hasNextPage = false;
+  late PermisosResponse permisosResponse;
 
   PermisosViewModel() {
     listController.addListener(() {
@@ -44,6 +48,12 @@ class PermisosViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool get busqueda => _busqueda;
+  set busqueda(bool value) {
+    _busqueda = value;
+    notifyListeners();
+  }
+
   Future<void> onInit() async {
     cargando = true;
     permisos = [];
@@ -52,9 +62,9 @@ class PermisosViewModel extends BaseViewModel {
     var resp =
         await _permisosApi.getPermisos(pageNumber: pageNumber, pageSize: 20);
     if (resp is Success) {
-      var temp = resp.response as PermisosResponse;
-      permisos = temp.data;
-      hasNextPage = temp.hasNextPage;
+      permisosResponse = resp.response as PermisosResponse;
+      permisos = permisosResponse.data;
+      hasNextPage = permisosResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -75,12 +85,41 @@ class PermisosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+      pageNumber -= 1;
     }
+  }
+
+  Future<void> buscarPermiso(String query) async {
+    cargando = true;
+    var resp = await _permisosApi.getPermisos(
+      descripcion: query,
+      pageSize: 0,
+    );
+    if (resp is Success) {
+      var temp = resp.response as PermisosResponse;
+      permisos = temp.data;
+      hasNextPage = temp.hasNextPage;
+      _busqueda = true;
+      notifyListeners();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    cargando = false;
+  }
+
+  void limpiarBusqueda() {
+    _busqueda = false;
+    permisos = permisosResponse.data;
+    if (permisos.length >= 20) {
+      hasNextPage = true;
+    }
+    notifyListeners();
+    tcBuscar.clear();
   }
 
   Future<void> modificarPermiso(String descripcion, int id, String accionNombre,
       String recursoNombre, BuildContext context) async {
-    String permisoDescripcion = descripcion;
     Map<String, dynamic> accion = {};
     Map<String, dynamic> recurso = {};
     dynamic opcion;

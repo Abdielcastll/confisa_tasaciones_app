@@ -3,37 +3,33 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
-import '../../../core/api/acciones_api.dart';
 import '../../../core/api/roles_api.dart';
 import '../../../core/api/usuarios_api.dart';
-import '../../../core/api/recursos_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
-import '../../../core/models/acciones_response.dart';
-import '../../../core/models/recursos_response.dart';
 import '../../../core/models/roles_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
-import '../widgets/forms/form_crear_permiso.dart';
 import '../widgets/forms/form_crear_usuario.dart';
 import '../widgets/forms/form_update_roles_usuarios.dart';
 import '../widgets/forms/form_update_usuario.dart';
-import '../widgets/mostrar_informacion_widget.dart';
 
 class UsuariosViewModel extends BaseViewModel {
   final user = locator<AuthenticationClient>().loadSession;
   final _usuariosApi = locator<UsuariosAPI>();
-  final _accionesApi = locator<AccionesApi>();
-  final _recursosApi = locator<RecursosAPI>();
   final _rolesApi = locator<RolesAPI>();
   final listController = ScrollController();
   final _navigationService = locator<NavigatorService>();
 
+  TextEditingController tcBuscar = TextEditingController();
+
   List<UsuariosData> usuarios = [];
   int pageNumber = 1;
   bool _cargando = false;
+  bool _busqueda = false;
   bool hasNextPage = false;
+  late UsuariosResponse usuariosResponse;
 
   UsuariosViewModel() {
     listController.addListener(() {
@@ -51,6 +47,12 @@ class UsuariosViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool get busqueda => _busqueda;
+  set busqueda(bool value) {
+    _busqueda = value;
+    notifyListeners();
+  }
+
   Future<void> onInit() async {
     cargando = true;
     usuarios = [];
@@ -59,9 +61,9 @@ class UsuariosViewModel extends BaseViewModel {
     var resp =
         await _usuariosApi.getUsuarios(pageNumber: pageNumber, pageSize: 20);
     if (resp is Success) {
-      var temp = resp.response as UsuariosResponse;
-      usuarios = temp.data;
-      hasNextPage = temp.hasNextPage;
+      usuariosResponse = resp.response as UsuariosResponse;
+      usuarios = usuariosResponse.data;
+      hasNextPage = usuariosResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -81,8 +83,38 @@ class UsuariosViewModel extends BaseViewModel {
       notifyListeners();
     }
     if (resp is Failure) {
+      pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
+  }
+
+  Future<void> buscarUsuario(String query) async {
+    cargando = true;
+    var resp = await _usuariosApi.getUsuarios(
+      nombreCompleto: query,
+      pageSize: 0,
+    );
+    if (resp is Success) {
+      var temp = resp.response as UsuariosResponse;
+      usuarios = temp.data;
+      hasNextPage = temp.hasNextPage;
+      _busqueda = true;
+      notifyListeners();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    cargando = false;
+  }
+
+  void limpiarBusqueda() {
+    _busqueda = false;
+    usuarios = usuariosResponse.data;
+    if (usuarios.length >= 20) {
+      hasNextPage = true;
+    }
+    notifyListeners();
+    tcBuscar.clear();
   }
 
   Future<void> modificarUsuario(

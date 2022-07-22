@@ -1,9 +1,9 @@
-part of usuarios_view;
+part of roles_view;
 
-class _UsuariosMobile extends StatelessWidget {
-  final UsuariosViewModel vm;
+class _RolesMobile extends StatelessWidget {
+  final RolesViewModel vm;
 
-  const _UsuariosMobile(this.vm);
+  const _RolesMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class _UsuariosMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Usuarios',
+            'Roles',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
@@ -31,7 +31,7 @@ class _UsuariosMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscarUsuario,
+                        onSubmitted: vm.buscarRol,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -40,7 +40,7 @@ class _UsuariosMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar usuarios...',
+                          hintText: 'Buscar roles...',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
@@ -60,7 +60,7 @@ class _UsuariosMobile extends StatelessWidget {
                   ),
                 ),
                 MaterialButton(
-                  onPressed: () => vm.crearUsuario(context, size),
+                  onPressed: () => vm.crearRol(context, size),
                   color: Colors.white,
                   minWidth: 30,
                   height: 48,
@@ -81,10 +81,10 @@ class _UsuariosMobile extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
-                  itemCount: vm.usuarios.length + 1,
+                  itemCount: vm.roles.length + 1,
                   controller: vm.listController,
                   itemBuilder: (context, i) {
-                    if (i >= vm.usuarios.length) {
+                    if (i >= vm.roles.length) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 30),
                         child: !vm.hasNextPage
@@ -92,12 +92,11 @@ class _UsuariosMobile extends StatelessWidget {
                             : const Center(child: CircularProgressIndicator()),
                       );
                     }
-                    var usuario = vm.usuarios[i];
+                    var rol = vm.roles[i];
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: MaterialButton(
-                        onPressed: () =>
-                            vm.modificarUsuario(usuario, context, size),
+                        onPressed: () => vm.modificarRol(rol, context, size),
                         color: Colors.white,
                         elevation: 4,
                         shape: RoundedRectangleBorder(
@@ -106,40 +105,13 @@ class _UsuariosMobile extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           height: 70,
                           padding: const EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                usuario.nombreCompleto,
-                                style: const TextStyle(
-                                  color: AppColors.brownDark,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              Text(
-                                "Correo/Usuario: ${usuario.email}",
-                                style: const TextStyle(
-                                    color: AppColors.brownDark, fontSize: 12),
-                              ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Roles: ",
-                                    style: TextStyle(
-                                        color: AppColors.brownDark,
-                                        fontSize: 12),
-                                  ),
-                                  ...usuario.roles.map((e) => Text(
-                                        "${e.description} ",
-                                        style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 12),
-                                      ))
-                                ],
-                              )
-                            ],
+                          child: Text(
+                            rol.name,
+                            style: const TextStyle(
+                              color: AppColors.brownDark,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                         ),
                       ),

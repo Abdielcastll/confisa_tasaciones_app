@@ -10,11 +10,21 @@ class RolesAPI {
   final AuthenticationClient _authenticationClient;
   RolesAPI(this._http, this._authenticationClient);
 
-  Future<Object> getRoles() async {
+  Future<Object> getRoles(
+      {int pageNumber = 1,
+      int pageSize = 20,
+      String descripcion = "",
+      String id = ""}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/roles/get',
       method: 'GET',
+      queryParameters: {
+        "Descripcion": descripcion,
+        "Id": id,
+        "PageSize": pageSize,
+        "PageNumber": pageNumber
+      },
       headers: {
         'Authorization': 'Bearer $_token',
       },
