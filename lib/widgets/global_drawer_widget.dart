@@ -55,49 +55,39 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                children: [
-                  /* Opciones del menu */
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 15, left: 8, right: 8, bottom: 8),
-                    child: Column(
-                        /* Recorrido de la lista de role claims que devuelve las opciones del menu */
-                        children: [
-                          ...menu(menuApp),
-                          ListTile(
-                            leading: const Icon(Icons.person),
-                            title: const Text(
-                              'Perfil',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                            onTap: () {
-                              _navigationService.pop();
-                              _navigationService
-                                  .navigateToPage(PerfilView.routeName);
-                            },
-                          ),
-                          ListTile(
-                            title: const Text(
-                              'Salir',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                            leading: const Icon(Icons.exit_to_app),
-                            onTap: () {
-                              _navigationService.pop();
-                              _navigationService
-                                  .navigateToPage(LoginView.routeName);
-                            },
-                          ),
-                        ]),
-                  )
-                ],
-              ),
+
+            /* Opciones del menu */
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Column(
+                  /* Recorrido de la lista de role claims que devuelve las opciones del menu */
+                  children: [
+                    ...menu(menuApp),
+                    ListTile(
+                      leading: const Icon(Icons.person),
+                      title: const Text(
+                        'Perfil',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w500),
+                      ),
+                      onTap: () {
+                        _navigationService.pop();
+                        _navigationService.navigateToPage(PerfilView.routeName);
+                      },
+                    ),
+                    ListTile(
+                      title: const Text(
+                        'Salir',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w500),
+                      ),
+                      leading: const Icon(Icons.exit_to_app),
+                      onTap: () {
+                        _navigationService.pop();
+                        _navigationService.navigateToPage(LoginView.routeName);
+                      },
+                    ),
+                  ]),
             ),
             const Padding(
               padding: EdgeInsets.all(20),
