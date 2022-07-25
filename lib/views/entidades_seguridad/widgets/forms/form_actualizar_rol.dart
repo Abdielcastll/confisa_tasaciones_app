@@ -15,9 +15,7 @@ class ActualizarRolForm extends StatelessWidget {
       required this.modificar,
       required this.changePermisos,
       required this.eliminar,
-      required this.descripcion,
       required this.buttonTittle,
-      required this.nombre,
       required this.showEliminar,
       required this.rol})
       : _formKey = formKey,
@@ -28,13 +26,14 @@ class ActualizarRolForm extends StatelessWidget {
   final String titulo;
   final bool validator, showEliminar;
   final Function modificar, changePermisos, eliminar;
-  late String descripcion;
   final String buttonTittle;
   final RolData rol;
-  late String nombre;
+
   final _navigationService = locator<NavigatorService>();
   @override
   Widget build(BuildContext context) {
+    String descripcion = "";
+    String nombre = "";
     return Form(
         key: _formKey,
         child: SingleChildScrollView(

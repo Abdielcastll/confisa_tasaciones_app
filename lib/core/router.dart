@@ -4,7 +4,6 @@ import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/acciones/acciones_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/endpoints/endpoints_view.dart';
-import 'package:tasaciones_app/views/entidades_seguridad/entidades_seguridad_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/roles/roles_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/usuarios/usuarios_view.dart';
 
@@ -33,10 +32,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case PerfilView.routeName:
       return CupertinoPageRoute(builder: (context) => const PerfilView());
-
-    case EntidadesSeguridadView.routeName:
-      return CupertinoPageRoute(
-          builder: (context) => const EntidadesSeguridadView());
 
     case AccionesView.routeName:
       return CupertinoPageRoute(builder: (context) => const AccionesView());

@@ -121,10 +121,8 @@ class RolesViewModel extends BaseViewModel {
     String titulo = "Actualizar Rol";
     final GlobalKey<FormState> _formKey = GlobalKey();
     const String buttonTittle = "Modificar";
-    String nombre = "";
-    String descripcion = "";
+
     bool validator = true;
-    List<Widget> informacion = [];
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -494,9 +492,7 @@ class RolesViewModel extends BaseViewModel {
                       Dialogs.error(msg: resp.messages.first);
                     }
                   },
-                  descripcion: descripcion,
-                  buttonTittle: buttonTittle,
-                  nombre: nombre),
+                  buttonTittle: buttonTittle),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ));
@@ -505,12 +501,10 @@ class RolesViewModel extends BaseViewModel {
 
   Future<void> crearRol(BuildContext context, Size size) async {
     final _rolesApi = locator<RolesAPI>();
-    String descripcion = "";
     final GlobalKey<FormState> _formKey = GlobalKey();
     String titulo = "Crear rol";
     bool validator = true;
     String buttonTittle = "Crear";
-    String nombre = "";
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -538,9 +532,7 @@ class RolesViewModel extends BaseViewModel {
                 },
                 eliminar: () {},
                 changePermisos: () {},
-                descripcion: descripcion,
-                buttonTittle: buttonTittle,
-                nombre: nombre),
+                buttonTittle: buttonTittle),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           );

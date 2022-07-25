@@ -120,10 +120,6 @@ class EndpointsViewModel extends BaseViewModel {
     final GlobalKey<FormState> _formKey = GlobalKey();
     bool validator = false;
     String buttonTittle = "Modificar";
-    String controlador = "";
-    String nombre = "";
-    String httpVerbo = "";
-    String metodo = "";
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -137,7 +133,7 @@ class EndpointsViewModel extends BaseViewModel {
                   final GlobalKey<FormState> _formKey = GlobalKey();
                   bool validator = true;
                   Map<String, dynamic> permiso = {};
-                  var opcion;
+                  dynamic opcion;
                   ProgressDialog.show(context);
                   var resp = await _permisosApi.getPermisos(pageSize: 999);
                   if (resp is Success<PermisosResponse>) {
@@ -231,11 +227,7 @@ class EndpointsViewModel extends BaseViewModel {
                     Dialogs.error(msg: resp.messages[0]);
                   }
                 },
-                controlador: controlador,
                 buttonTittle: buttonTittle,
-                nombre: nombre,
-                httpVerbo: httpVerbo,
-                metodo: metodo,
                 endpointsData: endpointsData),
           );
         });
@@ -243,10 +235,6 @@ class EndpointsViewModel extends BaseViewModel {
 
   Future<void> crearEndpoint(BuildContext context, Size size) async {
     final _endpointsApi = locator<EndpointsApi>();
-    String controlador = "";
-    String nombre = "";
-    String metodo = "";
-    String httpVerbo = "";
     final GlobalKey<FormState> _formKey = GlobalKey();
     String titulo = "Crear Endpoint";
     bool validator = true;
@@ -280,11 +268,7 @@ class EndpointsViewModel extends BaseViewModel {
                   Dialogs.error(msg: resp.messages.first);
                 }
               },
-              controlador: controlador,
-              httpVerbo: httpVerbo,
-              metodo: metodo,
               buttonTittle: buttonTittle,
-              nombre: nombre,
               endpointsData: EndpointsData(
                   controlador: "",
                   estado: false,

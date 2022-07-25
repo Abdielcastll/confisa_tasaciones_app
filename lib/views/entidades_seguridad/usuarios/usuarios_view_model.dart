@@ -410,7 +410,7 @@ class UsuariosViewModel extends BaseViewModel {
     Map<String, dynamic> rol1 = {};
     Map<String, dynamic> suplidor = {};
     List<RolData> roles = [];
-    var rolElegido;
+    dynamic rolElegido;
     ProgressDialog.show(context);
     var resp = await _rolesApi.getRoles();
     if (resp is Success<RolResponse>) {

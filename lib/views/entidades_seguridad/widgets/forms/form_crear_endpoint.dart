@@ -8,39 +8,36 @@ import '../../../../theme/theme.dart';
 class CrearEndpointForm extends StatelessWidget {
   CrearEndpointForm(
       {Key? key,
-      required GlobalKey<FormState> formKey,
+      required this.formKey,
       required this.size,
       required this.titulo,
       required this.validator,
       required this.modificar,
       required this.eliminar,
-      required this.controlador,
       required this.buttonTittle,
-      required this.nombre,
-      required this.httpVerbo,
-      required this.metodo,
       required this.endpointsData,
       required this.showEliminar,
       required this.asignarPermiso})
-      : _formKey = formKey,
-        super(key: key);
+      : super(key: key);
 
-  final GlobalKey<FormState> _formKey;
+  final GlobalKey<FormState> formKey;
   final Size size;
   final String titulo;
   final bool validator, showEliminar;
   final Function modificar, eliminar, asignarPermiso;
-  late String controlador;
-  late String metodo;
-  late String httpVerbo;
   final String buttonTittle;
   final EndpointsData endpointsData;
-  late String nombre;
+
   final _navigationService = locator<NavigatorService>();
+
   @override
   Widget build(BuildContext context) {
+    String controlador = "";
+    String nombre = "";
+    String metodo = "";
+    String httpVerbo = "";
     return Form(
-        key: _formKey,
+        key: formKey,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -217,8 +214,8 @@ class CrearEndpointForm extends StatelessWidget {
                             : const SizedBox(),
                         TextButton(
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState?.save();
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState?.save();
                               modificar(nombre, controlador, metodo, httpVerbo);
                             }
                           },

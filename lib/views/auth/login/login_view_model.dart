@@ -15,7 +15,6 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/views/home/home_view.dart';
 
 import '../../../core/api/recursos_api.dart';
-import '../../../core/providers/permisos_provider.dart';
 
 class LoginViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();
