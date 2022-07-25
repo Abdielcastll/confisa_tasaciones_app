@@ -246,8 +246,8 @@ class PermisosViewModel extends BaseViewModel {
                           descripcion: "",
                           accionNombre: "",
                           esBasico: 0,
-                          idAccion: 0,
-                          idRecurso: 0,
+                          idAccion: resp.response.data.first.id,
+                          idRecurso: resp2.response.data.first.id,
                           recursoNombre: "")),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
