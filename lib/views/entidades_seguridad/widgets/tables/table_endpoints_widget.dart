@@ -12,7 +12,6 @@ import '../../../../core/locator.dart';
 import '../../../../core/models/permisos_response.dart';
 import '../../../../theme/theme.dart';
 import '../../../../widgets/app_dialogs.dart';
-import '../forms/form_crear_endpoint.dart';
 
 class PaginatedTableEndpoints {
   late BuildContext context;
@@ -76,7 +75,6 @@ class TableEndpoints extends AdvancedDataTableSource<EndpointsData> {
           onPressed: () async {
             final GlobalKey<FormState> _formKey = GlobalKey();
             bool validator = true;
-            String buttonTittle = "Asignar";
             Map<String, dynamic> permiso = {};
             var opcion;
             ProgressDialog.show(context);

@@ -13,7 +13,6 @@ import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 import '../widgets/dialog_mostrar_informacion_permisos.dart';
 import '../widgets/forms/form_crear_usuario.dart';
-import '../widgets/forms/form_update_roles_usuarios.dart';
 import '../widgets/forms/form_update_usuario.dart';
 
 class UsuariosViewModel extends BaseViewModel {

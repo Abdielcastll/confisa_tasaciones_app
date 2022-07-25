@@ -12,7 +12,6 @@ import '../../../core/locator.dart';
 import '../../../core/models/acciones_response.dart';
 import '../../../core/models/recursos_response.dart';
 import '../../../core/services/navigator_service.dart';
-import '../../../theme/theme.dart';
 import '../widgets/forms/form_crear_permiso.dart';
 
 class PermisosViewModel extends BaseViewModel {

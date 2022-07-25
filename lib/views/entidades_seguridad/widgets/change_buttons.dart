@@ -7,21 +7,18 @@ import 'package:tasaciones_app/widgets/app_circle_icon_button.dart';
 import '../../../core/api/acciones_api.dart';
 import '../../../core/api/api_status.dart';
 import '../../../core/api/modulos_api.dart';
-import '../../../core/api/permisos_api.dart';
 import '../../../core/api/recursos_api.dart';
 import '../../../core/api/roles_api.dart';
 import '../../../core/api/usuarios_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/acciones_response.dart';
-import '../../../core/models/permisos_response.dart';
 import '../../../core/models/recursos_response.dart';
 import '../../../core/models/roles_response.dart';
 import '../../../core/models/usuarios_response.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/app_buttons.dart';
 import '../../../widgets/app_dialogs.dart';
-import 'forms/form_crear_permiso.dart';
 
 class ChangeButtons {
   late BuildContext context;
@@ -201,16 +198,10 @@ class ChangeButtons {
   Future<void> addButtonPermisos() async {
     final _accionesApi = locator<AccionesApi>();
     final _recursosApi = locator<RecursosAPI>();
-    final _permisosApi = locator<PermisosAPI>();
-    String descripcion = "";
-    Map<String, dynamic> accion = {};
-    Map<String, dynamic> recurso = {};
-    dynamic opcion;
     var resp = await _accionesApi.getAcciones();
     if (resp is Success<AccionesResponse>) {
       var resp2 = await _recursosApi.getRecursos();
       if (resp2 is Success<RecursosResponse>) {
-        final GlobalKey<FormState> _formKey = GlobalKey();
         /* showDialog(
             context: context,
             builder: (BuildContext context) {

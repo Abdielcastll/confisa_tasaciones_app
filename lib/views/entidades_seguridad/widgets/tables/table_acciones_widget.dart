@@ -57,7 +57,7 @@ class TableAcciones extends AdvancedDataTableSource<AccionesData> {
 
   int pageSize;
   TextEditingController tcNewName = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   DataRow? getRow(int index) {

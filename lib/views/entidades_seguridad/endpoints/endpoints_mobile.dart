@@ -28,7 +28,7 @@ class _EndpointsMobile extends StatelessWidget {
                 Expanded(
                   child: Card(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
                         onSubmitted: vm.buscarEndpoint,

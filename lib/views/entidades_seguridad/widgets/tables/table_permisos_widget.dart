@@ -13,7 +13,6 @@ import '../../../../core/models/permisos_response.dart';
 import '../../../../theme/theme.dart';
 import '../../../../core/models/recursos_response.dart';
 import '../../../../widgets/app_dialogs.dart';
-import '../forms/form_crear_permiso.dart';
 
 class PaginatedTablePermisos {
   late BuildContext context;
@@ -67,7 +66,6 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
 
   @override
   DataRow? getRow(int index) {
-    final Size size = MediaQuery.of(context).size;
     final currentRowData = lastDetails!.rows[index];
     return DataRow(cells: [
       DataCell(
@@ -76,10 +74,6 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
       DataCell(IconButton(
           onPressed: () async {
             // GlobalKey<FormState> _key = GlobalKey();
-            String descripcion = currentRowData.descripcion;
-            Map<String, dynamic> accion = {};
-            Map<String, dynamic> recurso = {};
-            dynamic opcion;
             ProgressDialog.show(context);
             var resp = await _accionesApi.getAcciones();
             if (resp is Success<AccionesResponse>) {
