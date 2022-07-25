@@ -81,6 +81,44 @@ class RolPOSTResponse {
       };
 }
 
+class RolResponse2 {
+  RolResponse2(
+      {required this.data,
+      required this.totalCount,
+      required this.totalPages,
+      required this.pageSize,
+      required this.currentPage,
+      required this.hasNextPage,
+      required this.hasPreviousPage,
+      required this.nextPageUrl});
+
+  List<RolData2> data;
+  String nextPageUrl;
+  int totalCount, pageSize, currentPage, totalPages;
+  bool hasNextPage, hasPreviousPage;
+
+  factory RolResponse2.fromJson(Map<String, dynamic> json) => RolResponse2(
+      data: json["data"].map<RolData2>((e) => RolData2.fromJson(e)).toList(),
+      totalCount: json["meta"]["totalCount"],
+      totalPages: json["meta"]["totalPages"],
+      pageSize: json["meta"]["pageSize"],
+      currentPage: json["meta"]["currentPage"],
+      hasNextPage: json["meta"]["hasNextPage"],
+      hasPreviousPage: json["meta"]["hasPreviousPage"],
+      nextPageUrl: json["meta"]["nextPageUrl"]);
+
+  Map<String, dynamic> toJson() => {
+        "data": data.map((e) => e.toJson()),
+        "totalCount": totalCount,
+        "totalPage": totalPages,
+        "pageSize": pageSize,
+        "currentPage": currentPage,
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "nextPageUrl": totalCount,
+      };
+}
+
 class RolData2 {
   RolData2(
       {required this.roleId,
@@ -94,10 +132,10 @@ class RolData2 {
   bool enabled;
 
   factory RolData2.fromJson(Map<String, dynamic> json) => RolData2(
-        roleId: json["roleId"] ?? '',
-        roleName: json["roleName"] ?? '',
+        roleId: json["id"] ?? '',
+        roleName: json["name"] ?? '',
         description: json["description"] ?? '',
-        enabled: json["enabled"] ?? false,
+        enabled: json["enabled"] ?? true,
       );
 
   Map<String, dynamic> toJson() => {

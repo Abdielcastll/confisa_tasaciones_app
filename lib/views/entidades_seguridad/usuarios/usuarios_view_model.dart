@@ -11,6 +11,7 @@ import '../../../core/locator.dart';
 import '../../../core/models/roles_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
+import '../widgets/dialog_mostrar_informacion_permisos.dart';
 import '../widgets/forms/form_crear_usuario.dart';
 import '../widgets/forms/form_update_roles_usuarios.dart';
 import '../widgets/forms/form_update_usuario.dart';
@@ -143,52 +144,6 @@ class UsuariosViewModel extends BaseViewModel {
                     size: 70,
                   ),
                 ),
-                [
-                  /* Text(usuario.nombreCompleto,
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.gold)),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Text(usuario.email,
-                        style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.gold)), */
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                      "Suplidor " +
-                          (usuario.nombreSuplidor.isEmpty
-                              ? "Ninguno"
-                              : usuario.nombreSuplidor),
-                      style: appDropdown),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Text("Roles ${usuario.nombreSuplidor}", style: appDropdown),
-                  Column(
-                    children: usuario.roles
-                        .map((e) => Text(e.description, style: appDropdown))
-                        .toList(),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  /* Text(
-                      "Telefono ${usuario.phoneNumber}",
-                      style: appDropdown,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ), */
-                  usuario.isActive
-                      ? Text("Estado Activo", style: appDropdown)
-                      : Text("Estado Inactivo", style: appDropdown)
-                ],
                 size,
                 context,
                 _key,
@@ -233,6 +188,155 @@ class UsuariosViewModel extends BaseViewModel {
                   }
                 },
                 () async {
+                  ProgressDialog.show(context);
+                  var resp = await _rolesApi.getRoles2();
+                  bool isSelect = false;
+                  if (resp is Success<RolResponse2>) {
+                    ProgressDialog.dissmiss(context);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          List<RolData2> selectedRol2 = [];
+                          return StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              contentPadding: EdgeInsets.zero,
+                              content: dialogMostrarInformacionPermisos(
+                                  Container(
+                                    height: size.height * .08,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10)),
+                                      color: AppColors.gold,
+                                    ),
+                                    child: const Align(
+                                      alignment: Alignment.center,
+                                      child: Text("Cambiar Rol",
+                                          style: TextStyle(
+                                              color: AppColors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
+                                  [
+                                    DataTable(
+                                        onSelectAll: (isSelectedAll) {
+                                          setState(() => {
+                                                selectedRol2 = isSelectedAll!
+                                                    ? resp.response.data
+                                                    : [],
+                                                isSelect = isSelectedAll
+                                              });
+                                        },
+                                        columns: const [
+                                          DataColumn(
+                                            label: Text("Rol"),
+                                          ),
+                                        ],
+                                        rows: resp.response.data
+                                            .map((e) => DataRow(
+                                                    selected: selectedRol2
+                                                        .contains(e),
+                                                    onSelectChanged:
+                                                        (isSelected) =>
+                                                            setState(() {
+                                                              final isAdding =
+                                                                  isSelected !=
+                                                                          null &&
+                                                                      isSelected;
+                                                              if (!isSelect) {
+                                                                isAdding
+                                                                    ? selectedRol2
+                                                                        .add(e)
+                                                                    : selectedRol2
+                                                                        .remove(
+                                                                            e);
+                                                              }
+                                                            }),
+                                                    cells: [
+                                                      DataCell(
+                                                        Text(
+                                                          e.description,
+                                                        ),
+                                                      ),
+                                                    ]))
+                                            .toList()),
+                                  ],
+                                  size,
+                                  Row(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          _navigationService.pop();
+                                        },
+                                        // button pressed
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const <Widget>[
+                                            Icon(
+                                              Icons.cancel,
+                                              color: Colors.red,
+                                            ),
+                                            SizedBox(
+                                              height: 3,
+                                            ), // icon
+                                            Text("Cancelar"), // text
+                                          ],
+                                        ),
+                                      ),
+                                      const Expanded(child: SizedBox()),
+                                      TextButton(
+                                        onPressed: () async {
+                                          if (selectedRol2.isNotEmpty) {
+                                            ProgressDialog.show(context);
+                                            var cambio = await _usuariosApi
+                                                .updateRolUsuario(
+                                                    id: usuario.id,
+                                                    roles: selectedRol2);
+                                            if (cambio is Success<
+                                                UsuarioPOSTResponse>) {
+                                              ProgressDialog.dissmiss(context);
+                                              Dialogs.success(
+                                                  msg: "Roles asignados");
+                                              _navigationService.pop();
+                                              _navigationService.pop();
+                                              onInit();
+                                            } else if (cambio is Failure) {
+                                              ProgressDialog.dissmiss(context);
+                                              Dialogs.error(
+                                                  msg: cambio.messages.first);
+                                            }
+                                          }
+                                        },
+                                        // button pressed
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const <Widget>[
+                                            Icon(
+                                              Icons.add_circle_sharp,
+                                              color: AppColors.green,
+                                            ),
+                                            SizedBox(
+                                              height: 3,
+                                            ), // icon
+                                            Text("Cambiar"), // text
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            );
+                          });
+                        });
+                  } else if (resp is Failure) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.error(msg: resp.messages.first);
+                  }
+                  /* 
                   GlobalKey<FormState> _key = GlobalKey();
                   var dropdown;
                   Map<String, dynamic> rol1 = {};
@@ -287,7 +391,7 @@ class UsuariosViewModel extends BaseViewModel {
                   } else if (resp is Failure) {
                     ProgressDialog.dissmiss(context);
                     Dialogs.error(msg: resp.messages.first);
-                  }
+                  } */
                 }),
           );
         });

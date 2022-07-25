@@ -87,7 +87,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
               if (resp2 is Success<RecursosResponse>) {
                 ProgressDialog.dissmiss(context);
                 final GlobalKey<FormState> _formKey = GlobalKey();
-                showDialog(
+                /* showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
@@ -144,7 +144,7 @@ class TablePermisos extends AdvancedDataTableSource<PermisosData> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ));
-                    });
+                    }); */
               } else if (resp2 is Failure) {
                 ProgressDialog.dissmiss(context);
                 Dialogs.error(msg: resp2.messages.first);

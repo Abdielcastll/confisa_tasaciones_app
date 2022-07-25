@@ -2,6 +2,7 @@ import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 
 import '../authentication_client.dart';
+import '../models/roles_response.dart';
 
 class UsuariosAPI {
   final Http _http;
@@ -141,21 +142,12 @@ class UsuariosAPI {
   }
 
   Future<Object> updateRolUsuario(
-      {required String id, required Map<String, dynamic> rol}) async {
+      {required String id, required List<RolData2> roles}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/users/update/$id/roles',
       method: 'PUT',
-      data: {
-        "userRoles": [
-          {
-            "roleId": rol["id"],
-            "roleName": rol["nombre"],
-            "description": rol["description"],
-            "enabled": true,
-          }
-        ]
-      },
+      data: {"userRoles": roles},
       headers: {
         'Authorization': 'Bearer $_token',
       },

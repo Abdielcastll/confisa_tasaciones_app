@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/locator.dart';
+import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 
 Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
-    Size size, Function guardar, eliminar) {
+    Size size, Function guardar, eliminar, asignar) {
+  final _navigationService = locator<NavigatorService>();
   return Column(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -17,57 +20,89 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                children: informacion,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    children: informacion,
+                  TextButton(
+                    onPressed: () => eliminar(), // button pressed
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        Icon(
+                          Icons.delete,
+                          color: AppColors.grey,
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ), // icon
+                        Text("Eliminar"), // text
+                      ],
+                    ),
                   ),
-                  const SizedBox(
-                    height: 15,
+                  const Expanded(child: SizedBox()),
+                  TextButton(
+                    onPressed: () {
+                      _navigationService.pop();
+                    },
+                    // button pressed
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ), // icon
+                        Text("Cancelar"), // text
+                      ],
+                    ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  TextButton(
+                    onPressed: () => asignar(),
+                    // button pressed
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        Icon(
+                          Icons.add_circle,
+                          color: AppColors.gold,
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ), // icon
+                        Text("Asignar"), // text
+                      ],
+                    ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  TextButton(
+                    onPressed: () => guardar(),
+                    // button pressed
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        Icon(
+                          Icons.save,
+                          color: AppColors.green,
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ), // icon
+                        Text("Actualizar"), // text
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () => guardar(),
-                  // button pressed
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const <Widget>[
-                      Icon(
-                        Icons.save,
-                        color: AppColors.green,
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ), // icon
-                      Text("Guardar"), // text
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 35,
-                ),
-                TextButton(
-                  onPressed: () => eliminar(), // button pressed
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const <Widget>[
-                      Icon(
-                        Icons.delete,
-                        color: AppColors.grey,
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ), // icon
-                      Text("Eliminar"), // text
-                    ],
-                  ),
-                )
-              ],
             )
           ],
         ),

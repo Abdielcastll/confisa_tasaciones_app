@@ -11,6 +11,7 @@ import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../../core/authentication_client.dart';
+import '../../../../core/services/navigator_service.dart';
 
 Future<dynamic> dialogCrearUsuario(
     String titulo,
@@ -38,6 +39,7 @@ Future<dynamic> dialogCrearUsuario(
   final _usuariosApi = locator<UsuariosAPI>();
   final _suplidoresApi = locator<SuplidoresAPI>();
   final user = locator<AuthenticationClient>().loadSession;
+  final _navigationService = locator<NavigatorService>();
   List<SuplidorData> suplidores = [];
   return showDialog(
       context: context,
@@ -140,16 +142,12 @@ Future<dynamic> dialogCrearUsuario(
                                                 nombreCompleto = value!;
                                               },
                                               validator: (value) {
-                                                if (validator &&
-                                                    (email != "" ||
-                                                        nombreCompleto != "" ||
-                                                        telefono != "")) {
-                                                  if (value == null ||
-                                                      value.isEmpty ||
-                                                      value.length < 8) {
-                                                    return 'Debe ingresar un nombre valido';
-                                                  }
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    value.length < 8) {
+                                                  return 'Debe ingresar un nombre valido';
                                                 }
+
                                                 return null;
                                               },
                                             ),
@@ -167,16 +165,12 @@ Future<dynamic> dialogCrearUsuario(
                                                 telefono = value!;
                                               },
                                               validator: (value) {
-                                                if (validator &&
-                                                    (email != "" ||
-                                                        nombreCompleto != "" ||
-                                                        telefono != "")) {
-                                                  if (value == null ||
-                                                      value.isEmpty ||
-                                                      value.length < 9) {
-                                                    return 'Debe ingresar un telefono valido';
-                                                  }
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    value.length < 9) {
+                                                  return 'Debe ingresar un telefono valido';
                                                 }
+
                                                 return null;
                                               },
                                             ),
@@ -192,17 +186,12 @@ Future<dynamic> dialogCrearUsuario(
                                                 email = value!;
                                               },
                                               validator: (value) {
-                                                if (validator &&
-                                                    (email != "" ||
-                                                        nombreCompleto != "" ||
-                                                        telefono != "")) {
-                                                  if (value == null ||
-                                                      value.isEmpty ||
-                                                      value.length < 8 ||
-                                                      !EmailValidator.validate(
-                                                          value, true, true)) {
-                                                    return 'Debe ingresar un email valido';
-                                                  }
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    value.length < 8 ||
+                                                    !EmailValidator.validate(
+                                                        value, true, true)) {
+                                                  return 'Debe ingresar un email valido';
                                                 }
 
                                                 return null;
@@ -268,26 +257,64 @@ Future<dynamic> dialogCrearUsuario(
                                             const SizedBox(
                                               height: 5,
                                             ),
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: AppColors.green,
-                                                  minimumSize:
-                                                      const Size.fromHeight(
-                                                          60)),
-                                              onPressed: () {
-                                                // Validate returns true if the form is valid, or false otherwise.
-                                                _formKey.currentState?.save();
-                                                if (_formKey.currentState!
-                                                    .validate()) {
-                                                  _formKey.currentState?.save();
-                                                  modificar(
-                                                      nombreCompleto,
-                                                      email,
-                                                      telefono,
-                                                      codSuplidor);
-                                                }
-                                              },
-                                              child: Text(buttonTittle),
+                                            Row(
+                                              children: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    _navigationService.pop();
+                                                  },
+                                                  // button pressed
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: const <Widget>[
+                                                      Icon(
+                                                        Icons.cancel,
+                                                        color: Colors.red,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 3,
+                                                      ), // icon
+                                                      Text("Cancelar"), // text
+                                                    ],
+                                                  ),
+                                                ),
+                                                const Expanded(
+                                                    child: SizedBox()),
+                                                TextButton(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: const <Widget>[
+                                                      Icon(
+                                                        Icons.add_box_sharp,
+                                                        color: Colors.green,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 3,
+                                                      ), // icon
+                                                      Text("Crear"), // text
+                                                    ],
+                                                  ),
+                                                  onPressed: () {
+                                                    // Validate returns true if the form is valid, or false otherwise.
+                                                    _formKey.currentState
+                                                        ?.save();
+                                                    if (_formKey.currentState!
+                                                        .validate()) {
+                                                      _formKey.currentState
+                                                          ?.save();
+                                                      modificar(
+                                                          nombreCompleto,
+                                                          email,
+                                                          telefono,
+                                                          codSuplidor);
+                                                    }
+                                                  },
+                                                ),
+                                              ],
                                             ),
                                           ];
                                         }));
@@ -311,17 +338,12 @@ Future<dynamic> dialogCrearUsuario(
                                         email = value!;
                                       },
                                       validator: (value) {
-                                        if (validator &&
-                                            (email != "" ||
-                                                nombreCompleto != "" ||
-                                                telefono != "")) {
-                                          if (value == null ||
-                                              value.isEmpty ||
-                                              value.length < 8 ||
-                                              !EmailValidator.validate(
-                                                  value, true, true)) {
-                                            return 'Debe ingresar un email valido';
-                                          }
+                                        if (value == null ||
+                                            value.isEmpty ||
+                                            value.length < 8 ||
+                                            !EmailValidator.validate(
+                                                value, true, true)) {
+                                          return 'Debe ingresar un email valido';
                                         }
 
                                         return null;
@@ -330,82 +352,197 @@ Future<dynamic> dialogCrearUsuario(
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          primary: AppColors.green,
-                                          minimumSize:
-                                              const Size.fromHeight(60)),
-                                      onPressed: () async {
-                                        // Validate returns true if the form is valid, or false otherwise.
-                                        _formKey.currentState?.save();
-                                        if (_formKey.currentState!.validate()) {
-                                          _formKey.currentState?.save();
-                                          ProgressDialog.show(context);
-                                          var resp = await _usuariosApi
-                                              .getUsuarioDomain(email: email);
-                                          if (resp
-                                              is Success<UsuarioDomainData>) {
-                                            ProgressDialog.dissmiss(context);
-                                            setState((() {
-                                              permisoRol = [
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                    "Nombre ${resp.response.nombreCompleto}",
-                                                    style: appDropdown),
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                    "Puesto  ${resp.response.puesto}",
-                                                    style: appDropdown),
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                  "Telefono  ${resp.response.telefono}",
-                                                  style: appDropdown,
-                                                ),
-                                                const SizedBox(
-                                                  height: 15,
-                                                ),
-                                                ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          primary:
-                                                              AppColors.green,
-                                                          minimumSize: const Size
-                                                              .fromHeight(60)),
-                                                  onPressed: () {
-                                                    // Validate returns true if the form is valid, or false otherwise.
-                                                    _formKey.currentState
-                                                        ?.save();
-                                                    if (_formKey.currentState!
-                                                        .validate()) {
-                                                      _formKey.currentState
-                                                          ?.save();
-                                                      modificar(
-                                                          resp.response
-                                                              .nombreCompleto,
-                                                          resp.response.email,
-                                                          resp.response
-                                                              .telefono,
-                                                          codSuplidor);
-                                                    }
-                                                  },
-                                                  child: const Text("Guardar"),
-                                                ),
-                                              ];
-                                            }));
-                                          } else if (resp is Failure) {
-                                            ProgressDialog.dissmiss(context);
-                                            Dialogs.error(
-                                                msg: resp.messages[0]);
-                                          }
-                                        }
-                                      },
-                                      child: const Text("Buscar"),
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            _navigationService.pop();
+                                          },
+                                          // button pressed
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const <Widget>[
+                                              Icon(
+                                                Icons.cancel,
+                                                color: Colors.red,
+                                              ),
+                                              SizedBox(
+                                                height: 3,
+                                              ), // icon
+                                              Text("Cancelar"), // text
+                                            ],
+                                          ),
+                                        ),
+                                        const Expanded(child: SizedBox()),
+                                        TextButton(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const <Widget>[
+                                              Icon(
+                                                Icons.search,
+                                                color: AppColors.green,
+                                              ),
+                                              SizedBox(
+                                                height: 3,
+                                              ), // icon
+                                              Text("Buscar"), // text
+                                            ],
+                                          ),
+                                          onPressed: () async {
+                                            // Validate returns true if the form is valid, or false otherwise.
+                                            _formKey.currentState?.save();
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              _formKey.currentState?.save();
+                                              ProgressDialog.show(context);
+                                              var resp = await _usuariosApi
+                                                  .getUsuarioDomain(
+                                                      email: email);
+                                              if (resp is Success<
+                                                  UsuarioDomainData>) {
+                                                ProgressDialog.dissmiss(
+                                                    context);
+                                                setState((() {
+                                                  permisoRol = [
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    TextFormField(
+                                                      enabled: false,
+                                                      initialValue: resp
+                                                          .response
+                                                          .nombreCompleto,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                        isDense: true,
+                                                        fillColor: Colors.white,
+                                                        label: Text('Nombre'),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    TextFormField(
+                                                      enabled: false,
+                                                      initialValue:
+                                                          resp.response.puesto,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                        isDense: true,
+                                                        fillColor: Colors.white,
+                                                        label: Text('Puesto'),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    TextFormField(
+                                                      enabled: false,
+                                                      initialValue: resp
+                                                          .response.telefono,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                        isDense: true,
+                                                        fillColor: Colors.white,
+                                                        label: Text('Teléfono'),
+                                                      ),
+                                                    ),
+                                                    Container(),
+                                                    const SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            _navigationService
+                                                                .pop();
+                                                          },
+                                                          // button pressed
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: const <
+                                                                Widget>[
+                                                              Icon(
+                                                                Icons.cancel,
+                                                                color:
+                                                                    Colors.red,
+                                                              ),
+                                                              SizedBox(
+                                                                height: 3,
+                                                              ), // icon
+                                                              Text(
+                                                                  "Cancelar"), // text
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const Expanded(
+                                                            child: SizedBox()),
+                                                        TextButton(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: const <
+                                                                Widget>[
+                                                              Icon(
+                                                                Icons.save,
+                                                                color: AppColors
+                                                                    .green,
+                                                              ),
+                                                              SizedBox(
+                                                                height: 3,
+                                                              ), // icon
+                                                              Text(
+                                                                  "Guardar"), // text
+                                                            ],
+                                                          ),
+                                                          onPressed: () {
+                                                            // Validate returns true if the form is valid, or false otherwise.
+                                                            _formKey
+                                                                .currentState
+                                                                ?.save();
+                                                            if (_formKey
+                                                                .currentState!
+                                                                .validate()) {
+                                                              _formKey
+                                                                  .currentState
+                                                                  ?.save();
+                                                              modificar(
+                                                                  resp.response
+                                                                      .nombreCompleto,
+                                                                  resp.response
+                                                                      .email,
+                                                                  resp.response
+                                                                      .telefono,
+                                                                  codSuplidor);
+                                                            }
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ];
+                                                }));
+                                              } else if (resp is Failure) {
+                                                ProgressDialog.dissmiss(
+                                                    context);
+                                                Dialogs.error(
+                                                    msg: resp.messages[0]);
+                                              }
+                                            }
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ];
                                 }

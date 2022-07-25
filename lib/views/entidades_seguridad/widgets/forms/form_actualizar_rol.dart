@@ -106,6 +106,69 @@ class ActualizarRolForm extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        showEliminar
+                            ? TextButton(
+                                onPressed: () => eliminar(), // button pressed
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.delete,
+                                      color: AppColors.grey,
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ), // icon
+                                    Text("Eliminar"), // text
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(),
+                        showEliminar
+                            ? const Expanded(child: SizedBox())
+                            : const SizedBox(),
+                        TextButton(
+                          onPressed: () {
+                            _navigationService.pop();
+                          },
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                        const Expanded(child: SizedBox()),
+                        showEliminar
+                            ? TextButton(
+                                onPressed: () => changePermisos(),
+                                // button pressed
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.add_circle,
+                                      color: AppColors.gold,
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ), // icon
+                                    Text("Permisos"), // text
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(),
+                        showEliminar
+                            ? const Expanded(child: SizedBox())
+                            : const SizedBox(),
                         TextButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -125,69 +188,6 @@ class ActualizarRolForm extends StatelessWidget {
                                 height: 3,
                               ), // icon
                               Text("Guardar"), // text
-                            ],
-                          ),
-                        ),
-                        showEliminar
-                            ? const Expanded(child: SizedBox())
-                            : const SizedBox(),
-                        showEliminar
-                            ? TextButton(
-                                onPressed: () => changePermisos(),
-                                // button pressed
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const <Widget>[
-                                    Icon(
-                                      Icons.cached,
-                                      color: AppColors.gold,
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ), // icon
-                                    Text("Permisos"), // text
-                                  ],
-                                ),
-                              )
-                            : const SizedBox(),
-                        showEliminar
-                            ? const Expanded(child: SizedBox())
-                            : const SizedBox(),
-                        showEliminar
-                            ? TextButton(
-                                onPressed: () => eliminar(), // button pressed
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const <Widget>[
-                                    Icon(
-                                      Icons.delete,
-                                      color: AppColors.grey,
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ), // icon
-                                    Text("Eliminar"), // text
-                                  ],
-                                ),
-                              )
-                            : const SizedBox(),
-                        const Expanded(child: SizedBox()),
-                        TextButton(
-                          onPressed: () {
-                            _navigationService.pop();
-                          },
-                          // button pressed
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const <Widget>[
-                              Icon(
-                                Icons.cancel,
-                                color: Colors.red,
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ), // icon
-                              Text("Cancelar"), // text
                             ],
                           ),
                         ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/permisos_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
+import '../../../../core/locator.dart';
+import '../../../../core/services/navigator_service.dart';
+
 Form formAsignarPermiso(
     String titulo,
     GlobalKey<FormState> _formKey,
@@ -12,6 +15,7 @@ Form formAsignarPermiso(
     Size size,
     bool validator,
     String buttonTittle) {
+  final _navigationService = locator<NavigatorService>();
   return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -68,21 +72,54 @@ Form formAsignarPermiso(
                   const SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: AppColors.green,
-                        minimumSize: const Size.fromHeight(60)),
-                    onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      if (!validator) {
-                        _formKey.currentState?.save();
-                        crear();
-                      } else if (_formKey.currentState!.validate()) {
-                        _formKey.currentState?.save();
-                        crear();
-                      }
-                    },
-                    child: Text(buttonTittle),
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          _navigationService.pop();
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Cancelar"), // text
+                          ],
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      TextButton(
+                        onPressed: () {
+                          if (!validator) {
+                            _formKey.currentState?.save();
+                            crear();
+                          } else if (_formKey.currentState!.validate()) {
+                            _formKey.currentState?.save();
+                            crear();
+                          }
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.add_box_rounded,
+                              color: AppColors.green,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Asignar"), // text
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -220,142 +220,10 @@ class RolesViewModel extends BaseViewModel {
                                                   isSelect = isSelectedAll
                                                 });
                                           },
-                                          columns: [
+                                          columns: const [
                                             DataColumn(
-                                                label: Row(
-                                              children: [
-                                                const Text("Permiso"),
-                                                const SizedBox(
-                                                  width: 20,
-                                                ),
-                                                CircleIconButton(
-                                                    color: AppColors.green,
-                                                    icon: Icons.add,
-                                                    onPressed: () async {
-                                                      ProgressDialog.show(
-                                                          context);
-                                                      var respPermisos =
-                                                          await _permisosApi
-                                                              .getPermisos(
-                                                                  pageSize:
-                                                                      1000);
-                                                      if (respPermisos is Success<
-                                                          PermisosResponse>) {
-                                                        ProgressDialog.dissmiss(
-                                                            context);
-                                                        showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              List<PermisosData>
-                                                                  selectedPermisos2 =
-                                                                  [];
-                                                              return StatefulBuilder(
-                                                                  builder: (context,
-                                                                      setState) {
-                                                                return AlertDialog(
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10)),
-                                                                  contentPadding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  content:
-                                                                      dialogMostrarInformacionPermisos(
-                                                                          Container(
-                                                                            height:
-                                                                                size.height * .08,
-                                                                            decoration:
-                                                                                const BoxDecoration(
-                                                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                                                                              color: AppColors.gold,
-                                                                            ),
-                                                                            child:
-                                                                                Align(
-                                                                              alignment: Alignment.center,
-                                                                              child: Row(
-                                                                                children: [
-                                                                                  const SizedBox(
-                                                                                    width: 20,
-                                                                                  ),
-                                                                                  const Text("Permisos", style: TextStyle(color: AppColors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                                                                                  const SizedBox(
-                                                                                    width: 20,
-                                                                                  ),
-                                                                                  CircleIconButton(
-                                                                                      color: AppColors.green,
-                                                                                      icon: Icons.add,
-                                                                                      onPressed: () async {
-                                                                                        if (selectedPermisos2.isNotEmpty) {
-                                                                                          ProgressDialog.show(context);
-                                                                                          var respAsignacion = await _rolesApi.assingPermisosRol(rol.id, selectedPermisos2);
-                                                                                          if (respAsignacion is Success<RolPOSTResponse>) {
-                                                                                            ProgressDialog.dissmiss(context);
-                                                                                            Dialogs.success(msg: "Asignacion exitosa");
-                                                                                            ProgressDialog.dissmiss(context);
-                                                                                            ProgressDialog.dissmiss(context);
-                                                                                            notifyListeners();
-                                                                                          } else {
-                                                                                            if (respAsignacion is Failure) {
-                                                                                              ProgressDialog.dissmiss(context);
-                                                                                              Dialogs.error(msg: respAsignacion.messages.first);
-                                                                                            }
-                                                                                          }
-                                                                                        }
-                                                                                      })
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                          [
-                                                                            DataTable(
-                                                                                onSelectAll: (isSelectedAll) {
-                                                                                  setState(() => {
-                                                                                        selectedPermisos2 = isSelectedAll! ? respPermisos.response.data : [],
-                                                                                        isSelect = isSelectedAll
-                                                                                      });
-                                                                                },
-                                                                                columns: const [
-                                                                                  DataColumn(
-                                                                                    label: Text("Permiso"),
-                                                                                  ),
-                                                                                ],
-                                                                                rows: respPermisos.response.data
-                                                                                    .map((e) => DataRow(
-                                                                                            selected: selectedPermisos2.contains(e),
-                                                                                            onSelectChanged: (isSelected) => setState(() {
-                                                                                                  final isAdding = isSelected != null && isSelected;
-                                                                                                  if (!isSelect) {
-                                                                                                    isAdding ? selectedPermisos2.add(e) : selectedPermisos2.remove(e);
-                                                                                                  }
-                                                                                                }),
-                                                                                            cells: [
-                                                                                              DataCell(
-                                                                                                Text(
-                                                                                                  e.descripcion,
-                                                                                                ),
-                                                                                              ),
-                                                                                            ]))
-                                                                                    .toList())
-                                                                          ],
-                                                                          size),
-                                                                );
-                                                              });
-                                                            });
-                                                      } else if (respPermisos
-                                                          is Failure) {
-                                                        ProgressDialog.dissmiss(
-                                                            context);
-                                                        Dialogs.error(
-                                                            msg: respPermisos
-                                                                .messages
-                                                                .first);
-                                                      }
-                                                    })
-                                              ],
-                                            )),
+                                              label: Text("Permiso"),
+                                            ),
                                           ],
                                           rows: resp.response.data
                                               .map((e) => DataRow(
@@ -422,6 +290,207 @@ class RolesViewModel extends BaseViewModel {
                                       Dialogs.error(msg: resp.messages.first);
                                     }
                                   });
+                                }, () async {
+                                  ProgressDialog.show(context);
+                                  var respPermisos = await _permisosApi
+                                      .getPermisos(pageSize: 1000);
+                                  if (respPermisos
+                                      is Success<PermisosResponse>) {
+                                    ProgressDialog.dissmiss(context);
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          List<PermisosData> selectedPermisos2 =
+                                              [];
+                                          return StatefulBuilder(
+                                              builder: (context, setState) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              contentPadding: EdgeInsets.zero,
+                                              content:
+                                                  dialogMostrarInformacionPermisos(
+                                                      Container(
+                                                        height:
+                                                            size.height * .08,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          10),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          10)),
+                                                          color: AppColors.gold,
+                                                        ),
+                                                        child: const Align(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Text(
+                                                              "Asignar Permisos",
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      AppColors
+                                                                          .white,
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                        ),
+                                                      ),
+                                                      [
+                                                        DataTable(
+                                                            onSelectAll:
+                                                                (isSelectedAll) {
+                                                              setState(() => {
+                                                                    selectedPermisos2 = isSelectedAll!
+                                                                        ? respPermisos
+                                                                            .response
+                                                                            .data
+                                                                        : [],
+                                                                    isSelect =
+                                                                        isSelectedAll
+                                                                  });
+                                                            },
+                                                            columns: const [
+                                                              DataColumn(
+                                                                label: Text(
+                                                                    "Permiso"),
+                                                              ),
+                                                            ],
+                                                            rows: respPermisos
+                                                                .response.data
+                                                                .map((e) =>
+                                                                    DataRow(
+                                                                        selected:
+                                                                            selectedPermisos2.contains(
+                                                                                e),
+                                                                        onSelectChanged: (isSelected) =>
+                                                                            setState(() {
+                                                                              final isAdding = isSelected != null && isSelected;
+                                                                              if (!isSelect) {
+                                                                                isAdding ? selectedPermisos2.add(e) : selectedPermisos2.remove(e);
+                                                                              }
+                                                                            }),
+                                                                        cells: [
+                                                                          DataCell(
+                                                                            Text(
+                                                                              e.descripcion,
+                                                                            ),
+                                                                          ),
+                                                                        ]))
+                                                                .toList()),
+                                                      ],
+                                                      size,
+                                                      Row(
+                                                        children: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              _navigationService
+                                                                  .pop();
+                                                            },
+                                                            // button pressed
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: const <
+                                                                  Widget>[
+                                                                Icon(
+                                                                  Icons.cancel,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 3,
+                                                                ), // icon
+                                                                Text(
+                                                                    "Cancelar"), // text
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          const Expanded(
+                                                              child:
+                                                                  SizedBox()),
+                                                          TextButton(
+                                                            onPressed:
+                                                                () async {
+                                                              if (selectedPermisos2
+                                                                  .isNotEmpty) {
+                                                                ProgressDialog
+                                                                    .show(
+                                                                        context);
+                                                                var respAsignacion =
+                                                                    await _rolesApi
+                                                                        .assingPermisosRol(
+                                                                            rol.id,
+                                                                            selectedPermisos2);
+                                                                if (respAsignacion
+                                                                    is Success<
+                                                                        RolPOSTResponse>) {
+                                                                  ProgressDialog
+                                                                      .dissmiss(
+                                                                          context);
+                                                                  Dialogs.success(
+                                                                      msg:
+                                                                          "Asignacion exitosa");
+                                                                  ProgressDialog
+                                                                      .dissmiss(
+                                                                          context);
+                                                                  ProgressDialog
+                                                                      .dissmiss(
+                                                                          context);
+                                                                  notifyListeners();
+                                                                } else {
+                                                                  if (respAsignacion
+                                                                      is Failure) {
+                                                                    ProgressDialog
+                                                                        .dissmiss(
+                                                                            context);
+                                                                    Dialogs.error(
+                                                                        msg: respAsignacion
+                                                                            .messages
+                                                                            .first);
+                                                                  }
+                                                                }
+                                                              }
+                                                            },
+                                                            // button pressed
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: const <
+                                                                  Widget>[
+                                                                Icon(
+                                                                  Icons
+                                                                      .add_circle_sharp,
+                                                                  color:
+                                                                      AppColors
+                                                                          .green,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 3,
+                                                                ), // icon
+                                                                Text(
+                                                                    "Asignar"), // text
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )),
+                                            );
+                                          });
+                                        });
+                                  } else if (respPermisos is Failure) {
+                                    ProgressDialog.dissmiss(context);
+                                    Dialogs.error(
+                                        msg: respPermisos.messages.first);
+                                  }
                                 }),
                               );
                             });

@@ -108,6 +108,26 @@ Widget dialogActualizarRolesUsuario(
                     children: [
                       TextButton(
                         onPressed: () {
+                          _navigationService.pop();
+                        },
+                        // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Cancelar"), // text
+                          ],
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      TextButton(
+                        onPressed: () {
                           _formKey.currentState?.save();
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState?.save();
@@ -126,26 +146,6 @@ Widget dialogActualizarRolesUsuario(
                               height: 3,
                             ), // icon
                             Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
-                      const Expanded(child: SizedBox()),
-                      TextButton(
-                        onPressed: () {
-                          _navigationService.pop();
-                        },
-                        // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
                           ],
                         ),
                       ),

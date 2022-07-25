@@ -93,53 +93,58 @@ class _UsuariosMobile extends StatelessWidget {
                       );
                     }
                     var usuario = vm.usuarios[i];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: MaterialButton(
-                        onPressed: () =>
-                            vm.modificarUsuario(usuario, context, size),
-                        color: Colors.white,
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          height: 70,
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                usuario.nombreCompleto,
-                                style: const TextStyle(
-                                  color: AppColors.brownDark,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              Text(
-                                "Correo/Usuario: ${usuario.email}",
-                                style: const TextStyle(
-                                    color: AppColors.brownDark, fontSize: 12),
-                              ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Roles: ",
-                                    style: TextStyle(
-                                        color: AppColors.brownDark,
-                                        fontSize: 12),
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: MaterialButton(
+                          onPressed: () =>
+                              vm.modificarUsuario(usuario, context, size),
+                          color: Colors.white,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            height: 86,
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  usuario.nombreCompleto,
+                                  style: const TextStyle(
+                                    color: AppColors.brownDark,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
                                   ),
-                                  ...usuario.roles.map((e) => Text(
-                                        "${e.description} ",
-                                        style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 12),
-                                      ))
-                                ],
-                              )
-                            ],
+                                ),
+                                Text(
+                                  "Correo/Usuario: ${usuario.email}",
+                                  style: const TextStyle(
+                                      color: AppColors.brownDark, fontSize: 12),
+                                ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "Roles: ",
+                                      style: TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    ...usuario.roles.map((e) => Flexible(
+                                          child: Text(
+                                            "${e.description} ",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          ),
+                                        ))
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -118,8 +118,8 @@ class PermisosViewModel extends BaseViewModel {
     tcBuscar.clear();
   }
 
-  Future<void> modificarPermiso(String descripcion, int id, String accionNombre,
-      String recursoNombre, BuildContext context) async {
+  Future<void> modificarPermiso(
+      PermisosData permiso, BuildContext context) async {
     Map<String, dynamic> accion = {};
     Map<String, dynamic> recurso = {};
     dynamic opcion;
@@ -139,12 +139,12 @@ class PermisosViewModel extends BaseViewModel {
                   content: formCrearPermiso(
                       "Modificacion de Permiso",
                       _formKey,
-                      descripcion,
+                      permiso.descripcion,
                       recurso,
                       accion, (String descripcionf) async {
                     ProgressDialog.show(context);
                     var creacion = await _permisosApi.updatePermisos(
-                        id: id,
+                        id: permiso.id,
                         descripcion: descripcionf,
                         idAccion: accion["id"] ?? 0,
                         idRecurso: recurso["id"] ?? 0,
@@ -165,7 +165,8 @@ class PermisosViewModel extends BaseViewModel {
                             "Esta seguro que desea eliminar el permiso?",
                         confirm: () async {
                       ProgressDialog.show(context);
-                      var resp = await _permisosApi.deletePermisos(id: id);
+                      var resp =
+                          await _permisosApi.deletePermisos(id: permiso.id);
                       if (resp is Success<PermisosPOSTResponse>) {
                         ProgressDialog.dissmiss(context);
                         Dialogs.success(msg: "Eliminado con exito");
@@ -176,25 +177,8 @@ class PermisosViewModel extends BaseViewModel {
                         Dialogs.error(msg: resp.messages.first);
                       }
                     });
-                  },
-                      opcion,
-                      resp.response.data,
-                      resp2.response.data,
-                      [
-                        Text("Permiso: $descripcion", style: appDropdown),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Text("Accion: $accionNombre", style: appDropdown),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Text("Recurso: $recursoNombre", style: appDropdown)
-                      ],
-                      size,
-                      false,
-                      "Modificar",
-                      true),
+                  }, opcion, resp.response.data, resp2.response.data, size,
+                      false, "Modificar", true, permiso),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ));
@@ -248,8 +232,23 @@ class PermisosViewModel extends BaseViewModel {
                       ProgressDialog.dissmiss(context);
                       Dialogs.error(msg: creacion.messages.first);
                     }
-                  }, () {}, opcion, resp.response.data, resp2.response.data, [],
-                      size, false, "Crear", false),
+                  },
+                      () {},
+                      opcion,
+                      resp.response.data,
+                      resp2.response.data,
+                      size,
+                      false,
+                      "Crear",
+                      false,
+                      PermisosData(
+                          id: 0,
+                          descripcion: "",
+                          accionNombre: "",
+                          esBasico: 0,
+                          idAccion: 0,
+                          idRecurso: 0,
+                          recursoNombre: "")),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ));
