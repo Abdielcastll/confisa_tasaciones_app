@@ -113,6 +113,7 @@ class _UsuariosMobile extends StatelessWidget {
                               children: [
                                 Text(
                                   usuario.nombreCompleto,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     color: AppColors.brownDark,
                                     fontSize: 18,
@@ -121,28 +122,21 @@ class _UsuariosMobile extends StatelessWidget {
                                 ),
                                 Text(
                                   "Correo/Usuario: ${usuario.email}",
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       color: AppColors.brownDark, fontSize: 12),
                                 ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "Roles: ",
-                                      style: TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
-                                    ...usuario.roles.map((e) => Flexible(
-                                          child: Text(
-                                            "${e.description} ",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                                color: AppColors.brownDark,
-                                                fontSize: 12),
-                                          ),
-                                        ))
-                                  ],
-                                )
+                                Text(
+                                  "Roles: " +
+                                      (usuario.roles
+                                          .map((e) => e.description)
+                                          .toList()
+                                          .join(", ")
+                                          .toString()),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: AppColors.brownDark, fontSize: 12),
+                                ),
                               ],
                             ),
                           ),
