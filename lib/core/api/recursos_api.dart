@@ -82,13 +82,10 @@ class RecursosAPI {
   Future<Object> deleteRecursos({required int id}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/recursos/delete',
+      '/api/recursos/delete/$id',
       method: "DELETE",
       headers: {
         'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "id": id,
       },
     );
   }

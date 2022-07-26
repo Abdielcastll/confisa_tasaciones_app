@@ -97,7 +97,8 @@ class _RecursosMobile extends StatelessWidget {
                       }
                       var accion = vm.recursos[i];
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3, horizontal: 5),
                         child: MaterialButton(
                           onPressed: () => vm.modificarRecurso(context, accion),
                           color: Colors.white,

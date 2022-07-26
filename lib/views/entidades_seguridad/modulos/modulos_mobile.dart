@@ -97,7 +97,8 @@ class _ModulosMobile extends StatelessWidget {
                       }
                       var modulo = vm.modulos[i];
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3, horizontal: 5),
                         child: MaterialButton(
                           onPressed: () => vm.modificarModulo(context, modulo),
                           color: Colors.white,

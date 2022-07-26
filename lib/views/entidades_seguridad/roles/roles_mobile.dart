@@ -94,7 +94,8 @@ class _RolesMobile extends StatelessWidget {
                     }
                     var rol = vm.roles[i];
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 3, horizontal: 5),
                       child: MaterialButton(
                         onPressed: () => vm.modificarRol(rol, context, size),
                         color: Colors.white,

@@ -94,7 +94,8 @@ class _EndpointsMobile extends StatelessWidget {
                     }
                     var endpoint = vm.endpoints[i];
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 3, horizontal: 5),
                       child: MaterialButton(
                         onPressed: () =>
                             vm.modificarEndpoint(endpoint, context, size),
@@ -108,48 +109,52 @@ class _EndpointsMobile extends StatelessWidget {
                           padding: const EdgeInsets.all(10),
                           child: Row(
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    endpoint.nombre,
-                                    style: const TextStyle(
-                                      color: AppColors.brownDark,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w800,
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      endpoint.nombre,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Permiso: " +
-                                            (endpoint
-                                                    .permiso.descripcion.isEmpty
-                                                ? "Ninguno"
-                                                : endpoint.permiso.descripcion),
-                                        style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Estado: " +
-                                            (endpoint.estado
-                                                ? "Activo"
-                                                : "Inactivo"),
-                                        style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Permiso: " +
+                                              (endpoint.permiso.descripcion
+                                                      .isEmpty
+                                                  ? "Ninguno"
+                                                  : endpoint
+                                                      .permiso.descripcion),
+                                          style: const TextStyle(
+                                              color: AppColors.brownDark,
+                                              fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Estado: " +
+                                              (endpoint.estado
+                                                  ? "Activo"
+                                                  : "Inactivo"),
+                                          style: const TextStyle(
+                                              color: AppColors.brownDark,
+                                              fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const Expanded(child: SizedBox()),
+                              // const Expanded(child: SizedBox()),
                               Icon(
                                 endpoint.estado
                                     ? Icons.check_box_outlined

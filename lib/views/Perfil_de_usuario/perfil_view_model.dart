@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
+import 'package:tasaciones_app/core/authentication_client.dart';
+import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../core/base/base_view_model.dart';
@@ -9,6 +11,7 @@ import '../../core/models/profile_response.dart';
 
 class PerfilViewModel extends BaseViewModel {
   final _personalApi = locator<PersonalApi>();
+  final _authenticationClient = locator<AuthenticationClient>();
   bool _loading = false;
   Profile? profile;
   int _currentPage = 0;
@@ -22,6 +25,7 @@ class PerfilViewModel extends BaseViewModel {
   bool obscurePassCurrent = true;
   bool obscurePassNew = true;
   bool obscurePassConfirmNew = true;
+  late Session session;
 
   void changeObscureCurrent() {
     obscurePassCurrent = !obscurePassCurrent;
@@ -70,6 +74,7 @@ class PerfilViewModel extends BaseViewModel {
 
   Future<void> onInit(BuildContext context) async {
     loading = true;
+    session = _authenticationClient.loadSession;
     var resp = await _personalApi.getProfile();
     if (resp is Success) {
       var d = resp.response as ProfileResponse;
@@ -79,6 +84,11 @@ class PerfilViewModel extends BaseViewModel {
       Dialogs.error(msg: resp.messages[0]);
     }
     loading = false;
+  }
+
+  bool editable() {
+    return (session.role.contains('AprobradorTasaciones') ||
+        session.role.contains('Tasador'));
   }
 
   void onChangedName(String value) {

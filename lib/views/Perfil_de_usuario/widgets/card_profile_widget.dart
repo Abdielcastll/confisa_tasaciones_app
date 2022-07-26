@@ -54,12 +54,15 @@ class CardProfileWidget extends StatelessWidget {
                                   ),
                           ),
                           const SizedBox(width: 20),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.edit_note_sharp,
-                              color: Colors.white,
+                          Visibility(
+                            visible: vm.editable(),
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.edit_note_sharp,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => vm.editName = !vm.editName,
                             ),
-                            onPressed: () => vm.editName = !vm.editName,
                           ),
                         ],
                       ),
@@ -84,21 +87,35 @@ class CardProfileWidget extends StatelessWidget {
                                     ),
                                   ),
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.edit_note_sharp,
-                              color: Colors.white,
+                          Visibility(
+                            visible: vm.editable(),
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.edit_note_sharp,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => vm.editEmail = !vm.editEmail,
                             ),
-                            onPressed: () => vm.editEmail = !vm.editEmail,
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
+          const SizedBox(height: 10),
+          ...vm.session.role.map((e) {
+            return Text(
+              e,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.w700,
+              ),
+            );
+          }),
           const SizedBox(height: 15),
           const Divider(
             thickness: 1.2,
@@ -135,12 +152,15 @@ class CardProfileWidget extends StatelessWidget {
                                   )
                                 : _infoItem(
                                     'Teléfono', vm.profile?.phoneNumber ?? '')),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.edit_note_sharp,
-                            color: Colors.white,
+                        Visibility(
+                          visible: vm.editable(),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.edit_note_sharp,
+                              color: Colors.white,
+                            ),
+                            onPressed: () => vm.editPhone = !vm.editPhone,
                           ),
-                          onPressed: () => vm.editPhone = !vm.editPhone,
                         ),
                       ],
                     ),

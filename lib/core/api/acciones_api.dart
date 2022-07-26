@@ -61,13 +61,10 @@ class AccionesApi {
   Future<Object> deleteAcciones({required int id}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/acciones/update',
+      '/api/acciones/delete/$id',
       method: "DELETE",
       headers: {
         'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "id": id,
       },
     );
   }

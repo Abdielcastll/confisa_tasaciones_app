@@ -94,7 +94,8 @@ class _PermisosMobile extends StatelessWidget {
                     }
                     var permiso = vm.permisos[i];
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 3, horizontal: 5),
                       child: MaterialButton(
                         onPressed: () => vm.modificarPermiso(permiso, context),
                         color: Colors.white,

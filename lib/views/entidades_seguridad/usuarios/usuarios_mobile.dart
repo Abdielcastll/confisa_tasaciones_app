@@ -95,7 +95,8 @@ class _UsuariosMobile extends StatelessWidget {
                     var usuario = vm.usuarios[i];
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3, horizontal: 5),
                         child: MaterialButton(
                           onPressed: () =>
                               vm.modificarUsuario(usuario, context, size),

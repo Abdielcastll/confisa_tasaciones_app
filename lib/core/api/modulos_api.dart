@@ -59,13 +59,10 @@ class ModulosApi {
   Future<Object> deleteModulos({required int id}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/modulos/update',
+      '/api/modulos/delete/$id',
       method: "DELETE",
       headers: {
         'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "id": id,
       },
     );
   }
