@@ -201,9 +201,9 @@ class EndpointsViewModel extends BaseViewModel {
                 },
                 eliminar: () {
                   Dialogs.confirm(context,
-                      tittle: "Eliminar Endpoint",
+                      tittle: "Desactivar Endpoint",
                       description:
-                          "Esta seguro que desea eliminar el endpoint?",
+                          "Esta seguro que desea desactivar el endpoint?",
                       confirm: () async {
                     ProgressDialog.show(context);
                     var resp = await _endpointsApi.deleteEndpoint(

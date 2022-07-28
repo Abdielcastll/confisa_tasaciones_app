@@ -522,7 +522,7 @@ Future<dynamic> dialogCrearUsuario(
                                                                 height: 3,
                                                               ), // icon
                                                               Text(
-                                                                  "Guardar"), // text
+                                                                  "Crear"), // text
                                                             ],
                                                           ),
                                                           onPressed: () {

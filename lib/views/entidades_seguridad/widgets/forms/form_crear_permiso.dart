@@ -186,15 +186,17 @@ Form formCrearPermiso(
                         // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
+                          children: <Widget>[
+                            const Icon(
                               Icons.save,
                               color: AppColors.green,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 3,
                             ), // icon
-                            Text("Guardar"), // text
+                            showEliminar
+                                ? const Text("Guardar")
+                                : const Text("Crear"), // text
                           ],
                         ),
                       ),
