@@ -258,6 +258,8 @@ Future<dynamic> dialogCrearUsuario(
                                               height: 5,
                                             ),
                                             Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
                                                 TextButton(
                                                   onPressed: () {
@@ -280,8 +282,6 @@ Future<dynamic> dialogCrearUsuario(
                                                     ],
                                                   ),
                                                 ),
-                                                const Expanded(
-                                                    child: SizedBox()),
                                                 TextButton(
                                                   child: Column(
                                                     mainAxisAlignment:
@@ -289,7 +289,7 @@ Future<dynamic> dialogCrearUsuario(
                                                             .center,
                                                     children: const <Widget>[
                                                       Icon(
-                                                        Icons.add_box_sharp,
+                                                        Icons.save,
                                                         color: Colors.green,
                                                       ),
                                                       SizedBox(
@@ -353,6 +353,8 @@ Future<dynamic> dialogCrearUsuario(
                                       height: 10,
                                     ),
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         TextButton(
                                           onPressed: () {
@@ -374,7 +376,6 @@ Future<dynamic> dialogCrearUsuario(
                                             ],
                                           ),
                                         ),
-                                        const Expanded(child: SizedBox()),
                                         TextButton(
                                           child: Column(
                                             mainAxisAlignment:
@@ -429,6 +430,22 @@ Future<dynamic> dialogCrearUsuario(
                                                     TextFormField(
                                                       enabled: false,
                                                       initialValue:
+                                                          resp.response.email,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                        isDense: true,
+                                                        fillColor: Colors.white,
+                                                        label: Text('Email'),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    TextFormField(
+                                                      enabled: false,
+                                                      initialValue:
                                                           resp.response.puesto,
                                                       decoration:
                                                           const InputDecoration(
@@ -460,6 +477,9 @@ Future<dynamic> dialogCrearUsuario(
                                                       height: 15,
                                                     ),
                                                     Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
                                                       children: [
                                                         TextButton(
                                                           onPressed: () {
@@ -486,8 +506,6 @@ Future<dynamic> dialogCrearUsuario(
                                                             ],
                                                           ),
                                                         ),
-                                                        const Expanded(
-                                                            child: SizedBox()),
                                                         TextButton(
                                                           child: Column(
                                                             mainAxisAlignment:

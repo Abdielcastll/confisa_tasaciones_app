@@ -379,6 +379,9 @@ class RolesViewModel extends BaseViewModel {
                                                       ],
                                                       size,
                                                       Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
                                                         children: [
                                                           TextButton(
                                                             onPressed: () {
@@ -405,9 +408,6 @@ class RolesViewModel extends BaseViewModel {
                                                               ],
                                                             ),
                                                           ),
-                                                          const Expanded(
-                                                              child:
-                                                                  SizedBox()),
                                                           TextButton(
                                                             onPressed:
                                                                 () async {

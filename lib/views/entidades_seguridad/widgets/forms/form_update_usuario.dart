@@ -39,6 +39,10 @@ Widget dialogActualizarInformacion(
                     height: 10,
                   ),
                   TextFormField(
+                    enabled: !usuariosData.roles.any((element) =>
+                        (element.description == "Administrador" ||
+                            element.description == "Aprobador Facturas" ||
+                            element.description == "Oficial Negocios")),
                     initialValue: usuariosData.nombreCompleto,
                     decoration: const InputDecoration(
                         labelText: 'Nombre Completo',
@@ -64,6 +68,10 @@ Widget dialogActualizarInformacion(
                     height: 10,
                   ),
                   TextFormField(
+                    enabled: !usuariosData.roles.any((element) =>
+                        (element.description == "Administrador" ||
+                            element.description == "Aprobador Facturas" ||
+                            element.description == "Oficial Negocios")),
                     initialValue: usuariosData.phoneNumber,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
@@ -89,6 +97,10 @@ Widget dialogActualizarInformacion(
                     height: 10,
                   ),
                   TextFormField(
+                    enabled: !usuariosData.roles.any((element) =>
+                        (element.description == "Administrador" ||
+                            element.description == "Aprobador Facturas" ||
+                            element.description == "Oficial Negocios")),
                     initialValue: usuariosData.email,
                     decoration: const InputDecoration(
                         labelText: 'Email', border: UnderlineInputBorder()),
@@ -153,7 +165,7 @@ Widget dialogActualizarInformacion(
                     height: 10,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
                         onPressed: () {
@@ -174,7 +186,6 @@ Widget dialogActualizarInformacion(
                           ],
                         ),
                       ),
-                      const Expanded(child: SizedBox()),
                       TextButton(
                         onPressed: () => changeRol(),
                         // button pressed
@@ -192,8 +203,6 @@ Widget dialogActualizarInformacion(
                           ],
                         ),
                       ),
-                      const Expanded(child: SizedBox()),
-                      const Expanded(child: SizedBox()),
                       TextButton(
                         onPressed: () => changeStatus(),
                         // button pressed
@@ -211,32 +220,36 @@ Widget dialogActualizarInformacion(
                           ],
                         ),
                       ),
-                      const Expanded(child: SizedBox()),
-                      TextButton(
-                        onPressed: () {
-                          if (validator) {
-                            _formKey.currentState?.save();
-                            modificar(nombreCompleto, email, telefono);
-                          } else if (_formKey.currentState!.validate()) {
-                            _formKey.currentState?.save();
-                            modificar(nombreCompleto, email, telefono);
-                          }
-                        },
-                        // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              Icons.save,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
+                      !usuariosData.roles.any((element) =>
+                              (element.description == "Administrador" ||
+                                  element.description == "Aprobador Facturas" ||
+                                  element.description == "Oficial Negocios"))
+                          ? TextButton(
+                              onPressed: () {
+                                if (validator) {
+                                  _formKey.currentState?.save();
+                                  modificar(nombreCompleto, email, telefono);
+                                } else if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState?.save();
+                                  modificar(nombreCompleto, email, telefono);
+                                }
+                              },
+                              // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    Icons.save,
+                                    color: AppColors.green,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Guardar"), // text
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
                     ],
                   ),
                 ],

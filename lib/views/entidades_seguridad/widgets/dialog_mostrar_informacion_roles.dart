@@ -26,7 +26,7 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   TextButton(
@@ -45,7 +45,6 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                       ],
                     ),
                   ),
-                  const Expanded(child: SizedBox()),
                   TextButton(
                     onPressed: () {
                       _navigationService.pop();
@@ -65,7 +64,6 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                       ],
                     ),
                   ),
-                  const Expanded(child: SizedBox()),
                   TextButton(
                     onPressed: () => asignar(),
                     // button pressed
@@ -83,7 +81,6 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                       ],
                     ),
                   ),
-                  const Expanded(child: SizedBox()),
                   TextButton(
                     onPressed: () => guardar(),
                     // button pressed

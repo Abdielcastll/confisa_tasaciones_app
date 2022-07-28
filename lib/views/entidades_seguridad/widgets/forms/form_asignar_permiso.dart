@@ -46,6 +46,7 @@ Form formAsignarPermiso(
                     height: 20,
                   ),
                   DropdownButtonFormField(
+                    isExpanded: true,
                     validator: (value) =>
                         value == null ? 'Debe escojer un permiso' : null,
                     decoration: const InputDecoration(
@@ -55,6 +56,7 @@ Form formAsignarPermiso(
                         .map((e) => DropdownMenuItem(
                               child: Text(
                                 e.descripcion,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(fontSize: 13.2),
                               ),
                               value: e.id,
@@ -73,6 +75,7 @@ Form formAsignarPermiso(
                     height: 20,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
                         onPressed: () {
@@ -93,7 +96,6 @@ Form formAsignarPermiso(
                           ],
                         ),
                       ),
-                      const Expanded(child: SizedBox()),
                       TextButton(
                         onPressed: () {
                           if (!validator) {

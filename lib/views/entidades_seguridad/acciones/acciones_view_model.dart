@@ -172,6 +172,60 @@ class AccionesViewModel extends BaseViewModel {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Dialogs.confirm(ctx,
+                              tittle: 'Eliminar Acción',
+                              description:
+                                  '¿Esta seguro de eliminar la acción ${accion.nombre}?',
+                              confirm: () async {
+                            ProgressDialog.show(ctx);
+                            var resp = await _accionesApi.deleteAcciones(
+                                id: accion.id);
+                            ProgressDialog.dissmiss(ctx);
+                            if (resp is Failure) {
+                              Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is Success) {
+                              Dialogs.success(msg: 'Acción eliminada');
+                              await onRefresh();
+                            }
+                          });
+                        }, // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.delete,
+                              color: AppColors.grey,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Eliminar"), // text
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          tcNewName.clear();
+                        }, // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Cancelar"), // text
+                          ],
+                        ),
+                      ),
+                      TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             if (tcNewName.text.trim() != accion.nombre) {
@@ -207,60 +261,6 @@ class AccionesViewModel extends BaseViewModel {
                               height: 3,
                             ), // icon
                             Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewName.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Acción',
-                              description:
-                                  '¿Esta seguro de eliminar la acción ${accion.nombre}?',
-                              confirm: () async {
-                            ProgressDialog.show(ctx);
-                            var resp = await _accionesApi.deleteAcciones(
-                                id: accion.id);
-                            ProgressDialog.dissmiss(ctx);
-                            if (resp is Failure) {
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is Success) {
-                              Dialogs.success(msg: 'Acción eliminada');
-                              await onRefresh();
-                            }
-                          });
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              Icons.delete,
-                              color: AppColors.grey,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Eliminar"), // text
                           ],
                         ),
                       ),
@@ -329,6 +329,25 @@ class AccionesViewModel extends BaseViewModel {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          tcNewName.clear();
+                        }, // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Cancelar"), // text
+                          ],
+                        ),
+                      ),
+                      TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             ProgressDialog.show(context);
@@ -362,25 +381,6 @@ class AccionesViewModel extends BaseViewModel {
                               height: 3,
                             ), // icon
                             Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewName.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
                           ],
                         ),
                       ),

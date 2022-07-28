@@ -104,7 +104,7 @@ Widget dialogActualizarRolesUsuario(
                     height: 10,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
                         onPressed: () {
@@ -125,7 +125,6 @@ Widget dialogActualizarRolesUsuario(
                           ],
                         ),
                       ),
-                      const Expanded(child: SizedBox()),
                       TextButton(
                         onPressed: () {
                           _formKey.currentState?.save();

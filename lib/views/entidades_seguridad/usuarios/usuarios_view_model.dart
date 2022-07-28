@@ -265,6 +265,8 @@ class UsuariosViewModel extends BaseViewModel {
                                   ],
                                   size,
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       TextButton(
                                         onPressed: () {
@@ -286,7 +288,6 @@ class UsuariosViewModel extends BaseViewModel {
                                           ],
                                         ),
                                       ),
-                                      const Expanded(child: SizedBox()),
                                       TextButton(
                                         onPressed: () async {
                                           if (selectedRol2.isNotEmpty) {
@@ -316,7 +317,7 @@ class UsuariosViewModel extends BaseViewModel {
                                               MainAxisAlignment.center,
                                           children: const <Widget>[
                                             Icon(
-                                              Icons.add_circle_sharp,
+                                              Icons.save,
                                               color: AppColors.green,
                                             ),
                                             SizedBox(
