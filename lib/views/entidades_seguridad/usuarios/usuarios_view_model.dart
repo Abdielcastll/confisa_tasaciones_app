@@ -451,6 +451,8 @@ class UsuariosViewModel extends BaseViewModel {
           if (creacion is Success<UsuarioPOSTResponse>) {
             ProgressDialog.dissmiss(context);
             Dialogs.success(msg: "Creacion de usuario exitosa");
+            _navigationService.pop();
+            onInit();
           } else if (creacion is Failure) {
             ProgressDialog.dissmiss(context);
             Dialogs.error(msg: creacion.messages[0]);
@@ -465,6 +467,8 @@ class UsuariosViewModel extends BaseViewModel {
           if (creacion is Success<UsuarioPOSTResponse>) {
             ProgressDialog.dissmiss(context);
             Dialogs.success(msg: "Creacion de usuario exitosa");
+            _navigationService.pop();
+            onInit();
           } else if (creacion is Failure) {
             ProgressDialog.dissmiss(context);
             Dialogs.error(msg: creacion.messages[0]);
