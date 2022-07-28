@@ -70,6 +70,23 @@ class EndpointsViewModel extends BaseViewModel {
     cargando = false;
   }
 
+  Future<void> onRefresh() async {
+    endpoints = [];
+    pageNumber = 1;
+    hasNextPage = false;
+    var resp =
+        await _endpointsApi.getEndpoints(pageNumber: pageNumber, pageSize: 20);
+    if (resp is Success) {
+      endpointsResponse = resp.response as EndpointsResponse;
+      endpoints = endpointsResponse.data;
+      hasNextPage = endpointsResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+  }
+
   Future<void> cargarMasEndpoints() async {
     pageNumber += 1;
     var resp =

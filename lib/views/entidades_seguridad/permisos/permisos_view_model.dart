@@ -72,6 +72,23 @@ class PermisosViewModel extends BaseViewModel {
     cargando = false;
   }
 
+  Future<void> onRefresh() async {
+    permisos = [];
+    pageNumber = 1;
+    hasNextPage = false;
+    var resp =
+        await _permisosApi.getPermisos(pageNumber: pageNumber, pageSize: 20);
+    if (resp is Success) {
+      permisosResponse = resp.response as PermisosResponse;
+      permisos = permisosResponse.data;
+      hasNextPage = permisosResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+  }
+
   Future<void> cargarMasPermisos() async {
     pageNumber += 1;
     var resp =

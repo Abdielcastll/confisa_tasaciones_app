@@ -79,45 +79,52 @@ class _PermisosMobile extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: vm.permisos.length + 1,
-                  controller: vm.listController,
-                  itemBuilder: (context, i) {
-                    if (i >= vm.permisos.length) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: !vm.hasNextPage
-                            ? const SizedBox()
-                            : const Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    var permiso = vm.permisos[i];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 3, horizontal: 5),
-                      child: MaterialButton(
-                        onPressed: () => vm.modificarPermiso(permiso, context),
-                        color: Colors.white,
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          height: 70,
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            permiso.descripcion,
-                            style: const TextStyle(
-                              color: AppColors.brownDark,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
+              child: RefreshIndicator(
+                onRefresh: () => vm.onRefresh(),
+                child: vm.permisos.isEmpty
+                    ? const RefreshWidget()
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: vm.permisos.length + 1,
+                        controller: vm.listController,
+                        itemBuilder: (context, i) {
+                          if (i >= vm.permisos.length) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: !vm.hasNextPage
+                                  ? const SizedBox()
+                                  : const Center(
+                                      child: CircularProgressIndicator()),
+                            );
+                          }
+                          var permiso = vm.permisos[i];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 3, horizontal: 5),
+                            child: MaterialButton(
+                              onPressed: () =>
+                                  vm.modificarPermiso(permiso, context),
+                              color: Colors.white,
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                height: 70,
+                                padding: const EdgeInsets.all(10),
+                                child: Text(
+                                  permiso.descripcion,
+                                  style: const TextStyle(
+                                    color: AppColors.brownDark,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+                          );
+                        }),
+              ),
             )
           ],
         ),

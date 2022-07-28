@@ -22,7 +22,7 @@ class AuthenticationClient {
     final session = Session.fromJson(jsonDecode(data));
     final currentDate = DateTime.now();
     final difference =
-        session.refreshTokenExpiryTime.difference(currentDate).inMinutes;
+        session.tokenExpiryTime.difference(currentDate).inMinutes;
     logger.wtf(difference);
     if (difference >= 15) {
       return session.token;

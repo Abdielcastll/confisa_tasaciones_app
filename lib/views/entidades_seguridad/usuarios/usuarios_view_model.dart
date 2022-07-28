@@ -72,6 +72,23 @@ class UsuariosViewModel extends BaseViewModel {
     cargando = false;
   }
 
+  Future<void> onRefresh() async {
+    usuarios = [];
+    pageNumber = 1;
+    hasNextPage = false;
+    var resp =
+        await _usuariosApi.getUsuarios(pageNumber: pageNumber, pageSize: 20);
+    if (resp is Success) {
+      usuariosResponse = resp.response as UsuariosResponse;
+      usuarios = usuariosResponse.data;
+      hasNextPage = usuariosResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+  }
+
   Future<void> cargarMasUsuarios() async {
     pageNumber += 1;
     var resp =

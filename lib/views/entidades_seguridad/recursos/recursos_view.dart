@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';
+import 'package:tasaciones_app/widgets/refresh_widget.dart';
 import 'recursos_view_model.dart';
 
 part 'recursos_mobile.dart';

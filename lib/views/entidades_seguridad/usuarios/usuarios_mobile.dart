@@ -79,72 +79,81 @@ class _UsuariosMobile extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: vm.usuarios.length + 1,
-                  controller: vm.listController,
-                  itemBuilder: (context, i) {
-                    if (i >= vm.usuarios.length) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: !vm.hasNextPage
-                            ? const SizedBox()
-                            : const Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    var usuario = vm.usuarios[i];
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 3, horizontal: 5),
-                        child: MaterialButton(
-                          onPressed: () =>
-                              vm.modificarUsuario(usuario, context, size),
-                          color: Colors.white,
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            height: 86,
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  usuario.nombreCompleto,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
+              child: RefreshIndicator(
+                onRefresh: () => vm.onRefresh(),
+                child: vm.usuarios.isEmpty
+                    ? const RefreshWidget()
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: vm.usuarios.length + 1,
+                        controller: vm.listController,
+                        itemBuilder: (context, i) {
+                          if (i >= vm.usuarios.length) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: !vm.hasNextPage
+                                  ? const SizedBox()
+                                  : const Center(
+                                      child: CircularProgressIndicator()),
+                            );
+                          }
+                          var usuario = vm.usuarios[i];
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 3, horizontal: 5),
+                              child: MaterialButton(
+                                onPressed: () =>
+                                    vm.modificarUsuario(usuario, context, size),
+                                color: Colors.white,
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  height: 86,
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        usuario.nombreCompleto,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Correo/Usuario: ${usuario.email}",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppColors.brownDark,
+                                            fontSize: 12),
+                                      ),
+                                      Text(
+                                        "Roles: " +
+                                            (usuario.roles
+                                                .map((e) => e.description)
+                                                .toList()
+                                                .join(", ")
+                                                .toString()),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppColors.brownDark,
+                                            fontSize: 12),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  "Correo/Usuario: ${usuario.email}",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      color: AppColors.brownDark, fontSize: 12),
-                                ),
-                                Text(
-                                  "Roles: " +
-                                      (usuario.roles
-                                          .map((e) => e.description)
-                                          .toList()
-                                          .join(", ")
-                                          .toString()),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      color: AppColors.brownDark, fontSize: 12),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+                          );
+                        }),
+              ),
             )
           ],
         ),

@@ -72,6 +72,22 @@ class RolesViewModel extends BaseViewModel {
     cargando = false;
   }
 
+  Future<void> onRefresh() async {
+    roles = [];
+    pageNumber = 1;
+    hasNextPage = false;
+    var resp = await _rolesApi.getRoles(pageNumber: pageNumber, pageSize: 20);
+    if (resp is Success) {
+      rolesResponse = resp.response as RolResponse;
+      roles = rolesResponse.data;
+      hasNextPage = rolesResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+  }
+
   Future<void> cargarMasRoles() async {
     pageNumber += 1;
     var resp = await _rolesApi.getRoles(pageNumber: pageNumber, pageSize: 20);

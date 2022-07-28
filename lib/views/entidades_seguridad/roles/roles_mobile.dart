@@ -79,45 +79,52 @@ class _RolesMobile extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: vm.roles.length + 1,
-                  controller: vm.listController,
-                  itemBuilder: (context, i) {
-                    if (i >= vm.roles.length) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: !vm.hasNextPage
-                            ? const SizedBox()
-                            : const Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    var rol = vm.roles[i];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 3, horizontal: 5),
-                      child: MaterialButton(
-                        onPressed: () => vm.modificarRol(rol, context, size),
-                        color: Colors.white,
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          height: 70,
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            rol.name,
-                            style: const TextStyle(
-                              color: AppColors.brownDark,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
+              child: RefreshIndicator(
+                onRefresh: () => vm.onRefresh(),
+                child: vm.roles.isEmpty
+                    ? const RefreshWidget()
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: vm.roles.length + 1,
+                        controller: vm.listController,
+                        itemBuilder: (context, i) {
+                          if (i >= vm.roles.length) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: !vm.hasNextPage
+                                  ? const SizedBox()
+                                  : const Center(
+                                      child: CircularProgressIndicator()),
+                            );
+                          }
+                          var rol = vm.roles[i];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 3, horizontal: 5),
+                            child: MaterialButton(
+                              onPressed: () =>
+                                  vm.modificarRol(rol, context, size),
+                              color: Colors.white,
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                height: 70,
+                                padding: const EdgeInsets.all(10),
+                                child: Text(
+                                  rol.name,
+                                  style: const TextStyle(
+                                    color: AppColors.brownDark,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+                          );
+                        }),
+              ),
             )
           ],
         ),

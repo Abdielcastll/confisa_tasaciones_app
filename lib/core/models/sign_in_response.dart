@@ -17,6 +17,7 @@ class Session {
     required this.token,
     required this.refreshToken,
     required this.refreshTokenExpiryTime,
+    required this.tokenExpiryTime,
     required this.email,
     required this.nombreCompleto,
     required this.role,
@@ -25,6 +26,7 @@ class Session {
   String token;
   String refreshToken;
   DateTime refreshTokenExpiryTime;
+  DateTime tokenExpiryTime;
   String email;
   String nombreCompleto;
   List<String> role;
@@ -34,6 +36,7 @@ class Session {
         refreshToken: json["refreshToken"] ?? '',
         refreshTokenExpiryTime:
             DateTime.parse(json["refreshTokenExpiryTime"] ?? ''),
+        tokenExpiryTime: DateTime.parse(json["tokenExpiryTime"] ?? ''),
         email: json["email"] ?? '',
         nombreCompleto: json["nombreCompleto"] ?? '',
         role: List<String>.from(json["role"].map((x) => x)),
@@ -43,6 +46,7 @@ class Session {
         "token": token,
         "refreshToken": refreshToken,
         "refreshTokenExpiryTime": refreshTokenExpiryTime.toIso8601String(),
+        "tokenExpiryTime": tokenExpiryTime.toIso8601String(),
         "email": email,
         "nombreCompleto": nombreCompleto,
         "role": List<dynamic>.from(role.map((x) => x)),
