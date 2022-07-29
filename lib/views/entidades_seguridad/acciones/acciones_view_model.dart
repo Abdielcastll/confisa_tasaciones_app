@@ -196,7 +196,7 @@ class AccionesViewModel extends BaseViewModel {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.delete,
+                              AppIcons.trash,
                               color: AppColors.grey,
                             ),
                             SizedBox(
@@ -215,7 +215,7 @@ class AccionesViewModel extends BaseViewModel {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.cancel,
+                              AppIcons.closeCircle,
                               color: Colors.red,
                             ),
                             SizedBox(
@@ -254,7 +254,7 @@ class AccionesViewModel extends BaseViewModel {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.save,
+                              AppIcons.save,
                               color: AppColors.green,
                             ),
                             SizedBox(
@@ -337,7 +337,7 @@ class AccionesViewModel extends BaseViewModel {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.cancel,
+                              AppIcons.closeCircle,
                               color: Colors.red,
                             ),
                             SizedBox(
@@ -374,7 +374,7 @@ class AccionesViewModel extends BaseViewModel {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.save,
+                              AppIcons.save,
                               color: AppColors.green,
                             ),
                             SizedBox(

@@ -115,7 +115,7 @@ Widget dialogActualizarRolesUsuario(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.cancel,
+                              AppIcons.closeCircle,
                               color: Colors.red,
                             ),
                             SizedBox(
@@ -138,7 +138,7 @@ Widget dialogActualizarRolesUsuario(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.save,
+                              AppIcons.save,
                               color: AppColors.green,
                             ),
                             SizedBox(

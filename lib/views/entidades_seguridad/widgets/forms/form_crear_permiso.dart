@@ -139,7 +139,7 @@ Form formCrearPermiso(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const <Widget>[
                                   Icon(
-                                    Icons.delete,
+                                    AppIcons.trash,
                                     color: AppColors.grey,
                                   ),
                                   SizedBox(
@@ -162,7 +162,7 @@ Form formCrearPermiso(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.cancel,
+                              AppIcons.closeCircle,
                               color: Colors.red,
                             ),
                             SizedBox(
@@ -188,7 +188,7 @@ Form formCrearPermiso(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             const Icon(
-                              Icons.save,
+                              AppIcons.save,
                               color: AppColors.green,
                             ),
                             const SizedBox(

@@ -44,13 +44,13 @@ class _RecursosMobile extends StatelessWidget {
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
                               ? const Icon(
-                                  Icons.search_outlined,
+                                  AppIcons.search,
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(
                                   onPressed: vm.limpiarBusqueda,
                                   icon: const Icon(
-                                    Icons.clear_rounded,
+                                    AppIcons.closeCircle,
                                     color: AppColors.brownDark,
                                   )),
                         ),
@@ -69,7 +69,7 @@ class _RecursosMobile extends StatelessWidget {
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
-                      Icons.add_circle_sharp,
+                      AppIcons.iconPlus,
                       color: AppColors.green,
                     ),
                   ),

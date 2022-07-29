@@ -156,7 +156,7 @@ class UsuariosViewModel extends BaseViewModel {
                   height: 100,
                   width: 100,
                   child: const Icon(
-                    Icons.person,
+                    AppIcons.personOutline,
                     size: 70,
                   ),
                 ),
@@ -295,7 +295,7 @@ class UsuariosViewModel extends BaseViewModel {
                                               MainAxisAlignment.center,
                                           children: const <Widget>[
                                             Icon(
-                                              Icons.cancel,
+                                              AppIcons.closeCircle,
                                               color: Colors.red,
                                             ),
                                             SizedBox(
@@ -334,7 +334,7 @@ class UsuariosViewModel extends BaseViewModel {
                                               MainAxisAlignment.center,
                                           children: const <Widget>[
                                             Icon(
-                                              Icons.save,
+                                              AppIcons.save,
                                               color: AppColors.green,
                                             ),
                                             SizedBox(

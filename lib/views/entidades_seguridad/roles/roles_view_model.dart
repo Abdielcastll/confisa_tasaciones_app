@@ -210,10 +210,13 @@ class RolesViewModel extends BaseViewModel {
                                       ),
                                       child: Align(
                                         alignment: Alignment.center,
-                                        child: Text("Permisos de ${rol.name}",
+                                        child: Text(
+                                            "Permisos de ${rol.description}",
+                                            textAlign: TextAlign.center,
                                             style: const TextStyle(
+                                                overflow: TextOverflow.ellipsis,
                                                 color: AppColors.white,
-                                                fontSize: 20,
+                                                fontSize: 17,
                                                 fontWeight: FontWeight.bold)),
                                       ),
                                     ),
@@ -412,7 +415,8 @@ class RolesViewModel extends BaseViewModel {
                                                               children: const <
                                                                   Widget>[
                                                                 Icon(
-                                                                  Icons.cancel,
+                                                                  AppIcons
+                                                                      .closeCircle,
                                                                   color: Colors
                                                                       .red,
                                                                 ),
@@ -475,8 +479,7 @@ class RolesViewModel extends BaseViewModel {
                                                               children: const <
                                                                   Widget>[
                                                                 Icon(
-                                                                  Icons
-                                                                      .add_circle_sharp,
+                                                                  AppIcons.save,
                                                                   color:
                                                                       AppColors
                                                                           .green,

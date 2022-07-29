@@ -28,6 +28,9 @@ dependencies:
   fluttertoast: ^8.0.9
   email_validator: ^2.0.1
   flutter_pw_validator: ^1.4.2
+  themify_flutter: ^1.0.0
+  line_icons: ^2.0.1
+  font_awesome_flutter: ^10.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

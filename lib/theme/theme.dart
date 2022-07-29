@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:themify_flutter/themify_flutter.dart';
 
 /* Colors */
 class AppColors {
@@ -15,6 +18,26 @@ class AppColors {
   static const cream = Color.fromRGBO(255, 247, 235, 1);
   static const lightGreen = Color.fromRGBO(46, 226, 146, 1);
   static const newBrownDark = Color.fromRGBO(109, 68, 32, 1);
+}
+
+class AppIcons {
+  static const paperPlane = FontAwesomeIcons.paperPlane;
+  static const pencilAlt = FontAwesomeIcons.penToSquare;
+  static const closeCircle = Icons.cancel_outlined;
+  static const accountOutline = Icons.account_circle_outlined;
+  static const messageOutline = Icons.messenger_outline_sharp;
+  static const checkCircle = Icons.check_circle_outline;
+  static const iconPlus = Icons.add_circle_outline;
+  static const trash = Themify.trash;
+  static const arrowCircleLeft = Themify.arrow_circle_left;
+  static const arrowCircleRight = Themify.arrow_circle_right;
+  static const bell = Themify.bell;
+  static const calendar = Themify.calendar;
+  static const timer = Themify.calendar;
+  static const search = Themify.search;
+  static const save = Themify.save;
+  static const personOutline = Icons.person_outline;
+  static const nonCheckCircle = Icons.circle_outlined;
 }
 
 final myTheme = ThemeData(

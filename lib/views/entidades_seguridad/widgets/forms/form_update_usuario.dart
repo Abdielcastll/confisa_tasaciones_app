@@ -176,7 +176,7 @@ Widget dialogActualizarInformacion(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.cancel,
+                              AppIcons.closeCircle,
                               color: Colors.red,
                             ),
                             SizedBox(
@@ -193,7 +193,7 @@ Widget dialogActualizarInformacion(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.account_circle_rounded,
+                              AppIcons.accountOutline,
                               color: AppColors.gold,
                             ),
                             SizedBox(
@@ -210,7 +210,7 @@ Widget dialogActualizarInformacion(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.assignment_ind_sharp,
+                              AppIcons.pencilAlt,
                               color: AppColors.gold,
                             ),
                             SizedBox(
@@ -239,7 +239,7 @@ Widget dialogActualizarInformacion(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const <Widget>[
                                   Icon(
-                                    Icons.save,
+                                    AppIcons.save,
                                     color: AppColors.green,
                                   ),
                                   SizedBox(

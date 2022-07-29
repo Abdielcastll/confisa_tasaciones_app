@@ -35,7 +35,7 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const <Widget>[
                         Icon(
-                          Icons.delete,
+                          AppIcons.trash,
                           color: AppColors.grey,
                         ),
                         SizedBox(
@@ -54,7 +54,7 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const <Widget>[
                         Icon(
-                          Icons.cancel,
+                          AppIcons.closeCircle,
                           color: Colors.red,
                         ),
                         SizedBox(
@@ -71,7 +71,7 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const <Widget>[
                         Icon(
-                          Icons.add_circle,
+                          AppIcons.iconPlus,
                           color: AppColors.gold,
                         ),
                         SizedBox(
@@ -88,7 +88,7 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const <Widget>[
                         Icon(
-                          Icons.save,
+                          AppIcons.save,
                           color: AppColors.green,
                         ),
                         SizedBox(

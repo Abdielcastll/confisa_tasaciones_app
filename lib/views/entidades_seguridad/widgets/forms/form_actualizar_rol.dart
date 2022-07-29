@@ -112,7 +112,7 @@ class ActualizarRolForm extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const <Widget>[
                                     Icon(
-                                      Icons.delete,
+                                      AppIcons.trash,
                                       color: AppColors.grey,
                                     ),
                                     SizedBox(
@@ -135,7 +135,7 @@ class ActualizarRolForm extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const <Widget>[
                               Icon(
-                                Icons.cancel,
+                                AppIcons.closeCircle,
                                 color: Colors.red,
                               ),
                               SizedBox(
@@ -154,7 +154,7 @@ class ActualizarRolForm extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const <Widget>[
                                     Icon(
-                                      Icons.add_circle,
+                                      AppIcons.iconPlus,
                                       color: AppColors.gold,
                                     ),
                                     SizedBox(
@@ -180,7 +180,7 @@ class ActualizarRolForm extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const <Widget>[
                               Icon(
-                                Icons.save,
+                                AppIcons.save,
                                 color: AppColors.green,
                               ),
                               SizedBox(

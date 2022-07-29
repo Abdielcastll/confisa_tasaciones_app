@@ -272,7 +272,7 @@ Future<dynamic> dialogCrearUsuario(
                                                             .center,
                                                     children: const <Widget>[
                                                       Icon(
-                                                        Icons.cancel,
+                                                        AppIcons.closeCircle,
                                                         color: Colors.red,
                                                       ),
                                                       SizedBox(
@@ -289,7 +289,7 @@ Future<dynamic> dialogCrearUsuario(
                                                             .center,
                                                     children: const <Widget>[
                                                       Icon(
-                                                        Icons.save,
+                                                        AppIcons.save,
                                                         color: Colors.green,
                                                       ),
                                                       SizedBox(
@@ -366,7 +366,7 @@ Future<dynamic> dialogCrearUsuario(
                                                 MainAxisAlignment.center,
                                             children: const <Widget>[
                                               Icon(
-                                                Icons.cancel,
+                                                AppIcons.closeCircle,
                                                 color: Colors.red,
                                               ),
                                               SizedBox(
@@ -382,7 +382,7 @@ Future<dynamic> dialogCrearUsuario(
                                                 MainAxisAlignment.center,
                                             children: const <Widget>[
                                               Icon(
-                                                Icons.search,
+                                                AppIcons.search,
                                                 color: AppColors.green,
                                               ),
                                               SizedBox(
@@ -494,7 +494,8 @@ Future<dynamic> dialogCrearUsuario(
                                                             children: const <
                                                                 Widget>[
                                                               Icon(
-                                                                Icons.cancel,
+                                                                AppIcons
+                                                                    .closeCircle,
                                                                 color:
                                                                     Colors.red,
                                                               ),
@@ -514,7 +515,7 @@ Future<dynamic> dialogCrearUsuario(
                                                             children: const <
                                                                 Widget>[
                                                               Icon(
-                                                                Icons.save,
+                                                                AppIcons.save,
                                                                 color: AppColors
                                                                     .green,
                                                               ),

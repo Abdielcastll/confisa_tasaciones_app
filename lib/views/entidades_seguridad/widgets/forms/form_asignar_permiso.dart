@@ -86,7 +86,7 @@ Form formAsignarPermiso(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.cancel,
+                              AppIcons.closeCircle,
                               color: Colors.red,
                             ),
                             SizedBox(
@@ -111,7 +111,7 @@ Form formAsignarPermiso(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const <Widget>[
                             Icon(
-                              Icons.add_box_rounded,
+                              AppIcons.save,
                               color: AppColors.green,
                             ),
                             SizedBox(
