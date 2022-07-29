@@ -196,8 +196,8 @@ class UsuariosViewModel extends BaseViewModel {
                   if (creacion is Success<UsuarioPOSTResponse>) {
                     ProgressDialog.dissmiss(context);
                     Dialogs.success(msg: "Estado actualizado");
-                    onInit();
                     _navigationService.pop();
+                    onInit();
                   } else if (creacion is Failure) {
                     ProgressDialog.dissmiss(context);
                     Dialogs.error(msg: creacion.messages.first);
