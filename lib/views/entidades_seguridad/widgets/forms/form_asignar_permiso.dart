@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/permisos_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
@@ -45,30 +46,31 @@ Form formAsignarPermiso(
                   const SizedBox(
                     height: 20,
                   ),
-                  DropdownButtonFormField(
-                    isExpanded: true,
+                  DropdownSearch<String>(
                     validator: (value) =>
                         value == null ? 'Debe escojer un permiso' : null,
-                    decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 3),
-                        border: UnderlineInputBorder()),
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                          hintText: "Permisos",
+                          contentPadding: EdgeInsets.only(left: 3),
+                          border: UnderlineInputBorder()),
+                      textAlignVertical: TextAlignVertical.center,
+                    ),
+                    popupProps: const PopupProps.menu(
+                        showSelectedItems: true,
+                        showSearchBox: true,
+                        searchDelay: Duration(microseconds: 0)),
                     items: permisos
-                        .map((e) => DropdownMenuItem(
-                              child: Text(
-                                e.descripcion,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 13.2),
-                              ),
-                              value: e.id,
-                            ))
+                        .map(
+                          (e) => e.descripcion,
+                        )
                         .toList(),
-                    hint: const Text("Permisos"),
                     onChanged: (value) {
                       measure = value;
-                      permiso['id'] = value;
-                      permiso["nombre"] = permisos
-                          .firstWhere((element) => element.id == value)
-                          .descripcion;
+                      permiso['nombre'] = value;
+                      permiso["id"] = permisos
+                          .firstWhere((element) => element.descripcion == value)
+                          .id;
                     },
                   ),
                   const SizedBox(
