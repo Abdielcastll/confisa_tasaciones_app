@@ -60,7 +60,7 @@ class ActualizarRolForm extends StatelessWidget {
               //   height: 15,
               // ),
               Padding(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
                     TextFormField(

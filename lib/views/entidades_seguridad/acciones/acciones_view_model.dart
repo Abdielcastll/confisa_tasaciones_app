@@ -43,12 +43,19 @@ class AccionesViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void ordenar() {
+    acciones.sort((a, b) {
+      return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
+    });
+  }
+
   Future<void> onInit() async {
     cargando = true;
     var resp = await _accionesApi.getAcciones(pageNumber: pageNumber);
     if (resp is Success) {
       accionesResponse = resp.response as AccionesResponse;
       acciones = accionesResponse.data;
+      ordenar();
       hasNextPage = accionesResponse.hasNextPage;
       notifyListeners();
     }
@@ -65,6 +72,7 @@ class AccionesViewModel extends BaseViewModel {
       var temp = resp.response as AccionesResponse;
       accionesResponse.data.addAll(temp.data);
       acciones.addAll(temp.data);
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -83,6 +91,7 @@ class AccionesViewModel extends BaseViewModel {
     if (resp is Success) {
       var temp = resp.response as AccionesResponse;
       acciones = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -109,6 +118,7 @@ class AccionesViewModel extends BaseViewModel {
       var temp = resp.response as AccionesResponse;
       accionesResponse = temp;
       acciones = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }

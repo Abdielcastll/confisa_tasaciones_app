@@ -45,8 +45,10 @@ class _PermisosMobile extends StatelessWidget {
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w700),
                             suffixIcon: !vm.busqueda
-                                ? const Icon(
-                                    AppIcons.search,
+                                ? IconButton(
+                                    icon: const Icon(AppIcons.search),
+                                    onPressed: () =>
+                                        vm.buscarPermiso(vm.tcBuscar.text),
                                     color: AppColors.brownDark,
                                   )
                                 : IconButton(

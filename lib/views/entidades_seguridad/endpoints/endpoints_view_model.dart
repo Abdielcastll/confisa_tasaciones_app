@@ -51,16 +51,22 @@ class EndpointsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void ordenar() {
+    endpoints.sort((a, b) {
+      return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
+    });
+  }
+
   Future<void> onInit() async {
     cargando = true;
     endpoints = [];
     pageNumber = 1;
     hasNextPage = false;
-    var resp =
-        await _endpointsApi.getEndpoints(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _endpointsApi.getEndpoints(pageNumber: pageNumber);
     if (resp is Success) {
       endpointsResponse = resp.response as EndpointsResponse;
       endpoints = endpointsResponse.data;
+      ordenar();
       hasNextPage = endpointsResponse.hasNextPage;
       notifyListeners();
     }
@@ -74,11 +80,11 @@ class EndpointsViewModel extends BaseViewModel {
     endpoints = [];
     pageNumber = 1;
     hasNextPage = false;
-    var resp =
-        await _endpointsApi.getEndpoints(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _endpointsApi.getEndpoints(pageNumber: pageNumber);
     if (resp is Success) {
       endpointsResponse = resp.response as EndpointsResponse;
       endpoints = endpointsResponse.data;
+      ordenar();
       hasNextPage = endpointsResponse.hasNextPage;
       notifyListeners();
     }
@@ -89,11 +95,11 @@ class EndpointsViewModel extends BaseViewModel {
 
   Future<void> cargarMasEndpoints() async {
     pageNumber += 1;
-    var resp =
-        await _endpointsApi.getEndpoints(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _endpointsApi.getEndpoints(pageNumber: pageNumber);
     if (resp is Success) {
       var temp = resp.response as EndpointsResponse;
       endpoints.addAll(temp.data);
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -112,6 +118,7 @@ class EndpointsViewModel extends BaseViewModel {
     if (resp is Success) {
       var temp = resp.response as EndpointsResponse;
       endpoints = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -210,7 +217,7 @@ class EndpointsViewModel extends BaseViewModel {
                         id: endpointsData.id);
                     if (resp is Success<EndpointsPOSTResponse>) {
                       ProgressDialog.dissmiss(context);
-                      Dialogs.success(msg: "Eliminado con exito");
+                      Dialogs.success(msg: "Desactivado con exito");
                       _formKey.currentState?.reset();
                       _navigationService.pop();
                       onInit();
