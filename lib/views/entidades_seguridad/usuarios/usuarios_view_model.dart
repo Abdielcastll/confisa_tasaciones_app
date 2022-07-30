@@ -11,6 +11,7 @@ import '../../../core/locator.dart';
 import '../../../core/models/roles_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
+import '../widgets/buscador.dart';
 import '../widgets/dialog_mostrar_informacion_permisos.dart';
 import '../widgets/forms/form_crear_usuario.dart';
 import '../widgets/forms/form_update_usuario.dart';
@@ -210,142 +211,175 @@ class UsuariosViewModel extends BaseViewModel {
                   if (resp is Success<RolResponse2>) {
                     ProgressDialog.dissmiss(context);
                     showDialog(
+                        barrierColor: Colors.transparent,
+                        barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) {
+                          var data = resp.response.data;
                           List<RolData2> selectedRol2 = [];
                           return StatefulBuilder(builder: (context, setState) {
                             return AlertDialog(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               contentPadding: EdgeInsets.zero,
-                              content: dialogMostrarInformacionPermisos(
-                                  Container(
-                                    height: size.height * .08,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10)),
-                                      color: AppColors.gold,
+                              content: SizedBox(
+                                width: MediaQuery.of(context).size.width * .75,
+                                child: dialogMostrarInformacionPermisos(
+                                    Container(
+                                      height: size.height * .08,
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                        color: AppColors.gold,
+                                      ),
+                                      child: const Align(
+                                        alignment: Alignment.center,
+                                        child: Text("Cambiar Rol",
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
                                     ),
-                                    child: const Align(
-                                      alignment: Alignment.center,
-                                      child: Text("Cambiar Rol",
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold)),
+                                    buscador(
+                                      text: 'Buscar rol...',
+                                      onChanged: (value) {
+                                        setState(() {
+                                          data = resp.response.data
+                                              .where((e) => e.roleName
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase()))
+                                              .toList();
+                                        });
+                                      },
                                     ),
-                                  ),
-                                  [
-                                    DataTable(
-                                        onSelectAll: (isSelectedAll) {
-                                          setState(() => {
-                                                selectedRol2 = isSelectedAll!
-                                                    ? resp.response.data
-                                                    : [],
-                                                isSelect = isSelectedAll
-                                              });
-                                        },
-                                        columns: const [
-                                          DataColumn(
-                                            label: Text("Rol"),
+                                    data.isEmpty
+                                        ? [
+                                            const Padding(
+                                              padding: EdgeInsets.all(50),
+                                              child: Text(
+                                                'No hay resultados',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            )
+                                          ]
+                                        : [
+                                            DataTable(
+                                                onSelectAll: (isSelectedAll) {
+                                                  setState(() => {
+                                                        selectedRol2 =
+                                                            isSelectedAll!
+                                                                ? data
+                                                                : [],
+                                                        isSelect = isSelectedAll
+                                                      });
+                                                },
+                                                columns: const [
+                                                  DataColumn(
+                                                    label: Text("Rol"),
+                                                  ),
+                                                ],
+                                                rows: data
+                                                    .map((e) => DataRow(
+                                                            selected:
+                                                                selectedRol2
+                                                                    .contains(
+                                                                        e),
+                                                            onSelectChanged:
+                                                                (isSelected) =>
+                                                                    setState(
+                                                                        () {
+                                                                      final isAdding =
+                                                                          isSelected != null &&
+                                                                              isSelected;
+                                                                      if (!isSelect) {
+                                                                        isAdding
+                                                                            ? selectedRol2.add(e)
+                                                                            : selectedRol2.remove(e);
+                                                                      }
+                                                                    }),
+                                                            cells: [
+                                                              DataCell(
+                                                                Text(
+                                                                  e.description,
+                                                                ),
+                                                              ),
+                                                            ]))
+                                                    .toList()),
+                                          ],
+                                    size,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            _navigationService.pop();
+                                          },
+                                          // button pressed
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const <Widget>[
+                                              Icon(
+                                                AppIcons.closeCircle,
+                                                color: Colors.red,
+                                              ),
+                                              SizedBox(
+                                                height: 3,
+                                              ), // icon
+                                              Text("Cancelar"), // text
+                                            ],
                                           ),
-                                        ],
-                                        rows: resp.response.data
-                                            .map((e) => DataRow(
-                                                    selected: selectedRol2
-                                                        .contains(e),
-                                                    onSelectChanged:
-                                                        (isSelected) =>
-                                                            setState(() {
-                                                              final isAdding =
-                                                                  isSelected !=
-                                                                          null &&
-                                                                      isSelected;
-                                                              if (!isSelect) {
-                                                                isAdding
-                                                                    ? selectedRol2
-                                                                        .add(e)
-                                                                    : selectedRol2
-                                                                        .remove(
-                                                                            e);
-                                                              }
-                                                            }),
-                                                    cells: [
-                                                      DataCell(
-                                                        Text(
-                                                          e.description,
-                                                        ),
-                                                      ),
-                                                    ]))
-                                            .toList()),
-                                  ],
-                                  size,
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          _navigationService.pop();
-                                        },
-                                        // button pressed
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: const <Widget>[
-                                            Icon(
-                                              AppIcons.closeCircle,
-                                              color: Colors.red,
-                                            ),
-                                            SizedBox(
-                                              height: 3,
-                                            ), // icon
-                                            Text("Cancelar"), // text
-                                          ],
                                         ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          if (selectedRol2.isNotEmpty) {
-                                            ProgressDialog.show(context);
-                                            var cambio = await _usuariosApi
-                                                .updateRolUsuario(
-                                                    id: usuario.id,
-                                                    roles: selectedRol2);
-                                            if (cambio is Success<
-                                                UsuarioPOSTResponse>) {
-                                              ProgressDialog.dissmiss(context);
-                                              Dialogs.success(
-                                                  msg: "Roles asignados");
-                                              _navigationService.pop();
-                                              _navigationService.pop();
-                                              onInit();
-                                            } else if (cambio is Failure) {
-                                              ProgressDialog.dissmiss(context);
-                                              Dialogs.error(
-                                                  msg: cambio.messages.first);
+                                        TextButton(
+                                          onPressed: () async {
+                                            if (selectedRol2.isNotEmpty) {
+                                              ProgressDialog.show(context);
+                                              var cambio = await _usuariosApi
+                                                  .updateRolUsuario(
+                                                      id: usuario.id,
+                                                      roles: selectedRol2);
+                                              if (cambio is Success<
+                                                  UsuarioPOSTResponse>) {
+                                                ProgressDialog.dissmiss(
+                                                    context);
+                                                Dialogs.success(
+                                                    msg: "Roles asignados");
+                                                _navigationService.pop();
+                                                _navigationService.pop();
+                                                onInit();
+                                              } else if (cambio is Failure) {
+                                                ProgressDialog.dissmiss(
+                                                    context);
+                                                Dialogs.error(
+                                                    msg: cambio.messages.first);
+                                              }
                                             }
-                                          }
-                                        },
-                                        // button pressed
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: const <Widget>[
-                                            Icon(
-                                              AppIcons.save,
-                                              color: AppColors.green,
-                                            ),
-                                            SizedBox(
-                                              height: 3,
-                                            ), // icon
-                                            Text("Cambiar"), // text
-                                          ],
+                                          },
+                                          // button pressed
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const <Widget>[
+                                              Icon(
+                                                AppIcons.save,
+                                                color: AppColors.green,
+                                              ),
+                                              SizedBox(
+                                                height: 3,
+                                              ), // icon
+                                              Text("Cambiar"), // text
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )),
+                                      ],
+                                    )),
+                              ),
                             );
                           });
                         });

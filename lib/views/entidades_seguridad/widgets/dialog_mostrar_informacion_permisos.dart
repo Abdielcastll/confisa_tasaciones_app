@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget dialogMostrarInformacionPermisos(
   Widget imagen,
+  Widget buscador,
   List<Widget> informacion,
   Size size,
   Widget buttons,
@@ -10,7 +11,8 @@ Widget dialogMostrarInformacionPermisos(
     mainAxisSize: MainAxisSize.min,
     children: [
       imagen,
-      Flexible(
+      buscador,
+      Expanded(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Padding(

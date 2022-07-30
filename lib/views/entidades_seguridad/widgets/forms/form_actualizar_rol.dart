@@ -56,9 +56,9 @@ class ActualizarRolForm extends StatelessWidget {
                           fontWeight: FontWeight.bold)),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
+              // const SizedBox(
+              //   height: 15,
+              // ),
               Padding(
                 padding: const EdgeInsets.all(14),
                 child: Column(
@@ -80,7 +80,7 @@ class ActualizarRolForm extends StatelessWidget {
                       },
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     TextFormField(
                       initialValue: rol.description,
@@ -123,9 +123,7 @@ class ActualizarRolForm extends StatelessWidget {
                                 ),
                               )
                             : const SizedBox(),
-                        showEliminar
-                            ? const Expanded(child: SizedBox())
-                            : const SizedBox(),
+                        showEliminar ? const Spacer() : const SizedBox(),
                         TextButton(
                           onPressed: () {
                             _navigationService.pop();
@@ -138,14 +136,12 @@ class ActualizarRolForm extends StatelessWidget {
                                 AppIcons.closeCircle,
                                 color: Colors.red,
                               ),
-                              SizedBox(
-                                height: 3,
-                              ), // icon
+                              SizedBox(height: 3), // icon
                               Text("Cancelar"), // text
                             ],
                           ),
                         ),
-                        const Expanded(child: SizedBox()),
+                        const Spacer(),
                         showEliminar
                             ? TextButton(
                                 onPressed: () => changePermisos(),
@@ -165,9 +161,7 @@ class ActualizarRolForm extends StatelessWidget {
                                 ),
                               )
                             : const SizedBox(),
-                        showEliminar
-                            ? const Expanded(child: SizedBox())
-                            : const SizedBox(),
+                        showEliminar ? const Spacer() : const SizedBox(),
                         TextButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
