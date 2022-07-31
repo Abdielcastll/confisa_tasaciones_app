@@ -610,7 +610,12 @@ class RolesViewModel extends BaseViewModel {
           return AlertDialog(
             contentPadding: EdgeInsets.zero,
             content: ActualizarRolForm(
-                rol: RolData(description: "", id: "", name: ""),
+                rol: RolData(
+                    description: "",
+                    id: "",
+                    name: "",
+                    typeRole: 0,
+                    typeRoleDescription: ""),
                 showEliminar: false,
                 formKey: _formKey,
                 size: size,

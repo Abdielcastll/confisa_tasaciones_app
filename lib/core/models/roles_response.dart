@@ -44,16 +44,25 @@ class RolResponse {
 }
 
 class RolData {
-  RolData({required this.id, required this.name, required this.description});
+  RolData(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.typeRole,
+      required this.typeRoleDescription});
 
   String id;
   String name;
   String description;
+  int typeRole;
+  String typeRoleDescription;
 
   factory RolData.fromJson(Map<String, dynamic> json) => RolData(
         id: json["id"] ?? '',
         name: json["name"] ?? '',
         description: json["description"] ?? '',
+        typeRole: json["typeRole"] ?? 0,
+        typeRoleDescription: json["typeRoleDescription"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -124,18 +133,24 @@ class RolData2 {
       {required this.roleId,
       required this.roleName,
       required this.description,
-      required this.enabled});
+      required this.enabled,
+      required this.typeRol,
+      required this.typeRolDescription});
 
   String roleId;
   String roleName;
   String description;
+  String typeRolDescription;
+  int typeRol;
   bool enabled;
 
   factory RolData2.fromJson(Map<String, dynamic> json) => RolData2(
-        roleId: json["id"] ?? '',
-        roleName: json["name"] ?? '',
+        roleId: json["roleId"] ?? '',
+        roleName: json["roleName"] ?? '',
         description: json["description"] ?? '',
         enabled: json["enabled"] ?? true,
+        typeRol: json["typeRole"] ?? 0,
+        typeRolDescription: json["typeRoleDescription"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

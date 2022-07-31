@@ -7,6 +7,7 @@ import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
+import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/providers/menu_provider.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
@@ -15,12 +16,16 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/views/home/home_view.dart';
 
 import '../../../core/api/recursos_api.dart';
+import '../../../core/api/usuarios_api.dart';
+import '../../../core/user_client.dart';
 
 class LoginViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();
   final _authenticationAPI = locator<AuthenticationAPI>();
   final _recursosAPI = locator<RecursosAPI>();
+  final _usuariosAPI = locator<UsuariosAPI>();
   final _autenticationClient = locator<AuthenticationClient>();
+  final _userClient = locator<UserClient>();
   final GlobalKey<FormState> formKey = GlobalKey();
   bool _loading = false;
   TextEditingController tcEmail =
@@ -48,8 +53,19 @@ class LoginViewModel extends BaseViewModel {
         if (resp1 is Success<MenuResponse>) {
           Provider.of<MenuProvider>(context, listen: false).menu =
               resp1.response;
-          loading = false;
-          _navigationService.navigateToPageWithReplacement(HomeView.routeName);
+          var resp2 =
+              await _usuariosAPI.getUsuarios(email: resp.response.data.email);
+          if (resp2 is Success<UsuariosResponse>) {
+            loading = false;
+            _userClient.saveUsuario(resp2.response.data.first);
+            _navigationService
+                .navigateToPageWithReplacement(HomeView.routeName);
+          } else if (resp2 is Failure) {
+            loading = false;
+            Dialogs.error(
+              msg: resp2.messages[0],
+            );
+          }
         } else if (resp1 is Failure) {
           loading = false;
           Dialogs.error(

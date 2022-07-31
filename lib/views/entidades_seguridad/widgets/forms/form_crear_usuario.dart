@@ -85,8 +85,6 @@ Future<dynamic> dialogCrearUsuario(
                               enabled: true,
                               popupProps: const PopupProps.menu(
                                   showSelectedItems: true,
-                                  isFilterOnline: true,
-                                  showSearchBox: true,
                                   searchDelay: Duration(microseconds: 0)),
                               onChanged: (value) async {
                                 setState(

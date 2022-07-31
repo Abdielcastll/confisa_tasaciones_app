@@ -108,7 +108,7 @@ class UsuariosData {
         "isActive": isActive,
         "emailConfirmed": emailConfirmed,
         "idSuplidor": idSuplidor,
-        "roles": roles
+        "roles": List<dynamic>.from(roles.map((x) => x)),
       };
 }
 

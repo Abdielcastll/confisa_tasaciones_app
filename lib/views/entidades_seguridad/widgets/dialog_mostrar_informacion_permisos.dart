@@ -12,14 +12,12 @@ Widget dialogMostrarInformacionPermisos(
     children: [
       imagen,
       buscador,
-      Expanded(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: informacion,
-            ),
+      SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: informacion,
           ),
         ),
       ),

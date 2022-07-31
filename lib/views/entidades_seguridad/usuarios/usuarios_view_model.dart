@@ -249,9 +249,15 @@ class UsuariosViewModel extends BaseViewModel {
                   bool isSelect = false;
                   if (resp is Success<RolResponse2>) {
                     ProgressDialog.dissmiss(context);
+                    if (usuario.roles.first.typeRolDescription == "Interno") {
+                      resp.response.data.removeWhere(
+                          (element) => element.typeRolDescription != "Interno");
+                    } else if (usuario.roles.first.typeRolDescription ==
+                        "Externo") {
+                      resp.response.data.removeWhere(
+                          (element) => element.typeRolDescription != "Externo");
+                    }
                     showDialog(
-                        barrierColor: Colors.transparent,
-                        barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) {
                           var data = resp.response.data;
@@ -457,9 +463,8 @@ class UsuariosViewModel extends BaseViewModel {
           break;
         } else if (element == "AprobadorTasaciones") {
           roles = resp.response.data;
-          roles.removeWhere((element) =>
-              (element.description != "AprobadorTasaciones" ||
-                  element.description != "Tasador"));
+          roles.removeWhere(
+              (element) => (element.typeRoleDescription != "Externo"));
         } else {
           roles = [];
         }
