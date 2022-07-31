@@ -43,8 +43,10 @@ class _ModulosMobile extends StatelessWidget {
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
-                              ? const Icon(
-                                  AppIcons.search,
+                              ? IconButton(
+                                  icon: const Icon(AppIcons.search),
+                                  onPressed: () =>
+                                      vm.buscarModulos(vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(

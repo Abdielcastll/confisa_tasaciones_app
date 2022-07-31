@@ -54,16 +54,24 @@ class UsuariosViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void ordenar() {
+    usuarios.sort((a, b) {
+      return a.nombreCompleto
+          .toLowerCase()
+          .compareTo(b.nombreCompleto.toLowerCase());
+    });
+  }
+
   Future<void> onInit() async {
     cargando = true;
     usuarios = [];
     pageNumber = 1;
     hasNextPage = false;
-    var resp =
-        await _usuariosApi.getUsuarios(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _usuariosApi.getUsuarios(pageNumber: pageNumber);
     if (resp is Success) {
       usuariosResponse = resp.response as UsuariosResponse;
       usuarios = usuariosResponse.data;
+      ordenar();
       hasNextPage = usuariosResponse.hasNextPage;
       notifyListeners();
     }
@@ -77,11 +85,11 @@ class UsuariosViewModel extends BaseViewModel {
     usuarios = [];
     pageNumber = 1;
     hasNextPage = false;
-    var resp =
-        await _usuariosApi.getUsuarios(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _usuariosApi.getUsuarios(pageNumber: pageNumber);
     if (resp is Success) {
       usuariosResponse = resp.response as UsuariosResponse;
       usuarios = usuariosResponse.data;
+      ordenar();
       hasNextPage = usuariosResponse.hasNextPage;
       notifyListeners();
     }
@@ -92,11 +100,11 @@ class UsuariosViewModel extends BaseViewModel {
 
   Future<void> cargarMasUsuarios() async {
     pageNumber += 1;
-    var resp =
-        await _usuariosApi.getUsuarios(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _usuariosApi.getUsuarios(pageNumber: pageNumber);
     if (resp is Success) {
       var temp = resp.response as UsuariosResponse;
       usuarios.addAll(temp.data);
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -115,6 +123,7 @@ class UsuariosViewModel extends BaseViewModel {
     if (resp is Success) {
       var temp = resp.response as UsuariosResponse;
       usuarios = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -138,7 +147,30 @@ class UsuariosViewModel extends BaseViewModel {
   Future<void> modificarUsuario(
       UsuariosData usuario, BuildContext context, Size size) async {
     String email = "", telefono = "", nombre = "";
+    int idSuplidor = 0;
     GlobalKey<FormState> _key = GlobalKey();
+    if (user.role.any((element) => element == "AprobradorTasaciones")) {
+      ProgressDialog.show(context);
+      var resp = await _usuariosApi.getUsuarios(email: user.email);
+      if (resp is Success<UsuariosResponse>) {
+        var resp2 =
+            await _usuariosApi.getUsuario(id: resp.response.data.first.id);
+        if (resp2 is Success<UsuariosResponse>) {
+          ProgressDialog.dissmiss(context);
+          idSuplidor = resp2.response.data.first.idSuplidor;
+        } else if (resp2 is Failure) {
+          ProgressDialog.dissmiss(context);
+          Dialogs.error(msg: resp2.messages.first);
+          return;
+        }
+      } else {
+        if (resp is Failure) {
+          ProgressDialog.dissmiss(context);
+          Dialogs.error(msg: resp.messages.first);
+          return;
+        }
+      }
+    }
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -190,19 +222,26 @@ class UsuariosViewModel extends BaseViewModel {
                 },
                 "Modificar",
                 usuario,
-                () async {
-                  ProgressDialog.show(context);
-                  var creacion = await _usuariosApi.updateStatusUsuario(
-                      id: usuario.id, status: !usuario.isActive);
-                  if (creacion is Success<UsuarioPOSTResponse>) {
-                    ProgressDialog.dissmiss(context);
-                    Dialogs.success(msg: "Estado actualizado");
-                    _navigationService.pop();
-                    onInit();
-                  } else if (creacion is Failure) {
-                    ProgressDialog.dissmiss(context);
-                    Dialogs.error(msg: creacion.messages.first);
-                  }
+                () {
+                  Dialogs.confirm(context,
+                      tittle: (usuario.isActive ? "DESACTIVAR" : "ACTIVAR") +
+                          " USUARIO",
+                      description: "¿Esta seguro que desea " +
+                          (usuario.isActive ? "desactivar" : "activar") +
+                          " al usuario?", confirm: () async {
+                    ProgressDialog.show(context);
+                    var creacion = await _usuariosApi.updateStatusUsuario(
+                        id: usuario.id, status: !usuario.isActive);
+                    if (creacion is Success<UsuarioPOSTResponse>) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.success(msg: "Estado actualizado");
+                      _navigationService.pop();
+                      onInit();
+                    } else if (creacion is Failure) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.error(msg: creacion.messages.first);
+                    }
+                  });
                 },
                 () async {
                   ProgressDialog.show(context);
@@ -210,9 +249,15 @@ class UsuariosViewModel extends BaseViewModel {
                   bool isSelect = false;
                   if (resp is Success<RolResponse2>) {
                     ProgressDialog.dissmiss(context);
+                    if (usuario.roles.first.typeRolDescription == "Interno") {
+                      resp.response.data.removeWhere(
+                          (element) => element.typeRolDescription != "Interno");
+                    } else if (usuario.roles.first.typeRolDescription ==
+                        "Externo") {
+                      resp.response.data.removeWhere(
+                          (element) => element.typeRolDescription != "Externo");
+                    }
                     showDialog(
-                        barrierColor: Colors.transparent,
-                        barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) {
                           var data = resp.response.data;
@@ -387,63 +432,8 @@ class UsuariosViewModel extends BaseViewModel {
                     ProgressDialog.dissmiss(context);
                     Dialogs.error(msg: resp.messages.first);
                   }
-                  /* 
-                  GlobalKey<FormState> _key = GlobalKey();
-                  var dropdown;
-                  Map<String, dynamic> rol1 = {};
-                  Map<String, dynamic> rol2 = {};
-                  ProgressDialog.show(context);
-                  var resp = await _rolesApi.getRoles();
-                  if (resp is Success<RolResponse>) {
-                    ProgressDialog.dissmiss(context);
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                    color: AppColors.gold, width: 3)),
-                            contentPadding: EdgeInsets.zero,
-                            content: dialogActualizarRolesUsuario(
-                                size, context, _key, resp.response.data, true,
-                                () async {
-                              if (rol1["id"] != "") {
-                                ProgressDialog.show(context);
-                                var creacion =
-                                    await _usuariosApi.updateRolUsuario(
-                                        id: usuario.id, rol: rol1);
-                                if (creacion is Success<UsuarioPOSTResponse>) {
-                                  ProgressDialog.dissmiss(context);
-                                  Dialogs.success(msg: "Rol asignado");
-                                  _key.currentState?.reset();
-                                } else if (creacion is Failure) {
-                                  ProgressDialog.dissmiss(context);
-                                  Dialogs.error(msg: creacion.messages.first);
-                                }
-                              }
-                              if (rol2["id"] != "") {
-                                ProgressDialog.show(context);
-                                var creacion =
-                                    await _usuariosApi.updateRolUsuario(
-                                        id: usuario.id, rol: rol2);
-                                if (creacion is Success<UsuarioPOSTResponse>) {
-                                  ProgressDialog.dissmiss(context);
-                                  Dialogs.success(msg: "Rol asignado");
-                                  _key.currentState?.reset();
-                                } else if (creacion is Failure) {
-                                  ProgressDialog.dissmiss(context);
-                                  Dialogs.error(msg: creacion.messages.first);
-                                }
-                              }
-                            }, dropdown, rol1, rol2),
-                          );
-                        });
-                  } else if (resp is Failure) {
-                    ProgressDialog.dissmiss(context);
-                    Dialogs.error(msg: resp.messages.first);
-                  } */
-                }),
+                },
+                idSuplidor),
           );
         });
   }
@@ -473,9 +463,8 @@ class UsuariosViewModel extends BaseViewModel {
           break;
         } else if (element == "AprobadorTasaciones") {
           roles = resp.response.data;
-          roles.removeWhere((element) =>
-              (element.description != "AprobadorTasaciones" ||
-                  element.description != "Tasador"));
+          roles.removeWhere(
+              (element) => (element.typeRoleDescription != "Externo"));
         } else {
           roles = [];
         }

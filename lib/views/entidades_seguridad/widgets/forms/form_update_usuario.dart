@@ -2,11 +2,15 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
+import '../../../../core/api/api_status.dart';
+import '../../../../core/api/usuarios_api.dart';
+import '../../../../core/authentication_client.dart';
 import '../../../../core/locator.dart';
 import '../../../../core/services/navigator_service.dart';
 
-Widget dialogActualizarInformacion(
+Form dialogActualizarInformacion(
   Widget imagen,
   Size size,
   BuildContext context,
@@ -20,8 +24,11 @@ Widget dialogActualizarInformacion(
   UsuariosData usuariosData,
   Function changeStatus,
   Function changeRol,
+  int idSuplidor,
 ) {
   final _navigationService = locator<NavigatorService>();
+  final session = locator<AuthenticationClient>().loadSession;
+
   return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -186,23 +193,43 @@ Widget dialogActualizarInformacion(
                           ],
                         ),
                       ),
-                      TextButton(
-                        onPressed: () => changeRol(),
-                        // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.accountOutline,
-                              color: AppColors.gold,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Roles"), // text
-                          ],
-                        ),
-                      ),
+                      session.role.any((element) => element == "Administrador")
+                          ? TextButton(
+                              onPressed: () => changeRol(),
+                              // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    AppIcons.accountOutline,
+                                    color: AppColors.gold,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Roles"), // text
+                                ],
+                              ),
+                            )
+                          : idSuplidor == usuariosData.idSuplidor
+                              ? TextButton(
+                                  onPressed: () => changeRol(),
+                                  // button pressed
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const <Widget>[
+                                      Icon(
+                                        AppIcons.accountOutline,
+                                        color: AppColors.gold,
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ), // icon
+                                      Text("Roles"), // text
+                                    ],
+                                  ),
+                                )
+                              : const SizedBox(),
                       TextButton(
                         onPressed: () => changeStatus(),
                         // button pressed

@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
@@ -72,30 +73,33 @@ Future<dynamic> dialogCrearUsuario(
                         padding: const EdgeInsets.all(14.0),
                         child: Column(
                           children: [
-                            DropdownButtonFormField(
-                              decoration: const InputDecoration(
-                                  border: UnderlineInputBorder()),
-                              items: roles
-                                  .map((e) => DropdownMenuItem(
-                                        child: Text(e.description),
-                                        value: e.id,
-                                      ))
-                                  .toList(),
-                              hint: const Text("Rol"),
+                            DropdownSearch<String>(
+                              dropdownDecoratorProps:
+                                  const DropDownDecoratorProps(
+                                dropdownSearchDecoration: InputDecoration(
+                                    labelText: "Rol",
+                                    border: UnderlineInputBorder()),
+                                textAlignVertical: TextAlignVertical.center,
+                              ),
+                              items: roles.map((e) => e.name).toList(),
+                              enabled: true,
+                              popupProps: const PopupProps.menu(
+                                  showSelectedItems: true,
+                                  searchDelay: Duration(microseconds: 0)),
                               onChanged: (value) async {
                                 setState(
                                   () => permisoRol = [],
                                 );
 
                                 dropdown = value;
-                                rol1['id'] = value;
-                                rol1["nombre"] = roles
+                                rol1['nombre'] = value;
+                                rol1["id"] = roles
                                     .firstWhere(
-                                        (element) => element.id == value)
-                                    .name;
+                                        (element) => element.name == value)
+                                    .id;
                                 rol1["description"] = roles
                                     .firstWhere(
-                                        (element) => element.id == value)
+                                        (element) => element.name == value)
                                     .description;
                                 if (rol1["description"] ==
                                         "Aprobrador Tasaciones" ||
@@ -201,46 +205,43 @@ Future<dynamic> dialogCrearUsuario(
                                               height: 10,
                                             ),
                                             codSuplidor == 0
-                                                ? DropdownButtonFormField(
+                                                ? DropdownSearch<String>(
                                                     validator: (value) => value ==
                                                             null
                                                         ? 'Debe escojer un suplidor'
                                                         : null,
-                                                    isExpanded: true,
-                                                    decoration:
-                                                        const InputDecoration(
-                                                            contentPadding:
-                                                                EdgeInsets.only(
-                                                                    left: 8),
-                                                            border:
-                                                                UnderlineInputBorder()),
+                                                    dropdownDecoratorProps:
+                                                        const DropDownDecoratorProps(
+                                                            dropdownSearchDecoration:
+                                                                InputDecoration(
+                                                              hintText:
+                                                                  "Suplidores",
+                                                            ),
+                                                            textAlignVertical:
+                                                                TextAlignVertical
+                                                                    .center),
                                                     items: suplidores
-                                                        .map((e) =>
-                                                            DropdownMenuItem(
-                                                              child: Text(
-                                                                e.nombre,
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            12),
-                                                              ),
-                                                              value: e
-                                                                  .codigoRelacionado,
-                                                            ))
+                                                        .map((e) => e.nombre)
                                                         .toList(),
-                                                    hint: const Text(
-                                                        "Suplidores"),
+                                                    popupProps: const PopupProps
+                                                            .menu(
+                                                        fit: FlexFit.loose,
+                                                        showSelectedItems: true,
+                                                        searchDelay: Duration(
+                                                            microseconds: 0)),
                                                     onChanged: (value) {
                                                       dropdown = value;
-                                                      suplidor[
-                                                              'codigoRelacional'] =
+                                                      suplidor['nombre'] =
                                                           value;
-                                                      suplidor["nombre"] = suplidores
-                                                          .firstWhere((element) =>
-                                                              element
-                                                                  .codigoRelacionado ==
-                                                              value)
-                                                          .nombre;
+                                                      suplidor[
+                                                              "codigoRelacional"] =
+                                                          suplidores
+                                                              .firstWhere(
+                                                                  (element) =>
+                                                                      element
+                                                                          .nombre ==
+                                                                      value)
+                                                              .codigoRelacionado;
 
                                                       suplidor[
                                                               "identificacion"] =
@@ -248,7 +249,7 @@ Future<dynamic> dialogCrearUsuario(
                                                               .firstWhere(
                                                                   (element) =>
                                                                       element
-                                                                          .codigoRelacionado ==
+                                                                          .nombre ==
                                                                       value)
                                                               .identificacion;
                                                     },
@@ -570,9 +571,7 @@ Future<dynamic> dialogCrearUsuario(
                             const SizedBox(
                               height: 10,
                             ),
-                            Column(
-                              children: permisoRol,
-                            ),
+                            ...permisoRol,
                           ],
                         ),
                       ),

@@ -49,12 +49,19 @@ class RecursosViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void ordenar() {
+    recursos.sort((a, b) {
+      return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
+    });
+  }
+
   Future<void> onInit() async {
     cargando = true;
     var resp = await _recursosApi.getRecursos(pageNumber: pageNumber);
     if (resp is Success) {
       recursosResponse = resp.response as RecursosResponse;
       recursos = recursosResponse.data;
+      ordenar();
       hasNextPage = recursosResponse.hasNextPage;
     }
     if (resp is Failure) {
@@ -78,6 +85,7 @@ class RecursosViewModel extends BaseViewModel {
       var temp = resp.response as RecursosResponse;
       recursosResponse.data.addAll(temp.data);
       recursos.addAll(temp.data);
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -96,6 +104,7 @@ class RecursosViewModel extends BaseViewModel {
     if (resp is Success) {
       var temp = resp.response as RecursosResponse;
       recursos = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -123,6 +132,7 @@ class RecursosViewModel extends BaseViewModel {
       var temp = resp.response as RecursosResponse;
       recursosResponse = temp;
       recursos = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }

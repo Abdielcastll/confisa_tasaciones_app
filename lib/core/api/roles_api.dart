@@ -12,7 +12,7 @@ class RolesAPI {
 
   Future<Object> getRoles(
       {int pageNumber = 1,
-      int pageSize = 20,
+      int pageSize = 100,
       String descripcion = "",
       String id = ""}) async {
     String _token = await _authenticationClient.accessToken;

@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/permisos_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
@@ -76,54 +77,51 @@ Form formCrearPermiso(
                   const SizedBox(
                     height: 20,
                   ),
-                  DropdownButtonFormField(
-                    value: permiso.idAccion,
+                  DropdownSearch<String>(
                     validator: (value) =>
                         value == null ? 'Debe escojer una accion' : null,
-                    decoration: const InputDecoration(
-                        border: UnderlineInputBorder(), label: Text("Accion")),
-                    items: acciones
-                        .map((e) => DropdownMenuItem(
-                              child: Text(e.nombre),
-                              value: e.id,
-                            ))
-                        .toList(),
-                    hint: const Text("Acciones"),
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                            hintText: "Acciones",
+                            border: UnderlineInputBorder(),
+                            label: Text("Accion"))),
+                    items: acciones.map((e) => e.nombre).toList(),
                     onChanged: (value) {
                       measure = value;
-                      accion['id'] = value;
-                      accion["nombre"] = acciones
+                      accion['nombre'] = value;
+                      accion["id"] = acciones
                           .firstWhere((element) => element.id == value)
-                          .nombre;
+                          .id;
                     },
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  DropdownButtonFormField(
-                    value: permiso.idRecurso,
-                    validator: (value) =>
-                        value == null ? 'Debe escojer un recurso' : null,
-                    decoration: const InputDecoration(
+                  DropdownSearch<String>(
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                      hintText: "Recursos",
                       border: UnderlineInputBorder(),
                       label: Text("Recurso"),
-                    ),
+                    )),
+                    validator: (value) =>
+                        value == null ? 'Debe escojer un recurso' : null,
+                    popupProps: const PopupProps.menu(
+                        showSelectedItems: true,
+                        isFilterOnline: true,
+                        showSearchBox: true,
+                        searchDelay: Duration(microseconds: 0)),
                     items: recursos
-                        .map((e) => DropdownMenuItem(
-                              child: Text(
-                                e.nombre,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              value: e.id,
-                            ))
+                        .map(
+                          (e) => e.nombre,
+                        )
                         .toList(),
-                    hint: const Text("Recursos"),
                     onChanged: (value) {
                       measure = value;
-                      recurso['id'] = value;
-                      recurso["nombre"] = recursos
-                          .firstWhere((element) => element.id == value)
-                          .nombre;
+                      recurso['nombre'] = value;
+                      recurso["id"] = recursos
+                          .firstWhere((element) => element.nombre == value)
+                          .id;
                     },
                   ),
                   const SizedBox(

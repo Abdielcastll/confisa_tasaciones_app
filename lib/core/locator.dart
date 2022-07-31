@@ -10,6 +10,7 @@ import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
 import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
+import 'package:tasaciones_app/core/user_client.dart';
 
 import '../core/logger.dart';
 import '../core/services/navigator_service.dart';
@@ -42,11 +43,12 @@ abstract class DependencyInjection {
 
     final authenticationClient =
         AuthenticationClient(storage, authenticationAPI);
+    final usuariosAPI = UsuariosAPI(http, authenticationClient);
+    final userClient = UserClient(storage, usuariosAPI);
     final personalApi = PersonalApi(http, authenticationClient);
     final accionesApi = AccionesApi(http, authenticationClient);
     final rolesAPI = RolesAPI(http, authenticationClient);
     final permisosAPI = PermisosAPI(http, authenticationClient);
-    final usuariosAPI = UsuariosAPI(http, authenticationClient);
     final recursosAPI = RecursosAPI(http, authenticationClient);
     final endpointsAPI = EndpointsApi(http, authenticationClient);
     final modulosAPI = ModulosApi(http, authenticationClient);
@@ -58,6 +60,7 @@ abstract class DependencyInjection {
     locator.registerSingleton<UsuariosAPI>(usuariosAPI);
     locator.registerSingleton<RecursosAPI>(recursosAPI);
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
+    locator.registerSingleton<UserClient>(userClient);
     locator.registerSingleton<PersonalApi>(personalApi);
     locator.registerSingleton<AccionesApi>(accionesApi);
     locator.registerSingleton<EndpointsApi>(endpointsAPI);

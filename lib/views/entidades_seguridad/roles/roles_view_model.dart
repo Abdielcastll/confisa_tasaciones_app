@@ -55,15 +55,22 @@ class RolesViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void ordenar() {
+    roles.sort((a, b) {
+      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+    });
+  }
+
   Future<void> onInit() async {
     cargando = true;
     roles = [];
     pageNumber = 1;
     hasNextPage = false;
-    var resp = await _rolesApi.getRoles(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _rolesApi.getRoles(pageNumber: pageNumber);
     if (resp is Success) {
       rolesResponse = resp.response as RolResponse;
       roles = rolesResponse.data;
+      ordenar();
       hasNextPage = rolesResponse.hasNextPage;
       notifyListeners();
     }
@@ -77,10 +84,11 @@ class RolesViewModel extends BaseViewModel {
     roles = [];
     pageNumber = 1;
     hasNextPage = false;
-    var resp = await _rolesApi.getRoles(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _rolesApi.getRoles(pageNumber: pageNumber);
     if (resp is Success) {
       rolesResponse = resp.response as RolResponse;
       roles = rolesResponse.data;
+      ordenar();
       hasNextPage = rolesResponse.hasNextPage;
       notifyListeners();
     }
@@ -91,10 +99,11 @@ class RolesViewModel extends BaseViewModel {
 
   Future<void> cargarMasRoles() async {
     pageNumber += 1;
-    var resp = await _rolesApi.getRoles(pageNumber: pageNumber, pageSize: 20);
+    var resp = await _rolesApi.getRoles(pageNumber: pageNumber);
     if (resp is Success) {
       var temp = resp.response as RolResponse;
       roles.addAll(temp.data);
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -113,6 +122,7 @@ class RolesViewModel extends BaseViewModel {
     if (resp is Success) {
       var temp = resp.response as RolResponse;
       roles = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -600,7 +610,12 @@ class RolesViewModel extends BaseViewModel {
           return AlertDialog(
             contentPadding: EdgeInsets.zero,
             content: ActualizarRolForm(
-                rol: RolData(description: "", id: "", name: ""),
+                rol: RolData(
+                    description: "",
+                    id: "",
+                    name: "",
+                    typeRole: 0,
+                    typeRoleDescription: ""),
                 showEliminar: false,
                 formKey: _formKey,
                 size: size,

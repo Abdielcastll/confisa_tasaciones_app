@@ -7,18 +7,22 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
+import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/providers/permisos_provider.dart';
 
 import '../../../core/api/api_status.dart';
 import '../../../core/api/roles_api.dart';
 import '../../../core/models/roles_response.dart';
 import '../../../widgets/app_dialogs.dart';
+import '../../core/user_client.dart';
 
 class HomeViewModel extends BaseViewModel {
   final _authenticationClient = locator<AuthenticationClient>();
+  final _userClient = locator<UserClient>();
   final _rolesAPI = locator<RolesAPI>();
   bool _loading = false;
   late Session _user;
+  late UsuariosData _userData;
   final logger = Logger();
   final List<RolClaimsData> _permisos;
   final MenuResponse _menu;
@@ -28,8 +32,14 @@ class HomeViewModel extends BaseViewModel {
   MenuResponse get menu => _menu;
 
   Session get user => _user;
+  UsuariosData get userData => _userData;
   set user(Session value) {
     _user = value;
+    notifyListeners();
+  }
+
+  set userData(UsuariosData value) {
+    _userData = value;
     notifyListeners();
   }
 
@@ -41,6 +51,7 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> onInit(BuildContext context) async {
     user = _authenticationClient.loadSession;
+    userData = _userClient.loadUsuario;
     // await getRoles(context);
   }
 

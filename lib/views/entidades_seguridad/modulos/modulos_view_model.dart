@@ -45,12 +45,19 @@ class ModulosViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void ordenar() {
+    modulos.sort((a, b) {
+      return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
+    });
+  }
+
   Future<void> onInit() async {
     cargando = true;
     var resp = await _modulosApi.getModulos(pageNumber: pageNumber);
     if (resp is Success) {
       modulosResponse = resp.response as ModulosResponse;
       modulos = modulosResponse.data;
+      ordenar();
       hasNextPage = modulosResponse.hasNextPage;
       notifyListeners();
     }
@@ -67,6 +74,7 @@ class ModulosViewModel extends BaseViewModel {
       var temp = resp.response as ModulosResponse;
       modulosResponse.data.addAll(temp.data);
       modulos.addAll(temp.data);
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
@@ -84,6 +92,7 @@ class ModulosViewModel extends BaseViewModel {
     if (resp is Success) {
       var temp = resp.response as ModulosResponse;
       modulos = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
       notifyListeners();
@@ -110,6 +119,7 @@ class ModulosViewModel extends BaseViewModel {
       var temp = resp.response as ModulosResponse;
       modulosResponse = temp;
       modulos = temp.data;
+      ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
