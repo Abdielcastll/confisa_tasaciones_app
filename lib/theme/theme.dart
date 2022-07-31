@@ -65,6 +65,12 @@ final myTheme = ThemeData(
       color: Colors.white,
     ),
   ),
+  checkboxTheme: CheckboxThemeData(
+    side: MaterialStateBorderSide.resolveWith(
+        (_) => const BorderSide(width: 1.5, color: AppColors.brown)),
+    fillColor: MaterialStateProperty.all(AppColors.brown),
+    checkColor: MaterialStateProperty.all(Colors.white),
+  ),
 );
 
 /* TextStyles */

@@ -43,8 +43,12 @@ class RecursosAPI {
     );
   }
 
-  Future<Object> createRecursos(
-      {required String name, required int idModulo}) async {
+  Future<Object> createRecursos({
+    required String name,
+    required int idModulo,
+    required int esMenuConfiguracion,
+    required String descripcionMenuConfiguracion,
+  }) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/recursos/create',
@@ -55,6 +59,8 @@ class RecursosAPI {
       data: {
         "nombre": name,
         "idModulo": idModulo,
+        "esMenuConfiguracion": esMenuConfiguracion,
+        "descripcionMenuConfiguracion": descripcionMenuConfiguracion,
       },
     );
   }

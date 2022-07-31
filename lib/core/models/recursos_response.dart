@@ -48,21 +48,38 @@ class RecursosResponse {
 }
 
 class RecursosData {
-  RecursosData(
-      {required this.id,
-      required this.estado,
-      required this.nombre,
-      required this.idModulo});
+  RecursosData({
+    required this.id,
+    required this.estado,
+    required this.nombre,
+    required this.idModulo,
+    required this.esMenuConfiguracion,
+    required this.descripcionMenuConfiguracion,
+  });
 
   String nombre;
-  int id, estado, idModulo;
+  int id;
+  int estado;
+  int idModulo;
+  int esMenuConfiguracion;
+  String descripcionMenuConfiguracion;
 
   factory RecursosData.fromJson(Map<String, dynamic> json) => RecursosData(
-      id: json["id"] ?? 0,
-      estado: json["estado"] ?? 0,
-      idModulo: json["idModulo"] ?? 0,
-      nombre: json["nombre"] ?? '');
+        id: json["id"] ?? 0,
+        estado: json["estado"] ?? 0,
+        idModulo: json["idModulo"] ?? 0,
+        nombre: json["nombre"] ?? '',
+        esMenuConfiguracion: json["esMenuConfiguracion"] ?? 0,
+        descripcionMenuConfiguracion:
+            json["descripcionMenuConfiguracion"] ?? '',
+      );
 
-  Map<String, dynamic> toJson() =>
-      {"id": id, "estado": estado, "nombre": nombre, "idModulo": idModulo};
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "estado": estado,
+        "nombre": nombre,
+        "idModulo": idModulo,
+        "esMenuConfiguracion": esMenuConfiguracion,
+        "descripcionMenuConfiguracion": descripcionMenuConfiguracion,
+      };
 }
