@@ -59,7 +59,7 @@ class CrearEndpointForm extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
                     TextFormField(
@@ -150,88 +150,96 @@ class CrearEndpointForm extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         showEliminar
-                            ? TextButton(
-                                onPressed: () => eliminar(), // button pressed
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const <Widget>[
-                                    Icon(
-                                      AppIcons.trash,
-                                      color: AppColors.grey,
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ), // icon
-                                    Text("Desactivar"), // text
-                                  ],
+                            ? SizedBox(
+                                child: TextButton(
+                                  onPressed: () => eliminar(), // button pressed
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const <Widget>[
+                                      Icon(
+                                        AppIcons.trash,
+                                        color: AppColors.grey,
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ), // icon
+                                      Text(
+                                        "Desactivar",
+                                        overflow: TextOverflow.ellipsis,
+                                      ), // text
+                                    ],
+                                  ),
                                 ),
                               )
                             : const SizedBox(),
-                        showEliminar
-                            ? const Expanded(child: SizedBox())
-                            : const SizedBox(),
-                        TextButton(
-                          onPressed: () {
-                            _navigationService.pop();
-                          },
-                          // button pressed
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const <Widget>[
-                              Icon(
-                                AppIcons.closeCircle,
-                                color: Colors.red,
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ), // icon
-                              Text("Cancelar"), // text
-                            ],
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: TextButton(
+                            onPressed: () {
+                              _navigationService.pop();
+                            },
+                            // button pressed
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const <Widget>[
+                                Icon(
+                                  AppIcons.closeCircle,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ), // icon
+                                Text("Cancelar"), // text
+                              ],
+                            ),
                           ),
                         ),
-                        const Expanded(child: SizedBox()),
                         showEliminar
-                            ? TextButton(
-                                onPressed: () =>
-                                    asignarPermiso(), // button pressed
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const <Widget>[
-                                    Icon(
-                                      AppIcons.iconPlus,
-                                      color: AppColors.gold,
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ), // icon
-                                    Text("Permiso"), // text
-                                  ],
+                            ? Flexible(
+                                fit: FlexFit.loose,
+                                child: TextButton(
+                                  onPressed: () =>
+                                      asignarPermiso(), // button pressed
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const <Widget>[
+                                      Icon(
+                                        AppIcons.iconPlus,
+                                        color: AppColors.gold,
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ), // icon
+                                      Text("Permiso"), // text
+                                    ],
+                                  ),
                                 ),
                               )
                             : const SizedBox(),
-                        showEliminar
-                            ? const Expanded(child: SizedBox())
-                            : const SizedBox(),
-                        TextButton(
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              formKey.currentState?.save();
-                              modificar(nombre, controlador, metodo, httpVerbo);
-                            }
-                          },
-                          // button pressed
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const <Widget>[
-                              Icon(
-                                AppIcons.save,
-                                color: AppColors.green,
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ), // icon
-                              Text("Guardar"), // text
-                            ],
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: TextButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                formKey.currentState?.save();
+                                modificar(
+                                    nombre, controlador, metodo, httpVerbo);
+                              }
+                            },
+                            // button pressed
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const <Widget>[
+                                Icon(
+                                  AppIcons.save,
+                                  color: AppColors.green,
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ), // icon
+                                Text("Guardar"), // text
+                              ],
+                            ),
                           ),
                         ),
                       ],
