@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/roles_response.dart';
 
@@ -17,7 +18,8 @@ class ActualizarRolForm extends StatelessWidget {
       required this.eliminar,
       required this.buttonTittle,
       required this.showEliminar,
-      required this.rol})
+      required this.rol,
+      required this.tiposRoles})
       : _formKey = formKey,
         super(key: key);
 
@@ -28,12 +30,17 @@ class ActualizarRolForm extends StatelessWidget {
   final Function modificar, changePermisos, eliminar;
   final String buttonTittle;
   final RolData rol;
+  final List<RolTipeData> tiposRoles;
 
   final _navigationService = locator<NavigatorService>();
   @override
   Widget build(BuildContext context) {
     String descripcion = "";
     String nombre = "";
+    Map<String, dynamic> tipoRol = {};
+    if (rol.description.isNotEmpty) {
+      tipoRol = {"id": rol.typeRole, "descripcion": rol.typeRoleDescription};
+    }
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -56,9 +63,6 @@ class ActualizarRolForm extends StatelessWidget {
                           fontWeight: FontWeight.bold)),
                 ),
               ),
-              // const SizedBox(
-              //   height: 15,
-              // ),
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
@@ -73,7 +77,7 @@ class ActualizarRolForm extends StatelessWidget {
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
-                            value.length < 5) {
+                            value.length < 4) {
                           return 'Debe ingresar un nombre valido';
                         }
                         return null;
@@ -93,7 +97,7 @@ class ActualizarRolForm extends StatelessWidget {
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
-                            value.length < 5) {
+                            value.length < 4) {
                           return 'Debe ingresar una descripcion valida';
                         }
                         return null;
@@ -102,6 +106,66 @@ class ActualizarRolForm extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
+                    !showEliminar
+                        ? DropdownSearch<String>(
+                            validator: (value) =>
+                                value == null ? 'Debe escojer un tipo' : null,
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                              textAlignVertical: TextAlignVertical.center,
+                              dropdownSearchDecoration: InputDecoration(
+                                isDense: true,
+                                hintText: "Tipo de Rol",
+                                border: UnderlineInputBorder(),
+                              ),
+                            ),
+                            items: tiposRoles
+                                .map(
+                                  (e) => e.descripcion,
+                                )
+                                .toList(),
+                            popupProps: const PopupProps.menu(
+                              showSelectedItems: true,
+                              fit: FlexFit.loose,
+                            ),
+                            onChanged: (value) {
+                              tipoRol['descripcion'] = value;
+                              tipoRol["id"] = tiposRoles
+                                  .firstWhere(
+                                      (element) => element.descripcion == value)
+                                  .id;
+                            },
+                          )
+                        : DropdownSearch<String>(
+                            selectedItem: rol.typeRoleDescription,
+                            validator: (value) =>
+                                value == null ? 'Debe escojer un tipo' : null,
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                              textAlignVertical: TextAlignVertical.center,
+                              dropdownSearchDecoration: InputDecoration(
+                                isDense: true,
+                                hintText: "Tipo de Rol",
+                                border: UnderlineInputBorder(),
+                              ),
+                            ),
+                            items: tiposRoles
+                                .map(
+                                  (e) => e.descripcion,
+                                )
+                                .toList(),
+                            popupProps: const PopupProps.menu(
+                              showSelectedItems: true,
+                              fit: FlexFit.loose,
+                            ),
+                            onChanged: (value) {
+                              tipoRol['descripcion'] = value;
+                              tipoRol["id"] = tiposRoles
+                                  .firstWhere(
+                                      (element) => element.descripcion == value)
+                                  .id;
+                            },
+                          ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -166,7 +230,7 @@ class ActualizarRolForm extends StatelessWidget {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState?.save();
-                              modificar(nombre, descripcion);
+                              modificar(nombre, descripcion, tipoRol);
                             }
                           },
                           // button pressed

@@ -58,12 +58,33 @@ class RolesAPI {
     );
   }
 
-  Future<Object> createRoles(String name, String descripcion) async {
+  Future<Object> getTiposRoles(
+      {int pageNumber = 1, int pageSize = 100, String descripcion = ""}) async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/roles/get/tiposroles',
+      method: 'GET',
+      queryParameters: {
+        "Descripcion": descripcion,
+        "PageSize": pageSize,
+        "PageNumber": pageNumber
+      },
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      parser: (data) {
+        return RolTipeResponse.fromJson(data);
+      },
+    );
+  }
+
+  Future<Object> createRoles(
+      String name, String descripcion, int typeRol) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/roles/create',
       method: 'POST',
-      data: {"name": name, "description": descripcion},
+      data: {"name": name, "description": descripcion, "typeRol": typeRol},
       headers: {
         'Authorization': 'Bearer $_token',
       },
@@ -73,7 +94,8 @@ class RolesAPI {
     );
   }
 
-  Future<Object> updateRol(String id, String name, String descripcion) async {
+  Future<Object> updateRol(
+      String id, String name, String descripcion, int idTipoRol) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/roles/update',

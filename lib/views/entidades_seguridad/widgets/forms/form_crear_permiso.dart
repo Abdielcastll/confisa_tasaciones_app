@@ -90,7 +90,7 @@ Form formCrearPermiso(
                       measure = value;
                       accion['nombre'] = value;
                       accion["id"] = acciones
-                          .firstWhere((element) => element.id == value)
+                          .firstWhere((element) => element.nombre == value)
                           .id;
                     },
                   ),

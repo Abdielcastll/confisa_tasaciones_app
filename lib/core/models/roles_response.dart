@@ -160,3 +160,68 @@ class RolData2 {
         "enabled": enabled
       };
 }
+
+RolResponse rolTipeResponseFromJson(String str) =>
+    RolResponse.fromJson(json.decode(str));
+
+String rolTipeResponseToJson(RolResponse data) => json.encode(data.toJson());
+
+class RolTipeResponse {
+  RolTipeResponse({
+    required this.data,
+    /* required this.totalCount,
+      required this.totalPages,
+      required this.pageSize,
+      required this.currentPage,
+      required this.hasNextPage,
+      required this.hasPreviousPage,
+      required this.nextPageUrl */
+  });
+
+  List<RolTipeData> data;
+  /*  String nextPageUrl;
+  int totalCount, pageSize, currentPage, totalPages;
+  bool hasNextPage, hasPreviousPage; */
+
+  factory RolTipeResponse.fromJson(Map<String, dynamic> json) =>
+      RolTipeResponse(
+        data: json["data"]
+            .map<RolTipeData>((e) => RolTipeData.fromJson(e))
+            .toList(),
+        /* totalCount: json["meta"]["totalCount"] ?? 0,
+          totalPages: json["meta"]["totalPages"] ?? 0,
+          pageSize: json["meta"]["pageSize"] ?? 0,
+          currentPage: json["meta"]["currentPage"] ?? 0,
+          hasNextPage: json["meta"]["hasNextPage"] ?? false,
+          hasPreviousPage: json["meta"]["hasPreviousPage"] ?? false,
+          nextPageUrl: json["meta"]["nextPageUrl"] ?? '' */
+      );
+
+  Map<String, dynamic> toJson() => {
+        "data": data.map((e) => e.toJson()),
+        /* "totalCount": totalCount,
+        "totalPage": totalPages,
+        "pageSize": pageSize,
+        "currentPage": currentPage,
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+        "nextPageUrl": totalCount, */
+      };
+}
+
+class RolTipeData {
+  RolTipeData({required this.id, required this.descripcion});
+
+  int id;
+  String descripcion;
+
+  factory RolTipeData.fromJson(Map<String, dynamic> json) => RolTipeData(
+        id: json["id"] ?? 0,
+        descripcion: json["descripcion"] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "descripcion": descripcion,
+      };
+}
