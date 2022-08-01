@@ -133,6 +133,13 @@ class _RolesMobile extends StatelessWidget {
                                           color: AppColors.brownDark,
                                           fontSize: 12),
                                     ),
+                                    Text(
+                                      "Tipo: ${rol.typeRoleDescription}",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
                                   ],
                                 ),
                               ),
