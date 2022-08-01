@@ -53,19 +53,21 @@ class LoginViewModel extends BaseViewModel {
         if (resp1 is Success<MenuResponse>) {
           Provider.of<MenuProvider>(context, listen: false).menu =
               resp1.response;
-          var resp2 =
-              await _usuariosAPI.getUsuarios(email: resp.response.data.email);
-          if (resp2 is Success<UsuariosResponse>) {
-            loading = false;
-            _userClient.saveUsuario(resp2.response.data.first);
-            _navigationService
-                .navigateToPageWithReplacement(HomeView.routeName);
-          } else if (resp2 is Failure) {
-            loading = false;
-            Dialogs.error(
-              msg: resp2.messages[0],
-            );
-          }
+          _navigationService.navigateToPageWithReplacement(HomeView.routeName);
+          loading = false;
+          // var resp2 =
+          //     await _usuariosAPI.getUsuarios(email: resp.response.data.email);
+          // if (resp2 is Success<UsuariosResponse>) {
+          //   loading = false;
+          //   _userClient.saveUsuario(resp2.response.data.first);
+          //   _navigationService
+          //       .navigateToPageWithReplacement(HomeView.routeName);
+          // } else if (resp2 is Failure) {
+          //   loading = false;
+          //   Dialogs.error(
+          //     msg: resp2.messages[0],
+          //   );
+          // }
         } else if (resp1 is Failure) {
           loading = false;
           Dialogs.error(

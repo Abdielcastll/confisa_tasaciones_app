@@ -3,8 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final icons = <String, IconData>{
   //Utilidad para obtener un icono segun su nombre mediante un map
-  'Seguridad': Icons.settings,
-  'General': Icons.app_registration_outlined,
+  'Mant. Seguridad': Icons.settings,
+  'Mant. General': Icons.app_registration_outlined,
+  'Mant. Solicitudes': Icons.article_rounded,
   'Solicitudes': Icons.article_rounded,
   '': FontAwesomeIcons.penToSquare,
   '': FontAwesomeIcons.paperPlane,

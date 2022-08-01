@@ -179,15 +179,18 @@ class CardProfileWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          AppButtonLogin(
-              text: 'Cambiar Contraseña',
-              onPressed: () {
-                vm.editEmail = false;
-                vm.editName = false;
-                vm.editPhone = false;
-                vm.currentPage = 1;
-              },
-              color: AppColors.brownDark),
+          Visibility(
+            visible: vm.editable(),
+            child: AppButtonLogin(
+                text: 'Cambiar Contraseña',
+                onPressed: () {
+                  vm.editEmail = false;
+                  vm.editName = false;
+                  vm.editPhone = false;
+                  vm.currentPage = 1;
+                },
+                color: AppColors.brownDark),
+          ),
         ],
       ),
     );
