@@ -2,10 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
-import '../../../../core/api/api_status.dart';
-import '../../../../core/api/usuarios_api.dart';
 import '../../../../core/authentication_client.dart';
 import '../../../../core/locator.dart';
 import '../../../../core/services/navigator_service.dart';
@@ -225,7 +222,26 @@ Form dialogActualizarInformacion(
                                   ],
                                 ),
                               )
-                            : const SizedBox(),
+                            : idSuplidor == usuariosData.idSuplidor
+                                ? TextButton(
+                                    onPressed: () => changeRol(),
+                                    // button pressed
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const <Widget>[
+                                        Icon(
+                                          AppIcons.accountOutline,
+                                          color: AppColors.gold,
+                                        ),
+                                        SizedBox(
+                                          height: 3,
+                                        ), // icon
+                                        Text("Roles"), // text
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox(),
                     TextButton(
                       onPressed: () => changeStatus(),
                       // button pressed
