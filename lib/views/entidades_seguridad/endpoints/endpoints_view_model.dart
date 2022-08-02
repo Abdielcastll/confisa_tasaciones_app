@@ -166,39 +166,32 @@ class EndpointsViewModel extends BaseViewModel {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
+                            clipBehavior: Clip.antiAlias,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                             contentPadding: EdgeInsets.zero,
                             content: formAsignarPermiso(
-                              "Asignar Permiso",
-                              _formKey,
-                              permiso,
-                              () async {
-                                ProgressDialog.show(context);
-                                var resp =
-                                    await _endpointsApi.assignPermisoEndpoint(
-                                        endpointId: endpointsData.id,
-                                        permisoId: permiso["id"]);
-                                if (resp is Success<EndpointsPOSTResponse>) {
-                                  ProgressDialog.dissmiss(context);
-                                  Dialogs.success(
-                                      msg: "Asignacion de Permiso exitosa");
-                                  _formKey.currentState?.reset();
-                                  _navigationService.pop();
-                                  _navigationService.pop();
-                                  onInit();
-                                } else if (resp is Failure) {
-                                  ProgressDialog.dissmiss(context);
-                                  Dialogs.error(msg: resp.messages[0]);
-                                }
-                              },
-                              opcion,
-                              resp.response.data,
-                              size,
-                              validator,
-                              "Asignar",
-                            ),
+                                "Asignar Permiso", _formKey, permiso, () async {
+                              ProgressDialog.show(context);
+                              var resp =
+                                  await _endpointsApi.assignPermisoEndpoint(
+                                      endpointId: endpointsData.id,
+                                      permisoId: permiso["id"]);
+                              if (resp is Success<EndpointsPOSTResponse>) {
+                                ProgressDialog.dissmiss(context);
+                                Dialogs.success(
+                                    msg: "Asignacion de Permiso exitosa");
+                                _formKey.currentState?.reset();
+                                _navigationService.pop();
+                                _navigationService.pop();
+                                onInit();
+                              } else if (resp is Failure) {
+                                ProgressDialog.dissmiss(context);
+                                Dialogs.error(msg: resp.messages[0]);
+                              }
+                            }, opcion, resp.response.data, size, validator,
+                                "Asignar", endpointsData.permiso),
                           );
                         });
                   } else if (resp is Failure) {

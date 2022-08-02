@@ -157,7 +157,6 @@ class RolesViewModel extends BaseViewModel {
     if (resp is Success<RolTipeResponse>) {
       ProgressDialog.dissmiss(context);
       showDialog(
-          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -212,7 +211,6 @@ class RolesViewModel extends BaseViewModel {
                           bool isSelect = false;
                           ProgressDialog.dissmiss(context);
                           showDialog(
-                              barrierDismissible: false,
                               barrierColor: Colors.transparent,
                               context: context,
                               builder: (BuildContext context) {
@@ -358,7 +356,6 @@ class RolesViewModel extends BaseViewModel {
                                             is Success<PermisosResponse>) {
                                           ProgressDialog.dissmiss(context);
                                           showDialog(
-                                              barrierDismissible: false,
                                               barrierColor: Colors.transparent,
                                               context: context,
                                               builder: (BuildContext context) {

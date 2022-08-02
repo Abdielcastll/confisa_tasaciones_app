@@ -47,537 +47,553 @@ Future<dynamic> dialogCrearUsuario(
       builder: (BuildContext context) {
         return StatefulBuilder(builder: ((BuildContext context, setState) {
           return AlertDialog(
-            content: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: size.height * .08,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                          color: AppColors.gold,
+            content: SizedBox(
+              width: size.width * .75,
+              child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: size.height * .08,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10)),
+                            color: AppColors.gold,
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(titulo,
+                                style: const TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold)),
+                          ),
                         ),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(titulo,
-                              style: const TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Column(
-                          children: [
-                            DropdownSearch<String>(
-                              dropdownDecoratorProps:
-                                  const DropDownDecoratorProps(
-                                dropdownSearchDecoration: InputDecoration(
-                                    labelText: "Rol",
-                                    border: UnderlineInputBorder()),
-                                textAlignVertical: TextAlignVertical.center,
-                              ),
-                              items: roles.map((e) => e.name).toList(),
-                              enabled: true,
-                              popupProps: const PopupProps.menu(
-                                  showSelectedItems: true,
-                                  searchDelay: Duration(microseconds: 0)),
-                              onChanged: (value) async {
-                                setState(
-                                  () => permisoRol = [],
-                                );
+                        Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                            children: [
+                              DropdownSearch<String>(
+                                dropdownDecoratorProps:
+                                    const DropDownDecoratorProps(
+                                  dropdownSearchDecoration: InputDecoration(
+                                      labelText: "Rol",
+                                      border: UnderlineInputBorder()),
+                                  textAlignVertical: TextAlignVertical.center,
+                                ),
+                                items: roles.map((e) => e.name).toList(),
+                                enabled: true,
+                                popupProps: const PopupProps.menu(
+                                    fit: FlexFit.loose,
+                                    showSelectedItems: true,
+                                    searchDelay: Duration(microseconds: 0)),
+                                onChanged: (value) async {
+                                  setState(
+                                    () => permisoRol = [],
+                                  );
 
-                                dropdown = value;
-                                rol1['nombre'] = value;
-                                rol1["id"] = roles
-                                    .firstWhere(
-                                        (element) => element.name == value)
-                                    .id;
-                                rol1["description"] = roles
-                                    .firstWhere(
-                                        (element) => element.name == value)
-                                    .description;
-                                if (rol1["description"] ==
-                                        "Aprobrador Tasaciones" ||
-                                    rol1["description"] == "Tasador") {
-                                  for (var element in user.role) {
-                                    if (element == "Aprobador Tasaciones") {
-                                      ProgressDialog.show(context);
-                                      var resp = await _usuariosApi.getUsuarios(
-                                          email: user.email);
-                                      if (resp is Success<UsuariosResponse>) {
-                                        codSuplidor =
-                                            resp.response.data.first.idSuplidor;
-                                        ProgressDialog.dissmiss(context);
-                                        permisoRol.add(
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                        );
-                                        permisoRol.add(
-                                          Text(
-                                              "Suplidor ${resp.response.data.first.nombreSuplidor}",
-                                              style: appDropdown),
-                                        );
-                                      } else if (resp is Failure) {
-                                        ProgressDialog.dissmiss(context);
-                                        Dialogs.error(msg: resp.messages[0]);
-                                      }
-                                    }
-                                    if (codSuplidor == 0) {
-                                      ProgressDialog.show(context);
-                                      var resp =
-                                          await _suplidoresApi.getSuplidores();
-                                      if (resp is Success<SuplidoresResponse>) {
-                                        ProgressDialog.dissmiss(context);
-                                        suplidores = resp.response.data;
-                                        setState((() {
-                                          permisoRol = [
-                                            TextFormField(
-                                              decoration: const InputDecoration(
-                                                  labelText: 'Nombre Completo',
-                                                  border:
-                                                      UnderlineInputBorder()),
-                                              onSaved: (value) {
-                                                nombreCompleto = value!;
-                                              },
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty ||
-                                                    value.length < 8) {
-                                                  return 'Debe ingresar un nombre valido';
-                                                }
-
-                                                return null;
-                                              },
-                                            ),
+                                  dropdown = value;
+                                  rol1['nombre'] = value;
+                                  rol1["id"] = roles
+                                      .firstWhere(
+                                          (element) => element.name == value)
+                                      .id;
+                                  rol1["description"] = roles
+                                      .firstWhere(
+                                          (element) => element.name == value)
+                                      .description;
+                                  if (rol1["description"] ==
+                                          "Aprobrador Tasaciones" ||
+                                      rol1["description"] == "Tasador") {
+                                    for (var element in user.role) {
+                                      if (element == "Aprobador Tasaciones") {
+                                        ProgressDialog.show(context);
+                                        var resp = await _usuariosApi
+                                            .getUsuarios(email: user.email);
+                                        if (resp is Success<UsuariosResponse>) {
+                                          codSuplidor = resp
+                                              .response.data.first.idSuplidor;
+                                          ProgressDialog.dissmiss(context);
+                                          permisoRol.add(
                                             const SizedBox(
                                               height: 10,
                                             ),
-                                            TextFormField(
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                  labelText: 'Telefono',
-                                                  border:
-                                                      UnderlineInputBorder()),
-                                              onSaved: (value) {
-                                                telefono = value!;
-                                              },
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty ||
-                                                    value.length < 9) {
-                                                  return 'Debe ingresar un telefono valido';
-                                                }
-
-                                                return null;
-                                              },
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            TextFormField(
-                                              decoration: const InputDecoration(
-                                                  labelText: 'Email',
-                                                  border:
-                                                      UnderlineInputBorder()),
-                                              onSaved: (value) {
-                                                email = value!;
-                                              },
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty ||
-                                                    value.length < 8 ||
-                                                    !EmailValidator.validate(
-                                                        value, true, true)) {
-                                                  return 'Debe ingresar un email valido';
-                                                }
-
-                                                return null;
-                                              },
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            codSuplidor == 0
-                                                ? DropdownSearch<String>(
-                                                    validator: (value) => value ==
-                                                            null
-                                                        ? 'Debe escojer un suplidor'
-                                                        : null,
-                                                    dropdownDecoratorProps:
-                                                        const DropDownDecoratorProps(
-                                                            dropdownSearchDecoration:
-                                                                InputDecoration(
-                                                              hintText:
-                                                                  "Suplidores",
-                                                            ),
-                                                            textAlignVertical:
-                                                                TextAlignVertical
-                                                                    .center),
-                                                    items: suplidores
-                                                        .map((e) => e.nombre)
-                                                        .toList(),
-                                                    popupProps: const PopupProps
-                                                            .menu(
-                                                        fit: FlexFit.loose,
-                                                        showSelectedItems: true,
-                                                        searchDelay: Duration(
-                                                            microseconds: 0)),
-                                                    onChanged: (value) {
-                                                      dropdown = value;
-                                                      suplidor['nombre'] =
-                                                          value;
-                                                      suplidor[
-                                                              "codigoRelacional"] =
-                                                          suplidores
-                                                              .firstWhere(
-                                                                  (element) =>
-                                                                      element
-                                                                          .nombre ==
-                                                                      value)
-                                                              .codigoRelacionado;
-
-                                                      suplidor[
-                                                              "identificacion"] =
-                                                          suplidores
-                                                              .firstWhere(
-                                                                  (element) =>
-                                                                      element
-                                                                          .nombre ==
-                                                                      value)
-                                                              .identificacion;
-                                                    },
-                                                  )
-                                                : Container(),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    _navigationService.pop();
-                                                  },
-                                                  // button pressed
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: const <Widget>[
-                                                      Icon(
-                                                        AppIcons.closeCircle,
-                                                        color: Colors.red,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 3,
-                                                      ), // icon
-                                                      Text("Cancelar"), // text
-                                                    ],
-                                                  ),
-                                                ),
-                                                TextButton(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: const <Widget>[
-                                                      Icon(
-                                                        AppIcons.save,
-                                                        color: Colors.green,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 3,
-                                                      ), // icon
-                                                      Text("Crear"), // text
-                                                    ],
-                                                  ),
-                                                  onPressed: () {
-                                                    // Validate returns true if the form is valid, or false otherwise.
-                                                    _formKey.currentState
-                                                        ?.save();
-                                                    if (_formKey.currentState!
-                                                        .validate()) {
-                                                      _formKey.currentState
-                                                          ?.save();
-                                                      modificar(
-                                                          nombreCompleto,
-                                                          email,
-                                                          telefono,
-                                                          codSuplidor);
-                                                    }
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ];
-                                        }));
-                                      } else if (resp is Failure) {
-                                        ProgressDialog.dissmiss(context);
-                                        Dialogs.error(msg: resp.messages[0]);
-                                      }
-                                    }
-                                  }
-                                } else if (rol1["description"] ==
-                                        "Administrador" ||
-                                    rol1["description"] ==
-                                        "Aprobador Facturas" ||
-                                    rol1["description"] == "Oficial Negocios") {
-                                  permisoRol = [
-                                    TextFormField(
-                                      decoration: const InputDecoration(
-                                          labelText: 'Email',
-                                          border: UnderlineInputBorder()),
-                                      onSaved: (value) {
-                                        email = value!;
-                                      },
-                                      validator: (value) {
-                                        if (value == null ||
-                                            value.isEmpty ||
-                                            value.length < 8 ||
-                                            !EmailValidator.validate(
-                                                value, true, true)) {
-                                          return 'Debe ingresar un email valido';
+                                          );
+                                          permisoRol.add(
+                                            Text(
+                                                "Suplidor ${resp.response.data.first.nombreSuplidor}",
+                                                style: appDropdown),
+                                          );
+                                        } else if (resp is Failure) {
+                                          ProgressDialog.dissmiss(context);
+                                          Dialogs.error(msg: resp.messages[0]);
                                         }
+                                      }
+                                      if (codSuplidor == 0) {
+                                        ProgressDialog.show(context);
+                                        var resp = await _suplidoresApi
+                                            .getSuplidores();
+                                        if (resp
+                                            is Success<SuplidoresResponse>) {
+                                          ProgressDialog.dissmiss(context);
+                                          suplidores = resp.response.data;
+                                          setState((() {
+                                            permisoRol = [
+                                              TextFormField(
+                                                decoration: const InputDecoration(
+                                                    labelText:
+                                                        'Nombre Completo',
+                                                    border:
+                                                        UnderlineInputBorder()),
+                                                onSaved: (value) {
+                                                  nombreCompleto = value!;
+                                                },
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 8) {
+                                                    return 'Debe ingresar un nombre valido';
+                                                  }
 
-                                        return null;
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () {
-                                            _navigationService.pop();
-                                          },
-                                          // button pressed
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const <Widget>[
-                                              Icon(
-                                                AppIcons.closeCircle,
-                                                color: Colors.red,
+                                                  return null;
+                                                },
                                               ),
-                                              SizedBox(
-                                                height: 3,
-                                              ), // icon
-                                              Text("Cancelar"), // text
-                                            ],
-                                          ),
-                                        ),
-                                        TextButton(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const <Widget>[
-                                              Icon(
-                                                AppIcons.search,
-                                                color: AppColors.green,
+                                              const SizedBox(
+                                                height: 10,
                                               ),
-                                              SizedBox(
-                                                height: 3,
-                                              ), // icon
-                                              Text("Buscar"), // text
-                                            ],
-                                          ),
-                                          onPressed: () async {
-                                            // Validate returns true if the form is valid, or false otherwise.
-                                            _formKey.currentState?.save();
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              _formKey.currentState?.save();
-                                              ProgressDialog.show(context);
-                                              var resp = await _usuariosApi
-                                                  .getUsuarioDomain(
-                                                      email: email);
-                                              if (resp is Success<
-                                                  UsuarioDomainData>) {
-                                                ProgressDialog.dissmiss(
-                                                    context);
-                                                setState((() {
-                                                  permisoRol = [
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    TextFormField(
-                                                      enabled: false,
-                                                      initialValue: resp
-                                                          .response
-                                                          .nombreCompleto,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border:
-                                                            UnderlineInputBorder(),
-                                                        isDense: true,
-                                                        fillColor: Colors.white,
-                                                        label: Text('Nombre'),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    TextFormField(
-                                                      enabled: false,
-                                                      initialValue:
-                                                          resp.response.email,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border:
-                                                            UnderlineInputBorder(),
-                                                        isDense: true,
-                                                        fillColor: Colors.white,
-                                                        label: Text('Email'),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    TextFormField(
-                                                      enabled: false,
-                                                      initialValue:
-                                                          resp.response.puesto,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border:
-                                                            UnderlineInputBorder(),
-                                                        isDense: true,
-                                                        fillColor: Colors.white,
-                                                        label: Text('Puesto'),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    TextFormField(
-                                                      enabled: false,
-                                                      initialValue: resp
-                                                          .response.telefono,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border:
-                                                            UnderlineInputBorder(),
-                                                        isDense: true,
-                                                        fillColor: Colors.white,
-                                                        label: Text('Teléfono'),
-                                                      ),
-                                                    ),
-                                                    Container(),
-                                                    const SizedBox(
-                                                      height: 15,
-                                                    ),
-                                                    Row(
+                                              TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                    labelText: 'Telefono',
+                                                    border:
+                                                        UnderlineInputBorder()),
+                                                onSaved: (value) {
+                                                  telefono = value!;
+                                                },
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 9) {
+                                                    return 'Debe ingresar un telefono valido';
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              TextFormField(
+                                                decoration: const InputDecoration(
+                                                    labelText: 'Email',
+                                                    border:
+                                                        UnderlineInputBorder()),
+                                                onSaved: (value) {
+                                                  email = value!;
+                                                },
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 8 ||
+                                                      !EmailValidator.validate(
+                                                          value, true, true)) {
+                                                    return 'Debe ingresar un email valido';
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              codSuplidor == 0
+                                                  ? DropdownSearch<String>(
+                                                      validator: (value) =>
+                                                          value == null
+                                                              ? 'Debe escojer un suplidor'
+                                                              : null,
+                                                      dropdownDecoratorProps:
+                                                          const DropDownDecoratorProps(
+                                                              dropdownSearchDecoration:
+                                                                  InputDecoration(
+                                                                hintText:
+                                                                    "Suplidores",
+                                                              ),
+                                                              textAlignVertical:
+                                                                  TextAlignVertical
+                                                                      .center),
+                                                      items: suplidores
+                                                          .map((e) => e.nombre)
+                                                          .toList(),
+                                                      popupProps: const PopupProps
+                                                              .menu(
+                                                          fit: FlexFit.loose,
+                                                          showSelectedItems:
+                                                              true,
+                                                          searchDelay: Duration(
+                                                              microseconds: 0)),
+                                                      onChanged: (value) {
+                                                        dropdown = value;
+                                                        suplidor['nombre'] =
+                                                            value;
+                                                        suplidor[
+                                                                "codigoRelacional"] =
+                                                            suplidores
+                                                                .firstWhere(
+                                                                    (element) =>
+                                                                        element
+                                                                            .nombre ==
+                                                                        value)
+                                                                .codigoRelacionado;
+
+                                                        suplidor[
+                                                                "identificacion"] =
+                                                            suplidores
+                                                                .firstWhere(
+                                                                    (element) =>
+                                                                        element
+                                                                            .nombre ==
+                                                                        value)
+                                                                .identificacion;
+                                                      },
+                                                    )
+                                                  : Container(),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      _navigationService.pop();
+                                                    },
+                                                    // button pressed
+                                                    child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            _navigationService
-                                                                .pop();
-                                                          },
-                                                          // button pressed
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: const <
-                                                                Widget>[
-                                                              Icon(
-                                                                AppIcons
-                                                                    .closeCircle,
-                                                                color:
-                                                                    Colors.red,
-                                                              ),
-                                                              SizedBox(
-                                                                height: 3,
-                                                              ), // icon
-                                                              Text(
-                                                                  "Cancelar"), // text
-                                                            ],
-                                                          ),
+                                                              .center,
+                                                      children: const <Widget>[
+                                                        Icon(
+                                                          AppIcons.closeCircle,
+                                                          color: Colors.red,
                                                         ),
-                                                        TextButton(
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: const <
-                                                                Widget>[
-                                                              Icon(
-                                                                AppIcons.save,
-                                                                color: AppColors
-                                                                    .green,
-                                                              ),
-                                                              SizedBox(
-                                                                height: 3,
-                                                              ), // icon
-                                                              Text(
-                                                                  "Crear"), // text
-                                                            ],
+                                                        SizedBox(
+                                                          height: 3,
+                                                        ), // icon
+                                                        Text(
+                                                            "Cancelar"), // text
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: const <Widget>[
+                                                        Icon(
+                                                          AppIcons.save,
+                                                          color: Colors.green,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 3,
+                                                        ), // icon
+                                                        Text("Crear"), // text
+                                                      ],
+                                                    ),
+                                                    onPressed: () {
+                                                      // Validate returns true if the form is valid, or false otherwise.
+                                                      _formKey.currentState
+                                                          ?.save();
+                                                      if (_formKey.currentState!
+                                                          .validate()) {
+                                                        _formKey.currentState
+                                                            ?.save();
+                                                        modificar(
+                                                            nombreCompleto,
+                                                            email,
+                                                            telefono,
+                                                            codSuplidor);
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ];
+                                          }));
+                                        } else if (resp is Failure) {
+                                          ProgressDialog.dissmiss(context);
+                                          Dialogs.error(msg: resp.messages[0]);
+                                        }
+                                      }
+                                    }
+                                  } else if (rol1["description"] ==
+                                          "Administrador" ||
+                                      rol1["description"] ==
+                                          "Aprobador Facturas" ||
+                                      rol1["description"] ==
+                                          "Oficial Negocios") {
+                                    permisoRol = [
+                                      TextFormField(
+                                        decoration: const InputDecoration(
+                                            labelText: 'Email',
+                                            border: UnderlineInputBorder()),
+                                        onSaved: (value) {
+                                          email = value!;
+                                        },
+                                        validator: (value) {
+                                          if (value == null ||
+                                              value.isEmpty ||
+                                              value.length < 8 ||
+                                              !EmailValidator.validate(
+                                                  value, true, true)) {
+                                            return 'Debe ingresar un email valido';
+                                          }
+
+                                          return null;
+                                        },
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              _navigationService.pop();
+                                            },
+                                            // button pressed
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const <Widget>[
+                                                Icon(
+                                                  AppIcons.closeCircle,
+                                                  color: Colors.red,
+                                                ),
+                                                SizedBox(
+                                                  height: 3,
+                                                ), // icon
+                                                Text("Cancelar"), // text
+                                              ],
+                                            ),
+                                          ),
+                                          TextButton(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const <Widget>[
+                                                Icon(
+                                                  AppIcons.search,
+                                                  color: AppColors.green,
+                                                ),
+                                                SizedBox(
+                                                  height: 3,
+                                                ), // icon
+                                                Text("Buscar"), // text
+                                              ],
+                                            ),
+                                            onPressed: () async {
+                                              // Validate returns true if the form is valid, or false otherwise.
+                                              _formKey.currentState?.save();
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                _formKey.currentState?.save();
+                                                ProgressDialog.show(context);
+                                                var resp = await _usuariosApi
+                                                    .getUsuarioDomain(
+                                                        email: email);
+                                                if (resp is Success<
+                                                    UsuarioDomainData>) {
+                                                  ProgressDialog.dissmiss(
+                                                      context);
+                                                  setState((() {
+                                                    permisoRol = [
+                                                      const SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      TextFormField(
+                                                        enabled: false,
+                                                        initialValue: resp
+                                                            .response
+                                                            .nombreCompleto,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          border:
+                                                              UnderlineInputBorder(),
+                                                          isDense: true,
+                                                          fillColor:
+                                                              Colors.white,
+                                                          label: Text('Nombre'),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      TextFormField(
+                                                        enabled: false,
+                                                        initialValue:
+                                                            resp.response.email,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          border:
+                                                              UnderlineInputBorder(),
+                                                          isDense: true,
+                                                          fillColor:
+                                                              Colors.white,
+                                                          label: Text('Email'),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      TextFormField(
+                                                        enabled: false,
+                                                        initialValue: resp
+                                                            .response.puesto,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          border:
+                                                              UnderlineInputBorder(),
+                                                          isDense: true,
+                                                          fillColor:
+                                                              Colors.white,
+                                                          label: Text('Puesto'),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      TextFormField(
+                                                        enabled: false,
+                                                        initialValue: resp
+                                                            .response.telefono,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          border:
+                                                              UnderlineInputBorder(),
+                                                          isDense: true,
+                                                          fillColor:
+                                                              Colors.white,
+                                                          label:
+                                                              Text('Teléfono'),
+                                                        ),
+                                                      ),
+                                                      Container(),
+                                                      const SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              _navigationService
+                                                                  .pop();
+                                                            },
+                                                            // button pressed
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: const <
+                                                                  Widget>[
+                                                                Icon(
+                                                                  AppIcons
+                                                                      .closeCircle,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 3,
+                                                                ), // icon
+                                                                Text(
+                                                                    "Cancelar"), // text
+                                                              ],
+                                                            ),
                                                           ),
-                                                          onPressed: () {
-                                                            // Validate returns true if the form is valid, or false otherwise.
-                                                            _formKey
-                                                                .currentState
-                                                                ?.save();
-                                                            if (_formKey
-                                                                .currentState!
-                                                                .validate()) {
+                                                          TextButton(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: const <
+                                                                  Widget>[
+                                                                Icon(
+                                                                  AppIcons.save,
+                                                                  color:
+                                                                      AppColors
+                                                                          .green,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 3,
+                                                                ), // icon
+                                                                Text(
+                                                                    "Crear"), // text
+                                                              ],
+                                                            ),
+                                                            onPressed: () {
+                                                              // Validate returns true if the form is valid, or false otherwise.
                                                               _formKey
                                                                   .currentState
                                                                   ?.save();
-                                                              modificar(
-                                                                  resp.response
-                                                                      .nombreCompleto,
-                                                                  resp.response
-                                                                      .email,
-                                                                  resp.response
-                                                                      .telefono,
-                                                                  codSuplidor);
-                                                            }
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ];
-                                                }));
-                                              } else if (resp is Failure) {
-                                                ProgressDialog.dissmiss(
-                                                    context);
-                                                Dialogs.error(
-                                                    msg: resp.messages[0]);
+                                                              if (_formKey
+                                                                  .currentState!
+                                                                  .validate()) {
+                                                                _formKey
+                                                                    .currentState
+                                                                    ?.save();
+                                                                modificar(
+                                                                    resp.response
+                                                                        .nombreCompleto,
+                                                                    resp.response
+                                                                        .email,
+                                                                    resp.response
+                                                                        .telefono,
+                                                                    codSuplidor);
+                                                              }
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ];
+                                                  }));
+                                                } else if (resp is Failure) {
+                                                  ProgressDialog.dissmiss(
+                                                      context);
+                                                  Dialogs.error(
+                                                      msg: resp.messages[0]);
+                                                }
                                               }
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ];
-                                }
-                              },
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ...permisoRol,
-                          ],
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ];
+                                  }
+                                },
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              ...permisoRol,
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )),
+                      ],
+                    ),
+                  )),
+            ),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             contentPadding: EdgeInsets.zero,
