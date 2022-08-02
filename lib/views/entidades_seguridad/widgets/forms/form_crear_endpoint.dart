@@ -147,7 +147,7 @@ class CrearEndpointForm extends StatelessWidget {
                       height: 15,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         showEliminar
                             ? TextButton(

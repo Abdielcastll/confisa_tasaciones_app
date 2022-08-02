@@ -152,107 +152,115 @@ class EndpointsViewModel extends BaseViewModel {
               borderRadius: BorderRadius.circular(10),
             ),
             contentPadding: EdgeInsets.zero,
-            content: CrearEndpointForm(
-                asignarPermiso: () async {
-                  final GlobalKey<FormState> _formKey = GlobalKey();
-                  bool validator = true;
-                  Map<String, dynamic> permiso = {};
-                  dynamic opcion;
-                  ProgressDialog.show(context);
-                  var resp = await _permisosApi.getPermisos(pageSize: 999);
-                  if (resp is Success<PermisosResponse>) {
-                    ProgressDialog.dissmiss(context);
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            contentPadding: EdgeInsets.zero,
-                            content: formAsignarPermiso(
-                              "Asignar Permiso",
-                              _formKey,
-                              permiso,
-                              () async {
-                                ProgressDialog.show(context);
-                                var resp =
-                                    await _endpointsApi.assignPermisoEndpoint(
-                                        endpointId: endpointsData.id,
-                                        permisoId: permiso["id"]);
-                                if (resp is Success<EndpointsPOSTResponse>) {
-                                  ProgressDialog.dissmiss(context);
-                                  Dialogs.success(
-                                      msg: "Asignacion de Permiso exitosa");
-                                  _formKey.currentState?.reset();
-                                  _navigationService.pop();
-                                  _navigationService.pop();
-                                  onInit();
-                                } else if (resp is Failure) {
-                                  ProgressDialog.dissmiss(context);
-                                  Dialogs.error(msg: resp.messages[0]);
-                                }
-                              },
-                              opcion,
-                              resp.response.data,
-                              size,
-                              validator,
-                              "Asignar",
-                            ),
-                          );
-                        });
-                  } else if (resp is Failure) {
-                    ProgressDialog.dissmiss(context);
-                    Dialogs.error(msg: resp.messages.first);
-                  }
-                },
-                eliminar: () {
-                  Dialogs.confirm(context,
-                      tittle: "Desactivar Endpoint",
-                      description:
-                          "Esta seguro que desea desactivar el endpoint?",
-                      confirm: () async {
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width * .75,
+              child: CrearEndpointForm(
+                  asignarPermiso: () async {
+                    final GlobalKey<FormState> _formKey = GlobalKey();
+                    bool validator = true;
+                    Map<String, dynamic> permiso = {};
+                    dynamic opcion;
                     ProgressDialog.show(context);
-                    var resp = await _endpointsApi.deleteEndpoint(
-                        id: endpointsData.id);
+                    var resp = await _permisosApi.getPermisos(pageSize: 999);
+                    if (resp is Success<PermisosResponse>) {
+                      ProgressDialog.dissmiss(context);
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              contentPadding: EdgeInsets.zero,
+                              content: SizedBox(
+                                width: MediaQuery.of(context).size.width * .75,
+                                child: formAsignarPermiso(
+                                  "Asignar Permiso",
+                                  _formKey,
+                                  permiso,
+                                  () async {
+                                    ProgressDialog.show(context);
+                                    var resp = await _endpointsApi
+                                        .assignPermisoEndpoint(
+                                            endpointId: endpointsData.id,
+                                            permisoId: permiso["id"]);
+                                    if (resp
+                                        is Success<EndpointsPOSTResponse>) {
+                                      ProgressDialog.dissmiss(context);
+                                      Dialogs.success(
+                                          msg: "Asignacion de Permiso exitosa");
+                                      _formKey.currentState?.reset();
+                                      _navigationService.pop();
+                                      _navigationService.pop();
+                                      onInit();
+                                    } else if (resp is Failure) {
+                                      ProgressDialog.dissmiss(context);
+                                      Dialogs.error(msg: resp.messages[0]);
+                                    }
+                                  },
+                                  opcion,
+                                  resp.response.data,
+                                  size,
+                                  validator,
+                                  "Asignar",
+                                ),
+                              ),
+                            );
+                          });
+                    } else if (resp is Failure) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.error(msg: resp.messages.first);
+                    }
+                  },
+                  eliminar: () {
+                    Dialogs.confirm(context,
+                        tittle: "Desactivar Endpoint",
+                        description:
+                            "Esta seguro que desea desactivar el endpoint?",
+                        confirm: () async {
+                      ProgressDialog.show(context);
+                      var resp = await _endpointsApi.deleteEndpoint(
+                          id: endpointsData.id);
+                      if (resp is Success<EndpointsPOSTResponse>) {
+                        ProgressDialog.dissmiss(context);
+                        Dialogs.success(msg: "Desactivado con exito");
+                        _formKey.currentState?.reset();
+                        _navigationService.pop();
+                        onInit();
+                      } else if (resp is Failure) {
+                        ProgressDialog.dissmiss(context);
+                        Dialogs.error(msg: resp.messages.first);
+                      }
+                    });
+                  },
+                  showEliminar: true,
+                  formKey: _formKey,
+                  size: size,
+                  titulo: "Modificar Endpoint",
+                  validator: validator,
+                  modificar:
+                      (nombref, controladorf, metodof, httpVerbof) async {
+                    ProgressDialog.show(context);
+                    var resp = await _endpointsApi.updateEndpoint(
+                        id: endpointsData.id,
+                        controlador: controladorf,
+                        nombre: nombref,
+                        metodo: metodof,
+                        httpVerbo: httpVerbof);
                     if (resp is Success<EndpointsPOSTResponse>) {
                       ProgressDialog.dissmiss(context);
-                      Dialogs.success(msg: "Desactivado con exito");
+                      Dialogs.success(msg: "Modificacion de endpoint exitosa");
                       _formKey.currentState?.reset();
                       _navigationService.pop();
                       onInit();
                     } else if (resp is Failure) {
                       ProgressDialog.dissmiss(context);
-                      Dialogs.error(msg: resp.messages.first);
+                      Dialogs.error(msg: resp.messages[0]);
                     }
-                  });
-                },
-                showEliminar: true,
-                formKey: _formKey,
-                size: size,
-                titulo: "Modificar Endpoint",
-                validator: validator,
-                modificar: (nombref, controladorf, metodof, httpVerbof) async {
-                  ProgressDialog.show(context);
-                  var resp = await _endpointsApi.updateEndpoint(
-                      id: endpointsData.id,
-                      controlador: controladorf,
-                      nombre: nombref,
-                      metodo: metodof,
-                      httpVerbo: httpVerbof);
-                  if (resp is Success<EndpointsPOSTResponse>) {
-                    ProgressDialog.dissmiss(context);
-                    Dialogs.success(msg: "Modificacion de endpoint exitosa");
-                    _formKey.currentState?.reset();
-                    _navigationService.pop();
-                    onInit();
-                  } else if (resp is Failure) {
-                    ProgressDialog.dissmiss(context);
-                    Dialogs.error(msg: resp.messages[0]);
-                  }
-                },
-                buttonTittle: buttonTittle,
-                endpointsData: endpointsData),
+                  },
+                  buttonTittle: buttonTittle,
+                  endpointsData: endpointsData),
+            ),
           );
         });
   }
@@ -268,48 +276,51 @@ class EndpointsViewModel extends BaseViewModel {
         builder: (BuildContext context) {
           return AlertDialog(
             contentPadding: EdgeInsets.zero,
-            content: CrearEndpointForm(
-              asignarPermiso: () {},
-              formKey: _formKey,
-              size: size,
-              titulo: titulo,
-              validator: validator,
-              modificar: (nombref, controladorf, metodof, httpVerbof) async {
-                ProgressDialog.show(context);
-                var resp = await _endpointsApi.createEndpoint(
-                    controlador: controladorf,
-                    nombre: nombref,
-                    metodo: metodof,
-                    httpVerbo: httpVerbof);
-                if (resp is Success<EndpointsData>) {
-                  ProgressDialog.dissmiss(context);
-                  Dialogs.success(msg: "Creacion de endpoint exitosa");
-                  _formKey.currentState?.reset();
-                  _navigationService.pop();
-                  onInit();
-                } else if (resp is Failure) {
-                  ProgressDialog.dissmiss(context);
-                  Dialogs.error(msg: resp.messages.first);
-                }
-              },
-              buttonTittle: buttonTittle,
-              endpointsData: EndpointsData(
-                  controlador: "",
-                  estado: false,
-                  httpVerbo: "",
-                  id: 0,
-                  metodo: "",
-                  nombre: "",
-                  permiso: PermisosData(
-                      accionNombre: "",
-                      descripcion: "",
-                      esBasico: 0,
-                      id: 0,
-                      idAccion: 0,
-                      idRecurso: 0,
-                      recursoNombre: "")),
-              eliminar: () {},
-              showEliminar: false,
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width * .75,
+              child: CrearEndpointForm(
+                asignarPermiso: () {},
+                formKey: _formKey,
+                size: size,
+                titulo: titulo,
+                validator: validator,
+                modificar: (nombref, controladorf, metodof, httpVerbof) async {
+                  ProgressDialog.show(context);
+                  var resp = await _endpointsApi.createEndpoint(
+                      controlador: controladorf,
+                      nombre: nombref,
+                      metodo: metodof,
+                      httpVerbo: httpVerbof);
+                  if (resp is Success<EndpointsData>) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.success(msg: "Creacion de endpoint exitosa");
+                    _formKey.currentState?.reset();
+                    _navigationService.pop();
+                    onInit();
+                  } else if (resp is Failure) {
+                    ProgressDialog.dissmiss(context);
+                    Dialogs.error(msg: resp.messages.first);
+                  }
+                },
+                buttonTittle: buttonTittle,
+                endpointsData: EndpointsData(
+                    controlador: "",
+                    estado: false,
+                    httpVerbo: "",
+                    id: 0,
+                    metodo: "",
+                    nombre: "",
+                    permiso: PermisosData(
+                        accionNombre: "",
+                        descripcion: "",
+                        esBasico: 0,
+                        id: 0,
+                        idAccion: 0,
+                        idRecurso: 0,
+                        recursoNombre: "")),
+                eliminar: () {},
+                showEliminar: false,
+              ),
             ),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

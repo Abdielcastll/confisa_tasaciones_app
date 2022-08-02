@@ -37,13 +37,14 @@ class _PerfilMobile extends StatelessWidget {
                           ? vm.currentPage = 0
                           : Navigator.of(context).pop(),
                       color: AppColors.orange),
-                  AppButton(
-                    text: 'Guardar',
-                    onPressed: () => vm.currentPage == 0
-                        ? vm.guardarPerfil(context)
-                        : vm.updatePassword(context),
-                    color: AppColors.green,
-                  ),
+                  if (vm.editable())
+                    AppButton(
+                      text: 'Guardar',
+                      onPressed: () => vm.currentPage == 0
+                          ? vm.guardarPerfil(context)
+                          : vm.updatePassword(context),
+                      color: AppColors.green,
+                    ),
                 ],
               ),
             )

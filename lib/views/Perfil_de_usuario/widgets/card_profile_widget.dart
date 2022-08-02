@@ -29,64 +29,63 @@ class CardProfileWidget extends StatelessWidget {
               const SizedBox(width: 15),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      // height: 35,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: vm.editName
-                                ? _textFieldEdit(
-                                    fontSize: 20,
-                                    onChanged: vm.onChangedName,
-                                    keyboardType: TextInputType.name,
-                                  )
-                                : Text(
-                                    vm.profile?.nombreCompleto ?? '',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                          ),
-                          const SizedBox(width: 20),
-                          Visibility(
-                            visible: vm.editable(),
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.edit_note_sharp,
-                                color: Colors.white,
+                    Row(
+                      mainAxisAlignment: vm.editable()
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.center,
+                      children: [
+                        vm.editName
+                            ? _textFieldEdit(
+                                fontSize: 20,
+                                onChanged: vm.onChangedName,
+                                keyboardType: TextInputType.name,
+                              )
+                            : Text(
+                                vm.profile?.nombreCompleto ?? '',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              onPressed: () => vm.editName = !vm.editName,
+                        Visibility(
+                          visible: vm.editable(),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.edit_note_sharp,
+                              color: Colors.white,
                             ),
+                            onPressed: () => vm.editName = !vm.editName,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 35,
                       child: Row(
+                        mainAxisAlignment: vm.editable()
+                            ? MainAxisAlignment.spaceBetween
+                            : MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: vm.editEmail
-                                ? _textFieldEdit(
-                                    fontSize: 18,
-                                    onChanged: vm.onChangedEmail,
-                                    keyboardType: TextInputType.emailAddress,
-                                  )
-                                : Text(
-                                    vm.profile?.email ?? '',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      // fontWeight: FontWeight.w600,
-                                    ),
+                          vm.editEmail
+                              ? _textFieldEdit(
+                                  fontSize: 18,
+                                  onChanged: vm.onChangedEmail,
+                                  keyboardType: TextInputType.emailAddress,
+                                )
+                              : Text(
+                                  vm.profile?.email ?? '',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    // fontWeight: FontWeight.w600,
                                   ),
-                          ),
+                                ),
                           Visibility(
                             visible: vm.editable(),
                             child: IconButton(
@@ -232,17 +231,37 @@ class CardProfileWidget extends StatelessWidget {
   }
 
   Widget _noImage(BuildContext context) {
-    return ClipOval(
-      child: Container(
-        height: MediaQuery.of(context).size.width * .25,
-        width: MediaQuery.of(context).size.width * .25,
-        padding: const EdgeInsets.all(8),
-        color: Colors.white,
-        child: Image.asset(
-          'assets/img/no-avatar.png',
-          color: Colors.grey,
+    return Stack(
+      children: [
+        ClipOval(
+          child: Container(
+            height: MediaQuery.of(context).size.width * .25,
+            width: MediaQuery.of(context).size.width * .25,
+            padding: const EdgeInsets.all(8),
+            color: Colors.white,
+            child: Image.asset(
+              'assets/img/no-avatar.png',
+              color: Colors.grey,
+            ),
+          ),
         ),
-      ),
+        Positioned(
+            bottom: 0,
+            right: 0,
+            child: ClipOval(
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                height: 35,
+                width: 35,
+                color: AppColors.brown,
+                child: const Icon(
+                  Icons.add_a_photo_rounded,
+                  size: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ))
+      ],
     );
   }
 }
