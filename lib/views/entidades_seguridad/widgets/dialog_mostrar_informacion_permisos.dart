@@ -12,7 +12,7 @@ Widget dialogMostrarInformacionPermisos(
     children: [
       imagen,
       buscador,
-      Expanded(
+      Flexible(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Padding(

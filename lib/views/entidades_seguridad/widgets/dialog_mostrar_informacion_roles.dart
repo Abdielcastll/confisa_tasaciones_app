@@ -5,7 +5,7 @@ import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 
 Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
-    Size size, Function guardar, eliminar, asignar) {
+    Size size, Function guardar, eliminar, Widget buscador) {
   final _navigationService = locator<NavigatorService>();
   return SizedBox(
     width: size.width * .75,
@@ -13,8 +13,8 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
       mainAxisSize: MainAxisSize.min,
       children: [
         imagen,
-        SizedBox(
-          height: 250,
+        buscador,
+        Flexible(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -68,23 +68,6 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                       height: 3,
                     ), // icon
                     Text("Cancelar"), // text
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () => asignar(),
-                // button pressed
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    Icon(
-                      AppIcons.iconPlus,
-                      color: AppColors.gold,
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ), // icon
-                    Text("Asignar"), // text
                   ],
                 ),
               ),

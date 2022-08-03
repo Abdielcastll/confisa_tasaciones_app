@@ -140,16 +140,19 @@ Form dialogActualizarInformacion(
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  readOnly: true,
-                  maxLines: null,
-                  initialValue: usuariosData.nombreSuplidor == ""
-                      ? "Ninguno"
-                      : usuariosData.nombreSuplidor,
-                  style: const TextStyle(color: Colors.black54),
-                  decoration: const InputDecoration(
-                      labelText: 'Suplidor', border: UnderlineInputBorder()),
-                ),
+                usuariosData.roles.first.typeRolDescription == "Externo"
+                    ? TextFormField(
+                        readOnly: true,
+                        maxLines: null,
+                        initialValue: usuariosData.nombreSuplidor == ""
+                            ? "Ninguno"
+                            : usuariosData.nombreSuplidor,
+                        style: const TextStyle(color: Colors.black54),
+                        decoration: const InputDecoration(
+                            labelText: 'Suplidor',
+                            border: UnderlineInputBorder()),
+                      )
+                    : const SizedBox(),
                 const SizedBox(
                   height: 10,
                 ),

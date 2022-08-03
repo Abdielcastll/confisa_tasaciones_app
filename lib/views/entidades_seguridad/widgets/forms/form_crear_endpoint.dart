@@ -148,10 +148,8 @@ class CrearEndpointForm extends StatelessWidget {
                       const SizedBox(
                         height: 15,
                       ),
-                      Wrap(
-                        spacing: 0.0,
-                        runSpacing: 5.0,
-                        direction: Axis.horizontal,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           showEliminar
                               ? TextButton(
@@ -169,7 +167,7 @@ class CrearEndpointForm extends StatelessWidget {
                                       Text(
                                         "Desactivar",
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 12),
+                                        style: TextStyle(fontSize: 10),
                                       ), // text
                                     ],
                                   ),
@@ -192,11 +190,14 @@ class CrearEndpointForm extends StatelessWidget {
                                 ), // icon
                                 Text(
                                   "Cancelar",
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 10),
                                 ), // text
                               ],
                             ),
                           ),
+                          !showEliminar
+                              ? const Expanded(child: SizedBox())
+                              : const SizedBox(),
                           showEliminar
                               ? TextButton(
                                   onPressed: () =>
@@ -213,7 +214,7 @@ class CrearEndpointForm extends StatelessWidget {
                                       ), // icon
                                       Text(
                                         "Permiso",
-                                        style: TextStyle(fontSize: 12),
+                                        style: TextStyle(fontSize: 10),
                                       ), // text
                                     ],
                                   ),
@@ -240,7 +241,7 @@ class CrearEndpointForm extends StatelessWidget {
                                 ), // icon
                                 Text(
                                   "Guardar",
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 10),
                                 ), // text
                               ],
                             ),

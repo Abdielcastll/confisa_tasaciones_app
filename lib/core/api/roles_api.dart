@@ -185,4 +185,19 @@ class RolesAPI {
       },
     );
   }
+
+  Future<Object> getAllRolesClaims() async {
+    String _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/rolesclaims/get',
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      queryParameters: {"PageSize": 999},
+      parser: (data) {
+        return RolClaimsResponseGet.fromJson(data);
+      },
+    );
+  }
 }
