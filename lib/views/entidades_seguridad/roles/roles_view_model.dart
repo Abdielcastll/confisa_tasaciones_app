@@ -278,7 +278,7 @@ class RolesViewModel extends BaseViewModel {
                                                   setState(() => {
                                                         selectedPermisos =
                                                             isSelectedAll!
-                                                                ? list
+                                                                ? list.toList()
                                                                 : [],
                                                         isSelect = isSelectedAll
                                                       });
@@ -299,17 +299,12 @@ class RolesViewModel extends BaseViewModel {
                                                                 (isSelected) =>
                                                                     setState(
                                                                         () {
-                                                                      final isAdding =
-                                                                          isSelected != null &&
-                                                                              isSelected;
-                                                                      if (!isSelect) {
-                                                                        isAdding
-                                                                            ? selectedPermisos.add(
-                                                                                e)
-                                                                            : selectedPermisos.removeWhere((element) =>
-                                                                                element.id ==
-                                                                                e.id);
-                                                                      }
+                                                                      isSelected!
+                                                                          ? selectedPermisos.add(
+                                                                              e)
+                                                                          : selectedPermisos.removeWhere((element) =>
+                                                                              element.id ==
+                                                                              e.id);
                                                                     }),
                                                             cells: [
                                                               DataCell(
@@ -338,32 +333,6 @@ class RolesViewModel extends BaseViewModel {
                                               Dialogs.error(
                                                   msg: resp.messages.first);
                                             }
-                                          },
-                                          () {
-                                            Dialogs.confirm(context,
-                                                tittle: "Eliminar Permiso",
-                                                description:
-                                                    "Esta seguro que desea eliminar el permiso?",
-                                                confirm: () async {
-                                              ProgressDialog.show(context);
-                                              var resp = await _rolesApi
-                                                  .deletePermisosRol(
-                                                      rol.id, selectedPermisos);
-                                              if (resp
-                                                  is Success<RolPOSTResponse>) {
-                                                ProgressDialog.dissmiss(
-                                                    context);
-                                                Dialogs.success(
-                                                    msg: "Eliminado con exito");
-                                                _navigationService.pop();
-                                                notifyListeners();
-                                              } else if (resp is Failure) {
-                                                ProgressDialog.dissmiss(
-                                                    context);
-                                                Dialogs.error(
-                                                    msg: resp.messages.first);
-                                              }
-                                            });
                                           },
                                           buscador(
                                             text: 'Buscar permisos...',

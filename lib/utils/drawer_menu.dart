@@ -16,16 +16,21 @@ List<Widget> menu(MenuResponse menu) {
         style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
       ),
       children: element.recursos
-          .map((e) => ListTile(
-                title: Text(
-                  e.nombre,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500),
-                ),
-                onTap: () {
-                  _navigationService.pop();
-                  _navigationService.navigateToPage(e.nombre);
-                },
+          .map((e) => ExpansionTile(
+                title: Text(e.nombre),
+                children: e.recursos
+                    .map((e2) => ListTile(
+                          title: Text(
+                            e2.nombre,
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                          onTap: () {
+                            _navigationService.pop();
+                            _navigationService.navigateToPage(e2.nombre);
+                          },
+                        ))
+                    .toList(),
               ))
           .toList(),
     ));

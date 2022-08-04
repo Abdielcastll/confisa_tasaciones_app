@@ -187,9 +187,9 @@ class ModulosViewModel extends BaseViewModel {
                         onPressed: () {
                           Navigator.pop(context);
                           Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Acción',
+                              tittle: 'Eliminar Módulo',
                               description:
-                                  '¿Esta seguro de eliminar la acción ${modulo.nombre}?',
+                                  '¿Esta seguro de eliminar el módulo ${modulo.nombre}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
                             var resp =

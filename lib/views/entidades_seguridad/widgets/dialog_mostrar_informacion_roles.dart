@@ -5,7 +5,7 @@ import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 
 Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
-    Size size, Function guardar, eliminar, Widget buscador) {
+    Size size, Function guardar, Widget buscador) {
   final _navigationService = locator<NavigatorService>();
   return SizedBox(
     width: size.width * .75,
@@ -36,22 +36,6 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TextButton(
-                onPressed: () => eliminar(), // button pressed
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    Icon(
-                      AppIcons.trash,
-                      color: AppColors.grey,
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ), // icon
-                    Text("Eliminar"), // text
-                  ],
-                ),
-              ),
               TextButton(
                 onPressed: () {
                   _navigationService.pop();

@@ -26,14 +26,40 @@ class MenuData {
 
   String nombre;
   int id;
-  List<RecursosData> recursos;
+  List<MenuRecursoData> recursos;
 
   factory MenuData.fromJson(Map<String, dynamic> json) => MenuData(
       id: json["id"] ?? 0,
       nombre: json["nombre"] ?? '',
       recursos: json["recursos"]
-          .map<RecursosData>((e) => RecursosData.fromJson(e))
+          .map<MenuRecursoData>((e) => MenuRecursoData.fromJson(e))
           .toList());
+
+  Map<String, dynamic> toJson() => {"id": id, "nombre": nombre};
+}
+
+class MenuRecursoData {
+  MenuRecursoData(
+      {required this.id,
+      required this.nombre,
+      required this.recursos,
+      required this.moduloPadre});
+
+  String nombre;
+  int id;
+  int moduloPadre;
+  List<RecursosData> recursos;
+
+  factory MenuRecursoData.fromJson(Map<String, dynamic> json) =>
+      MenuRecursoData(
+          id: json["id"] ?? 0,
+          nombre: json["nombre"] ?? '',
+          moduloPadre: json["moduloPadre"] ?? 0,
+          recursos: json["recursos"] != null
+              ? json["recursos"]
+                  .map<RecursosData>((e) => RecursosData.fromJson(e))
+                  .toList()
+              : []);
 
   Map<String, dynamic> toJson() => {"id": id, "nombre": nombre};
 }

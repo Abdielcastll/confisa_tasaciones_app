@@ -247,23 +247,32 @@ class UsuariosViewModel extends BaseViewModel {
                   },
                   () async {
                     ProgressDialog.show(context);
-                    var resp = await _rolesApi.getRoles2();
-                    bool isSelect = false;
-                    if (resp is Success<RolResponse2>) {
+                    var resp = await _rolesApi.getRoles();
+                    if (resp is Success<RolResponse>) {
                       ProgressDialog.dissmiss(context);
                       if (usuario.roles.first.typeRolDescription == "Interno") {
                         resp.response.data.removeWhere((element) =>
-                            element.typeRolDescription != "Interno");
+                            element.typeRoleDescription != "Interno");
                       } else if (usuario.roles.first.typeRolDescription ==
                           "Externo") {
                         resp.response.data.removeWhere((element) =>
-                            element.typeRolDescription != "Externo");
+                            element.typeRoleDescription != "Externo");
                       }
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             var data = resp.response.data;
-                            List<RolData2> selectedRol2 = [];
+                            List<RolData> selectedRol2 = [];
+                            for (var element in usuario.roles) {
+                              selectedRol2.add(RolData(
+                                  id: element.roleId,
+                                  name: element.roleName,
+                                  description: element.description,
+                                  typeRole: element.typeRol,
+                                  typeRoleDescription:
+                                      element.typeRolDescription));
+                            }
+
                             return StatefulBuilder(
                                 builder: (context, setState) {
                               return AlertDialog(
@@ -296,7 +305,7 @@ class UsuariosViewModel extends BaseViewModel {
                                         onChanged: (value) {
                                           setState(() {
                                             data = resp.response.data
-                                                .where((e) => e.roleName
+                                                .where((e) => e.name
                                                     .toLowerCase()
                                                     .contains(
                                                         value.toLowerCase()))
@@ -323,9 +332,8 @@ class UsuariosViewModel extends BaseViewModel {
                                                           selectedRol2 =
                                                               isSelectedAll!
                                                                   ? data
+                                                                      .toList()
                                                                   : [],
-                                                          isSelect =
-                                                              isSelectedAll
                                                         });
                                                   },
                                                   columns: const [
@@ -335,22 +343,21 @@ class UsuariosViewModel extends BaseViewModel {
                                                   ],
                                                   rows: data
                                                       .map((e) => DataRow(
-                                                              selected:
-                                                                  selectedRol2
-                                                                      .contains(
-                                                                          e),
+                                                              selected: selectedRol2
+                                                                  .any((element) =>
+                                                                      element
+                                                                          .id ==
+                                                                      e.id),
                                                               onSelectChanged:
                                                                   (isSelected) =>
                                                                       setState(
                                                                           () {
-                                                                        final isAdding =
-                                                                            isSelected != null &&
-                                                                                isSelected;
-                                                                        if (!isSelect) {
-                                                                          isAdding
-                                                                              ? selectedRol2.add(e)
-                                                                              : selectedRol2.remove(e);
-                                                                        }
+                                                                        isSelected!
+                                                                            ? selectedRol2.add(
+                                                                                e)
+                                                                            : selectedRol2.removeWhere((element) =>
+                                                                                element.id ==
+                                                                                e.id);
                                                                       }),
                                                               cells: [
                                                                 DataCell(
@@ -390,10 +397,23 @@ class UsuariosViewModel extends BaseViewModel {
                                             onPressed: () async {
                                               if (selectedRol2.isNotEmpty) {
                                                 ProgressDialog.show(context);
+                                                List<RolData2> tempList = [];
+                                                for (var element
+                                                    in selectedRol2) {
+                                                  tempList.add(RolData2(
+                                                      roleId: element.id,
+                                                      roleName: element.name,
+                                                      description:
+                                                          element.description,
+                                                      enabled: true,
+                                                      typeRol: element.typeRole,
+                                                      typeRolDescription: element
+                                                          .typeRoleDescription));
+                                                }
                                                 var cambio = await _usuariosApi
                                                     .updateRolUsuario(
                                                         id: usuario.id,
-                                                        roles: selectedRol2);
+                                                        roles: tempList);
                                                 if (cambio is Success<
                                                     UsuarioPOSTResponse>) {
                                                   ProgressDialog.dissmiss(

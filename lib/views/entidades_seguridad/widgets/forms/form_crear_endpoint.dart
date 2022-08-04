@@ -152,26 +152,30 @@ class CrearEndpointForm extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           showEliminar
-                              ? TextButton(
-                                  onPressed: () => eliminar(), // button pressed
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const <Widget>[
-                                      Icon(
-                                        AppIcons.trash,
-                                        color: AppColors.grey,
+                              ? endpointsData.estado
+                                  ? TextButton(
+                                      onPressed: () =>
+                                          eliminar(), // button pressed
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const <Widget>[
+                                          Icon(
+                                            AppIcons.trash,
+                                            color: AppColors.grey,
+                                          ),
+                                          SizedBox(
+                                            height: 3,
+                                          ), // icon
+                                          Text(
+                                            "Inactivar",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(fontSize: 10),
+                                          ), // text
+                                        ],
                                       ),
-                                      SizedBox(
-                                        height: 3,
-                                      ), // icon
-                                      Text(
-                                        "Desactivar",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 10),
-                                      ), // text
-                                    ],
-                                  ),
-                                )
+                                    )
+                                  : const SizedBox()
                               : const SizedBox(),
                           TextButton(
                             onPressed: () {
@@ -195,6 +199,32 @@ class CrearEndpointForm extends StatelessWidget {
                               ],
                             ),
                           ),
+                          showEliminar
+                              ? !endpointsData.estado
+                                  ? TextButton(
+                                      onPressed: () =>
+                                          eliminar(), // button pressed
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const <Widget>[
+                                          Icon(
+                                            AppIcons.checkCircle,
+                                            color: AppColors.grey,
+                                          ),
+                                          SizedBox(
+                                            height: 3,
+                                          ), // icon
+                                          Text(
+                                            "Activar",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(fontSize: 10),
+                                          ), // text
+                                        ],
+                                      ),
+                                    )
+                                  : const SizedBox()
+                              : const SizedBox(),
                           !showEliminar
                               ? const Expanded(child: SizedBox())
                               : const SizedBox(),

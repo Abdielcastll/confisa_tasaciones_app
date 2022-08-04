@@ -248,25 +248,51 @@ class EndpointsViewModel extends BaseViewModel {
                     }
                   },
                   eliminar: () {
-                    Dialogs.confirm(context,
-                        tittle: "Desactivar Endpoint",
-                        description:
-                            "Esta seguro que desea desactivar el endpoint?",
-                        confirm: () async {
-                      ProgressDialog.show(context);
-                      var resp = await _endpointsApi.deleteEndpoint(
-                          id: endpointsData.id);
-                      if (resp is Success<EndpointsPOSTResponse>) {
-                        ProgressDialog.dissmiss(context);
-                        Dialogs.success(msg: "Desactivado con exito");
-                        _formKey.currentState?.reset();
-                        _navigationService.pop();
-                        onInit();
-                      } else if (resp is Failure) {
-                        ProgressDialog.dissmiss(context);
-                        Dialogs.error(msg: resp.messages.first);
-                      }
-                    });
+                    if (endpointsData.estado) {
+                      Dialogs.confirm(context,
+                          tittle: "Desactivar Endpoint",
+                          description:
+                              "Esta seguro que desea desactivar el endpoint?",
+                          confirm: () async {
+                        ProgressDialog.show(context);
+                        var resp = await _endpointsApi.deleteEndpoint(
+                            id: endpointsData.id);
+                        if (resp is Success<EndpointsPOSTResponse>) {
+                          ProgressDialog.dissmiss(context);
+                          Dialogs.success(msg: "Desactivado con exito");
+                          _formKey.currentState?.reset();
+                          _navigationService.pop();
+                          onInit();
+                        } else if (resp is Failure) {
+                          ProgressDialog.dissmiss(context);
+                          Dialogs.error(msg: resp.messages.first);
+                        }
+                      });
+                    } else {
+                      Dialogs.confirm(context,
+                          tittle: "Activar Endpoint",
+                          description:
+                              "Esta seguro que desea activar el endpoint?",
+                          confirm: () async {
+                        ProgressDialog.show(context);
+                        var resp = await _endpointsApi.updateEndpoint(
+                            id: endpointsData.id,
+                            nombre: endpointsData.nombre,
+                            controlador: endpointsData.controlador,
+                            metodo: endpointsData.metodo,
+                            httpVerbo: endpointsData.httpVerbo);
+                        if (resp is Success<EndpointsPOSTResponse>) {
+                          ProgressDialog.dissmiss(context);
+                          Dialogs.success(msg: "Activacion exitosa");
+                          _formKey.currentState?.reset();
+                          _navigationService.pop();
+                          onInit();
+                        } else if (resp is Failure) {
+                          ProgressDialog.dissmiss(context);
+                          Dialogs.error(msg: resp.messages.first);
+                        }
+                      });
+                    }
                   },
                   showEliminar: true,
                   formKey: _formKey,

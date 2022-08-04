@@ -7,6 +7,7 @@ final icons = <String, IconData>{
   'Mant. General': Icons.app_registration_outlined,
   'Mant. Solicitudes': Icons.article_rounded,
   'Solicitudes': Icons.article_rounded,
+  'Mantenimientos': Icons.settings,
   '': FontAwesomeIcons.penToSquare,
   '': FontAwesomeIcons.paperPlane,
   // 'account_circle': Icons.account_circle,
