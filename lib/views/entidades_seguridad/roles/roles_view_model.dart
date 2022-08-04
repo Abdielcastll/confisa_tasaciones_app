@@ -176,7 +176,7 @@ class RolesViewModel extends BaseViewModel {
                             rol.id, nombref, descripcionf, tipoRol["id"]);
                         if (resp is Success<RolPOSTResponse>) {
                           ProgressDialog.dissmiss(context);
-                          Dialogs.success(msg: "Modificacion Exitosa");
+                          Dialogs.success(msg: "Modificación Exitosa");
                           _navigationService.pop();
                           onInit();
                         } else if (resp is Failure) {
@@ -188,13 +188,13 @@ class RolesViewModel extends BaseViewModel {
                         Dialogs.confirm(context,
                             tittle: "Eliminar Rol",
                             description:
-                                "Esta seguro que desea eliminar el rol?",
+                                "¿Está seguro que desea eliminar el rol?",
                             confirm: () async {
                           ProgressDialog.show(context);
                           var resp = await _rolesApi.deleteRol(rol.id);
                           if (resp is Success<RolPOSTResponse>) {
                             ProgressDialog.dissmiss(context);
-                            Dialogs.success(msg: "Eliminado con exito");
+                            Dialogs.success(msg: "Eliminado con éxito");
                             _navigationService.pop();
                             onInit();
                           } else if (resp is Failure) {
@@ -326,7 +326,7 @@ class RolesViewModel extends BaseViewModel {
                                                 is Success<RolPOSTResponse>) {
                                               ProgressDialog.dissmiss(context);
                                               Dialogs.success(
-                                                  msg: "Actualizado con exito");
+                                                  msg: "Actualización exitosa");
                                               _navigationService.pop();
                                             } else if (resp is Failure) {
                                               ProgressDialog.dissmiss(context);
@@ -420,7 +420,7 @@ class RolesViewModel extends BaseViewModel {
                         nombref, descripcionf, tipoRol["id"]);
                     if (resp is Success<RolPOSTResponse>) {
                       ProgressDialog.dissmiss(context);
-                      Dialogs.success(msg: "Creacion de rol exitosa");
+                      Dialogs.success(msg: "Creación de rol exitosa");
                       _navigationService.pop();
                       onInit();
                     } else if (resp is Failure) {

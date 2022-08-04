@@ -212,7 +212,7 @@ class UsuariosViewModel extends BaseViewModel {
                           fullName: nombref);
                       if (creacion is Success<UsuarioPOSTResponse>) {
                         ProgressDialog.dissmiss(context);
-                        Dialogs.success(msg: "Modificacion de datos exitosa");
+                        Dialogs.success(msg: "Modificación de datos exitosa");
                         _key.currentState?.reset();
                         _navigationService.pop();
                         onInit();
@@ -517,7 +517,7 @@ class UsuariosViewModel extends BaseViewModel {
               codigoSuplidor: suplidor["codigoRelacional"]);
           if (creacion is Success<UsuarioPOSTResponse>) {
             ProgressDialog.dissmiss(context);
-            Dialogs.success(msg: "Creacion de usuario exitosa");
+            Dialogs.success(msg: "Creación de usuario exitosa");
             _navigationService.pop();
             onInit();
           } else if (creacion is Failure) {
@@ -533,7 +533,7 @@ class UsuariosViewModel extends BaseViewModel {
               codigoSuplidor: codigoSuplidorf);
           if (creacion is Success<UsuarioPOSTResponse>) {
             ProgressDialog.dissmiss(context);
-            Dialogs.success(msg: "Creacion de usuario exitosa");
+            Dialogs.success(msg: "Creación de usuario exitosa");
             _navigationService.pop();
             onInit();
           } else if (creacion is Failure) {

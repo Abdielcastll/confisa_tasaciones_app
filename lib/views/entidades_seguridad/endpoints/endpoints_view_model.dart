@@ -184,7 +184,7 @@ class EndpointsViewModel extends BaseViewModel {
                                 if (resp is Success<EndpointsPOSTResponse>) {
                                   ProgressDialog.dissmiss(context);
                                   Dialogs.success(
-                                      msg: "Asignacion de Permiso exitosa");
+                                      msg: "Asignación de Permiso exitosa");
                                   _formKey.currentState?.reset();
                                   _navigationService.pop();
                                   _navigationService.pop();
@@ -252,14 +252,14 @@ class EndpointsViewModel extends BaseViewModel {
                       Dialogs.confirm(context,
                           tittle: "Desactivar Endpoint",
                           description:
-                              "Esta seguro que desea desactivar el endpoint?",
+                              "Está seguro que desea desactivar el endpoint?",
                           confirm: () async {
                         ProgressDialog.show(context);
                         var resp = await _endpointsApi.deleteEndpoint(
                             id: endpointsData.id);
                         if (resp is Success<EndpointsPOSTResponse>) {
                           ProgressDialog.dissmiss(context);
-                          Dialogs.success(msg: "Desactivado con exito");
+                          Dialogs.success(msg: "Desactivado con éxito");
                           _formKey.currentState?.reset();
                           _navigationService.pop();
                           onInit();
@@ -272,7 +272,7 @@ class EndpointsViewModel extends BaseViewModel {
                       Dialogs.confirm(context,
                           tittle: "Activar Endpoint",
                           description:
-                              "Esta seguro que desea activar el endpoint?",
+                              "Está seguro que desea activar el endpoint?",
                           confirm: () async {
                         ProgressDialog.show(context);
                         var resp = await _endpointsApi.updateEndpoint(
@@ -283,7 +283,7 @@ class EndpointsViewModel extends BaseViewModel {
                             httpVerbo: endpointsData.httpVerbo);
                         if (resp is Success<EndpointsPOSTResponse>) {
                           ProgressDialog.dissmiss(context);
-                          Dialogs.success(msg: "Activacion exitosa");
+                          Dialogs.success(msg: "Activación exitosa");
                           _formKey.currentState?.reset();
                           _navigationService.pop();
                           onInit();
@@ -310,7 +310,7 @@ class EndpointsViewModel extends BaseViewModel {
                         httpVerbo: httpVerbof);
                     if (resp is Success<EndpointsPOSTResponse>) {
                       ProgressDialog.dissmiss(context);
-                      Dialogs.success(msg: "Modificacion de endpoint exitosa");
+                      Dialogs.success(msg: "Modificación de endpoint exitosa");
                       _formKey.currentState?.reset();
                       _navigationService.pop();
                       onInit();
@@ -354,7 +354,7 @@ class EndpointsViewModel extends BaseViewModel {
                       httpVerbo: httpVerbof);
                   if (resp is Success<EndpointsData>) {
                     ProgressDialog.dissmiss(context);
-                    Dialogs.success(msg: "Creacion de endpoint exitosa");
+                    Dialogs.success(msg: "Creación de endpoint exitosa");
                     _formKey.currentState?.reset();
                     _navigationService.pop();
                     onInit();

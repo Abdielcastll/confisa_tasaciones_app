@@ -71,10 +71,7 @@ Form formCrearPermiso(
                         if (value == null ||
                             value.isEmpty ||
                             value.length < 3) {
-                          return 'First Name must contain at least 3 characters';
-                        } else if (value
-                            .contains(RegExp(r'^[0-9_\-=@,\.;]+$'))) {
-                          return 'First Name cannot contain special characters';
+                          return 'Debe contener por lo menos 3 caracteres';
                         }
                         return null;
                       },
@@ -84,12 +81,12 @@ Form formCrearPermiso(
                     ),
                     DropdownSearch<String>(
                       validator: (value) =>
-                          value == null ? 'Debe escojer una accion' : null,
+                          value == null ? 'Debe escojer una acción' : null,
                       dropdownDecoratorProps: const DropDownDecoratorProps(
                           dropdownSearchDecoration: InputDecoration(
                               hintText: "Acciones",
                               border: UnderlineInputBorder(),
-                              label: Text("Accion"))),
+                              label: Text("Acción"))),
                       items: acciones.map((e) => e.nombre).toList(),
                       onChanged: (value) {
                         measure = value;

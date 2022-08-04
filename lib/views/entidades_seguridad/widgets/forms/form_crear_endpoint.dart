@@ -77,7 +77,7 @@ class CrearEndpointForm extends StatelessWidget {
                           if (value == null ||
                               value.isEmpty ||
                               value.length < 5) {
-                            return 'Debe ingresar un nombre valido';
+                            return 'Debe ingresar un nombre válido';
                           }
                           return null;
                         },
@@ -98,7 +98,7 @@ class CrearEndpointForm extends StatelessWidget {
                           if (value == null ||
                               value.isEmpty ||
                               value.length < 5) {
-                            return 'Debe ingresar un controlador valido';
+                            return 'Debe ingresar un controlador válido';
                           }
                           return null;
                         },
@@ -119,7 +119,7 @@ class CrearEndpointForm extends StatelessWidget {
                           if (value == null ||
                               value.isEmpty ||
                               value.length < 5) {
-                            return 'Debe ingresar un metodo valido';
+                            return 'Debe ingresar un método válido';
                           }
                           return null;
                         },
@@ -140,7 +140,7 @@ class CrearEndpointForm extends StatelessWidget {
                           if (value == null ||
                               value.isEmpty ||
                               value.length < 3) {
-                            return 'Debe ingresar un verbo http valudo';
+                            return 'Debe ingresar un verbo http válido';
                           }
                           return null;
                         },

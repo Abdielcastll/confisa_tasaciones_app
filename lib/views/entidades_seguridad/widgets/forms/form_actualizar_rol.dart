@@ -101,7 +101,7 @@ class ActualizarRolForm extends StatelessWidget {
                           if (value == null ||
                               value.isEmpty ||
                               value.length < 4) {
-                            return 'Debe ingresar una descripcion valida';
+                            return 'Debe ingresar una descripción válida';
                           }
                           return null;
                         },

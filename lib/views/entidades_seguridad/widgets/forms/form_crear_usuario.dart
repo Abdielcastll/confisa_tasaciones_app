@@ -154,7 +154,7 @@ Future<dynamic> dialogCrearUsuario(
                                                   if (value == null ||
                                                       value.isEmpty ||
                                                       value.length < 8) {
-                                                    return 'Debe ingresar un nombre valido';
+                                                    return 'Debe ingresar un nombre válido';
                                                   }
 
                                                   return null;
@@ -167,7 +167,7 @@ Future<dynamic> dialogCrearUsuario(
                                                 keyboardType:
                                                     TextInputType.number,
                                                 decoration: const InputDecoration(
-                                                    labelText: 'Telefono',
+                                                    labelText: 'Teléfono',
                                                     border:
                                                         UnderlineInputBorder()),
                                                 onSaved: (value) {
@@ -177,7 +177,7 @@ Future<dynamic> dialogCrearUsuario(
                                                   if (value == null ||
                                                       value.isEmpty ||
                                                       value.length < 9) {
-                                                    return 'Debe ingresar un telefono valido';
+                                                    return 'Debe ingresar un teléfono válido';
                                                   }
 
                                                   return null;
@@ -353,7 +353,7 @@ Future<dynamic> dialogCrearUsuario(
                                               value.length < 8 ||
                                               !EmailValidator.validate(
                                                   value, true, true)) {
-                                            return 'Debe ingresar un email valido';
+                                            return 'Debe ingresar un email válido';
                                           }
 
                                           return null;

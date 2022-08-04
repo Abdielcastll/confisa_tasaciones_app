@@ -160,7 +160,7 @@ class PermisosViewModel extends BaseViewModel {
               return AlertDialog(
                   contentPadding: EdgeInsets.zero,
                   content: formCrearPermiso(
-                      "Modificacion de Permiso",
+                      "Modificación de Permiso",
                       _formKey,
                       permiso.descripcion,
                       recurso,
@@ -174,7 +174,7 @@ class PermisosViewModel extends BaseViewModel {
                         esBasico: 1);
                     if (creacion is Success<PermisosPOSTResponse>) {
                       ProgressDialog.dissmiss(context);
-                      Dialogs.success(msg: "Modificacion exitosa");
+                      Dialogs.success(msg: "Modificación exitosa");
                       _navigationService.pop();
                       onInit();
                     } else if (creacion is Failure) {
@@ -185,14 +185,14 @@ class PermisosViewModel extends BaseViewModel {
                     Dialogs.confirm(context,
                         tittle: "Eliminar Permiso",
                         description:
-                            "Esta seguro que desea eliminar el permiso?",
+                            "¿Está seguro que desea eliminar el permiso?",
                         confirm: () async {
                       ProgressDialog.show(context);
                       var resp =
                           await _permisosApi.deletePermisos(id: permiso.id);
                       if (resp is Success<PermisosPOSTResponse>) {
                         ProgressDialog.dissmiss(context);
-                        Dialogs.success(msg: "Eliminado con exito");
+                        Dialogs.success(msg: "Eliminado con éxito");
                         _navigationService.pop();
                         onInit();
                       } else if (resp is Failure) {
@@ -234,7 +234,7 @@ class PermisosViewModel extends BaseViewModel {
               return AlertDialog(
                   contentPadding: EdgeInsets.zero,
                   content: formCrearPermiso(
-                      "Creacion de Permiso",
+                      "Creación de Permiso",
                       _formKey,
                       descripcion,
                       recurso,
@@ -247,7 +247,7 @@ class PermisosViewModel extends BaseViewModel {
                         esBasico: 1);
                     if (creacion is Success<PermisosData>) {
                       ProgressDialog.dissmiss(context);
-                      Dialogs.success(msg: "Creacion exitosa");
+                      Dialogs.success(msg: "Creación exitosa");
                       _formKey.currentState?.reset();
                       _navigationService.pop();
                       onInit();

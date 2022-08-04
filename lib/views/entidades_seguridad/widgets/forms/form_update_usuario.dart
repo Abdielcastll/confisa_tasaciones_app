@@ -60,7 +60,7 @@ Form dialogActualizarInformacion(
                             nombreCompleto != "" ||
                             telefono != "")) {
                       if (value == null || value.isEmpty || value.length < 8) {
-                        return 'Debe ingresar un nombre valido';
+                        return 'Debe ingresar un nombre válido';
                       }
                     }
                     return null;
@@ -87,7 +87,7 @@ Form dialogActualizarInformacion(
                             nombreCompleto != "" ||
                             telefono != "")) {
                       if (value == null || value.isEmpty || value.length < 9) {
-                        return 'Debe ingresar un telefono valido';
+                        return 'Debe ingresar un teléfono válido';
                       }
                     }
                     return null;
@@ -116,7 +116,7 @@ Form dialogActualizarInformacion(
                           value.isEmpty ||
                           value.length < 8 ||
                           !EmailValidator.validate(value, true, true)) {
-                        return 'Debe ingresar un email valido';
+                        return 'Debe ingresar un email válido';
                       }
                     }
 
