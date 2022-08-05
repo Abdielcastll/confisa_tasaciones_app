@@ -61,16 +61,28 @@ class LoginViewModel extends BaseViewModel {
             _navigationService
                 .navigateToPageWithReplacement(HomeView.routeName);
           } else if (resp2 is Failure) {
-            loading = false;
-            Dialogs.error(
-              msg: resp2.messages[0],
-            );
+            if (resp2.messages.first != "No Internet") {
+              loading = false;
+              _navigationService
+                  .navigateToPageWithReplacement(HomeView.routeName);
+            } else {
+              loading = false;
+              Dialogs.error(
+                msg: resp2.messages[0],
+              );
+            }
           }
         } else if (resp1 is Failure) {
-          loading = false;
-          Dialogs.error(
-            msg: resp1.messages[0],
-          );
+          if (resp1.messages.first != "No Internet") {
+            loading = false;
+            _navigationService
+                .navigateToPageWithReplacement(HomeView.routeName);
+          } else {
+            loading = false;
+            Dialogs.error(
+              msg: resp1.messages[0],
+            );
+          }
         }
       } else if (resp is Failure) {
         loading = false;

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
+import 'package:tasaciones_app/views/entidades_generales/tipos_adjuntos/tipos_adjuntos_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/acciones/acciones_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/endpoints/endpoints_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/roles/roles_view.dart';
@@ -53,6 +54,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case RolesView.routeName:
       return CupertinoPageRoute(builder: (context) => const RolesView());
+
+    case TiposAdjuntosView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const TiposAdjuntosView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());
