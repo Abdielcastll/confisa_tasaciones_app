@@ -63,10 +63,10 @@ class AccionesPendientesData {
   Map<String, dynamic> toJson() => {"id": id, "descipcion": descripcion};
 }
 
-AccionesPendientesResponse AccionesPendientesPOSTResponseFromJson(String str) =>
+AccionesPendientesResponse accionesPendientesPOSTResponseFromJson(String str) =>
     AccionesPendientesResponse.fromJson(json.decode(str));
 
-String AccionesPendientesPOSTResponseToJson(AccionesPendientesResponse data) =>
+String accionesPendientesPOSTResponseToJson(AccionesPendientesResponse data) =>
     json.encode(data.toJson());
 
 class AccionesPendientesPOSTResponse {

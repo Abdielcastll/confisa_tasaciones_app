@@ -103,6 +103,7 @@ abstract class Dialogs {
                       alignment: Alignment.center,
                       child: Text(
                         tittle.toUpperCase(),
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,

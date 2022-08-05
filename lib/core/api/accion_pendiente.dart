@@ -1,4 +1,5 @@
 import '../authentication_client.dart';
+import '../models/acciones_pendientes_response.dart';
 import 'http.dart';
 
 class AccionesPendientesApi {
@@ -14,7 +15,7 @@ class AccionesPendientesApi {
       int? elemento}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/tipos-acciones-solicitud/get',
+      '/api/tipo-acciones-solicitud/get',
       method: 'GET',
       headers: {
         'Authorization': 'Bearer $_token',
@@ -35,7 +36,7 @@ class AccionesPendientesApi {
   Future<Object> createAccionesPendientes({required String descripcion}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/tipos-acciones-solicitud/create',
+      '/api/tipo-acciones-solicitud/create',
       method: 'POST',
       headers: {
         'Authorization': 'Bearer $_token',
@@ -44,7 +45,7 @@ class AccionesPendientesApi {
         "descripcion": descripcion,
       },
       parser: (data) {
-        return AccionesPendientesData.fromJson(data["data"]);
+        return AccionesPendientesPOSTResponse.fromJson(data["data"]);
       },
     );
   }
@@ -53,7 +54,7 @@ class AccionesPendientesApi {
       {required int id, required String descripcion}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/tipos-acciones-solicitud/update',
+      '/api/tipo-acciones-solicitud/update',
       method: 'PUT',
       headers: {
         'Authorization': 'Bearer $_token',
@@ -65,16 +66,14 @@ class AccionesPendientesApi {
     );
   }
 
-  Future<Object> deleteAccionesPendientes(
-      {required int id, required String descripcion}) async {
+  Future<Object> deleteAccionesPendientes({required int id}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/tipos-acciones-solicitud/delete/$id',
+      '/api/tipo-acciones-solicitud/delete/$id',
       method: 'DELETE',
       headers: {
         'Authorization': 'Bearer $_token',
       },
-      data: {"id": id, "descripcion": descripcion},
       parser: (data) {
         return AccionesPendientesPOSTResponse.fromJson(data);
       },
