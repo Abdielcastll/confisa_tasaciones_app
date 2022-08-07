@@ -38,7 +38,7 @@ Future<dynamic> dialogCrearUsuario(
   suplidor["identificacion"] = "";
   int codSuplidor = 0;
   final _usuariosApi = locator<UsuariosAPI>();
-  final _suplidoresApi = locator<SuplidoresAPI>();
+  final _suplidoresApi = locator<SuplidoresApi>();
   final user = locator<AuthenticationClient>().loadSession;
   final _navigationService = locator<NavigatorService>();
   List<SuplidorData> suplidores = [];

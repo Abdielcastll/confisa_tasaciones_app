@@ -1,6 +1,6 @@
-import '../authentication_client.dart';
-import '../models/Adjuntos_response.dart';
-import 'http.dart';
+import '../../authentication_client.dart';
+import '../../models/seguridad_entidades_generales/adjuntos_response.dart';
+import '../http.dart';
 
 class AdjuntosApi {
   final Http _http;

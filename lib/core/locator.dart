@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tasaciones_app/core/api/accion_pendiente.dart';
 import 'package:tasaciones_app/core/api/acciones_api.dart';
-import 'package:tasaciones_app/core/api/adjuntos.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
 import 'package:tasaciones_app/core/api/endpoints_api.dart';
@@ -10,6 +8,8 @@ import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/api/permisos_api.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos.dart';
 import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/user_client.dart';
@@ -21,6 +21,9 @@ import 'package:logger/logger.dart';
 
 import 'api/modulos_api.dart';
 import 'api/recursos_api.dart';
+import 'api/seguridad_entidades_generales/accion_pendiente.dart';
+import 'api/seguridad_entidades_generales/adjuntos.dart';
+import 'api/seguridad_entidades_solicitudes/componentes_vehiculo_suplidor_api.dart';
 import 'api/usuarios_api.dart';
 
 GetIt locator = GetIt.instance;
@@ -51,13 +54,19 @@ abstract class DependencyInjection {
         AccionesPendientesApi(http, authenticationClient);
     final userClient = UserClient(storage, usuariosAPI);
     final personalApi = PersonalApi(http, authenticationClient);
+    final componenteVehiculoSuplidorApi =
+        ComponentesVehiculoSuplidorApi(http, authenticationClient);
     final accionesApi = AccionesApi(http, authenticationClient);
+    final segmentosComponentesVehiculosApi =
+        SegmentosComponentesVehiculosApi(http, authenticationClient);
+    final componentesVehiculoApi =
+        ComponentesVehiculoApi(http, authenticationClient);
     final rolesAPI = RolesAPI(http, authenticationClient);
     final permisosAPI = PermisosAPI(http, authenticationClient);
     final recursosAPI = RecursosAPI(http, authenticationClient);
     final endpointsAPI = EndpointsApi(http, authenticationClient);
     final modulosAPI = ModulosApi(http, authenticationClient);
-    final suplidoresAPI = SuplidoresAPI(http, authenticationClient);
+    final suplidoresAPI = SuplidoresApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
@@ -66,12 +75,17 @@ abstract class DependencyInjection {
     locator.registerSingleton<AccionesPendientesApi>(accionesPendientesAPI);
     locator.registerSingleton<UsuariosAPI>(usuariosAPI);
     locator.registerSingleton<RecursosAPI>(recursosAPI);
+    locator.registerSingleton<SegmentosComponentesVehiculosApi>(
+        segmentosComponentesVehiculosApi);
+    locator.registerSingleton<ComponentesVehiculoSuplidorApi>(
+        componenteVehiculoSuplidorApi);
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
     locator.registerSingleton<UserClient>(userClient);
+    locator.registerSingleton<ComponentesVehiculoApi>(componentesVehiculoApi);
     locator.registerSingleton<PersonalApi>(personalApi);
     locator.registerSingleton<AccionesApi>(accionesApi);
     locator.registerSingleton<EndpointsApi>(endpointsAPI);
     locator.registerSingleton<ModulosApi>(modulosAPI);
-    locator.registerSingleton<SuplidoresAPI>(suplidoresAPI);
+    locator.registerSingleton<SuplidoresApi>(suplidoresAPI);
   }
 }

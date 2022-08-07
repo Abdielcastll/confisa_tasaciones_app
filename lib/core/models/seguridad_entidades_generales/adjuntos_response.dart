@@ -58,7 +58,7 @@ class AdjuntosData {
         descripcion: json["descripcion"] ?? '',
       );
 
-  Map<String, dynamic> toJson() => {"id": id, "descipcion": descripcion};
+  Map<String, dynamic> toJson() => {"id": id, "descripcion": descripcion};
 }
 
 AdjuntosResponse adjuntosPOSTResponseFromJson(String str) =>

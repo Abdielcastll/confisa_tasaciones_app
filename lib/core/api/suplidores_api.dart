@@ -3,10 +3,10 @@ import 'package:tasaciones_app/core/models/suplidores_response.dart';
 
 import '../authentication_client.dart';
 
-class SuplidoresAPI {
+class SuplidoresApi {
   final Http _http;
   final AuthenticationClient _authenticationClient;
-  SuplidoresAPI(this._http, this._authenticationClient);
+  SuplidoresApi(this._http, this._authenticationClient);
 
   Future<Object> getSuplidores() async {
     String _token = await _authenticationClient.accessToken;

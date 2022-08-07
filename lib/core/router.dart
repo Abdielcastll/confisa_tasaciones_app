@@ -8,12 +8,14 @@ import 'package:tasaciones_app/views/entidades_seguridad/acciones/acciones_view.
 import 'package:tasaciones_app/views/entidades_seguridad/endpoints/endpoints_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/roles/roles_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/usuarios/usuarios_view.dart';
+import 'package:tasaciones_app/views/entidades_solicitudes/componentes_vehiculo/componentes_vehiculo_view.dart';
 
 import '../views/Perfil_de_usuario/perfil_view.dart';
 import '../views/auth/login/login_view.dart';
 import '../views/entidades_seguridad/modulos/modulos_view.dart';
 import '../views/entidades_seguridad/permisos/permisos_view.dart';
 import '../views/entidades_seguridad/recursos/recursos_view.dart';
+import '../views/entidades_solicitudes/componentes_vehiculo_suplidor/componentes_vehiculo_suplidor_view.dart';
 import '../views/home/home_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -63,6 +65,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AccionesPendientesView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const AccionesPendientesView());
+
+    case ComponentesVehiculoSuplidorView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const ComponentesVehiculoSuplidorView());
+
+    case ComponentesVehiculoView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const ComponentesVehiculoView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

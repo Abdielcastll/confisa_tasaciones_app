@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
-import '../../../core/api/adjuntos.dart';
+import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
-import '../../../core/models/Adjuntos_response.dart';
+import '../../../core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import '../../../theme/theme.dart';
 
 class TiposAdjuntosViewModel extends BaseViewModel {

@@ -6,7 +6,7 @@ import 'package:themify_flutter/themify_flutter.dart';
 /* Colors */
 class AppColors {
   static const bronce = Color.fromRGBO(235, 219, 206, 1);
-  static const grey = Color.fromRGBO(230, 230, 230, 1);
+  static const grey = Color.fromARGB(255, 163, 161, 161);
   static const orange = Color(0xFFFE9301);
   static const darkOrange = Color.fromRGBO(255, 135, 44, 1);
   static const green = Color(0xFFA8C638);

@@ -1,6 +1,6 @@
-import '../authentication_client.dart';
-import '../models/acciones_pendientes_response.dart';
-import 'http.dart';
+import '../../authentication_client.dart';
+import '../../models/seguridad_entidades_generales/acciones_pendientes_response.dart';
+import '../http.dart';
 
 class AccionesPendientesApi {
   final Http _http;
