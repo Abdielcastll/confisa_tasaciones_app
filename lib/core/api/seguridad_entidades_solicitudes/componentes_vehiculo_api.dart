@@ -1,4 +1,4 @@
-import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/componentes_vehiculo.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/componentes_vehiculo_response.dart';
 
 import '../../authentication_client.dart';
 import '../http.dart';

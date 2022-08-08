@@ -8,9 +8,11 @@ import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/api/permisos_api.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
-import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo.dart';
-import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
 import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/user_client.dart';
@@ -60,14 +62,18 @@ abstract class DependencyInjection {
     final accionesApi = AccionesApi(http, authenticationClient);
     final segmentosComponentesVehiculosApi =
         SegmentosComponentesVehiculosApi(http, authenticationClient);
+    final segmentosAccesoriosVehiculosApi =
+        SegmentosAccesoriosVehiculosApi(http, authenticationClient);
     final componentesVehiculoApi =
         ComponentesVehiculoApi(http, authenticationClient);
+    final accesoriosApi = AccesoriosApi(http, authenticationClient);
     final condicionesComponentesVehiculoApi =
         CondicionesComponentesVehiculoApi(http, authenticationClient);
     final rolesAPI = RolesAPI(http, authenticationClient);
     final permisosAPI = PermisosAPI(http, authenticationClient);
     final recursosAPI = RecursosAPI(http, authenticationClient);
     final endpointsAPI = EndpointsApi(http, authenticationClient);
+
     final modulosAPI = ModulosApi(http, authenticationClient);
     final suplidoresAPI = SuplidoresApi(http, authenticationClient);
 
@@ -80,9 +86,12 @@ abstract class DependencyInjection {
     locator.registerSingleton<RecursosAPI>(recursosAPI);
     locator.registerSingleton<SegmentosComponentesVehiculosApi>(
         segmentosComponentesVehiculosApi);
+    locator.registerSingleton<SegmentosAccesoriosVehiculosApi>(
+        segmentosAccesoriosVehiculosApi);
     locator.registerSingleton<ComponentesVehiculoSuplidorApi>(
         componenteVehiculoSuplidorApi);
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
+    locator.registerSingleton<AccesoriosApi>(accesoriosApi);
     locator.registerSingleton<UserClient>(userClient);
     locator.registerSingleton<ComponentesVehiculoApi>(componentesVehiculoApi);
     locator.registerSingleton<CondicionesComponentesVehiculoApi>(

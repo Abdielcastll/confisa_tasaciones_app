@@ -1,8 +1,7 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
-import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo.dart';
-import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_api.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -23,7 +22,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
   bool _busqueda = false;
   bool hasNextPage = false;
   late CondicionesComponentesVehiculoResponse
-      CondicionescomponentesVehiculoResponse;
+      condicionescomponentesVehiculoResponse;
 
   CondicionesComponentesVehiculoViewModel() {
     listController.addListener(() {
@@ -58,12 +57,12 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
     var resp = await _condicionescomponentesVehiculoApi
         .getCondicionesComponentesVehiculo(pageNumber: pageNumber);
     if (resp is Success) {
-      CondicionescomponentesVehiculoResponse =
+      condicionescomponentesVehiculoResponse =
           resp.response as CondicionesComponentesVehiculoResponse;
       condicionesComponentesVehiculo =
-          CondicionescomponentesVehiculoResponse.data;
+          condicionescomponentesVehiculoResponse.data;
       ordenar();
-      hasNextPage = CondicionescomponentesVehiculoResponse.hasNextPage;
+      hasNextPage = condicionescomponentesVehiculoResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -78,7 +77,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
         .getCondicionesComponentesVehiculo(pageNumber: pageNumber);
     if (resp is Success) {
       var temp = resp.response as CondicionesComponentesVehiculoResponse;
-      CondicionescomponentesVehiculoResponse.data.addAll(temp.data);
+      condicionescomponentesVehiculoResponse.data.addAll(temp.data);
       condicionesComponentesVehiculo.addAll(temp.data);
       ordenar();
       hasNextPage = temp.hasNextPage;
@@ -114,7 +113,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
   void limpiarBusqueda() {
     _busqueda = false;
     condicionesComponentesVehiculo =
-        CondicionescomponentesVehiculoResponse.data;
+        condicionescomponentesVehiculoResponse.data;
     if (condicionesComponentesVehiculo.length >= 20) {
       hasNextPage = true;
     }
@@ -129,7 +128,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
         .getCondicionesComponentesVehiculo();
     if (resp is Success) {
       var temp = resp.response as CondicionesComponentesVehiculoResponse;
-      CondicionescomponentesVehiculoResponse = temp;
+      condicionescomponentesVehiculoResponse = temp;
       condicionesComponentesVehiculo = temp.data;
       ordenar();
       hasNextPage = temp.hasNextPage;

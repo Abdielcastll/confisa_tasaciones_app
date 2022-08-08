@@ -13,7 +13,6 @@ import '../../../core/models/roles_claims_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 import '../widgets/buscador.dart';
-import '../widgets/dialog_mostrar_informacion_permisos.dart';
 import '../widgets/dialog_mostrar_informacion_roles.dart';
 import '../widgets/forms/form_actualizar_rol.dart';
 
@@ -222,7 +221,6 @@ class RolesViewModel extends BaseViewModel {
                                   .toLowerCase()
                                   .compareTo(b.descripcion.toLowerCase());
                             });
-                            bool isSelect = false;
                             showDialog(
                                 barrierColor: Colors.transparent,
                                 context: context,
@@ -280,7 +278,6 @@ class RolesViewModel extends BaseViewModel {
                                                             isSelectedAll!
                                                                 ? list.toList()
                                                                 : [],
-                                                        isSelect = isSelectedAll
                                                       });
                                                 },
                                                 columns: const [

@@ -1,9 +1,9 @@
-part of segmentos_componentes_vehiculos_view;
+part of segmentos_accesorios_vehiculos_view;
 
-class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
-  final SegmentosComponentesVehiculosViewModel vm;
+class _SegmentosAccesoriosVehiculosMobile extends StatelessWidget {
+  final SegmentosAccesoriosVehiculosViewModel vm;
 
-  const _SegmentosComponentesVehiculosMobile(this.vm);
+  const _SegmentosAccesoriosVehiculosMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Segmentos Vehículo Componentes',
+            'Vehículo Segmentos Accesorios',
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
@@ -31,7 +31,7 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscarSegmentosComponentesVehiculos,
+                        onSubmitted: vm.buscarSegmentosAccesoriosVehiculos,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -40,7 +40,7 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Segmentos Componentes Vehiculo ',
+                          hintText: 'Buscar Segmentos Accesorios Vehiculo ',
                           hintStyle: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -49,7 +49,7 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
                                   onPressed: () =>
-                                      vm.buscarSegmentosComponentesVehiculos(
+                                      vm.buscarSegmentosAccesoriosVehiculos(
                                           vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
@@ -67,7 +67,7 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
                 MaterialButton(
                   onPressed:
                       () {} /* =>
-                      vm.crearSegmentosComponentesVehiculos(context) */
+                      vm.crearSegmentosAccesoriosVehiculos(context) */
                   ,
                   color: Colors.white,
                   minWidth: 30,
@@ -90,14 +90,14 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.segmentosComponentesVehiculos.isEmpty
+                child: vm.segmentosAccesoriosVehiculos.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.segmentosComponentesVehiculos.length + 1,
+                        itemCount: vm.segmentosAccesoriosVehiculos.length + 1,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          if (i >= vm.segmentosComponentesVehiculos.length) {
+                          if (i >= vm.segmentosAccesoriosVehiculos.length) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 30),
                               child: !vm.hasNextPage
@@ -107,14 +107,14 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
                             );
                           }
                           var segmentoComponenteVehiculo =
-                              vm.segmentosComponentesVehiculos[i];
+                              vm.segmentosAccesoriosVehiculos[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
                               onPressed:
                                   () {} /* =>
-                                  vm.modificarSegmentosComponentesVehiculos(
+                                  vm.modificarSegmentosAccesoriosVehiculos(
                                       context, segmentoComponenteVehiculo) */
                               ,
                               color: Colors.white,
