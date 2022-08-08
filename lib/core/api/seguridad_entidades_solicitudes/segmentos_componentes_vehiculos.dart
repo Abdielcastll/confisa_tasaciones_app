@@ -32,18 +32,18 @@ class SegmentosComponentesVehiculosApi {
     );
   }
 
-  Future<Object> createComponenteVehiculoSuplidor(
-      {required int idComponente, required int idSuplidor}) async {
+  Future<Object> createComponenteVehiculo(
+      {required int idComponente, required int id}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/componentes-vehiculo-suplidor/create',
+      '/api/componentes-vehiculo/create',
       method: 'POST',
       headers: {
         'Authorization': 'Bearer $_token',
       },
       data: {
         "idComponente": idComponente,
-        "idSuplidor": idSuplidor,
+        "id": id,
       },
       parser: (data) {
         return SegmentosComponentesVehiculosData.fromJson(data["data"]);
@@ -54,7 +54,7 @@ class SegmentosComponentesVehiculosApi {
   Future<Object> deleteSegmentosComponentesVehiculos({required int id}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/componentes-vehiculo-suplidor/delete/$id',
+      '/api/componentes-vehiculo-/delete/$id',
       method: 'DELETE',
       headers: {
         'Authorization': 'Bearer $_token',

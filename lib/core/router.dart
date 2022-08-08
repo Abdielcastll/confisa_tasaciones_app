@@ -9,6 +9,7 @@ import 'package:tasaciones_app/views/entidades_seguridad/endpoints/endpoints_vie
 import 'package:tasaciones_app/views/entidades_seguridad/roles/roles_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/usuarios/usuarios_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/componentes_vehiculo/componentes_vehiculo_view.dart';
+import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_componentes_vehiculos/segmentos_componentes_vehiculos_view.dart';
 
 import '../views/Perfil_de_usuario/perfil_view.dart';
 import '../views/auth/login/login_view.dart';
@@ -73,6 +74,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ComponentesVehiculoView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const ComponentesVehiculoView());
+
+    case SegmentosComponentesVehiculosView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const SegmentosComponentesVehiculosView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

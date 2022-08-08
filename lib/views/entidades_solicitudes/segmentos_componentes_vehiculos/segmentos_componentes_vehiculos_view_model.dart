@@ -1,9 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
-import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos.dart';
-import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/componentes_vehiculo.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
@@ -12,28 +10,26 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 
-class ComponentesVehiculoViewModel extends BaseViewModel {
-  final _componentesVehiculoApi = locator<ComponentesVehiculoApi>();
+class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
   final _segmentosComponentesVehiculosApi =
       locator<SegmentosComponentesVehiculosApi>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewDescripcion = TextEditingController();
 
-  List<ComponentesVehiculoData> componentesVehiculo = [];
-  List<SegmentosComponentesVehiculosData> segmentosComponentesVehiculos = [];
+  List<SegmentosComponentesVehiculosData> SegmentosComponentesVehiculos = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
-  late ComponentesVehiculoResponse componentesVehiculoResponse;
-  SegmentosComponentesVehiculosData? segmentoComponenteVehiculo;
+  late SegmentosComponentesVehiculosResponse
+      segmentosComponentesVehiculosResponse;
 
-  ComponentesVehiculoViewModel() {
+  SegmentosComponentesVehiculosViewModel() {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
-          cargarMasComponentesVehiculo();
+          cargarMasSegmentosComponentesVehiculos();
         }
       }
     });
@@ -52,46 +48,38 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
   }
 
   void ordenar() {
-    componentesVehiculo.sort((a, b) {
+    SegmentosComponentesVehiculos.sort((a, b) {
       return a.descripcion.toLowerCase().compareTo(b.descripcion.toLowerCase());
     });
   }
 
   Future<void> onInit() async {
     cargando = true;
-    var resp = await _componentesVehiculoApi.getComponentesVehiculo(
-        pageNumber: pageNumber);
+    var resp = await _segmentosComponentesVehiculosApi
+        .getSegmentosComponentesVehiculos(pageNumber: pageNumber);
     if (resp is Success) {
-      componentesVehiculoResponse =
-          resp.response as ComponentesVehiculoResponse;
-      componentesVehiculo = componentesVehiculoResponse.data;
+      segmentosComponentesVehiculosResponse =
+          resp.response as SegmentosComponentesVehiculosResponse;
+      SegmentosComponentesVehiculos =
+          segmentosComponentesVehiculosResponse.data;
       ordenar();
-      hasNextPage = componentesVehiculoResponse.hasNextPage;
+      hasNextPage = segmentosComponentesVehiculosResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
-    var respseg = await _segmentosComponentesVehiculosApi
-        .getSegmentosComponentesVehiculos();
-    if (respseg is Success) {
-      var data = respseg.response as SegmentosComponentesVehiculosResponse;
-      segmentosComponentesVehiculos = data.data;
-    }
-    if (respseg is Failure) {
-      Dialogs.error(msg: respseg.messages.first);
-    }
     cargando = false;
   }
 
-  Future<void> cargarMasComponentesVehiculo() async {
+  Future<void> cargarMasSegmentosComponentesVehiculos() async {
     pageNumber += 1;
-    var resp = await _componentesVehiculoApi.getComponentesVehiculo(
-        pageNumber: pageNumber);
+    var resp = await _segmentosComponentesVehiculosApi
+        .getSegmentosComponentesVehiculos(pageNumber: pageNumber);
     if (resp is Success) {
-      var temp = resp.response as ComponentesVehiculoResponse;
-      componentesVehiculoResponse.data.addAll(temp.data);
-      componentesVehiculo.addAll(temp.data);
+      var temp = resp.response as SegmentosComponentesVehiculosResponse;
+      segmentosComponentesVehiculosResponse.data.addAll(temp.data);
+      SegmentosComponentesVehiculos.addAll(temp.data);
       ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
@@ -102,15 +90,16 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> buscarComponentesVehiculo(String query) async {
+  Future<void> buscarSegmentosComponentesVehiculos(String query) async {
     cargando = true;
-    var resp = await _componentesVehiculoApi.getComponentesVehiculo(
+    var resp = await _segmentosComponentesVehiculosApi
+        .getSegmentosComponentesVehiculos(
       descripcion: query,
       pageSize: 0,
     );
     if (resp is Success) {
-      var temp = resp.response as ComponentesVehiculoResponse;
-      componentesVehiculo = temp.data;
+      var temp = resp.response as SegmentosComponentesVehiculosResponse;
+      SegmentosComponentesVehiculos = temp.data;
       ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
@@ -124,8 +113,8 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
 
   void limpiarBusqueda() {
     _busqueda = false;
-    componentesVehiculo = componentesVehiculoResponse.data;
-    if (componentesVehiculo.length >= 20) {
+    SegmentosComponentesVehiculos = segmentosComponentesVehiculosResponse.data;
+    if (SegmentosComponentesVehiculos.length >= 20) {
       hasNextPage = true;
     }
     notifyListeners();
@@ -133,13 +122,14 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
   }
 
   Future<void> onRefresh() async {
-    componentesVehiculo = [];
+    SegmentosComponentesVehiculos = [];
     cargando = true;
-    var resp = await _componentesVehiculoApi.getComponentesVehiculo();
+    var resp = await _segmentosComponentesVehiculosApi
+        .getSegmentosComponentesVehiculos();
     if (resp is Success) {
-      var temp = resp.response as ComponentesVehiculoResponse;
-      componentesVehiculoResponse = temp;
-      componentesVehiculo = temp.data;
+      var temp = resp.response as SegmentosComponentesVehiculosResponse;
+      segmentosComponentesVehiculosResponse = temp;
+      SegmentosComponentesVehiculos = temp.data;
       ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
@@ -147,23 +137,15 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
-    var respseg = await _segmentosComponentesVehiculosApi
-        .getSegmentosComponentesVehiculos();
-    if (respseg is Success) {
-      var data = respseg.response as SegmentosComponentesVehiculosResponse;
-      segmentosComponentesVehiculos = data.data;
-    }
-    if (respseg is Failure) {
-      Dialogs.error(msg: respseg.messages.first);
-    }
+
     cargando = false;
   }
 
-  Future<void> modificarComponentesVehiculo(
-      BuildContext ctx, ComponentesVehiculoData componenteVehiculo) async {
+  /* Future<void> modificarSegmentosComponentesVehiculos(BuildContext ctx,
+      SegmentosComponentesVehiculosData componenteVehiculo) async {
     tcNewDescripcion.text = componenteVehiculo.descripcion;
     final GlobalKey<FormState> _formKey = GlobalKey();
-    segmentoComponenteVehiculo = SegmentosComponentesVehiculosData(
+    segmentoComponenteVehiculo = SegmentosSegmentosComponentesVehiculossData(
         id: componenteVehiculo.idSegmento,
         descripcion: componenteVehiculo.segmentoDescripcion);
     showDialog(
@@ -232,12 +214,12 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                           fit: FlexFit.loose,
                           showSelectedItems: true,
                           searchDelay: Duration(microseconds: 0)),
-                      items: segmentosComponentesVehiculos
+                      items: segmentosSegmentosComponentesVehiculoss
                           .map((e) => e.descripcion)
                           .toList(),
                       onChanged: (value) {
                         segmentoComponenteVehiculo =
-                            segmentosComponentesVehiculos.firstWhere(
+                            segmentosSegmentosComponentesVehiculoss.firstWhere(
                                 (element) => element.descripcion == value);
                       },
                     ),
@@ -254,8 +236,8 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                                   '¿Esta seguro de eliminar el componente ${componenteVehiculo.descripcion}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
-                            var resp = await _componentesVehiculoApi
-                                .deleteComponentesVehiculo(
+                            var resp = await _SegmentosComponentesVehiculosApi
+                                .deleteSegmentosComponentesVehiculos(
                                     id: componenteVehiculo.id);
                             ProgressDialog.dissmiss(ctx);
                             if (resp is Failure) {
@@ -309,8 +291,8 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                                 componenteVehiculo.idSegmento !=
                                     segmentoComponenteVehiculo!.id) {
                               ProgressDialog.show(context);
-                              var resp = await _componentesVehiculoApi
-                                  .updateComponentesVehiculo(
+                              var resp = await _SegmentosComponentesVehiculosApi
+                                  .updateSegmentosComponentesVehiculos(
                                       idSegmento:
                                           segmentoComponenteVehiculo!.id,
                                       descripcion: tcNewDescripcion.text.trim(),
@@ -354,18 +336,18 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
             ),
           );
         });
-  }
+  } */
 
-  Future<void> deleteComponentesVehiculo(
-      BuildContext context, ComponentesVehiculoData componente) async {
+  /* Future<void> deleteSegmentosComponentesVehiculos(BuildContext context,
+      SegmentosComponentesVehiculosData componente) async {
     Dialogs.confirm(context,
         tittle: "Eliminar Vehículo Componente ${componente.descripcion}",
         description: "¿Está seguro que desea eliminar el Vehículo Componente?",
         confirm: () async {
       ProgressDialog.show(context);
-      var resp = await _componentesVehiculoApi.deleteComponentesVehiculo(
-          id: componente.id);
-      if (resp is Success<ComponentesVehiculoPOSTResponse>) {
+      var resp = await _SegmentosComponentesVehiculosApi
+          .deleteSegmentosComponentesVehiculos(id: componente.id);
+      if (resp is Success<SegmentosComponentesVehiculosPOSTResponse>) {
         ProgressDialog.dissmiss(context);
         Dialogs.success(msg: "Eliminado con éxito");
         onInit();
@@ -374,9 +356,9 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
         Dialogs.error(msg: resp.messages.first);
       }
     });
-  }
+  } */
 
-  Future<void> crearComponentesVehiculo(BuildContext ctx) async {
+  /* Future<void> crearSegmentosComponentesVehiculos(BuildContext ctx) async {
     final GlobalKey<FormState> _formKey = GlobalKey();
     tcNewDescripcion.clear();
     showDialog(
@@ -453,12 +435,12 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                                       fit: FlexFit.loose,
                                       showSelectedItems: true,
                                       searchDelay: Duration(microseconds: 0)),
-                                  items: segmentosComponentesVehiculos
+                                  items: segmentosSegmentosComponentesVehiculoss
                                       .map((e) => e.descripcion)
                                       .toList(),
                                   onChanged: (value) {
                                     segmentoComponenteVehiculo =
-                                        segmentosComponentesVehiculos
+                                        segmentosSegmentosComponentesVehiculoss
                                             .firstWhere((element) =>
                                                 element.descripcion == value);
                                   },
@@ -494,12 +476,13 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 ProgressDialog.show(context);
-                                var resp = await _componentesVehiculoApi
-                                    .createComponentesVehiculo(
-                                        idSegmento:
-                                            segmentoComponenteVehiculo!.id,
-                                        descripcion:
-                                            tcNewDescripcion.text.trim());
+                                var resp =
+                                    await _SegmentosComponentesVehiculosApi
+                                        .createSegmentosComponentesVehiculos(
+                                            idSegmento:
+                                                segmentoComponenteVehiculo!.id,
+                                            descripcion:
+                                                tcNewDescripcion.text.trim());
                                 ProgressDialog.dissmiss(context);
                                 if (resp is Success) {
                                   Dialogs.success(
@@ -538,7 +521,7 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
             },
           );
         });
-  }
+  } */
 
   @override
   void dispose() {

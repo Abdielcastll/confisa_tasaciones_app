@@ -1,9 +1,9 @@
-part of componentes_vehiculo_view;
+part of segmentos_componentes_vehiculos_view;
 
-class _ComponentesVehiculoMobile extends StatelessWidget {
-  final ComponentesVehiculoViewModel vm;
+class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
+  final SegmentosComponentesVehiculosViewModel vm;
 
-  const _ComponentesVehiculoMobile(this.vm);
+  const _SegmentosComponentesVehiculosMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +14,9 @@ class _ComponentesVehiculoMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Vehículo Componentes',
+            'Segmentos Vehículo Componentes',
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
         ),
@@ -31,7 +31,7 @@ class _ComponentesVehiculoMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscarComponentesVehiculo,
+                        onSubmitted: vm.buscarSegmentosComponentesVehiculos,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -40,7 +40,7 @@ class _ComponentesVehiculoMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Vehiculo Componentes',
+                          hintText: 'Buscar Segmentos Componentes Vehiculo ',
                           hintStyle: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -48,8 +48,9 @@ class _ComponentesVehiculoMobile extends StatelessWidget {
                           suffixIcon: !vm.busqueda
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
-                                  onPressed: () => vm.buscarComponentesVehiculo(
-                                      vm.tcBuscar.text),
+                                  onPressed: () =>
+                                      vm.buscarSegmentosComponentesVehiculos(
+                                          vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(
@@ -64,7 +65,10 @@ class _ComponentesVehiculoMobile extends StatelessWidget {
                   ),
                 ),
                 MaterialButton(
-                  onPressed: () => vm.crearComponentesVehiculo(context),
+                  onPressed:
+                      () {} /* =>
+                      vm.crearSegmentosComponentesVehiculos(context) */
+                  ,
                   color: Colors.white,
                   minWidth: 30,
                   height: 48,
@@ -86,14 +90,14 @@ class _ComponentesVehiculoMobile extends StatelessWidget {
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.componentesVehiculo.isEmpty
+                child: vm.SegmentosComponentesVehiculos.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.componentesVehiculo.length + 1,
+                        itemCount: vm.SegmentosComponentesVehiculos.length + 1,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          if (i >= vm.componentesVehiculo.length) {
+                          if (i >= vm.SegmentosComponentesVehiculos.length) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 30),
                               child: !vm.hasNextPage
@@ -102,13 +106,17 @@ class _ComponentesVehiculoMobile extends StatelessWidget {
                                       child: CircularProgressIndicator()),
                             );
                           }
-                          var componenteVehiculo = vm.componentesVehiculo[i];
+                          var segmentoComponenteVehiculo =
+                              vm.SegmentosComponentesVehiculos[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
-                              onPressed: () => vm.modificarComponentesVehiculo(
-                                  context, componenteVehiculo),
+                              onPressed:
+                                  () {} /* =>
+                                  vm.modificarSegmentosComponentesVehiculos(
+                                      context, segmentoComponenteVehiculo) */
+                              ,
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
@@ -127,20 +135,14 @@ class _ComponentesVehiculoMobile extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            componenteVehiculo.descripcion,
+                                            segmentoComponenteVehiculo
+                                                .descripcion,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                               color: AppColors.brownDark,
                                               fontSize: 18,
                                               fontWeight: FontWeight.w800,
                                             ),
-                                          ),
-                                          Text(
-                                            "Segmento: ${componenteVehiculo.segmentoDescripcion}",
-                                            style: const TextStyle(
-                                                overflow: TextOverflow.ellipsis,
-                                                color: AppColors.brownDark,
-                                                fontSize: 12),
                                           ),
                                         ],
                                       ),
