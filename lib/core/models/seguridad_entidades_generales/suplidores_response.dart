@@ -16,15 +16,15 @@ class SuplidoresResponse {
 }
 
 class SuplidorData {
-  SuplidorData({
-    required this.codigoRelacionado,
-    required this.estado,
-    required this.nombre,
-    required this.identificacion,
-  });
+  SuplidorData(
+      {required this.codigoRelacionado,
+      required this.estado,
+      required this.nombre,
+      required this.identificacion,
+      required this.direccion});
 
   int codigoRelacionado, estado;
-  String nombre;
+  String nombre, direccion;
   String identificacion;
 
   factory SuplidorData.fromJson(Map<String, dynamic> json) => SuplidorData(
@@ -32,12 +32,14 @@ class SuplidorData {
         estado: json["estado"] ?? 0,
         nombre: json["nombre"] ?? '',
         identificacion: json["identificacion"] ?? '',
+        direccion: json["direccion"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
         "codigoRelacionado": codigoRelacionado,
         "estado": estado,
         "nombre": nombre,
-        "identificacion": identificacion
+        "identificacion": identificacion,
+        "direccion": direccion
       };
 }

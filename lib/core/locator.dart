@@ -8,12 +8,12 @@ import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/api/permisos_api.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
-import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 

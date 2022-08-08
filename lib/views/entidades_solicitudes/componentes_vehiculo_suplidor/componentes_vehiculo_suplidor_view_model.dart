@@ -1,14 +1,14 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/componentes_vehiculo_response.dart';
-import 'package:tasaciones_app/core/models/suplidores_response.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/seguridad_entidades_solicitudes/componentes_vehiculo_suplidor_api.dart';
-import '../../../core/api/suplidores_api.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 
