@@ -36,7 +36,7 @@ class CondicionesComponentesVehiculoApi {
       {required int id, required String descripcion}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/condiciones-componentes-vehiculo/create',
+      '/api/condiciones-componentes-vehiculo/update',
       method: 'PUT',
       headers: {
         'Authorization': 'Bearer $_token',

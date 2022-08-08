@@ -9,6 +9,7 @@ import 'package:tasaciones_app/core/api/permisos_api.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos.dart';
 import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
@@ -61,6 +62,8 @@ abstract class DependencyInjection {
         SegmentosComponentesVehiculosApi(http, authenticationClient);
     final componentesVehiculoApi =
         ComponentesVehiculoApi(http, authenticationClient);
+    final condicionesComponentesVehiculoApi =
+        CondicionesComponentesVehiculoApi(http, authenticationClient);
     final rolesAPI = RolesAPI(http, authenticationClient);
     final permisosAPI = PermisosAPI(http, authenticationClient);
     final recursosAPI = RecursosAPI(http, authenticationClient);
@@ -82,6 +85,8 @@ abstract class DependencyInjection {
     locator.registerSingleton<AuthenticationClient>(authenticationClient);
     locator.registerSingleton<UserClient>(userClient);
     locator.registerSingleton<ComponentesVehiculoApi>(componentesVehiculoApi);
+    locator.registerSingleton<CondicionesComponentesVehiculoApi>(
+        condicionesComponentesVehiculoApi);
     locator.registerSingleton<PersonalApi>(personalApi);
     locator.registerSingleton<AccionesApi>(accionesApi);
     locator.registerSingleton<EndpointsApi>(endpointsAPI);
