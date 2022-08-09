@@ -8,8 +8,8 @@ final icons = <String, IconData>{
   'Mant. Solicitudes': Icons.article_rounded,
   'Solicitudes': Icons.article_rounded,
   'Mantenimientos': Icons.settings,
-  '': FontAwesomeIcons.penToSquare,
-  '': FontAwesomeIcons.paperPlane,
+  /* '': FontAwesomeIcons.penToSquare,
+  '': FontAwesomeIcons.paperPlane, */
   // 'account_circle': Icons.account_circle,
   // 'account_circle': Icons.account_circle,
   // 'account_circle': Icons.account_circle,
