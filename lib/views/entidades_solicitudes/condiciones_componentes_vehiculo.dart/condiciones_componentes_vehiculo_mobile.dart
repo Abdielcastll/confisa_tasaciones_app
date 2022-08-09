@@ -14,7 +14,7 @@ class _CondicionesComponentesVehiculoMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Vehículo Componentes',
+            'Vehículo Condiciones',
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
@@ -40,7 +40,7 @@ class _CondicionesComponentesVehiculoMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Vehiculo Componentes',
+                          hintText: 'Buscar Vehiculo Condiciones',
                           hintStyle: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,

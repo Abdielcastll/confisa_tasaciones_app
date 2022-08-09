@@ -80,6 +80,7 @@ Form formCrearPermiso(
                       height: 20,
                     ),
                     DropdownSearch<String>(
+                      selectedItem: permiso.accionNombre,
                       validator: (value) =>
                           value == null ? 'Debe escojer una acción' : null,
                       dropdownDecoratorProps: const DropDownDecoratorProps(
@@ -100,6 +101,7 @@ Form formCrearPermiso(
                       height: 20,
                     ),
                     DropdownSearch<String>(
+                      selectedItem: permiso.recursoNombre,
                       dropdownDecoratorProps: const DropDownDecoratorProps(
                           dropdownSearchDecoration: InputDecoration(
                         hintText: "Recursos",

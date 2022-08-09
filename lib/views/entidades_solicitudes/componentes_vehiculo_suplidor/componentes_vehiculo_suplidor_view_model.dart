@@ -389,13 +389,16 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
                         width: double.infinity,
                         alignment: Alignment.center,
                         color: AppColors.brownLight,
-                        child: const Text(
-                          'Crear Vehiculo Componente Suplidor',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'Crear Vehiculo Componente Suplidor',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                         ),
                       ),
