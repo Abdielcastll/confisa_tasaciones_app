@@ -189,7 +189,7 @@ class _SuplidoresDefaultMobile extends StatelessWidget {
                                               SizedBox(
                                                 height: 3,
                                               ), // icon
-                                              Text("Guardar"), // text
+                                              Text("Actualizar"), // text
                                             ],
                                           ),
                                         ),

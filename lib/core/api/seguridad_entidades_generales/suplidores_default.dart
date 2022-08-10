@@ -50,7 +50,7 @@ class SuplidoresDefaultApi {
         "codigoEntidad": codigoEntidad,
       },
       parser: (data) {
-        return SuplidoresDefaultPOSTResponse.fromJson(data["data"]);
+        return SuplidoresDefaultPOSTResponse.fromJson(data);
       },
     );
   }

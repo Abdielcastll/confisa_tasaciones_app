@@ -157,11 +157,7 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
       BuildContext ctx, SuplidoresDefaultData suplidorDefault) async {
     tcNewValor.text = suplidorDefault.valor;
 
-    if (suplidor!.nombre !=
-        suplidores
-            .firstWhere((element) =>
-                suplidor!.codigoRelacionado == element.codigoRelacionado)
-            .nombre) {
+    if (suplidor!.codigoRelacionado.toString() != suplidorDefault.valor) {
       ProgressDialog.show(ctx);
       var resp = await _suplidoresDefaultApi.createOrUpdateSuplidoresDefault(
           valor: suplidor!.codigoRelacionado.toString(),
@@ -169,7 +165,6 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
       ProgressDialog.dissmiss(ctx);
       if (resp is Success) {
         Dialogs.success(msg: 'Suplidor default Actualizado');
-        Navigator.of(ctx).pop();
         await onRefresh();
       }
 
@@ -180,7 +175,6 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
       tcNewValor.clear();
     } else {
       Dialogs.success(msg: 'Suplidor default Actualizado');
-      Navigator.of(ctx).pop();
     }
   }
 
