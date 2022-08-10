@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/views/entidades_generales/acciones_pendientes/acciones_pendientes_view.dart';
+import 'package:tasaciones_app/views/entidades_generales/parametros_servidor_email/parametros_servidor_email_view.dart';
 import 'package:tasaciones_app/views/entidades_generales/suplidores/suplidores_view.dart';
 import 'package:tasaciones_app/views/entidades_generales/suplidores_default/suplidores_default_view.dart';
 import 'package:tasaciones_app/views/entidades_generales/tipos_adjuntos/tipos_adjuntos_view.dart';
@@ -101,6 +102,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case SuplidoresDefaultView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const SuplidoresDefaultView());
+
+    case ParametrosServidorEmailView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const ParametrosServidorEmailView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

@@ -8,6 +8,7 @@ import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/api/permisos_api.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/roles_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/parametros_servidor_email_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_default.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_api.dart';
@@ -74,7 +75,8 @@ abstract class DependencyInjection {
     final permisosAPI = PermisosAPI(http, authenticationClient);
     final recursosAPI = RecursosAPI(http, authenticationClient);
     final endpointsAPI = EndpointsApi(http, authenticationClient);
-
+    final parametrosServidorEmailApi =
+        ParametrosServidorEmailApi(http, authenticationClient);
     final modulosAPI = ModulosApi(http, authenticationClient);
     final suplidoresAPI = SuplidoresApi(http, authenticationClient);
     final suplidoresDefaultAPI =
@@ -102,6 +104,8 @@ abstract class DependencyInjection {
     locator.registerSingleton<PersonalApi>(personalApi);
     locator.registerSingleton<AccionesApi>(accionesApi);
     locator.registerSingleton<EndpointsApi>(endpointsAPI);
+    locator.registerSingleton<ParametrosServidorEmailApi>(
+        parametrosServidorEmailApi);
     locator.registerSingleton<ModulosApi>(modulosAPI);
     locator.registerSingleton<SuplidoresApi>(suplidoresAPI);
     locator.registerSingleton<SuplidoresDefaultApi>(suplidoresDefaultAPI);
