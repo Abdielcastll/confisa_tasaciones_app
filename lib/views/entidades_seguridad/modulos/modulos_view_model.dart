@@ -172,10 +172,9 @@ class ModulosViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
+                        decoration: const InputDecoration(
+                          label: Text("Nombre"),
+                          border: UnderlineInputBorder(),
                         ),
                       ),
                     ),
@@ -329,10 +328,9 @@ class ModulosViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
+                        decoration: const InputDecoration(
+                          label: Text("Nombre"),
+                          border: UnderlineInputBorder(),
                         ),
                       ),
                     ),
