@@ -61,7 +61,7 @@ class ParametrosServidorEmailApi {
         "password": password,
       },
       parser: (data) {
-        return ParametrosServidorEmailResponse.fromJson(data);
+        return ParametrosServidorEmailResponse2.fromJson(data);
       },
     );
   }
