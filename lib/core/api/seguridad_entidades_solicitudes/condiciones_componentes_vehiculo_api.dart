@@ -114,7 +114,8 @@ class CondicionesComponentesVehiculoApi {
         "idCondicionesComponentes": idCondicionesComponentes
       },
       parser: (data) {
-        return CondicionesComponentesVehiculoPOSTResponse.fromJson(data);
+        return CondicionesComponentesVehiculoPOSTResponse.fromJson(
+            data["data"][0]);
       },
     );
   }
