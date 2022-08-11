@@ -26,6 +26,7 @@ class ComponentesVehiculoSuplidorApi {
         "Id": id,
         "IdComponenete": idComponente,
         "IdSuplidor": idSuplidor,
+        "ComponenteDescripcion": componenteDescripcion,
         "Estado": estado,
         "PageSize": pageSize,
         "PageNumber": pageNumber,
@@ -37,7 +38,7 @@ class ComponentesVehiculoSuplidorApi {
   }
 
   Future<Object> createComponenteVehiculoSuplidor(
-      {required int idComponente, required int idSuplidor}) async {
+      {required List<int> idComponentes, required int idSuplidor}) async {
     String _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/componentes-vehiculo-suplidor/create',
@@ -46,11 +47,11 @@ class ComponentesVehiculoSuplidorApi {
         'Authorization': 'Bearer $_token',
       },
       data: {
-        "idComponente": idComponente,
+        "idComponentes": idComponentes,
         "idSuplidor": idSuplidor,
       },
       parser: (data) {
-        return ComponentesVehiculoSuplidorData.fromJson(data["data"]);
+        return ComponentesVehiculoSuplidorData.fromJson(data);
       },
     );
   }

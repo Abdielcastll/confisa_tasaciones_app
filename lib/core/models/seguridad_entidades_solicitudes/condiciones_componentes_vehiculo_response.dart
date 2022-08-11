@@ -92,3 +92,57 @@ class CondicionesComponentesVehiculoPOSTResponse {
         "data": data,
       };
 }
+
+class AsociadosCondicionesComponentesVehiculoResponse {
+  AsociadosCondicionesComponentesVehiculoResponse({
+    required this.data,
+  });
+
+  List<AsociadosCondicionesComponentesVehiculoData> data;
+
+  factory AsociadosCondicionesComponentesVehiculoResponse.fromJson(
+          Map<String, dynamic> json) =>
+      AsociadosCondicionesComponentesVehiculoResponse(
+        data: json["data"]
+            .map<AsociadosCondicionesComponentesVehiculoData>(
+                (e) => AsociadosCondicionesComponentesVehiculoData.fromJson(e))
+            .toList(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "data": data.map((e) => e.toJson()),
+      };
+}
+
+class AsociadosCondicionesComponentesVehiculoData {
+  AsociadosCondicionesComponentesVehiculoData(
+      {required this.id,
+      required this.condicionDescripcion,
+      required this.componenteDescripcion,
+      required this.estado,
+      required this.idComponente,
+      required this.idCondicionParametroG});
+
+  String condicionDescripcion, componenteDescripcion;
+  int id, idComponente, idCondicionParametroG, estado;
+
+  factory AsociadosCondicionesComponentesVehiculoData.fromJson(
+          Map<String, dynamic> json) =>
+      AsociadosCondicionesComponentesVehiculoData(
+        id: json["id"] ?? 0,
+        idComponente: json["idComponente"] ?? 0,
+        idCondicionParametroG: json["idCondicionParametroG"] ?? 0,
+        estado: json["estado"] ?? 0,
+        condicionDescripcion: json["condicionDescripcion"] ?? '',
+        componenteDescripcion: json["componenteDescripcion"] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "idComponente": idComponente,
+        "idCondicionParametroG": idCondicionParametroG,
+        "condicionDescripcion": condicionDescripcion,
+        "estado": estado,
+        "componenteDescripcion": componenteDescripcion,
+      };
+}
