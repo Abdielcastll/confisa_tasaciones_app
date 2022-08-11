@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/modulos_response.dart';
 
 import '../authentication_client.dart';
@@ -14,56 +15,72 @@ class ModulosApi {
     int? id,
     String name = '',
   }) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request('/api/modulos/get', headers: {
-      'Authorization': 'Bearer $_token',
-    }, queryParameters: {
-      "Nombre": name,
-      "PageSize": pageSize,
-      "PageNumber": pageNumber,
-      "id": id,
-    }, parser: (data) {
-      return ModulosResponse.fromJson(data);
-    });
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request('/api/modulos/get', headers: {
+        'Authorization': 'Bearer $_token',
+      }, queryParameters: {
+        "Nombre": name,
+        "PageSize": pageSize,
+        "PageNumber": pageNumber,
+        "id": id,
+      }, parser: (data) {
+        return ModulosResponse.fromJson(data);
+      });
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createModulos({required String name}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/modulos/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "nombre": name,
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/modulos/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "nombre": name,
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updateModulos({required String name, required int id}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/modulos/update',
-      method: "PUT",
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "id": id,
-        "nombre": name,
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/modulos/update',
+        method: "PUT",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "id": id,
+          "nombre": name,
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> deleteModulos({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/modulos/delete/$id',
-      method: "DELETE",
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/modulos/delete/$id',
+        method: "DELETE",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

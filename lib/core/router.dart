@@ -6,6 +6,7 @@ import 'package:tasaciones_app/views/entidades_seguridad/acciones/acciones_view.
 import 'package:tasaciones_app/views/entidades_seguridad/endpoints/endpoints_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/roles/roles_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/usuarios/usuarios_view.dart';
+import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
 
 import '../views/Perfil_de_usuario/perfil_view.dart';
 import '../views/auth/login/login_view.dart';
@@ -53,6 +54,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case RolesView.routeName:
       return CupertinoPageRoute(builder: (context) => const RolesView());
+
+    case SolicitudEstimacionView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const SolicitudEstimacionView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

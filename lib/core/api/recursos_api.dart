@@ -3,6 +3,7 @@ import 'package:tasaciones_app/core/models/recursos_response.dart';
 
 import '../authentication_client.dart';
 import '../models/menu_response.dart';
+import 'api_status.dart';
 
 class RecursosAPI {
   final Http _http;
@@ -11,36 +12,44 @@ class RecursosAPI {
 
   Future<Object> getRecursos(
       {int pageNumber = 1, int pageSize = 20, String name = ''}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/recursos/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Nombre": name,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return RecursosResponse.fromJson(data);
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/recursos/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Nombre": name,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return RecursosResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> getMenu() async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/recursos/get/menu',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return MenuResponse.fromJson(data);
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/recursos/get/menu',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return MenuResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createRecursos({
@@ -49,20 +58,25 @@ class RecursosAPI {
     required int esMenuConfiguracion,
     required String descripcionMenuConfiguracion,
   }) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/recursos/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "nombre": name,
-        "idModulo": idModulo,
-        "esMenuConfiguracion": esMenuConfiguracion,
-        "descripcionMenuConfiguracion": descripcionMenuConfiguracion,
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+
+    if (_token != null) {
+      return _http.request(
+        '/api/recursos/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "nombre": name,
+          "idModulo": idModulo,
+          "esMenuConfiguracion": esMenuConfiguracion,
+          "descripcionMenuConfiguracion": descripcionMenuConfiguracion,
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updateRecursos({
@@ -70,29 +84,37 @@ class RecursosAPI {
     required String nombre,
     required int idModulo,
   }) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/recursos/update',
-      method: "PUT",
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "id": id,
-        "nombre": nombre,
-        "idModulo": idModulo,
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/recursos/update',
+        method: "PUT",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "id": id,
+          "nombre": nombre,
+          "idModulo": idModulo,
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> deleteRecursos({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/recursos/delete/$id',
-      method: "DELETE",
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/recursos/delete/$id',
+        method: "DELETE",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

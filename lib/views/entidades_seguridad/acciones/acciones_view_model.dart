@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/acciones_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/acciones_api.dart';
@@ -10,6 +12,7 @@ import '../../../theme/theme.dart';
 
 class AccionesViewModel extends BaseViewModel {
   final _accionesApi = locator<AccionesApi>();
+  final _navigatorService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewName = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
@@ -62,6 +65,10 @@ class AccionesViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
     cargando = false;
   }
 
@@ -79,6 +86,10 @@ class AccionesViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -98,6 +109,10 @@ class AccionesViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
     cargando = false;
   }
@@ -124,6 +139,10 @@ class AccionesViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -200,6 +219,11 @@ class AccionesViewModel extends BaseViewModel {
                               Dialogs.success(msg: 'Acción eliminada');
                               await onRefresh();
                             }
+                            if (resp is TokenFail) {
+                              Dialogs.error(msg: 'su sesión a expirado');
+                              _navigatorService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                            }
                           });
                         }, // button pressed
                         child: Column(
@@ -252,6 +276,11 @@ class AccionesViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                Dialogs.error(msg: 'su sesión a expirado');
+                                _navigatorService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
                               }
                               tcNewName.clear();
                             } else {
@@ -373,6 +402,11 @@ class AccionesViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is TokenFail) {
+                              Dialogs.error(msg: 'su sesión a expirado');
+                              _navigatorService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
                             }
                             tcNewName.clear();
                           } else {

@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/models/permisos_response.dart';
@@ -10,22 +11,26 @@ class PermisosAPI {
 
   Future<Object> getPermisos(
       {int pageNumber = 1, int pageSize = 900, String descripcion = ""}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/permisos/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return PermisosResponse.fromJson(data);
-      },
-      queryParameters: {
-        'PageSize': pageSize,
-        'PageNumber': pageNumber,
-        'Descripcion': descripcion
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/permisos/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return PermisosResponse.fromJson(data);
+        },
+        queryParameters: {
+          'PageSize': pageSize,
+          'PageNumber': pageNumber,
+          'Descripcion': descripcion
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createPermisos(
@@ -33,23 +38,27 @@ class PermisosAPI {
       required int idAccion,
       required int idRecurso,
       required int esBasico}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/permisos/create',
-      method: 'POST',
-      data: {
-        "descripcion": descripcion,
-        "idAccion": idAccion,
-        "idRecurso": idRecurso,
-        "esBasico": esBasico
-      },
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return PermisosData.fromJson(data);
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/permisos/create',
+        method: 'POST',
+        data: {
+          "descripcion": descripcion,
+          "idAccion": idAccion,
+          "idRecurso": idRecurso,
+          "esBasico": esBasico
+        },
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return PermisosData.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updatePermisos(
@@ -58,38 +67,46 @@ class PermisosAPI {
       required int idAccion,
       required int idRecurso,
       required int esBasico}) async {
-    String _token =
+    String? _token =
         await _authenticationClient.accessToken.timeout(durationLoading);
-    return _http.request(
-      '/api/permisos/update',
-      method: 'POST',
-      data: {
-        "id": id,
-        "descripcion": descripcion,
-        "idAccion": idAccion,
-        "idRecurso": idRecurso,
-        "esBasico": esBasico
-      },
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return PermisosPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/permisos/update',
+        method: 'POST',
+        data: {
+          "id": id,
+          "descripcion": descripcion,
+          "idAccion": idAccion,
+          "idRecurso": idRecurso,
+          "esBasico": esBasico
+        },
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return PermisosPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> deletePermisos({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/permisos/delete/$id',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return PermisosPOSTResponse.fromJson(data);
-      },
-    );
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/permisos/delete/$id',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return PermisosPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }
