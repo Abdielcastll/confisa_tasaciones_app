@@ -14,7 +14,7 @@ class AccesoriosApi {
       String descripcion = "",
       int? id,
       int? idSegmento}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/accesorios/get',
       method: 'GET',
@@ -38,7 +38,7 @@ class AccesoriosApi {
       {required int id,
       required String descripcion,
       required int idSegmento}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/accesorios/update',
       method: 'PUT',
@@ -54,7 +54,7 @@ class AccesoriosApi {
 
   Future<Object> createAccesorios(
       {required String descripcion, required int idSegmento}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/accesorios/create',
       method: 'POST',
@@ -69,7 +69,7 @@ class AccesoriosApi {
   }
 
   Future<Object> deleteAccesorios({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/accesorios/delete/$id',
       method: 'DELETE',

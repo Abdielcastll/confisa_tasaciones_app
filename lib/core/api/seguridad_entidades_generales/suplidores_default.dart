@@ -15,7 +15,7 @@ class SuplidoresDefaultApi {
       int? codigoEntidad,
       int? id,
       int? idCatalogoParametro}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/suplidor-default/get',
       method: 'GET',
@@ -38,7 +38,7 @@ class SuplidoresDefaultApi {
 
   Future<Object> createOrUpdateSuplidoresDefault(
       {required String codigoEntidad, required String valor}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/suplidor-default/create-or-update',
       method: 'POST',

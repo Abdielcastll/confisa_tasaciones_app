@@ -12,6 +12,7 @@ import '../../../core/locator.dart';
 import '../../../core/models/acciones_response.dart';
 import '../../../core/models/recursos_response.dart';
 import '../../../core/services/navigator_service.dart';
+import '../../auth/login/login_view.dart';
 import '../widgets/forms/form_crear_permiso.dart';
 
 class PermisosViewModel extends BaseViewModel {
@@ -75,6 +76,10 @@ class PermisosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
     cargando = false;
   }
 
@@ -93,6 +98,10 @@ class PermisosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
   }
 
   Future<void> cargarMasPermisos() async {
@@ -108,6 +117,10 @@ class PermisosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
       pageNumber -= 1;
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -127,6 +140,10 @@ class PermisosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
     cargando = false;
   }
@@ -181,6 +198,11 @@ class PermisosViewModel extends BaseViewModel {
                       ProgressDialog.dissmiss(context);
                       Dialogs.error(msg: creacion.messages.first);
                     }
+                    if (resp is TokenFail) {
+                      Dialogs.error(msg: 'su sesión a expirado');
+                      _navigationService
+                          .navigateToPageAndRemoveUntil(LoginView.routeName);
+                    }
                   }, () async {
                     Dialogs.confirm(context,
                         tittle: "Eliminar Permiso",
@@ -213,6 +235,10 @@ class PermisosViewModel extends BaseViewModel {
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
       Dialogs.error(msg: resp.messages.first);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -283,6 +309,9 @@ class PermisosViewModel extends BaseViewModel {
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
       Dialogs.error(msg: resp.messages.first);
+    } else if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 

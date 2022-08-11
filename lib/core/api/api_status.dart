@@ -34,3 +34,5 @@ class Failure {
         "statusCode": statusCode,
       };
 }
+
+class TokenFail {}

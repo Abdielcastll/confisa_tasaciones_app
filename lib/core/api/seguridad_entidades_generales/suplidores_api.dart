@@ -15,7 +15,7 @@ class SuplidoresApi {
     int pageNumber = 1,
     int? codigoRelacionado,
   }) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/suplidores/get',
       method: 'GET',
@@ -38,7 +38,7 @@ class SuplidoresApi {
   Future<Object> getSuplidoresPorId({
     required int codigoRelacionado,
   }) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/suplidores/get',
       method: 'GET',

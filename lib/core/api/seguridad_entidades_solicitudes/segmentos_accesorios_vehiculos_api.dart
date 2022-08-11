@@ -13,7 +13,7 @@ class SegmentosAccesoriosVehiculosApi {
       int pageNumber = 1,
       String descripcion = "",
       int? id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/segmentosaccesoriosvehiculos/get',
       method: 'GET',

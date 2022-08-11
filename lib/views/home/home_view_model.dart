@@ -14,10 +14,12 @@ import '../../../core/api/api_status.dart';
 import '../../../core/api/roles_api.dart';
 import '../../../core/models/roles_response.dart';
 import '../../../widgets/app_dialogs.dart';
+import '../../core/services/navigator_service.dart';
 import '../../core/user_client.dart';
 
 class HomeViewModel extends BaseViewModel {
   final _authenticationClient = locator<AuthenticationClient>();
+  final _navigatorService = locator<NavigatorService>();
   final _userClient = locator<UserClient>();
   final _rolesAPI = locator<RolesAPI>();
   bool _loading = false;

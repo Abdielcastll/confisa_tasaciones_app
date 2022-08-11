@@ -8,10 +8,13 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import '../../core/base/base_view_model.dart';
 import '../../core/locator.dart';
 import '../../core/models/profile_response.dart';
+import '../../core/services/navigator_service.dart';
+import '../auth/login/login_view.dart';
 
 class PerfilViewModel extends BaseViewModel {
   final _personalApi = locator<PersonalApi>();
   final _authenticationClient = locator<AuthenticationClient>();
+  final _navigatorService = locator<NavigatorService>();
   bool _loading = false;
   Profile? profile;
   int _currentPage = 0;
@@ -83,6 +86,10 @@ class PerfilViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
     loading = false;
   }
 
@@ -125,6 +132,10 @@ class PerfilViewModel extends BaseViewModel {
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages[0]);
       }
+      if (resp is TokenFail) {
+        Dialogs.error(msg: 'su sesión a expirado');
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      }
     }
   }
 
@@ -146,6 +157,10 @@ class PerfilViewModel extends BaseViewModel {
       }
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages[0]);
+      }
+      if (resp is TokenFail) {
+        Dialogs.error(msg: 'su sesión a expirado');
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       }
     }
   }

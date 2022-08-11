@@ -13,8 +13,9 @@ class _LoginMobile extends StatelessWidget {
         child: Form(
           key: vm.formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 80),
               AppTextField(
                 text: 'Usuario',
                 controller: vm.tcEmail,

@@ -13,7 +13,7 @@ class CondicionesComponentesVehiculoApi {
       int pageNumber = 1,
       String descripcion = "",
       int? id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/condiciones-componentes-vehiculo/get',
       method: 'GET',
@@ -34,7 +34,7 @@ class CondicionesComponentesVehiculoApi {
 
   Future<Object> updateComponenteVehiculoSuplidor(
       {required int id, required String descripcion}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/condiciones-componentes-vehiculo/update',
       method: 'PUT',
@@ -53,7 +53,7 @@ class CondicionesComponentesVehiculoApi {
 
   Future<Object> createComponenteVehiculoSuplidor(
       {required String descripcion}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/condiciones-componentes-vehiculo/create',
       method: 'POST',
@@ -68,7 +68,7 @@ class CondicionesComponentesVehiculoApi {
   }
 
   Future<Object> deleteCondicionesComponentesVehiculo({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/condiciones-componentes-vehiculo/delete/$id',
       method: 'DELETE',

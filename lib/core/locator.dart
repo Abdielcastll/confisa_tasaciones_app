@@ -16,6 +16,8 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componen
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
+import 'package:tasaciones_app/core/api/solicitudes_api.dart';
+import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 
@@ -81,6 +83,7 @@ abstract class DependencyInjection {
     final suplidoresAPI = SuplidoresApi(http, authenticationClient);
     final suplidoresDefaultAPI =
         SuplidoresDefaultApi(http, authenticationClient);
+    final solicitudesAPI = SolicitudesApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
@@ -109,5 +112,6 @@ abstract class DependencyInjection {
     locator.registerSingleton<ModulosApi>(modulosAPI);
     locator.registerSingleton<SuplidoresApi>(suplidoresAPI);
     locator.registerSingleton<SuplidoresDefaultApi>(suplidoresDefaultAPI);
+    locator.registerSingleton<SolicitudesApi>(solicitudesAPI);
   }
 }
