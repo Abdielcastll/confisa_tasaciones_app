@@ -41,7 +41,7 @@ class CondicionesComponentesVehiculoApi {
       int? idComponente,
       int? estado,
       int? id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/condiciones-componentes-vehiculo/get-asociados',
       method: 'GET',
@@ -102,7 +102,7 @@ class CondicionesComponentesVehiculoApi {
   Future<Object> asociarComponenteVehiculoSuplidor(
       {required int idComponente,
       required List<int> idCondicionesComponentes}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/condiciones-componentes-vehiculo/asociar',
       method: 'POST',

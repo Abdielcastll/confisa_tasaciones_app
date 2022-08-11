@@ -15,7 +15,7 @@ class ComponentesVehiculoSuplidorApi {
       int pageNumber = 1,
       String componenteDescripcion = "",
       int? id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/componentes-vehiculo-suplidor/get',
       method: 'GET',
@@ -39,7 +39,7 @@ class ComponentesVehiculoSuplidorApi {
 
   Future<Object> createComponenteVehiculoSuplidor(
       {required List<int> idComponentes, required int idSuplidor}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/componentes-vehiculo-suplidor/create',
       method: 'POST',
@@ -57,7 +57,7 @@ class ComponentesVehiculoSuplidorApi {
   }
 
   Future<Object> deleteComponentesVehiculoSuplidor({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/componentes-vehiculo-suplidor/delete/$id',
       method: 'DELETE',
