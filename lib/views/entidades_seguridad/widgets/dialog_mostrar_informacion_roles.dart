@@ -68,7 +68,7 @@ Widget dialogMostrarInformacionRoles(Widget imagen, List<Widget> informacion,
                     SizedBox(
                       height: 3,
                     ), // icon
-                    Text("Actualizar"), // text
+                    Text("Guardar"), // text
                   ],
                 ),
               ),

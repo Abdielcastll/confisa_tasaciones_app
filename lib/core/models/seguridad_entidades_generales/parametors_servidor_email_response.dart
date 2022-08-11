@@ -50,6 +50,24 @@ class ParametrosServidorEmailResponse {
       };
 }
 
+class ParametrosServidorEmailResponse2 {
+  ParametrosServidorEmailResponse2({
+    required this.data,
+  });
+
+  ParametrosServidorEmailData data;
+
+  factory ParametrosServidorEmailResponse2.fromJson(
+          Map<String, dynamic> json) =>
+      ParametrosServidorEmailResponse2(
+        data: ParametrosServidorEmailData.fromJson(json["data"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "data": data,
+      };
+}
+
 class ParametrosServidorEmailData {
   ParametrosServidorEmailData(
       {required this.id,

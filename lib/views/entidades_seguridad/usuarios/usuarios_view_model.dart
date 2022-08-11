@@ -166,7 +166,7 @@ class UsuariosViewModel extends BaseViewModel {
     String email = "", telefono = "", nombre = "";
     int idSuplidor = 0;
     GlobalKey<FormState> _key = GlobalKey();
-    if (user.role.any((element) => element == "AprobradorTasaciones")) {
+    if (user.role.any((element) => element == "AprobadorTasaciones")) {
       ProgressDialog.show(context);
       var resp = await _usuariosApi.getUsuarios(email: user.email);
       if (resp is Success<UsuariosResponse>) {

@@ -210,11 +210,8 @@ class RecursosViewModel extends BaseViewModel {
                                       return null;
                                     }
                                   },
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                  ),
+                                  decoration: const InputDecoration(
+                                      border: UnderlineInputBorder()),
                                 ),
                               ),
                             ),
@@ -222,13 +219,7 @@ class RecursosViewModel extends BaseViewModel {
                               padding: const EdgeInsets.all(8.0),
                               child: DropdownButtonFormField<ModulosData>(
                                 decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 0.0),
-                                    ),
-                                    border: OutlineInputBorder()),
+                                    border: UnderlineInputBorder()),
                                 items: modulos
                                     .map((e) => DropdownMenuItem<ModulosData>(
                                           child: Text(e.nombre),
@@ -263,11 +254,9 @@ class RecursosViewModel extends BaseViewModel {
                                       return null;
                                     }
                                   },
-                                  decoration: InputDecoration(
-                                    hintText: 'Descripción para menú',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
+                                  decoration: const InputDecoration(
+                                    label: Text('Descripción para menú'),
+                                    border: UnderlineInputBorder(),
                                   ),
                                 ),
                               ),
@@ -452,11 +441,9 @@ class RecursosViewModel extends BaseViewModel {
                                         return null;
                                       }
                                     },
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: 'Nombre del recurso',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
+                                      border: UnderlineInputBorder(),
                                     ),
                                   ),
                                 ),
@@ -472,13 +459,7 @@ class RecursosViewModel extends BaseViewModel {
                                     }
                                   },
                                   decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide: BorderSide(
-                                            color: Colors.grey, width: 0.0),
-                                      ),
-                                      border: OutlineInputBorder()),
+                                      border: UnderlineInputBorder()),
                                   items: modulos
                                       .map((e) => DropdownMenuItem<ModulosData>(
                                             child: Text(e.nombre),
@@ -512,11 +493,10 @@ class RecursosViewModel extends BaseViewModel {
                                         return null;
                                       }
                                     },
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
+                                      label: Text('Descripción para menú'),
                                       hintText: 'Descripción para menú',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
+                                      border: UnderlineInputBorder(),
                                     ),
                                   ),
                                 ),

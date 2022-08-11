@@ -2,10 +2,14 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/componentes_vehiculo_response.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/buscador.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_roles.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -16,12 +20,15 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
   final _componentesVehiculoApi = locator<ComponentesVehiculoApi>();
   final _segmentosComponentesVehiculosApi =
       locator<SegmentosComponentesVehiculosApi>();
+  final _condicionesComponenteVehiculo =
+      locator<CondicionesComponentesVehiculoApi>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewDescripcion = TextEditingController();
 
   List<ComponentesVehiculoData> componentesVehiculo = [];
   List<SegmentosComponentesVehiculosData> segmentosComponentesVehiculos = [];
+  List<CondicionesComponentesVehiculoData> condicionesComponenteVehiculo = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
@@ -298,6 +305,215 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                               height: 3,
                             ), // icon
                             Text("Cancelar"), // text
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          List<CondicionesComponentesVehiculoData> list = [];
+                          Size size = MediaQuery.of(ctx).size;
+                          ProgressDialog.show(ctx);
+                          var resp = await _condicionesComponenteVehiculo
+                              .getCondicionesAsociadosComponentesVehiculo(
+                                  idComponente: componenteVehiculo.id);
+                          if (resp is Success<
+                              AsociadosCondicionesComponentesVehiculoResponse>) {
+                            var respcomp = await _condicionesComponenteVehiculo
+                                .getCondicionesComponentesVehiculo();
+                            if (respcomp is Success<
+                                CondicionesComponentesVehiculoResponse>) {
+                              ProgressDialog.dissmiss(context);
+                              list = respcomp.response.data;
+                              /* for (var element in componentes) {
+                                list.add(ComponentesVehiculoSuplidorData(
+                                    id: 0,
+                                    componenteDescripcion: element.descripcion,
+                                    estado: 0,
+                                    idComponente: element.id,
+                                    idSuplidor: 0,
+                                    suplidorDescripcion: ""));
+                              } */
+                              list.sort((a, b) {
+                                return a.descripcion
+                                    .toLowerCase()
+                                    .compareTo(b.descripcion.toLowerCase());
+                              });
+                              showDialog(
+                                  context: ctx,
+                                  builder: (BuildContext context) {
+                                    List<CondicionesComponentesVehiculoData>
+                                        selectedComponentes = [];
+                                    for (var element in resp.response.data) {
+                                      selectedComponentes.add(
+                                          CondicionesComponentesVehiculoData(
+                                              id: element.idCondicionParametroG,
+                                              descripcion: element
+                                                  .condicionDescripcion));
+                                    }
+                                    return StatefulBuilder(
+                                        builder: (context, setState) {
+                                      return AlertDialog(
+                                        insetPadding: const EdgeInsets.all(15),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        contentPadding: EdgeInsets.zero,
+                                        content: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .75,
+                                          child: dialogMostrarInformacionRoles(
+                                            Container(
+                                              height: size.height * .08,
+                                              decoration: const BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10)),
+                                                color: AppColors.gold,
+                                              ),
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                    "Condiciones de ${componenteVehiculo.descripcion}",
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        color: AppColors.white,
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ),
+                                            ),
+                                            [
+                                              DataTable(
+                                                  onSelectAll: (isSelectedAll) {
+                                                    setState(() => {
+                                                          print("x"),
+                                                          selectedComponentes =
+                                                              isSelectedAll!
+                                                                  ? list
+                                                                      .toList()
+                                                                  : [],
+                                                        });
+                                                  },
+                                                  columns: const [
+                                                    DataColumn(
+                                                      label: Text("Condición"),
+                                                    ),
+                                                  ],
+                                                  rows: list
+                                                      .map((e) => DataRow(
+                                                              selected: selectedComponentes
+                                                                  .any((element) =>
+                                                                      element
+                                                                          .id ==
+                                                                      e.id),
+                                                              onSelectChanged:
+                                                                  (isSelected) =>
+                                                                      setState(
+                                                                          () {
+                                                                        isSelected!
+                                                                            ? selectedComponentes.add(
+                                                                                e)
+                                                                            : selectedComponentes.removeWhere((element) =>
+                                                                                element.id ==
+                                                                                e.id);
+                                                                      }),
+                                                              cells: [
+                                                                DataCell(
+                                                                  Text(
+                                                                    e.descripcion,
+                                                                  ),
+                                                                  onTap: null,
+                                                                ),
+                                                              ]))
+                                                      .toList())
+                                            ],
+                                            size,
+                                            () async {
+                                              ProgressDialog.show(context);
+                                              List<int> condiciones = [];
+                                              for (var element
+                                                  in selectedComponentes) {
+                                                condiciones.add(element.id);
+                                              }
+                                              var resp = await _condicionesComponenteVehiculo
+                                                  .asociarComponenteVehiculoSuplidor(
+                                                      idComponente:
+                                                          componenteVehiculo.id,
+                                                      idCondicionesComponentes:
+                                                          condiciones);
+                                              if (resp is Success<
+                                                  CondicionesComponentesVehiculoPOSTResponse>) {
+                                                ProgressDialog.dissmiss(
+                                                    context);
+                                                Dialogs.success(
+                                                    msg:
+                                                        "Actualización exitosa");
+                                                Navigator.of(context).pop();
+                                              } else if (resp is Failure) {
+                                                ProgressDialog.dissmiss(
+                                                    context);
+                                                Dialogs.error(
+                                                    msg: resp.messages.first);
+                                              }
+                                            },
+                                            buscador(
+                                              text: 'Buscar condiciones...',
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  list = [];
+                                                  for (var element in respcomp
+                                                      .response.data) {
+                                                    if (element.descripcion
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase())) {
+                                                      list.add(
+                                                          CondicionesComponentesVehiculoData(
+                                                              id: element.id,
+                                                              descripcion: element
+                                                                  .descripcion));
+                                                    }
+                                                  }
+                                                  list.sort((a, b) {
+                                                    return a.descripcion
+                                                        .toLowerCase()
+                                                        .compareTo(b.descripcion
+                                                            .toLowerCase());
+                                                  });
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    });
+                                  });
+                            } else if (respcomp is Failure) {
+                              ProgressDialog.dissmiss(ctx);
+                              Dialogs.error(msg: respcomp.messages.first);
+                            }
+                          } else if (resp is Failure) {
+                            ProgressDialog.dissmiss(ctx);
+                            Dialogs.error(msg: resp.messages.first);
+                          }
+                        }, // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              AppIcons.iconPlus,
+                              color: AppColors.gold,
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text("Condiciones"), // text
                           ],
                         ),
                       ),

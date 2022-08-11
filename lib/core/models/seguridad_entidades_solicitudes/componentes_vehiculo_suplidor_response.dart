@@ -51,34 +51,55 @@ class ComponentesVehiculoSuplidorResponse {
       };
 }
 
+class ComponentesVehiculoSuplidorResponseSinMeta {
+  ComponentesVehiculoSuplidorResponseSinMeta({
+    required this.data,
+  });
+
+  List<ComponentesVehiculoSuplidorData> data;
+
+  factory ComponentesVehiculoSuplidorResponseSinMeta.fromJson(
+          Map<String, dynamic> json) =>
+      ComponentesVehiculoSuplidorResponseSinMeta(
+        data: json["data"]
+            .map<ComponentesVehiculoSuplidorData>(
+                (e) => ComponentesVehiculoSuplidorData.fromJson(e))
+            .toList(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "data": data.map((e) => e.toJson()),
+      };
+}
+
 class ComponentesVehiculoSuplidorData {
   ComponentesVehiculoSuplidorData(
       {required this.id,
-      required this.componentesDescripcion,
+      required this.componenteDescripcion,
       required this.estado,
-      required this.idComponentes,
+      required this.idComponente,
       required this.idSuplidor,
       required this.suplidorDescripcion});
 
-  String componentesDescripcion, suplidorDescripcion;
-  int id, idComponentes, idSuplidor, estado;
+  String componenteDescripcion, suplidorDescripcion;
+  int id, idComponente, idSuplidor, estado;
 
   factory ComponentesVehiculoSuplidorData.fromJson(Map<String, dynamic> json) =>
       ComponentesVehiculoSuplidorData(
         id: json["id"] ?? 0,
-        idComponentes: json["idComponentes"] ?? 0,
+        idComponente: json["idComponente"] ?? 0,
         idSuplidor: json["idSuplidor"] ?? 0,
         estado: json["estado"] ?? 0,
-        componentesDescripcion: json["componenteDescripcion"] ?? '',
+        componenteDescripcion: json["componenteDescripcion"] ?? '',
         suplidorDescripcion: json["suplidorDescripcion"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "idComponentes": idComponentes,
+        "idComponente": idComponente,
         "idSuplidor": idSuplidor,
         "estado": estado,
-        "componentesDescripcion": componentesDescripcion,
+        "componenteDescripcion": componenteDescripcion,
         "suplidorDescripcion": suplidorDescripcion
       };
 }

@@ -455,7 +455,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Remitente",
                           border: UnderlineInputBorder(),
                         ),
@@ -475,7 +475,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Host",
                           border: UnderlineInputBorder(),
                         ),
@@ -494,7 +494,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Usuario",
                           border: UnderlineInputBorder(),
                         ),
@@ -513,7 +513,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Contraseña",
                           border: UnderlineInputBorder(),
                         ),
@@ -533,7 +533,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Puerto",
                           border: UnderlineInputBorder(),
                         ),
@@ -580,8 +580,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             );
                             ProgressDialog.dissmiss(context);
                             if (resp is Success) {
-                              Dialogs.success(
-                                  msg: 'Tipo parametroServidorEmail Creado');
+                              Dialogs.success(msg: 'Servidor Email Creado');
                               Navigator.of(context).pop();
                               await onRefresh();
                             }

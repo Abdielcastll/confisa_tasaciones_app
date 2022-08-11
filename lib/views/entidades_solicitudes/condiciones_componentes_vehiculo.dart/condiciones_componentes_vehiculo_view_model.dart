@@ -189,7 +189,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                         },
                         decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
-                            label: Text("Descripcion del Componente")),
+                            label: Text("Descripcion de la Condición")),
                       ),
                     ),
                   ),
@@ -259,9 +259,8 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                             if ((tcNewDescripcion.text.trim() !=
                                 condicionComponenteVehiculo.descripcion)) {
                               ProgressDialog.show(context);
-                              var resp =
-                                  await _condicionescomponentesVehiculoApi
-                                      .updateComponenteVehiculoSuplidor(
+                              var resp = await _condicionescomponentesVehiculoApi
+                                  .updateCondicionComponenteVehiculoSuplidor(
                                 id: condicionComponenteVehiculo.id,
                                 descripcion: tcNewDescripcion.text.trim(),
                               );
@@ -362,7 +361,8 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                                       border: UnderlineInputBorder(),
                                       isDense: true,
                                       fillColor: Colors.white,
-                                      label: Text('Descripción del Componente'),
+                                      label:
+                                          Text('Descripción de la Condición'),
                                     ),
                                   ),
                                 ),
@@ -397,11 +397,10 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 ProgressDialog.show(context);
-                                var resp =
-                                    await _condicionescomponentesVehiculoApi
-                                        .createComponenteVehiculoSuplidor(
-                                            descripcion:
-                                                tcNewDescripcion.text.trim());
+                                var resp = await _condicionescomponentesVehiculoApi
+                                    .createCondicionComponenteVehiculoSuplidor(
+                                        descripcion:
+                                            tcNewDescripcion.text.trim());
                                 ProgressDialog.dissmiss(context);
                                 if (resp is Success) {
                                   Dialogs.success(

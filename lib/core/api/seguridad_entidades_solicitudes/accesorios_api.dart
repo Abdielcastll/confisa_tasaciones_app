@@ -63,7 +63,7 @@ class AccesoriosApi {
       },
       data: {"descripcion": descripcion, "idSegmento": idSegmento},
       parser: (data) {
-        return AccesoriosPOSTResponse.fromJson(data);
+        return AccesoriosData.fromJson(data);
       },
     );
   }
