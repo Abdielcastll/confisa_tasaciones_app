@@ -5,4 +5,6 @@ class AppCuentas {
   String clavePrueba = "eXterno!123.";
   String usuarioAprobadorTasaciones = "hernando.delgado01@gmail.com";
   String claveAprobadorTasaciones = "eXterno!123.";
+  String usuarioAprobadorTasacionesid = "aprobadortester@hotmail.com";
+  String claveAprobadorTasacionesid = "eXterno!123.";
 }

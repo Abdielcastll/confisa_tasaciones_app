@@ -392,7 +392,6 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                                               DataTable(
                                                   onSelectAll: (isSelectedAll) {
                                                     setState(() => {
-                                                          print("x"),
                                                           selectedComponentes =
                                                               isSelectedAll!
                                                                   ? list

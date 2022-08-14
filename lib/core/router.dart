@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/views/entidades_generales/acciones_pendientes/acciones_pendientes_view.dart';
@@ -106,6 +107,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ParametrosServidorEmailView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const ParametrosServidorEmailView());
+
+    case AlarmasView.routeName:
+      return CupertinoPageRoute(builder: (context) => const AlarmasView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasaciones_app/core/api/acciones_api.dart';
+import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
 import 'package:tasaciones_app/core/api/endpoints_api.dart';
@@ -69,6 +70,7 @@ abstract class DependencyInjection {
     final componentesVehiculoApi =
         ComponentesVehiculoApi(http, authenticationClient);
     final accesoriosApi = AccesoriosApi(http, authenticationClient);
+    final alarmasApi = AlarmasApi(http, authenticationClient);
     final condicionesComponentesVehiculoApi =
         CondicionesComponentesVehiculoApi(http, authenticationClient);
     final rolesAPI = RolesAPI(http, authenticationClient);
@@ -89,6 +91,7 @@ abstract class DependencyInjection {
     locator.registerSingleton<AccionesPendientesApi>(accionesPendientesAPI);
     locator.registerSingleton<UsuariosAPI>(usuariosAPI);
     locator.registerSingleton<RecursosAPI>(recursosAPI);
+    locator.registerSingleton<AlarmasApi>(alarmasApi);
     locator.registerSingleton<SegmentosComponentesVehiculosApi>(
         segmentosComponentesVehiculosApi);
     locator.registerSingleton<SegmentosAccesoriosVehiculosApi>(

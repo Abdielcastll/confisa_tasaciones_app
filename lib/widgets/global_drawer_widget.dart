@@ -4,6 +4,7 @@ import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
+import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';
@@ -69,6 +70,32 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                             leading: const Icon(Icons.person),
                             title: const Text(
                               'Perfil',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                            onTap: () {
+                              _navigationService.pop();
+                              _navigationService
+                                  .navigateToPage(PerfilView.routeName);
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.alarm),
+                            title: const Text(
+                              'Alarmas',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                            onTap: () {
+                              _navigationService.pop();
+                              _navigationService
+                                  .navigateToPage(AlarmasView.routeName);
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.article_outlined),
+                            title: const Text(
+                              'Notas',
                               style: TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.w500),
                             ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/parametros_servidor_email_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/parametors_servidor_email_response.dart';
@@ -189,7 +188,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           label: Text("Remitente"),
                           border: UnderlineInputBorder(),
                         ),
@@ -209,7 +208,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           label: Text("Host"),
                           border: UnderlineInputBorder(),
                         ),
@@ -228,7 +227,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           label: Text("Usuario"),
                           border: UnderlineInputBorder(),
                         ),
@@ -247,7 +246,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           label: Text("Contraseña"),
                           border: UnderlineInputBorder(),
                         ),
@@ -267,7 +266,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           label: Text("Puerto"),
                           border: UnderlineInputBorder(),
                         ),
