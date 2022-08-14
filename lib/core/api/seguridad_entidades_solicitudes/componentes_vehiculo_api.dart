@@ -15,7 +15,7 @@ class ComponentesVehiculoApi {
     int pageSize = 900,
     String descripcion = '',
   }) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/componentes-vehiculo/get',
       headers: {
@@ -36,7 +36,7 @@ class ComponentesVehiculoApi {
 
   Future<Object> createComponentesVehiculo(
       {required String descripcion, required int idSegmento}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/componentes-vehiculo/create',
       method: 'POST',
@@ -54,7 +54,7 @@ class ComponentesVehiculoApi {
       {required String descripcion,
       required int id,
       required int idSegmento}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/componentes-vehiculo/update',
       method: "PUT",
@@ -69,7 +69,7 @@ class ComponentesVehiculoApi {
   }
 
   Future<Object> deleteComponentesVehiculo({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/componentes-vehiculo/delete/$id',
       method: "DELETE",

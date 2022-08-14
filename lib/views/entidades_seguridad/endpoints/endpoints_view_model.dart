@@ -10,6 +10,7 @@ import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 import '../../../core/services/navigator_service.dart';
+import '../../auth/login/login_view.dart';
 import '../widgets/forms/form_asignar_permiso.dart';
 import '../widgets/forms/form_crear_endpoint.dart';
 
@@ -73,6 +74,10 @@ class EndpointsViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
     cargando = false;
   }
 
@@ -91,6 +96,10 @@ class EndpointsViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
   }
 
   Future<void> cargarMasEndpoints() async {
@@ -106,6 +115,10 @@ class EndpointsViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
       pageNumber -= 1;
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -125,6 +138,10 @@ class EndpointsViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
     cargando = false;
   }
@@ -245,6 +262,10 @@ class EndpointsViewModel extends BaseViewModel {
                     } else if (resp is Failure) {
                       ProgressDialog.dissmiss(context);
                       Dialogs.error(msg: resp.messages.first);
+                    } else if (resp is TokenFail) {
+                      Dialogs.error(msg: 'su sesión a expirado');
+                      _navigationService
+                          .navigateToPageAndRemoveUntil(LoginView.routeName);
                     }
                   },
                   eliminar: () {
@@ -266,6 +287,10 @@ class EndpointsViewModel extends BaseViewModel {
                         } else if (resp is Failure) {
                           ProgressDialog.dissmiss(context);
                           Dialogs.error(msg: resp.messages.first);
+                        } else if (resp is TokenFail) {
+                          Dialogs.error(msg: 'su sesión a expirado');
+                          _navigationService.navigateToPageAndRemoveUntil(
+                              LoginView.routeName);
                         }
                       });
                     } else {
@@ -290,6 +315,10 @@ class EndpointsViewModel extends BaseViewModel {
                         } else if (resp is Failure) {
                           ProgressDialog.dissmiss(context);
                           Dialogs.error(msg: resp.messages.first);
+                        } else if (resp is TokenFail) {
+                          Dialogs.error(msg: 'su sesión a expirado');
+                          _navigationService.navigateToPageAndRemoveUntil(
+                              LoginView.routeName);
                         }
                       });
                     }
@@ -317,6 +346,10 @@ class EndpointsViewModel extends BaseViewModel {
                     } else if (resp is Failure) {
                       ProgressDialog.dissmiss(context);
                       Dialogs.error(msg: resp.messages[0]);
+                    } else if (resp is TokenFail) {
+                      Dialogs.error(msg: 'su sesión a expirado');
+                      _navigationService
+                          .navigateToPageAndRemoveUntil(LoginView.routeName);
                     }
                   },
                   buttonTittle: buttonTittle,
@@ -361,6 +394,10 @@ class EndpointsViewModel extends BaseViewModel {
                   } else if (resp is Failure) {
                     ProgressDialog.dissmiss(context);
                     Dialogs.error(msg: resp.messages.first);
+                  } else if (resp is TokenFail) {
+                    Dialogs.error(msg: 'su sesión a expirado');
+                    _navigationService
+                        .navigateToPageAndRemoveUntil(LoginView.routeName);
                   }
                 },
                 buttonTittle: buttonTittle,

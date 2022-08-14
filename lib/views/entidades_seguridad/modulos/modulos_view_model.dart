@@ -7,12 +7,15 @@ import '../../../core/api/modulos_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
+import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
+import '../../auth/login/login_view.dart';
 
 class ModulosViewModel extends BaseViewModel {
   final user = locator<AuthenticationClient>().loadSession;
   final _modulosApi = locator<ModulosApi>();
   final listController = ScrollController();
+  final _navigatorService = locator<NavigatorService>();
   TextEditingController tcNewName = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
@@ -64,6 +67,10 @@ class ModulosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
     cargando = false;
   }
 
@@ -80,6 +87,10 @@ class ModulosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -99,6 +110,10 @@ class ModulosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
     cargando = false;
   }
@@ -126,6 +141,10 @@ class ModulosViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -201,6 +220,11 @@ class ModulosViewModel extends BaseViewModel {
                               Dialogs.success(msg: 'Módulo eliminado');
                               await onRefresh();
                             }
+                            if (resp is TokenFail) {
+                              Dialogs.error(msg: 'su sesión a expirado');
+                              _navigatorService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                            }
                           });
                         }, // button pressed
                         child: Column(
@@ -253,6 +277,11 @@ class ModulosViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                Dialogs.error(msg: 'su sesión a expirado');
+                                _navigatorService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
                               }
                               tcNewName.clear();
                             } else {
@@ -373,6 +402,11 @@ class ModulosViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is TokenFail) {
+                              Dialogs.error(msg: 'su sesión a expirado');
+                              _navigatorService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
                             }
                             tcNewName.clear();
                           }

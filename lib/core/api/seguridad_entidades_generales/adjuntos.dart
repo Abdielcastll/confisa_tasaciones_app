@@ -12,7 +12,7 @@ class AdjuntosApi {
       int pageSize = 900,
       int pageNumber = 1,
       int? id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/tipos-adjuntos/get',
       method: 'GET',
@@ -32,7 +32,7 @@ class AdjuntosApi {
   }
 
   Future<Object> createAdjunto({required String descripcion}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/tipos-adjuntos/create',
       method: 'POST',
@@ -50,7 +50,7 @@ class AdjuntosApi {
 
   Future<Object> updateAdjunto(
       {required int id, required String descripcion}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/tipos-adjuntos/update',
       method: 'PUT',

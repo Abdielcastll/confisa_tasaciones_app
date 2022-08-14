@@ -12,6 +12,7 @@ import '../../../core/models/permisos_response.dart';
 import '../../../core/models/roles_claims_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
+import '../../auth/login/login_view.dart';
 import '../widgets/buscador.dart';
 import '../widgets/dialog_mostrar_informacion_roles.dart';
 import '../widgets/forms/form_actualizar_rol.dart';
@@ -76,6 +77,10 @@ class RolesViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
     cargando = false;
   }
 
@@ -94,6 +99,10 @@ class RolesViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
   }
 
   Future<void> cargarMasRoles() async {
@@ -109,6 +118,10 @@ class RolesViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
       pageNumber -= 1;
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -128,6 +141,10 @@ class RolesViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
     cargando = false;
   }
@@ -381,6 +398,9 @@ class RolesViewModel extends BaseViewModel {
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
       Dialogs.error(msg: resp.messages.first);
+    } else if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -436,6 +456,9 @@ class RolesViewModel extends BaseViewModel {
     } else if (resp is Failure) {
       ProgressDialog.dissmiss(context);
       Dialogs.error(msg: resp.messages.first);
+    } else if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 

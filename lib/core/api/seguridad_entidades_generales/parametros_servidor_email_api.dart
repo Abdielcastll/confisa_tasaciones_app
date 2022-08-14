@@ -17,7 +17,7 @@ class ParametrosServidorEmailApi {
       int pageSize = 900,
       int pageNumber = 1,
       int? id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/parametros-servidor-email/get',
       method: 'GET',
@@ -46,7 +46,7 @@ class ParametrosServidorEmailApi {
       required String puerto,
       required String usuario,
       required String password}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/parametros-servidor-email/create',
       method: 'POST',
@@ -73,7 +73,7 @@ class ParametrosServidorEmailApi {
       required String puerto,
       required String usuario,
       required String password}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/parametros-servidor-email/update',
       method: 'PUT',
@@ -95,7 +95,7 @@ class ParametrosServidorEmailApi {
   }
 
   Future<Object> deleteParametrosServidorEmail({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/parametros-servidor-email/delete/$id',
       method: 'DELETE',

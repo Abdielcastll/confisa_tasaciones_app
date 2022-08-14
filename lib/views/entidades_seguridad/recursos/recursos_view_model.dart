@@ -8,11 +8,14 @@ import '../../../core/api/recursos_api.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 import '../../../core/models/recursos_response.dart';
+import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
+import '../../auth/login/login_view.dart';
 
 class RecursosViewModel extends BaseViewModel {
   final _recursosApi = locator<RecursosAPI>();
   final _modulosApi = locator<ModulosApi>();
+  final _navigatorService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewName = TextEditingController();
   TextEditingController tcDecripcionMenu = TextEditingController();
@@ -67,6 +70,10 @@ class RecursosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
     var modresp = await _modulosApi.getModulos();
     if (modresp is Success) {
       var data = modresp.response as ModulosResponse;
@@ -93,6 +100,10 @@ class RecursosViewModel extends BaseViewModel {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
   }
 
   Future<void> buscarRecursos(String query) async {
@@ -111,6 +122,10 @@ class RecursosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
     cargando = false;
   }
@@ -138,6 +153,10 @@ class RecursosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -267,6 +286,12 @@ class RecursosViewModel extends BaseViewModel {
                                   Dialogs.success(msg: 'Recurso eliminado');
                                   await onRefresh();
                                 }
+                                if (resp is TokenFail) {
+                                  Dialogs.error(msg: 'su sesión a expirado');
+                                  _navigatorService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
+                                }
                               });
                             }, // button pressed
                             child: Column(
@@ -325,6 +350,12 @@ class RecursosViewModel extends BaseViewModel {
                                   if (resp is Failure) {
                                     ProgressDialog.dissmiss(context);
                                     Dialogs.error(msg: resp.messages[0]);
+                                  }
+                                  if (resp is TokenFail) {
+                                    Dialogs.error(msg: 'su sesión a expirado');
+                                    _navigatorService
+                                        .navigateToPageAndRemoveUntil(
+                                            LoginView.routeName);
                                   }
                                   tcNewName.clear();
                                 } else {
@@ -517,6 +548,12 @@ class RecursosViewModel extends BaseViewModel {
                                 if (resp is Failure) {
                                   ProgressDialog.dissmiss(context);
                                   Dialogs.error(msg: resp.messages[0]);
+                                }
+                                if (resp is TokenFail) {
+                                  Dialogs.error(msg: 'su sesión a expirado');
+                                  _navigatorService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
                                 }
                                 tcNewName.clear();
                               }

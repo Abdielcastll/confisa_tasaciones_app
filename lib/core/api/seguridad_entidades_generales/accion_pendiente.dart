@@ -13,7 +13,7 @@ class AccionesPendientesApi {
       int pageNumber = 1,
       int? id,
       int? elemento}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/tipo-acciones-solicitud/get',
       method: 'GET',
@@ -34,7 +34,7 @@ class AccionesPendientesApi {
   }
 
   Future<Object> createAccionesPendientes({required String descripcion}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/tipo-acciones-solicitud/create',
       method: 'POST',
@@ -52,7 +52,7 @@ class AccionesPendientesApi {
 
   Future<Object> updateAccionesPendientes(
       {required int id, required String descripcion}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/tipo-acciones-solicitud/update',
       method: 'PUT',
@@ -67,7 +67,7 @@ class AccionesPendientesApi {
   }
 
   Future<Object> deleteAccionesPendientes({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
       '/api/tipo-acciones-solicitud/delete/$id',
       method: 'DELETE',
