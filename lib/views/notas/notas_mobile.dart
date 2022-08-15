@@ -1,9 +1,9 @@
-part of alarmas_view;
+part of notas_view;
 
-class _AlarmasMobile extends StatelessWidget {
-  final AlarmasViewModel vm;
+class _NotasMobile extends StatelessWidget {
+  final NotasViewModel vm;
 
-  const _AlarmasMobile(this.vm);
+  const _NotasMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class _AlarmasMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Alarmas',
+            'Notas',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
@@ -30,7 +30,7 @@ class _AlarmasMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscarAlarmas,
+                        onSubmitted: vm.buscarNotas,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -39,14 +39,14 @@ class _AlarmasMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Alarmas...',
+                          hintText: 'Buscar Notas...',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
                                   onPressed: () =>
-                                      vm.buscarAlarmas(vm.tcBuscar.text),
+                                      vm.buscarNotas(vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(
@@ -61,7 +61,7 @@ class _AlarmasMobile extends StatelessWidget {
                   ),
                 ),
                 MaterialButton(
-                  onPressed: () => vm.crearAlarmas(context),
+                  onPressed: () => vm.crearNotas(context),
                   color: Colors.white,
                   minWidth: 30,
                   height: 48,
@@ -83,14 +83,14 @@ class _AlarmasMobile extends StatelessWidget {
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.alarmas.isEmpty
+                child: vm.notas.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.alarmas.length + 1,
+                        itemCount: vm.notas.length + 1,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          if (i >= vm.alarmas.length) {
+                          if (i >= vm.notas.length) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 30),
                               child: !vm.hasNextPage
@@ -99,13 +99,12 @@ class _AlarmasMobile extends StatelessWidget {
                                       child: CircularProgressIndicator()),
                             );
                           }
-                          var alarma = vm.alarmas[i];
+                          var nota = vm.notas[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
-                              onPressed: () =>
-                                  vm.modificarAlarma(context, alarma),
+                              onPressed: () => vm.modificarNota(context, nota),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
@@ -115,7 +114,7 @@ class _AlarmasMobile extends StatelessWidget {
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
                                 child: Text(
-                                  alarma.titulo,
+                                  nota.titulo,
                                   style: const TextStyle(
                                     color: AppColors.brownDark,
                                     fontSize: 18,

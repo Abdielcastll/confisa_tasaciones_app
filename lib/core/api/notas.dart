@@ -1,13 +1,13 @@
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
-import 'package:tasaciones_app/core/models/alarma_response.dart';
+import 'package:tasaciones_app/core/models/notas_response.dart';
 
-class AlarmasApi {
+class NotasApi {
   final Http _http;
   final AuthenticationClient _authenticationClient;
-  AlarmasApi(this._http, this._authenticationClient);
+  NotasApi(this._http, this._authenticationClient);
 
-  Future<Object> getAlarmas(
+  Future<Object> getNotas(
       {String descripcion = "",
       bool? enviado,
       String correo = "",
@@ -21,7 +21,7 @@ class AlarmasApi {
       int? id}) async {
     String? _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/alarmas-solicitud/get',
+      '/api/notassolicitud/get',
       method: 'GET',
       headers: {
         'Authorization': 'Bearer $_token',
@@ -40,21 +40,19 @@ class AlarmasApi {
         "PageNumber": pageNumber,
       },
       parser: (data) {
-        return AlarmasResponse.fromJson(data);
+        return NotasResponse.fromJson(data);
       },
     );
   }
 
-  Future<Object> createAlarma({
+  Future<Object> createNota({
     required int idSolicitud,
     required String descripcion,
-    required String fechaCompromiso,
     required String titulo,
-    required String correo,
   }) async {
     String? _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/alarmas-solicitud/create',
+      '/api/notassolicitud/create',
       method: 'POST',
       headers: {
         'Authorization': 'Bearer $_token',
@@ -62,26 +60,22 @@ class AlarmasApi {
       data: {
         "idSolicitud": idSolicitud,
         "descripcion": descripcion,
-        "fechaCompromiso": fechaCompromiso,
         "titulo": titulo,
-        "correo": correo
       },
       parser: (data) {
-        return AlarmasData.fromJson(data["data"]);
+        return NotasData.fromJson(data["data"]);
       },
     );
   }
 
-  Future<Object> updateAlarma({
+  Future<Object> updateNota({
     required int id,
     required String descripcion,
-    required String fechaCompromiso,
     required String titulo,
-    required String correo,
   }) async {
     String? _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/alarmas-solicitud/update',
+      '/api/notassolicitud/update',
       method: 'PUT',
       headers: {
         'Authorization': 'Bearer $_token',
@@ -89,28 +83,26 @@ class AlarmasApi {
       data: {
         "id": id,
         "descripcion": descripcion,
-        "fechaCompromiso": fechaCompromiso,
         "titulo": titulo,
-        "correo": correo
       },
       parser: (data) {
-        return AlarmasPOSTResponse.fromJson(data);
+        return NotasPOSTResponse.fromJson(data);
       },
     );
   }
 
-  Future<Object> deleteAlarma({
+  Future<Object> deleteNota({
     required int id,
   }) async {
     String? _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/alarmas-solicitud/delete/$id',
+      '/api/notassolicitud/delete/$id',
       method: 'DELETE',
       headers: {
         'Authorization': 'Bearer $_token',
       },
       parser: (data) {
-        return AlarmasPOSTResponse.fromJson(data);
+        return NotasPOSTResponse.fromJson(data);
       },
     );
   }

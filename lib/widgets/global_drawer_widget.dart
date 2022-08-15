@@ -5,6 +5,7 @@ import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
+import 'package:tasaciones_app/views/notas/notas_view.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';
@@ -117,7 +118,7 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                             onTap: () {
                               _navigationService.pop();
                               _navigationService
-                                  .navigateToPage(PerfilView.routeName);
+                                  .navigateToPage(NotasView.routeName);
                             },
                           ),
                           ListTile(

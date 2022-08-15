@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tasaciones_app/core/api/alarmas.dart';
+import 'package:tasaciones_app/core/api/notas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
-import 'package:tasaciones_app/core/models/alarma_response.dart';
+import 'package:tasaciones_app/core/models/notas_response.dart';
+import 'package:tasaciones_app/core/models/notas_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
@@ -12,29 +13,27 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 
-class AlarmasViewModel extends BaseViewModel {
-  final _alarmasApi = locator<AlarmasApi>();
+class NotasViewModel extends BaseViewModel {
+  final _notasApi = locator<NotasApi>();
   final _userClient = locator<UserClient>();
   final listController = ScrollController();
   TextEditingController tcNewDescription = TextEditingController();
-  TextEditingController tcNewFechaCompromiso = TextEditingController();
-  TextEditingController tcNewHoraCompromiso = TextEditingController();
   TextEditingController tcNewTitulo = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
-  List<AlarmasData> alarmas = [];
+  List<NotasData> notas = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
-  late AlarmasResponse alarmasResponse;
+  late NotasResponse notasResponse;
   UsuariosData? usuario;
 
-  AlarmasViewModel() {
+  NotasViewModel() {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
-          cargarMasAlarmas();
+          cargarMasNotas();
         }
       }
     });
@@ -53,7 +52,7 @@ class AlarmasViewModel extends BaseViewModel {
   }
 
   void ordenar() {
-    alarmas.sort((a, b) {
+    notas.sort((a, b) {
       return a.titulo.toLowerCase().compareTo(b.titulo.toLowerCase());
     });
   }
@@ -61,12 +60,12 @@ class AlarmasViewModel extends BaseViewModel {
   Future<void> onInit() async {
     cargando = true;
     usuario = _userClient.loadUsuario;
-    var resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
+    var resp = await _notasApi.getNotas(pageNumber: pageNumber);
     if (resp is Success) {
-      alarmasResponse = resp.response as AlarmasResponse;
-      alarmas = alarmasResponse.data;
+      notasResponse = resp.response as NotasResponse;
+      notas = notasResponse.data;
       ordenar();
-      hasNextPage = alarmasResponse.hasNextPage;
+      hasNextPage = notasResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -75,13 +74,13 @@ class AlarmasViewModel extends BaseViewModel {
     cargando = false;
   }
 
-  Future<void> cargarMasAlarmas() async {
+  Future<void> cargarMasNotas() async {
     pageNumber += 1;
-    var resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
+    var resp = await _notasApi.getNotas(pageNumber: pageNumber);
     if (resp is Success) {
-      var temp = resp.response as AlarmasResponse;
-      alarmasResponse.data.addAll(temp.data);
-      alarmas.addAll(temp.data);
+      var temp = resp.response as NotasResponse;
+      notasResponse.data.addAll(temp.data);
+      notas.addAll(temp.data);
       ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
@@ -92,15 +91,15 @@ class AlarmasViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> buscarAlarmas(String query) async {
+  Future<void> buscarNotas(String query) async {
     cargando = true;
-    var resp = await _alarmasApi.getAlarmas(
+    var resp = await _notasApi.getNotas(
       titulo: query,
       pageSize: 0,
     );
     if (resp is Success) {
-      var temp = resp.response as AlarmasResponse;
-      alarmas = temp.data;
+      var temp = resp.response as NotasResponse;
+      notas = temp.data;
       ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
@@ -114,8 +113,8 @@ class AlarmasViewModel extends BaseViewModel {
 
   void limpiarBusqueda() {
     _busqueda = false;
-    alarmas = alarmasResponse.data;
-    if (alarmas.length >= 20) {
+    notas = notasResponse.data;
+    if (notas.length >= 20) {
       hasNextPage = true;
     }
     notifyListeners();
@@ -123,13 +122,13 @@ class AlarmasViewModel extends BaseViewModel {
   }
 
   Future<void> onRefresh() async {
-    alarmas = [];
+    notas = [];
     cargando = true;
-    var resp = await _alarmasApi.getAlarmas();
+    var resp = await _notasApi.getNotas();
     if (resp is Success) {
-      var temp = resp.response as AlarmasResponse;
-      alarmasResponse = temp;
-      alarmas = temp.data;
+      var temp = resp.response as NotasResponse;
+      notasResponse = temp;
+      notas = temp.data;
       ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
@@ -140,16 +139,9 @@ class AlarmasViewModel extends BaseViewModel {
     cargando = false;
   }
 
-  Future<void> modificarAlarma(BuildContext ctx, AlarmasData adjunto) async {
-    tcNewDescription.text = adjunto.descripcion;
-    tcNewTitulo.text = adjunto.titulo;
-    int idx = adjunto.fechaHora.indexOf("T");
-    List parts = [
-      adjunto.fechaHora.substring(0, idx).trim(),
-      adjunto.fechaHora.substring(idx + 1).trim()
-    ];
-    tcNewFechaCompromiso.text = parts[0];
-    tcNewHoraCompromiso.text = parts[1];
+  Future<void> modificarNota(BuildContext ctx, NotasData nota) async {
+    tcNewDescription.text = nota.descripcion;
+    tcNewTitulo.text = nota.titulo;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -171,7 +163,7 @@ class AlarmasViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Modificar Alarma',
+                      'Modificar Nota',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -203,59 +195,8 @@ class AlarmasViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        readOnly: true,
-                        controller: tcNewFechaCompromiso,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Seleccione una fecha';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Fecha"),
-                          suffixIcon: Icon(Icons.calendar_today),
-                          border: UnderlineInputBorder(),
-                        ),
-                        onTap: () async {
-                          tcNewFechaCompromiso.text =
-                              await Pickers.selectDate(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        readOnly: true,
-                        controller: tcNewHoraCompromiso,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Seleccione una hora';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Hora"),
-                          suffixIcon: Icon(Icons.alarm),
-                          border: UnderlineInputBorder(),
-                        ),
-                        onTap: () async {
-                          tcNewHoraCompromiso.text =
-                              await Pickers.selectTime(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
                         controller: tcNewDescription,
+                        maxLines: 5,
                         validator: (value) {
                           if (value!.trim() == '') {
                             return 'Escriba una descripción';
@@ -279,7 +220,7 @@ class AlarmasViewModel extends BaseViewModel {
                           Dialogs.confirm(ctx,
                               tittle: 'Eliminar Módulo',
                               description:
-                                  '¿Esta seguro de eliminar el tipo adjunto ${adjunto.descripcion}?',
+                                  '¿Esta seguro de eliminar el tipo nota ${nota.descripcion}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
                             var resp = await _.delete(id: modulo.id);
@@ -330,15 +271,15 @@ class AlarmasViewModel extends BaseViewModel {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             /* if (tcNewDescription.text.trim() !=
-                                adjunto.descripcion) {
+                                nota.descripcion) {
                               ProgressDialog.show(context);
-                              var resp = await _.updateAdjunto(
+                              var resp = await _.updatenota(
                                   descripcion: tcNewDescription.text,
-                                  id: adjunto.id);
+                                  id: nota.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
                                 Dialogs.success(
-                                    msg: 'Tipo Adjunto Actualizado');
+                                    msg: 'Tipo nota Actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -349,7 +290,7 @@ class AlarmasViewModel extends BaseViewModel {
                               }
                               tcNewDescription.clear();
                             } else {
-                              Dialogs.success(msg: 'Tipo Adjunto Actualizado');
+                              Dialogs.success(msg: 'Tipo nota Actualizado');
                               Navigator.of(context).pop();
                             } */
                           }
@@ -378,10 +319,8 @@ class AlarmasViewModel extends BaseViewModel {
         });
   }
 
-  Future<void> crearAlarmas(BuildContext ctx) async {
+  Future<void> crearNotas(BuildContext ctx) async {
     tcNewDescription.clear();
-    tcNewFechaCompromiso.clear();
-    tcNewHoraCompromiso.clear();
     tcNewTitulo.clear();
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
@@ -404,7 +343,7 @@ class AlarmasViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Crear Alarma',
+                      'Crear Nota',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -436,58 +375,6 @@ class AlarmasViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        readOnly: true,
-                        controller: tcNewFechaCompromiso,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Seleccione una fecha';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Fecha"),
-                          suffixIcon: Icon(Icons.calendar_today),
-                          border: UnderlineInputBorder(),
-                        ),
-                        onTap: () async {
-                          tcNewFechaCompromiso.text =
-                              await Pickers.selectDate(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        readOnly: true,
-                        controller: tcNewHoraCompromiso,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Seleccione una hora';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Hora"),
-                          suffixIcon: Icon(Icons.alarm),
-                          border: UnderlineInputBorder(),
-                        ),
-                        onTap: () async {
-                          tcNewHoraCompromiso.text =
-                              await Pickers.selectTime(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
                         controller: tcNewDescription,
                         validator: (value) {
                           if (value!.trim() == '') {
@@ -511,8 +398,6 @@ class AlarmasViewModel extends BaseViewModel {
                         onPressed: () {
                           Navigator.of(context).pop();
                           tcNewDescription.clear();
-                          tcNewFechaCompromiso.clear();
-                          tcNewHoraCompromiso.clear();
                           tcNewTitulo.clear();
                         }, // button pressed
                         child: Column(
@@ -533,11 +418,11 @@ class AlarmasViewModel extends BaseViewModel {
                         onPressed: () async {
                           /* if (_formKey.currentState!.validate()) {
                             ProgressDialog.show(context);
-                            var resp = await _.createAdjunto(
+                            var resp = await _.createnota(
                                 descripcion: tcNewDescription.text.trim());
                             ProgressDialog.dissmiss(context);
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Tipo Adjunto Creado');
+                              Dialogs.success(msg: 'Tipo nota Creado');
                               Navigator.of(context).pop();
                               await onRefresh();
                             }
@@ -580,8 +465,6 @@ class AlarmasViewModel extends BaseViewModel {
   void dispose() {
     listController.dispose();
     tcNewDescription.dispose();
-    tcNewFechaCompromiso.dispose();
-    tcNewHoraCompromiso.dispose();
     tcNewTitulo.dispose();
     tcBuscar.dispose();
     super.dispose();

@@ -17,6 +17,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/componentes_vehiculo/
 import 'package:tasaciones_app/views/entidades_solicitudes/condiciones_componentes_vehiculo.dart/condiciones_componentes_vehiculo_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_accesorios_vehiculos/segmentos_accesorios_vehiculos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_componentes_vehiculos/segmentos_componentes_vehiculos_view.dart';
+import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
 
 import '../views/Perfil_de_usuario/perfil_view.dart';
@@ -108,12 +109,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ParametrosServidorEmailView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const ParametrosServidorEmailView());
+
     case SolicitudEstimacionView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const SolicitudEstimacionView());
 
     case AlarmasView.routeName:
       return CupertinoPageRoute(builder: (context) => const AlarmasView());
+
+    case NotasView.routeName:
+      return CupertinoPageRoute(builder: (context) => const NotasView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());
