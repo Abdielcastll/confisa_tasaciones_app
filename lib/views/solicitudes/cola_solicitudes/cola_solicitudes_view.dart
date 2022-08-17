@@ -1,0 +1,32 @@
+library cola_solicitudes_view;
+
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:stacked/stacked.dart';
+import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/widgets/forms/fotos.dart';
+import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/widgets/forms/generales.dart';
+import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/widgets/forms/vehiculo.dart';
+import 'package:tasaciones_app/widgets/progress_widget.dart';
+import '../../../theme/theme.dart';
+import '../../../widgets/refresh_widget.dart';
+import 'cola_solicitudes_view_model.dart';
+
+part 'cola_solicitudes_mobile.dart';
+
+class ColaSolicitudesView extends StatelessWidget {
+  static const routeName = 'Cola Solicitudes';
+  const ColaSolicitudesView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ColaSolicitudesViewModel viewModel = ColaSolicitudesViewModel();
+    return ViewModelBuilder<ColaSolicitudesViewModel>.reactive(
+        viewModelBuilder: () => viewModel,
+        onModelReady: (viewModel) {
+          viewModel.onInit(context);
+        },
+        builder: (context, viewModel, child) {
+          return _ColaSolicitudesMobile(viewModel);
+        });
+  }
+}

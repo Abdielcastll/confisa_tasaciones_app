@@ -43,18 +43,18 @@ class MenuRecursoData {
       {required this.id,
       required this.nombre,
       required this.recursos,
-      required this.moduloPadre});
+      this.moduloPadre});
 
   String nombre;
   int id;
-  int moduloPadre;
+  int? moduloPadre;
   List<RecursosData> recursos;
 
   factory MenuRecursoData.fromJson(Map<String, dynamic> json) =>
       MenuRecursoData(
           id: json["id"] ?? 0,
           nombre: json["nombre"] ?? '',
-          moduloPadre: json["moduloPadre"] ?? 0,
+          moduloPadre: json["moduloPadre"],
           recursos: json["recursos"] != null
               ? json["recursos"]
                   .map<RecursosData>((e) => RecursosData.fromJson(e))

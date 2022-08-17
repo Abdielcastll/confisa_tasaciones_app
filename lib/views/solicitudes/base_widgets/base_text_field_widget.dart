@@ -11,6 +11,7 @@ class BaseTextField extends StatelessWidget {
     this.onChanged,
     this.keyboardType,
     this.validator,
+    this.controller,
     Key? key,
   }) : super(key: key);
   final String? initialValue;
@@ -20,6 +21,7 @@ class BaseTextField extends StatelessWidget {
   final void Function(String)? onChanged;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class BaseTextField extends StatelessWidget {
       initialValue: initialValue,
       onChanged: onChanged,
       keyboardType: keyboardType,
+      controller: controller,
       enabled: enabled,
       decoration: InputDecoration(
         labelStyle: const TextStyle(color: AppColors.brownDark),

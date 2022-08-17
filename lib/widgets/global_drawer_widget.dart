@@ -9,6 +9,7 @@ import '../core/locator.dart';
 import '../core/services/navigator_service.dart';
 import '../views/auth/login/login_view.dart';
 import '../views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
+import '../views/solicitudes/solicitud_tasacion/solicitud_tasacion_view.dart';
 
 class GlobalDrawerDartDesktop extends StatelessWidget {
   GlobalDrawerDartDesktop({Key? key, required this.menuApp}) : super(key: key);
@@ -78,6 +79,20 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                               _navigationService.pop();
                               _navigationService.navigateToPage(
                                   SolicitudEstimacionView.routeName);
+                            },
+                          ),
+                          ListTile(
+                            leading:
+                                const Icon(Icons.document_scanner_outlined),
+                            title: const Text(
+                              'Solicitar Tasación',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                            onTap: () {
+                              _navigationService.pop();
+                              _navigationService.navigateToPage(
+                                  SolicitudTasacionView.routeName);
                             },
                           ),
                           ListTile(
