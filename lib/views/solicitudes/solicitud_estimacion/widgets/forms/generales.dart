@@ -31,9 +31,11 @@ class GeneralesForm extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            const BaseTextField(
+            BaseTextField(
               label: 'Tipo de tasación',
-              initialValue: 'Estimación',
+              initialValue: vm.solicitudCola != null
+                  ? vm.solicitudCola!.descripcionTipoTasacion!
+                  : 'Estimación',
               enabled: false,
             ),
             // const BaseTextField(
@@ -43,21 +45,32 @@ class GeneralesForm extends StatelessWidget {
             // ),
             BaseTextField(
               label: 'Fecha de solicitud',
-              initialValue:
-                  DateFormat.yMMMMd('es').format(vm.fechaActual).toUpperCase(),
+              initialValue: vm.solicitudCola != null
+                  ? DateFormat.yMMMMd('es')
+                      .format(vm.solicitudCola!.fechaCreada!)
+                      .toUpperCase()
+                  : DateFormat.yMMMMd('es')
+                      .format(vm.fechaActual)
+                      .toUpperCase(),
               enabled: false,
             ),
-            Form(
-              key: vm.formKey,
-              child: BaseTextField(
-                label: 'No. de solicitud de crédito',
-                hint: 'Ingrese el número de solicitud',
-                keyboardType: TextInputType.number,
-                onChanged: (value) => vm.numeroSolicitud = value,
-                validator: vm.noSolicitudValidator,
-                initialValue: '90108',
-              ),
-            ),
+            vm.solicitudCola != null
+                ? BaseTextField(
+                    label: 'No. de solicitud de crédito',
+                    initialValue:
+                        vm.solicitudCola!.noSolicitudCredito.toString(),
+                    enabled: false,
+                  )
+                : Form(
+                    key: vm.formKey,
+                    child: BaseTextField(
+                      label: 'No. de solicitud de crédito',
+                      hint: 'Ingrese el número de solicitud',
+                      keyboardType: TextInputType.number,
+                      validator: vm.noSolicitudValidator,
+                      controller: vm.tcNoSolicitud,
+                    ),
+                  ),
           ],
         ),
       ),

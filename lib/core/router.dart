@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
+import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/views/entidades_generales/acciones_pendientes/acciones_pendientes_view.dart';
@@ -18,7 +19,9 @@ import 'package:tasaciones_app/views/entidades_solicitudes/condiciones_component
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_accesorios_vehiculos/segmentos_accesorios_vehiculos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_componentes_vehiculos/segmentos_componentes_vehiculos_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
+import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
+import 'package:tasaciones_app/widgets/escaner.dart';
 
 import '../views/Perfil_de_usuario/perfil_view.dart';
 import '../views/auth/login/login_view.dart';
@@ -27,6 +30,7 @@ import '../views/entidades_seguridad/permisos/permisos_view.dart';
 import '../views/entidades_seguridad/recursos/recursos_view.dart';
 import '../views/entidades_solicitudes/componentes_vehiculo_suplidor/componentes_vehiculo_suplidor_view.dart';
 import '../views/home/home_view.dart';
+import '../views/solicitudes/solicitud_tasacion/solicitud_tasacion_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -110,9 +114,21 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return CupertinoPageRoute(
           builder: (context) => const ParametrosServidorEmailView());
 
-    case SolicitudEstimacionView.routeName:
+    case ColaSolicitudesView.routeName:
       return CupertinoPageRoute(
-          builder: (context) => const SolicitudEstimacionView());
+          builder: (context) => const ColaSolicitudesView());
+
+    case SolicitudEstimacionView.routeName:
+      final args = settings.arguments as SolicitudesData;
+      return CupertinoPageRoute(
+          builder: (context) => SolicitudEstimacionView(solicitudData: args));
+
+    case SolicitudTasacionView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const SolicitudTasacionView());
+
+    case EscanerPage.routeName:
+      return CupertinoPageRoute(builder: (context) => const EscanerPage());
 
     case AlarmasView.routeName:
       return CupertinoPageRoute(builder: (context) => const AlarmasView());

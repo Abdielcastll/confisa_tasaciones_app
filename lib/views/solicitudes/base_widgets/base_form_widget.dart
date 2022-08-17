@@ -72,6 +72,7 @@ class BaseFormWidget extends StatelessWidget {
                       Icon(
                         iconBack,
                         color: Colors.red,
+                        size: 30,
                       ),
                       const SizedBox(
                         height: 3,
@@ -88,6 +89,7 @@ class BaseFormWidget extends StatelessWidget {
                       Icon(
                         iconNext,
                         color: AppColors.green,
+                        size: 24,
                       ),
                       const SizedBox(
                         height: 3,
