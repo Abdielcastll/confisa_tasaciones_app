@@ -43,63 +43,63 @@ class _ColaSolicitudesMobile extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 10),
-        // Row(
-        //   children: [
-        //     Expanded(
-        //       child: Card(
-        //         child: Padding(
-        //           padding: const EdgeInsets.symmetric(horizontal: 10),
-        //           child: TextField(
-        //             controller: vm.tcBuscar,
-        //             onSubmitted: vm.buscarAccion,
-        //             style: const TextStyle(
-        //               color: AppColors.brownDark,
-        //               fontSize: 18,
-        //               fontWeight: FontWeight.w800,
-        //             ),
-        //             textInputAction: TextInputAction.search,
-        //             decoration: InputDecoration(
-        //               border: InputBorder.none,
-        //               hintText: 'Buscar acciones...',
-        //               hintStyle: const TextStyle(
-        //                   color: Colors.grey, fontWeight: FontWeight.w700),
-        //               suffixIcon: !vm.busqueda
-        //                   ? IconButton(
-        //                       icon: const Icon(AppIcons.search),
-        //                       onPressed: () =>
-        //                           vm.buscarAccion(vm.tcBuscar.text),
-        //                       color: AppColors.brownDark,
-        //                     )
-        //                   : IconButton(
-        //                       onPressed: vm.limpiarBusqueda,
-        //                       icon: const Icon(
-        //                         AppIcons.closeCircle,
-        //                         color: AppColors.brownDark,
-        //                       )),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     // MaterialButton(
-        //     //   onPressed: () => vm.crearAccion(context),
-        //     //   color: Colors.white,
-        //     //   minWidth: 30,
-        //     //   height: 48,
-        //     //   shape: RoundedRectangleBorder(
-        //     //       borderRadius: BorderRadius.circular(5)),
-        //     //   elevation: 4,
-        //     //   child: const Padding(
-        //     //     padding: EdgeInsets.all(8.0),
-        //     //     child: Icon(
-        //     //       AppIcons.iconPlus,
-        //     //       color: AppColors.green,
-        //     //     ),
-        //     //   ),
-        //     // ),
-        //     const SizedBox(width: 5),
-        //   ],
-        // ),
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: TextField(
+                    controller: vm.tcBuscar,
+                    onSubmitted: vm.buscar,
+                    style: const TextStyle(
+                      color: AppColors.brownDark,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                    textInputAction: TextInputAction.search,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Buscar solicitud',
+                      hintStyle: const TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.w700),
+                      suffixIcon: !vm.busqueda
+                          ? IconButton(
+                              icon: const Icon(AppIcons.search),
+                              onPressed: () => vm.buscar(vm.tcBuscar.text),
+                              color: AppColors.brownDark,
+                            )
+                          : IconButton(
+                              onPressed: vm.limpiarBusqueda,
+                              icon: const Icon(
+                                AppIcons.closeCircle,
+                                color: AppColors.brownDark,
+                              )),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // MaterialButton(
+            //   onPressed: () => vm.crearAccion(context),
+            //   color: Colors.white,
+            //   minWidth: 30,
+            //   height: 48,
+            //   shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(5)),
+            //   elevation: 4,
+            //   child: const Padding(
+            //     padding: EdgeInsets.all(8.0),
+            //     child: Icon(
+            //       AppIcons.iconPlus,
+            //       color: AppColors.green,
+            //     ),
+            //   ),
+            // ),
+            const SizedBox(width: 5),
+          ],
+        ),
         Expanded(
           child: RefreshIndicator(
             triggerMode: RefreshIndicatorTriggerMode.anywhere,

@@ -279,6 +279,7 @@ class SolicitudesApi {
   }
 
   Future<Object> getColaSolicitudes({
+    int? noSolicitud,
     int pageNumber = 1,
     int pageSize = 20,
   }) async {
@@ -291,6 +292,7 @@ class SolicitudesApi {
           'Authorization': 'Bearer $_token',
         },
         queryParameters: {
+          "NoSolicitudCredito": noSolicitud,
           "PageSize": pageSize,
           "PageNumber": pageNumber,
         },

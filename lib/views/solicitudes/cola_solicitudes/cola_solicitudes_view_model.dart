@@ -16,10 +16,13 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   final listController = ScrollController();
   late GetSolicitudesResponse solicitudesResponse;
   List<SolicitudesData> solicitudes = [];
+  TextEditingController tcBuscar = TextEditingController();
+
   bool _loading = true;
   int pageNumber = 1;
   int _currentForm = 0;
   bool hasNextPage = false;
+  bool _busqueda = false;
 
   ColaSolicitudesViewModel() {
     listController.addListener(() {
@@ -40,6 +43,12 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   bool get loading => _loading;
   set loading(bool value) {
     _loading = value;
+    notifyListeners();
+  }
+
+  bool get busqueda => _busqueda;
+  set busqueda(bool value) {
+    _busqueda = value;
     notifyListeners();
   }
 
@@ -87,6 +96,40 @@ class ColaSolicitudesViewModel extends BaseViewModel {
           .toLowerCase()
           .compareTo(b.noSolicitudCredito.toString().toLowerCase());
     });
+  }
+
+  Future<void> buscar(String query) async {
+    loading = true;
+    var resp = await _solicitudesApi.getColaSolicitudes(
+      noSolicitud: int.parse(query),
+      pageSize: 0,
+    );
+    if (resp is Success) {
+      var temp = resp.response as GetSolicitudesResponse;
+      solicitudes = temp.data;
+      ordenar();
+      hasNextPage = temp.hasNextPage;
+      _busqueda = true;
+      notifyListeners();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
+    loading = false;
+  }
+
+  void limpiarBusqueda() {
+    _busqueda = false;
+    solicitudes = solicitudesResponse.data;
+    if (solicitudes.length >= 20) {
+      hasNextPage = true;
+    }
+    notifyListeners();
+    tcBuscar.clear();
   }
 
   goToSolicitud(SolicitudesData s) {
