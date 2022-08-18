@@ -61,7 +61,8 @@ class AlarmasViewModel extends BaseViewModel {
   Future<void> onInit() async {
     cargando = true;
     usuario = _userClient.loadUsuario;
-    var resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
+    var resp = await _alarmasApi.getAlarmas(
+        pageNumber: pageNumber, usuario: usuario!.email);
     if (resp is Success) {
       alarmasResponse = resp.response as AlarmasResponse;
       alarmas = alarmasResponse.data;

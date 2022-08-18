@@ -16,8 +16,10 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_eliminacion_data_grafica_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/vencimiento_estados_api.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
@@ -74,6 +76,10 @@ abstract class DependencyInjection {
         ComponentesVehiculoApi(http, authenticationClient);
     final accesoriosApi = AccesoriosApi(http, authenticationClient);
     final alarmasApi = AlarmasApi(http, authenticationClient);
+    final vencimientoEstadosApi =
+        VencimientoEstadosApi(http, authenticationClient);
+    final periodoEliminacionDataGraficaApi =
+        PeriodoEliminacionDataGraficaApi(http, authenticationClient);
     final notasApi = NotasApi(http, authenticationClient);
     final condicionesComponentesVehiculoApi =
         CondicionesComponentesVehiculoApi(http, authenticationClient);
@@ -97,6 +103,9 @@ abstract class DependencyInjection {
     locator.registerSingleton<UsuariosAPI>(usuariosAPI);
     locator.registerSingleton<RecursosAPI>(recursosAPI);
     locator.registerSingleton<AlarmasApi>(alarmasApi);
+    locator.registerSingleton<VencimientoEstadosApi>(vencimientoEstadosApi);
+    locator.registerSingleton<PeriodoEliminacionDataGraficaApi>(
+        periodoEliminacionDataGraficaApi);
     locator.registerSingleton<NotasApi>(notasApi);
     locator.registerSingleton<SegmentosComponentesVehiculosApi>(
         segmentosComponentesVehiculosApi);
