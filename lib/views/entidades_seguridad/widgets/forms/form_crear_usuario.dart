@@ -33,6 +33,7 @@ Future<dynamic> dialogCrearUsuario(
   rol1['id'] = "";
   rol1["nombre"] = "";
   rol1["description"] = "";
+  rol1["typeRolDescription"] = "";
   suplidor['codigoRelacional'] = 0;
   suplidor["nombre"] = "";
   suplidor["identificacion"] = "";
@@ -104,9 +105,11 @@ Future<dynamic> dialogCrearUsuario(
                                       .firstWhere(
                                           (element) => element.name == value)
                                       .description;
-                                  if (rol1["description"] ==
-                                          "Aprobrador Tasaciones" ||
-                                      rol1["description"] == "Tasador") {
+                                  rol1["typeRolDescription"] = roles
+                                      .firstWhere(
+                                          (element) => element.name == value)
+                                      .typeRoleDescription;
+                                  if (rol1["typeRolDescription"] == "Externo") {
                                     for (var element in user.role) {
                                       if (element == "Aprobador Tasaciones") {
                                         ProgressDialog.show(context);
@@ -220,7 +223,7 @@ Future<dynamic> dialogCrearUsuario(
                                                               dropdownSearchDecoration:
                                                                   InputDecoration(
                                                                 hintText:
-                                                                    "Suplidores",
+                                                                    "Suplidor",
                                                               ),
                                                               textAlignVertical:
                                                                   TextAlignVertical
@@ -333,12 +336,8 @@ Future<dynamic> dialogCrearUsuario(
                                         }
                                       }
                                     }
-                                  } else if (rol1["description"] ==
-                                          "Administrador" ||
-                                      rol1["description"] ==
-                                          "Aprobador Facturas" ||
-                                      rol1["description"] ==
-                                          "Oficial Negocios") {
+                                  } else if (rol1["typeRolDescription"] ==
+                                      "Interno") {
                                     permisoRol = [
                                       TextFormField(
                                         decoration: const InputDecoration(

@@ -127,7 +127,7 @@ class _RolesMobile extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Descripcion: ${rol.name}",
+                                      "Descripcion: ${rol.description}",
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                           color: AppColors.brownDark,

@@ -527,7 +527,7 @@ class UsuariosViewModel extends BaseViewModel {
           size,
           context,
           _formKey,
-          resp.response.data,
+          roles,
           nombre,
           telefono,
           email,
