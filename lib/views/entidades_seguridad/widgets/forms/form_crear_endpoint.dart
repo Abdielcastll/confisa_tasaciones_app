@@ -148,14 +148,16 @@ class CrearEndpointForm extends StatelessWidget {
                       const SizedBox(
                         height: 15,
                       ),
-                      TextFormField(
-                        initialValue:
-                            endpointsData.estado ? "Activo" : "Inactivo",
-                        decoration: const InputDecoration(
-                          labelText: "Estado",
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
+                      showEliminar
+                          ? TextFormField(
+                              initialValue:
+                                  endpointsData.estado ? "Activo" : "Inactivo",
+                              decoration: const InputDecoration(
+                                labelText: "Estado",
+                                border: UnderlineInputBorder(),
+                              ),
+                            )
+                          : const SizedBox(),
                       const SizedBox(
                         height: 15,
                       ),

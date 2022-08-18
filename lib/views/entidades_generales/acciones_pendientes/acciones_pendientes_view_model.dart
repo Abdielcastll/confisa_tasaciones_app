@@ -156,7 +156,7 @@ class AccionesPendientesViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Modificar Adjunto',
+                      'Modificar Acciones Pendiente',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -193,7 +193,7 @@ class AccionesPendientesViewModel extends BaseViewModel {
                           Dialogs.confirm(ctx,
                               tittle: 'Eliminar Tipo Acción Pendiente',
                               description:
-                                  '¿Esta seguro de eliminar el tipo adjunto ${accionPendiente.descripcion}?',
+                                  '¿Esta seguro de eliminar el tipo acción pendiente ${accionPendiente.descripcion}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
                             var resp = await _accionesPendientes
@@ -320,7 +320,7 @@ class AccionesPendientesViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Crear Acción Pendiente Adjunto',
+                      'Crear Acción Pendiente',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,

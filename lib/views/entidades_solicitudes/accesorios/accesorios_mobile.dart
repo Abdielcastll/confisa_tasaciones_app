@@ -135,13 +135,17 @@ class _AccesoriosMobile extends StatelessWidget {
                                               fontWeight: FontWeight.w800,
                                             ),
                                           ),
-                                          Text(
-                                            "Segmento: ${componenteVehiculo.segmentoDescripcion}",
-                                            style: const TextStyle(
-                                                overflow: TextOverflow.ellipsis,
-                                                color: AppColors.brownDark,
-                                                fontSize: 12),
-                                          ),
+                                          componenteVehiculo.idSegmento == 0
+                                              ? const SizedBox()
+                                              : Text(
+                                                  "Segmento: ${vm.segmentosAccesoriosVehiculos.firstWhere((element) => element.id == componenteVehiculo.idSegmento).descripcion}",
+                                                  style: const TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color:
+                                                          AppColors.brownDark,
+                                                      fontSize: 12),
+                                                ),
                                         ],
                                       ),
                                     ),

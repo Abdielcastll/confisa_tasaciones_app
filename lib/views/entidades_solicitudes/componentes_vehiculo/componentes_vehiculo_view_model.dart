@@ -401,7 +401,8 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                                                   },
                                                   columns: const [
                                                     DataColumn(
-                                                      label: Text("Condición"),
+                                                      label:
+                                                          Text("Condiciones"),
                                                     ),
                                                   ],
                                                   rows: list
