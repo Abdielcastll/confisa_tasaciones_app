@@ -160,9 +160,18 @@ class AccesoriosViewModel extends BaseViewModel {
       BuildContext ctx, AccesoriosData accesorioVehiculo) async {
     tcNewDescripcion.text = accesorioVehiculo.descripcion;
     final GlobalKey<FormState> _formKey = GlobalKey();
-    segmentoaccesorioVehiculo = SegmentosAccesoriosVehiculosData(
-        id: accesorioVehiculo.idSegmento,
-        descripcion: accesorioVehiculo.segmentoDescripcion);
+    if (accesorioVehiculo.idSegmento != 0) {
+      segmentoaccesorioVehiculo = SegmentosAccesoriosVehiculosData(
+          id: accesorioVehiculo.idSegmento,
+          descripcion: segmentosAccesoriosVehiculos
+              .firstWhere(
+                  (element) => element.id == accesorioVehiculo.idSegmento)
+              .descripcion);
+    } else {
+      segmentoaccesorioVehiculo =
+          SegmentosAccesoriosVehiculosData(id: 0, descripcion: "");
+    }
+
     showDialog(
         context: ctx,
         builder: (BuildContext context) {

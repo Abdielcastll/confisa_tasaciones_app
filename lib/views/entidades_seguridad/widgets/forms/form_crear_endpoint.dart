@@ -150,6 +150,7 @@ class CrearEndpointForm extends StatelessWidget {
                       ),
                       showEliminar
                           ? TextFormField(
+                              enabled: false,
                               initialValue:
                                   endpointsData.estado ? "Activo" : "Inactivo",
                               decoration: const InputDecoration(

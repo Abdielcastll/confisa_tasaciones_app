@@ -25,7 +25,7 @@ class _PeriodoEliminacionDataGraficaMobile extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Expanded(
+                /* Expanded(
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -63,14 +63,16 @@ class _PeriodoEliminacionDataGraficaMobile extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-                Card(
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: DropdownButton<String>(
-                          value: vm.opcion,
-                          items: vm.opciones(),
-                          onChanged: (String? value) => vm.opcion = value!)),
+                ), */
+                Expanded(
+                  child: Card(
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: DropdownButton<String>(
+                            value: vm.opcion,
+                            items: vm.opciones(),
+                            onChanged: (String? value) => vm.opcion = value!)),
+                  ),
                 ),
               ],
             ),
