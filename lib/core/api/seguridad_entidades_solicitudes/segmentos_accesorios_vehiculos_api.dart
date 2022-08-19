@@ -32,29 +32,42 @@ class SegmentosAccesoriosVehiculosApi {
     );
   }
 
-  /*  Future<Object> createComponenteVehiculo(
-      {required int idComponente, required int id}) async {
-    String _token = await _authenticationClient.accessToken;
+  Future<Object> createSegmentoAccesorioVehiculo(
+      {required String descripcion}) async {
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/componentes-vehiculo/create',
+      '/api/segmentosaccesoriosvehiculos/create',
       method: 'POST',
       headers: {
         'Authorization': 'Bearer $_token',
       },
-      data: {
-        "idComponente": idComponente,
-        "id": id,
-      },
+      data: {"descripcion": descripcion},
       parser: (data) {
         return SegmentosAccesoriosVehiculosData.fromJson(data["data"]);
       },
     );
-  } */
+  }
 
-  /* Future<Object> deleteSegmentosAccesoriosVehiculos({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
+  Future<Object> updateSegmentoComponenteVehiculo(
+      {required String descripcion, required int id}) async {
+    String? _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/componentes-vehiculo-/delete/$id',
+      '/api/segmentosaccesoriosvehiculos/update',
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      data: {"descripcion": descripcion, "id": id},
+      parser: (data) {
+        return SegmentosAccesoriosVehiculosPOSTResponse.fromJson(data);
+      },
+    );
+  }
+
+  Future<Object> deleteSegmentoAccesorioVehiculo({required int id}) async {
+    String? _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/segmentosaccesoriosvehiculos/delete/$id',
       method: 'DELETE',
       headers: {
         'Authorization': 'Bearer $_token',
@@ -63,5 +76,5 @@ class SegmentosAccesoriosVehiculosApi {
         return SegmentosAccesoriosVehiculosPOSTResponse.fromJson(data);
       },
     );
-  } */
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_response.dart';
+import 'package:tasaciones_app/theme/theme.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -139,13 +140,10 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
     cargando = false;
   }
 
-  /* Future<void> modificarSegmentosComponentesVehiculos(BuildContext ctx,
+  Future<void> modificarSegmentosComponentesVehiculos(BuildContext ctx,
       SegmentosComponentesVehiculosData componenteVehiculo) async {
     tcNewDescripcion.text = componenteVehiculo.descripcion;
     final GlobalKey<FormState> _formKey = GlobalKey();
-    segmentoComponenteVehiculo = SegmentosSegmentosComponentesVehiculossData(
-        id: componenteVehiculo.idSegmento,
-        descripcion: componenteVehiculo.segmentoDescripcion);
     showDialog(
         context: ctx,
         builder: (BuildContext context) {
@@ -168,7 +166,7 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                     child: const Padding(
                       padding: EdgeInsets.all(12.0),
                       child: Text(
-                        'Modificar Componente Vehículo',
+                        'Modificar Segmento Componente Vehículo',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -191,35 +189,8 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                         },
                         decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
-                            label: Text("Descripcion del Componente")),
+                            label: Text("Descripcion del Segmento Componente")),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownSearch<String>(
-                      selectedItem: segmentoComponenteVehiculo!.descripcion,
-                      validator: (value) =>
-                          value == null ? 'Debe escojer un segmento' : null,
-                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                        textAlignVertical: TextAlignVertical.center,
-                        dropdownSearchDecoration: InputDecoration(
-                          hintText: "Segmento",
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                      popupProps: const PopupProps.menu(
-                          fit: FlexFit.loose,
-                          showSelectedItems: true,
-                          searchDelay: Duration(microseconds: 0)),
-                      items: segmentosSegmentosComponentesVehiculoss
-                          .map((e) => e.descripcion)
-                          .toList(),
-                      onChanged: (value) {
-                        segmentoComponenteVehiculo =
-                            segmentosSegmentosComponentesVehiculoss.firstWhere(
-                                (element) => element.descripcion == value);
-                      },
                     ),
                   ),
                   Row(
@@ -229,12 +200,12 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                         onPressed: () {
                           Navigator.pop(context);
                           Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Componente Vehículo',
+                              tittle: 'Eliminar Segmento Componente Vehículo',
                               description:
-                                  '¿Esta seguro de eliminar el componente ${componenteVehiculo.descripcion}?',
+                                  '¿Esta seguro de eliminar el segmento componente vehículo ${componenteVehiculo.descripcion}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
-                            var resp = await _SegmentosComponentesVehiculosApi
+                            var resp = await _segmentosComponentesVehiculosApi
                                 .deleteSegmentosComponentesVehiculos(
                                     id: componenteVehiculo.id);
                             ProgressDialog.dissmiss(ctx);
@@ -243,7 +214,8 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                             }
                             if (resp is Success) {
                               Dialogs.success(
-                                  msg: 'Componente Vehículo eliminado');
+                                  msg:
+                                      'Segmento componente vehículo eliminado');
                               await onRefresh();
                             }
                           });
@@ -285,19 +257,17 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             if ((tcNewDescripcion.text.trim() !=
-                                    componenteVehiculo.descripcion) ||
-                                componenteVehiculo.idSegmento !=
-                                    segmentoComponenteVehiculo!.id) {
+                                componenteVehiculo.descripcion)) {
                               ProgressDialog.show(context);
-                              var resp = await _SegmentosComponentesVehiculosApi
-                                  .updateSegmentosComponentesVehiculos(
-                                      idSegmento:
-                                          segmentoComponenteVehiculo!.id,
+                              var resp = await _segmentosComponentesVehiculosApi
+                                  .updateSegmentoComponenteVehiculo(
                                       descripcion: tcNewDescripcion.text.trim(),
                                       id: componenteVehiculo.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(msg: 'Componente Actualizado');
+                                Dialogs.success(
+                                    msg:
+                                        'Segmento Componente Vehículo Actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -307,7 +277,9 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                               }
                               tcNewDescripcion.clear();
                             } else {
-                              Dialogs.success(msg: 'Componente Actualizado');
+                              Dialogs.success(
+                                  msg:
+                                      'Segmento Componente Vehículo Actualizado');
                               Navigator.of(context).pop();
                             }
                           }
@@ -334,7 +306,7 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
             ),
           );
         });
-  } */
+  }
 
   /* Future<void> deleteSegmentosComponentesVehiculos(BuildContext context,
       SegmentosComponentesVehiculosData componente) async {
@@ -356,7 +328,7 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
     });
   } */
 
-  /* Future<void> crearSegmentosComponentesVehiculos(BuildContext ctx) async {
+  Future<void> crearSegmentosComponentesVehiculos(BuildContext ctx) async {
     final GlobalKey<FormState> _formKey = GlobalKey();
     tcNewDescripcion.clear();
     showDialog(
@@ -381,7 +353,7 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                         alignment: Alignment.center,
                         color: AppColors.brownLight,
                         child: const Text(
-                          'Crear Vehiculo Componente ',
+                          'Crear Segmento Componente Vehiculo',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -415,35 +387,6 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: DropdownSearch<String>(
-                                  validator: (value) => value == null
-                                      ? 'Debe escojer un segmento'
-                                      : null,
-                                  dropdownDecoratorProps:
-                                      const DropDownDecoratorProps(
-                                    textAlignVertical: TextAlignVertical.center,
-                                    dropdownSearchDecoration: InputDecoration(
-                                      hintText: "Segmento",
-                                      border: UnderlineInputBorder(),
-                                    ),
-                                  ),
-                                  popupProps: const PopupProps.menu(
-                                      fit: FlexFit.loose,
-                                      showSelectedItems: true,
-                                      searchDelay: Duration(microseconds: 0)),
-                                  items: segmentosSegmentosComponentesVehiculoss
-                                      .map((e) => e.descripcion)
-                                      .toList(),
-                                  onChanged: (value) {
-                                    segmentoComponenteVehiculo =
-                                        segmentosSegmentosComponentesVehiculoss
-                                            .firstWhere((element) =>
-                                                element.descripcion == value);
-                                  },
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -475,16 +418,15 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                               if (_formKey.currentState!.validate()) {
                                 ProgressDialog.show(context);
                                 var resp =
-                                    await _SegmentosComponentesVehiculosApi
-                                        .createSegmentosComponentesVehiculos(
-                                            idSegmento:
-                                                segmentoComponenteVehiculo!.id,
+                                    await _segmentosComponentesVehiculosApi
+                                        .createSegmentoComponenteVehiculo(
                                             descripcion:
                                                 tcNewDescripcion.text.trim());
                                 ProgressDialog.dissmiss(context);
                                 if (resp is Success) {
                                   Dialogs.success(
-                                      msg: 'Vehículo Componente  Creado');
+                                      msg:
+                                          'Segmento Componente Vehículo Creado');
                                   Navigator.of(context).pop();
                                   await onRefresh();
                                 }
@@ -519,7 +461,7 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
             },
           );
         });
-  } */
+  }
 
   @override
   void dispose() {

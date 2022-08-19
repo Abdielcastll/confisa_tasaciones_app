@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_response.dart';
+import 'package:tasaciones_app/theme/theme.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -138,13 +139,10 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
     cargando = false;
   }
 
-  /* Future<void> modificarSegmentosAccesoriosVehiculos(BuildContext ctx,
-      SegmentosAccesoriosVehiculosData componenteVehiculo) async {
-    tcNewDescripcion.text = componenteVehiculo.descripcion;
+  Future<void> modificarSegmentosAccesoriosVehiculos(BuildContext ctx,
+      SegmentosAccesoriosVehiculosData segmentoAccesorioVehiculo) async {
+    tcNewDescripcion.text = segmentoAccesorioVehiculo.descripcion;
     final GlobalKey<FormState> _formKey = GlobalKey();
-    segmentoComponenteVehiculo = SegmentosSegmentosAccesoriosVehiculossData(
-        id: componenteVehiculo.idSegmento,
-        descripcion: componenteVehiculo.segmentoDescripcion);
     showDialog(
         context: ctx,
         builder: (BuildContext context) {
@@ -167,7 +165,7 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
                     child: const Padding(
                       padding: EdgeInsets.all(12.0),
                       child: Text(
-                        'Modificar Componente Vehículo',
+                        'Modificar Segmento Accesorio Vehículo',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -190,35 +188,8 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
                         },
                         decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
-                            label: Text("Descripcion del Componente")),
+                            label: Text("Descripcion")),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownSearch<String>(
-                      selectedItem: segmentoComponenteVehiculo!.descripcion,
-                      validator: (value) =>
-                          value == null ? 'Debe escojer un segmento' : null,
-                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                        textAlignVertical: TextAlignVertical.center,
-                        dropdownSearchDecoration: InputDecoration(
-                          hintText: "Segmento",
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                      popupProps: const PopupProps.menu(
-                          fit: FlexFit.loose,
-                          showSelectedItems: true,
-                          searchDelay: Duration(microseconds: 0)),
-                      items: segmentosSegmentosAccesoriosVehiculoss
-                          .map((e) => e.descripcion)
-                          .toList(),
-                      onChanged: (value) {
-                        segmentoComponenteVehiculo =
-                            segmentosSegmentosAccesoriosVehiculoss.firstWhere(
-                                (element) => element.descripcion == value);
-                      },
                     ),
                   ),
                   Row(
@@ -228,21 +199,21 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
                         onPressed: () {
                           Navigator.pop(context);
                           Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Componente Vehículo',
+                              tittle: 'Eliminar Segmento Accesorio Vehículo',
                               description:
-                                  '¿Esta seguro de eliminar el componente ${componenteVehiculo.descripcion}?',
+                                  '¿Esta seguro de eliminar el segmento accesorio vehículo ${segmentoAccesorioVehiculo.descripcion}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
-                            var resp = await _SegmentosAccesoriosVehiculosApi
-                                .deleteSegmentosAccesoriosVehiculos(
-                                    id: componenteVehiculo.id);
+                            var resp = await _segmentosAccesoriosVehiculosApi
+                                .deleteSegmentoAccesorioVehiculo(
+                                    id: segmentoAccesorioVehiculo.id);
                             ProgressDialog.dissmiss(ctx);
                             if (resp is Failure) {
                               Dialogs.error(msg: resp.messages[0]);
                             }
                             if (resp is Success) {
                               Dialogs.success(
-                                  msg: 'Componente Vehículo eliminado');
+                                  msg: 'Segmento accesorio vehículo eliminado');
                               await onRefresh();
                             }
                           });
@@ -284,19 +255,17 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             if ((tcNewDescripcion.text.trim() !=
-                                    componenteVehiculo.descripcion) ||
-                                componenteVehiculo.idSegmento !=
-                                    segmentoComponenteVehiculo!.id) {
+                                segmentoAccesorioVehiculo.descripcion)) {
                               ProgressDialog.show(context);
-                              var resp = await _SegmentosAccesoriosVehiculosApi
-                                  .updateSegmentosAccesoriosVehiculos(
-                                      idSegmento:
-                                          segmentoComponenteVehiculo!.id,
+                              var resp = await _segmentosAccesoriosVehiculosApi
+                                  .updateSegmentoComponenteVehiculo(
                                       descripcion: tcNewDescripcion.text.trim(),
-                                      id: componenteVehiculo.id);
+                                      id: segmentoAccesorioVehiculo.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(msg: 'Componente Actualizado');
+                                Dialogs.success(
+                                    msg:
+                                        'Segmento Accesorio Vehículo Actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -306,7 +275,9 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
                               }
                               tcNewDescripcion.clear();
                             } else {
-                              Dialogs.success(msg: 'Componente Actualizado');
+                              Dialogs.success(
+                                  msg:
+                                      'Segmento Accesorio Vehículo Actualizado');
                               Navigator.of(context).pop();
                             }
                           }
@@ -333,7 +304,7 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
             ),
           );
         });
-  } */
+  }
 
   /* Future<void> deleteSegmentosAccesoriosVehiculos(BuildContext context,
       SegmentosAccesoriosVehiculosData componente) async {
@@ -353,9 +324,9 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
         Dialogs.error(msg: resp.messages.first);
       }
     });
-  } */
+  }*/
 
-  /* Future<void> crearSegmentosAccesoriosVehiculos(BuildContext ctx) async {
+  Future<void> crearSegmentosAccesoriosVehiculos(BuildContext ctx) async {
     final GlobalKey<FormState> _formKey = GlobalKey();
     tcNewDescripcion.clear();
     showDialog(
@@ -379,13 +350,16 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
                         width: double.infinity,
                         alignment: Alignment.center,
                         color: AppColors.brownLight,
-                        child: const Text(
-                          'Crear Vehiculo Componente ',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'Crear Segmento Accesorio Vehículo',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                         ),
                       ),
@@ -409,38 +383,9 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
                                       border: UnderlineInputBorder(),
                                       isDense: true,
                                       fillColor: Colors.white,
-                                      label: Text('Descripción del Componente'),
+                                      label: Text('Descripción'),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: DropdownSearch<String>(
-                                  validator: (value) => value == null
-                                      ? 'Debe escojer un segmento'
-                                      : null,
-                                  dropdownDecoratorProps:
-                                      const DropDownDecoratorProps(
-                                    textAlignVertical: TextAlignVertical.center,
-                                    dropdownSearchDecoration: InputDecoration(
-                                      hintText: "Segmento",
-                                      border: UnderlineInputBorder(),
-                                    ),
-                                  ),
-                                  popupProps: const PopupProps.menu(
-                                      fit: FlexFit.loose,
-                                      showSelectedItems: true,
-                                      searchDelay: Duration(microseconds: 0)),
-                                  items: segmentosSegmentosAccesoriosVehiculoss
-                                      .map((e) => e.descripcion)
-                                      .toList(),
-                                  onChanged: (value) {
-                                    segmentoComponenteVehiculo =
-                                        segmentosSegmentosAccesoriosVehiculoss
-                                            .firstWhere((element) =>
-                                                element.descripcion == value);
-                                  },
                                 ),
                               ),
                             ],
@@ -474,16 +419,15 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
                               if (_formKey.currentState!.validate()) {
                                 ProgressDialog.show(context);
                                 var resp =
-                                    await _SegmentosAccesoriosVehiculosApi
-                                        .createSegmentosAccesoriosVehiculos(
-                                            idSegmento:
-                                                segmentoComponenteVehiculo!.id,
+                                    await _segmentosAccesoriosVehiculosApi
+                                        .createSegmentoAccesorioVehiculo(
                                             descripcion:
                                                 tcNewDescripcion.text.trim());
                                 ProgressDialog.dissmiss(context);
                                 if (resp is Success) {
                                   Dialogs.success(
-                                      msg: 'Vehículo Componente  Creado');
+                                      msg:
+                                          'Segmento Accesorio Vehículo Creado');
                                   Navigator.of(context).pop();
                                   await onRefresh();
                                 }
@@ -518,7 +462,7 @@ class SegmentosAccesoriosVehiculosViewModel extends BaseViewModel {
             },
           );
         });
-  } */
+  }
 
   @override
   void dispose() {

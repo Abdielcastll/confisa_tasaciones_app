@@ -65,10 +65,8 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
                   ),
                 ),
                 MaterialButton(
-                  onPressed:
-                      () {} /* =>
-                      vm.crearSegmentosComponentesVehiculos(context) */
-                  ,
+                  onPressed: () =>
+                      vm.crearSegmentosComponentesVehiculos(context),
                   color: Colors.white,
                   minWidth: 30,
                   height: 48,
@@ -112,11 +110,9 @@ class _SegmentosComponentesVehiculosMobile extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
-                              onPressed:
-                                  () {} /* =>
+                              onPressed: () =>
                                   vm.modificarSegmentosComponentesVehiculos(
-                                      context, segmentoComponenteVehiculo) */
-                              ,
+                                      context, segmentoComponenteVehiculo),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(

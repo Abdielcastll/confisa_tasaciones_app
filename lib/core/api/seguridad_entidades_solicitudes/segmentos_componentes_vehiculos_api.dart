@@ -32,21 +32,34 @@ class SegmentosComponentesVehiculosApi {
     );
   }
 
-  Future<Object> createComponenteVehiculo(
-      {required int idComponente, required int id}) async {
+  Future<Object> createSegmentoComponenteVehiculo(
+      {required String descripcion}) async {
     String? _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/componentes-vehiculo/create',
+      '/api/segmentoscomponentesvehiculos/create',
       method: 'POST',
       headers: {
         'Authorization': 'Bearer $_token',
       },
-      data: {
-        "idComponente": idComponente,
-        "id": id,
-      },
+      data: {"descripcion": descripcion},
       parser: (data) {
         return SegmentosComponentesVehiculosData.fromJson(data["data"]);
+      },
+    );
+  }
+
+  Future<Object> updateSegmentoComponenteVehiculo(
+      {required String descripcion, required int id}) async {
+    String? _token = await _authenticationClient.accessToken;
+    return _http.request(
+      '/api/segmentoscomponentesvehiculos/update',
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+      data: {"descripcion": descripcion, "id": id},
+      parser: (data) {
+        return SegmentosComponentesVehiculosPOSTResponse.fromJson(data);
       },
     );
   }
@@ -54,7 +67,7 @@ class SegmentosComponentesVehiculosApi {
   Future<Object> deleteSegmentosComponentesVehiculos({required int id}) async {
     String? _token = await _authenticationClient.accessToken;
     return _http.request(
-      '/api/componentes-vehiculo-/delete/$id',
+      '/api/segmentoscomponentesvehiculos/delete/$id',
       method: 'DELETE',
       headers: {
         'Authorization': 'Bearer $_token',
