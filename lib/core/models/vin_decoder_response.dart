@@ -63,21 +63,24 @@ class VinDecoderData {
   int? idTrim;
 
   factory VinDecoderData.fromJson(Map<String, dynamic> json) => VinDecoderData(
-        codigoMarca: json["codigoMarca"],
-        marca: json["marca"],
-        codigoModelo: json["codigoModelo"],
-        modelo: json["modelo"],
-        ano: json["ano"],
-        tipoVehiculo: json["tipoVehiculo"],
-        sistemaCambio: json["sistemaCambio"],
-        traccion: json["traccion"],
-        numeroPuertas: json["numeroPuertas"],
-        numeroCilindros: json["numeroCilindros"],
-        fuerzaMotriz: json["fuerzaMotriz"],
-        serie: json["serie"],
-        idSerie: json["idSerie"],
-        trim: json["trim"],
-        idTrim: json["idTrim"],
+        codigoMarca: json["codigoMarca"] == '' ? null : json["codigoMarca"],
+        marca: json["marca"] == '' ? null : json["marca"],
+        codigoModelo: json["codigoModelo"] == '' ? null : json["codigoModelo"],
+        modelo: json["modelo"] == '' ? null : json["modelo"],
+        ano: json["ano"] == '' ? null : json["ano"],
+        tipoVehiculo: json["tipoVehiculo"] == '' ? null : json["tipoVehiculo"],
+        sistemaCambio:
+            json["sistemaCambio"] == '' ? null : json["sistemaCambio"],
+        traccion: json["traccion"] == '' ? null : json["traccion"],
+        numeroPuertas:
+            json["numeroPuertas"] == '' ? null : json["numeroPuertas"],
+        numeroCilindros:
+            json["numeroCilindros"] == '' ? null : json["numeroCilindros"],
+        fuerzaMotriz: json["fuerzaMotriz"] == '' ? null : json["fuerzaMotriz"],
+        serie: json["serie"] == '' ? null : json["serie"],
+        idSerie: json["idSerie"] == '' ? null : json["idSerie"],
+        trim: json["trim"] == '' ? null : json["trim"],
+        idTrim: json["idTrim"] == '' ? null : json["idTrim"],
       );
 
   Map<String, dynamic> toJson() => {

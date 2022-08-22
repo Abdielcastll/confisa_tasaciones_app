@@ -8,14 +8,8 @@ class _SolicitudTasacionMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Solicitud de tasación')),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _form(),
-          ],
-        ),
-      ),
+      appBar: AppBar(title: const Text('Solicitud de Tasación')),
+      body: _form(),
     );
   }
 
@@ -25,7 +19,6 @@ class _SolicitudTasacionMobile extends StatelessWidget {
         return GeneralesA(vm);
       case 2:
         return GeneralesB(vm);
-
       default:
         return Container();
     }

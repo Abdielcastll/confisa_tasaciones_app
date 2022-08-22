@@ -19,13 +19,12 @@ class GeneralesForm extends StatelessWidget {
     return BaseFormWidget(
       iconHeader: Icons.add_chart_sharp,
       titleHeader: 'Generales',
-      iconBack: AppIcons.closeCircle,
+      iconBack: Icons.arrow_back_ios,
       labelBack: 'Cancelar',
       onPressedBack: () => Navigator.of(context).pop(),
-      iconNext: AppIcons.save,
+      iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
       onPressedNext: () => vm.solicitudCredito(context),
-      // onPressedNext: () => vm.currentForm = 2,
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,

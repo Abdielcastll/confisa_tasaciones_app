@@ -6,6 +6,7 @@ import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/widgets/forms/fotos.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/widgets/forms/generales.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/widgets/forms/vehiculo.dart';
+import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/refresh_widget.dart';

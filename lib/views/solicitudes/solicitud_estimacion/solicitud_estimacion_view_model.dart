@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -15,28 +16,31 @@ import 'package:tasaciones_app/core/models/tracciones_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/widgets/escaner.dart';
 
+import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/models/solicitudes/solicitud_credito_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../auth/login/login_view.dart';
+import '../../home/home_view.dart';
 
 class SolicitudEstimacionViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final _solicitudesApi = locator<SolicitudesApi>();
+  final _adjuntosApi = locator<AdjuntosApi>();
   late DateTime fechaActual;
-  // String? _numeroSolicitud;
-  // String? _numeroVIN;
   String? _estado;
-  String? _placa;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
   GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
   TextEditingController tcNoSolicitud = TextEditingController();
-  TextEditingController tcVIN =
-      TextEditingController(text: '1FMCU9DG5CKA99352');
+  TextEditingController tcVIN = TextEditingController();
+  TextEditingController tcFuerzaMotriz = TextEditingController();
+  TextEditingController tcKilometraje = TextEditingController();
+  TextEditingController tcPlaca = TextEditingController();
   int _currentForm = 1;
   SolicitudCreditoData? solicitud;
   VinDecoderData? _vinData;
@@ -45,7 +49,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   TraccionesData? _traccion;
   int? _nPuertas;
   int? _nCilindros;
-  int? _kilometraje;
   ColorVehiculo? _colorVehiculo;
   late int _fotosPermitidas;
   late List<File> fotos;
@@ -62,16 +65,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // set numeroSolicitud(String value) {
-  //   _numeroSolicitud = value;
-  //   notifyListeners();
-  // }
-
-  // set numeroVIN(String value) {
-  //   _numeroVIN = value;
-  //   notifyListeners();
-  // }
-
   int get currentForm => _currentForm;
   set currentForm(int i) {
     _currentForm = i;
@@ -87,18 +80,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   int? get nCilindros => _nCilindros;
   set nCilindros(int? i) {
     _nCilindros = i;
-    notifyListeners();
-  }
-
-  String? get kilometraje => _kilometraje.toString();
-  set kilometraje(String? i) {
-    _kilometraje = int.parse(i!);
-    notifyListeners();
-  }
-
-  String? get placa => _placa;
-  set placa(String? i) {
-    _placa = i!;
     notifyListeners();
   }
 
@@ -140,21 +121,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
 
   void onInit(SolicitudesData? arg) {
     if (arg != null) {
-      /*solicitud = SolicitudCreditoData(
-        ano: arg.ano.toString(),
-        chasis: arg.chasis,
-        codEntidad: arg.codigoEntidad,
-        codOficialNegocios: arg.idOficial,
-        codSucursal: arg.codigoSucursal,
-        entidad: arg.codigoEntidad,
-        estado: arg.estadoTasacion,
-        marca: arg.descripcionMarca,
-        modelo: arg.descripcionModelo,
-        noIdentificacion: arg.identificacion,
-        noSolicitud: arg.noSolicitudCredito,
-        nombreCliente: arg.nombreCliente,
-        nombreOficialNegocios: arg.
-      );*/
       solicitudCola = arg;
       tcNoSolicitud.text = arg.noSolicitudCredito.toString();
       tcVIN.text = arg.chasis!;
@@ -219,10 +185,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       ProgressDialog.dissmiss(context);
     }
   }
-
-  // void completarDatosVehiculo(VinDecoderData data){
-  //   tipoVehiculo=data.
-  // }
 
   String? noSolicitudValidator(String? value) {
     if (value?.trim() == '') {
@@ -299,6 +261,29 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> subirFotos() async {
+    List<Map<String, dynamic>> dataList = [];
+    for (File e in fotos) {
+      var fotoBase = base64Encode(e.readAsBytesSync());
+      Map<String, dynamic> data = {
+        "adjuntoInBytes": fotoBase,
+        "tipoAdjunto": 0,
+        "descripcion": e.path,
+      };
+      dataList.add(data);
+    }
+    var resp = await _adjuntosApi.addFotosTasacion(
+        noTasacion: solicitud!.noSolicitud!, adjuntos: dataList);
+
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'su sesión a expirado');
+    }
+  }
+
   Future<void> editarFoto(int i) async {
     var croppedFile = await ImageCropper().cropImage(
       sourcePath: fotos[i].path,
@@ -347,43 +332,59 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> crearSolicitud() async {
-    var resp = await _solicitudesApi.createNewSolicitudEstimacion(
-      ano: int.parse(solicitud!.ano!),
-      chasis: solicitud!.chasis!,
-      codigoEntidad: solicitud!.codEntidad!,
-      codigoSucursal: solicitud!.codEntidad!,
-      color: colorVehiculo.id,
-      edicion: vinData?.idTrim ?? 0,
-      fuerzaMotriz: int.parse(vinData?.fuerzaMotriz ?? ''),
-      idOficial: solicitud!.codOficialNegocios!,
-      idPromotor: 0,
-      identificacion: solicitud!.noIdentificacion!,
-      kilometraje: _kilometraje!,
-      marca: 0,
-      modelo: 0,
-      noCilindros: _nCilindros!,
-      noPuertas: _nPuertas!,
-      noSolicitudCredito: solicitud!.noSolicitud!,
-      nombreCliente: solicitud!.nombreCliente!,
-      nuevoUsado: _estado == 'Nuevo' ? 0 : 1,
-      placa: _placa!,
-      serie: vinData?.idSerie ?? 0,
-      sistemaTransmision: _transmision?.id ?? 0,
-      suplidorTasacion: 0,
-      tipoTasacion: 0,
-      tipoVehiculoLocal: 0,
-      traccion: _traccion?.id ?? 0,
-      trim: vinData?.idTrim ?? 0,
-      versionLocal: 0,
-    );
-  }
-
-  bool isEditable() {
-    if (solicitudCola != null) {
-      return solicitudCola!.estadoTasacion == 9;
+  Future<void> crearSolicitud(BuildContext context) async {
+    if (fotos.any((e) => e.path == '')) {
+      Dialogs.error(msg: 'Debe cargar todas las fotos');
     } else {
-      return true;
+      ProgressDialog.show(context);
+      var resp = await _solicitudesApi.createNewSolicitudEstimacion(
+        ano: int.parse(solicitud!.ano!),
+        chasis: solicitud!.chasis ?? tcVIN.text,
+        codigoEntidad: solicitud!.codEntidad!,
+        codigoSucursal: solicitud!.codEntidad!,
+        color: colorVehiculo.id,
+        edicion: vinData?.idTrim ?? 0,
+        fuerzaMotriz: vinData?.fuerzaMotriz != null
+            ? int.parse(vinData?.fuerzaMotriz ?? '')
+            : int.parse(tcFuerzaMotriz.text),
+        idOficial: solicitud!.codOficialNegocios!,
+        idPromotor: 0,
+        identificacion: solicitud!.noIdentificacion!,
+        kilometraje: int.parse(tcKilometraje.text),
+        marca: solicitud!.codMarca ?? vinData!.codigoMarca ?? 0,
+        modelo: solicitud!.codModelo ?? vinData!.codigoModelo ?? 0,
+        noCilindros: _nCilindros!,
+        noPuertas: _nPuertas!,
+        noSolicitudCredito: solicitud!.noSolicitud!,
+        nombreCliente: solicitud!.nombreCliente!,
+        nuevoUsado: _estado == 'Nuevo' ? 0 : 1,
+        placa: tcPlaca.text,
+        serie: vinData?.idSerie!,
+        sistemaTransmision: _transmision!.id,
+        suplidorTasacion: 0,
+        tipoTasacion: 21,
+        tipoVehiculoLocal: 0,
+        traccion: _traccion!.id,
+        trim: vinData?.idTrim,
+        versionLocal: 0,
+      );
+      if (resp is Failure) {
+        ProgressDialog.dissmiss(context);
+        Dialogs.error(msg: resp.messages[0]);
+      }
+      if (resp is TokenFail) {
+        ProgressDialog.dissmiss(context);
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'su sesión a expirado');
+      }
+      if (resp is Success) {
+        print('SUCCESS');
+        await subirFotos();
+        ProgressDialog.dissmiss(context);
+        Dialogs.success(msg: 'Solicitud creada correctamente');
+        _navigatorService
+            .navigateToPageAndRemoveUntil(ColaSolicitudesView.routeName);
+      }
     }
   }
 
@@ -394,15 +395,13 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     });
   }
 
-/*
-  String estadoVehiculo() {
-    if (vinData == null) return '';
-    if (int.parse(vinData?.ano ?? '2020') >= DateTime.now().year) {
-      print('nuevo');
-      return 'Nuevo';
-    } else {
-      print('USADO');
-      return 'Usado';
-    }
-  }*/
+  @override
+  void dispose() {
+    tcVIN.dispose();
+    tcPlaca.dispose();
+    tcNoSolicitud.dispose();
+    tcFuerzaMotriz.dispose();
+    tcKilometraje.dispose();
+    super.dispose();
+  }
 }

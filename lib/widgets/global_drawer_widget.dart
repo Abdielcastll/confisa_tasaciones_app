@@ -69,34 +69,34 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                         /* Recorrido de la lista de role claims que devuelve las opciones del menu */
                         children: [
                           ...menu(menuApp),
-                          ListTile(
-                            leading:
-                                const Icon(Icons.document_scanner_outlined),
-                            title: const Text(
-                              'Solicitar estimación',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                            onTap: () {
-                              _navigationService.pop();
-                              _navigationService.navigateToPage(
-                                  SolicitudEstimacionView.routeName);
-                            },
-                          ),
-                          ListTile(
-                            leading:
-                                const Icon(Icons.document_scanner_outlined),
-                            title: const Text(
-                              'Solicitar Tasación',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                            onTap: () {
-                              _navigationService.pop();
-                              _navigationService.navigateToPage(
-                                  SolicitudTasacionView.routeName);
-                            },
-                          ),
+                          // ListTile(
+                          //   leading:
+                          //       const Icon(Icons.document_scanner_outlined),
+                          //   title: const Text(
+                          //     'Solicitar estimación',
+                          //     style: TextStyle(
+                          //         fontSize: 17, fontWeight: FontWeight.w500),
+                          //   ),
+                          //   onTap: () {
+                          //     _navigationService.pop();
+                          //     _navigationService.navigateToPage(
+                          //         SolicitudEstimacionView.routeName);
+                          //   },
+                          // ),
+                          // ListTile(
+                          //   leading:
+                          //       const Icon(Icons.document_scanner_outlined),
+                          //   title: const Text(
+                          //     'Solicitar Tasación',
+                          //     style: TextStyle(
+                          //         fontSize: 17, fontWeight: FontWeight.w500),
+                          //   ),
+                          //   onTap: () {
+                          //     _navigationService.pop();
+                          //     _navigationService.navigateToPage(
+                          //         SolicitudTasacionView.routeName);
+                          //   },
+                          // ),
                           ListTile(
                             leading: const Icon(Icons.person),
                             title: const Text(

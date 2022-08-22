@@ -30,6 +30,7 @@ import '../views/entidades_seguridad/permisos/permisos_view.dart';
 import '../views/entidades_seguridad/recursos/recursos_view.dart';
 import '../views/entidades_solicitudes/componentes_vehiculo_suplidor/componentes_vehiculo_suplidor_view.dart';
 import '../views/home/home_view.dart';
+import '../views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
 import '../views/solicitudes/solicitud_tasacion/solicitud_tasacion_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -118,10 +119,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return CupertinoPageRoute(
           builder: (context) => const ColaSolicitudesView());
 
-    case SolicitudEstimacionView.routeName:
-      final args = settings.arguments as SolicitudesData;
+    case ConsultarModificarView.routeName:
+      final args = settings.arguments as SolicitudesData?;
       return CupertinoPageRoute(
-          builder: (context) => SolicitudEstimacionView(solicitudData: args));
+          builder: (context) => ConsultarModificarView(solicitudData: args));
+
+    case SolicitudEstimacionView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const SolicitudEstimacionView());
 
     case SolicitudTasacionView.routeName:
       return CupertinoPageRoute(
