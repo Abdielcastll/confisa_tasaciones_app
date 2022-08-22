@@ -16,11 +16,14 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
   TextEditingController tcNewDescripcion = TextEditingController();
 
   List<PeriodoTasacionPromedioData> periodoTasacionPromedio = [];
+  List<OpcionesPeriodoTasacionPromedioData> opcionesPeriodoTasacionPromedio =
+      [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
   late PeriodoTasacionPromedioResponse periodoTasacionPromedioResponse;
+  OpcionesPeriodoTasacionPromedioData? opcionPeriodoTasacionPromedioData;
 
   PeriodoTasacionPromedioViewModel() {
     listController.addListener(() {
