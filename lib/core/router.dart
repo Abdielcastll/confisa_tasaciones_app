@@ -17,6 +17,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/accesorios/accesorios
 import 'package:tasaciones_app/views/entidades_solicitudes/componentes_vehiculo/componentes_vehiculo_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/condiciones_componentes_vehiculo.dart/condiciones_componentes_vehiculo_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/periodo_eliminacion_data_grafica/periodo_eliminacion_data_grafica_view.dart';
+import 'package:tasaciones_app/views/entidades_solicitudes/periodo_tasacion_promedio/periodo_tasacion_promedio_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_accesorios_vehiculos/segmentos_accesorios_vehiculos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_componentes_vehiculos/segmentos_componentes_vehiculos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/vencimiento_estados/vencimiento_estados_view.dart';
@@ -145,6 +146,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case PeriodoEliminacionDataGraficaView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const PeriodoEliminacionDataGraficaView());
+
+    case PeriodoTasacionPromedioView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const PeriodoTasacionPromedioView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

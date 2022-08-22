@@ -1,5 +1,4 @@
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/periodo_eliminacion_data_grafica_response.dart';
-import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/vencimiento_estados_response.dart';
 
 import '../../authentication_client.dart';
 import '../http.dart';
