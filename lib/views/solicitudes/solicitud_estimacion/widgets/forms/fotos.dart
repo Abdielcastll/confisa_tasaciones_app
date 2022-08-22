@@ -18,12 +18,12 @@ class FotosForm extends StatelessWidget {
     return BaseFormWidget(
       iconHeader: Icons.add_chart_sharp,
       titleHeader: 'Fotos',
-      iconBack: AppIcons.closeCircle,
-      labelBack: 'Cancelar',
+      iconBack: Icons.arrow_back_ios,
+      labelBack: 'Anterior',
       onPressedBack: () => vm.currentForm = 2,
       iconNext: AppIcons.save,
-      labelNext: 'Siguiente',
-      onPressedNext: () => print('GUARDAR'),
+      labelNext: 'Guardar',
+      onPressedNext: () => vm.crearSolicitud(context),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,

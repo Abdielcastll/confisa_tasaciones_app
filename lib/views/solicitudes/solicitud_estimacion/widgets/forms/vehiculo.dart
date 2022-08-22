@@ -23,13 +23,13 @@ class VehiculoForm extends StatelessWidget {
     return BaseFormWidget(
       iconHeader: Icons.add_chart_sharp,
       titleHeader: 'Vehículo',
-      iconBack: AppIcons.closeCircle,
-      labelBack: 'Atrás',
+      iconBack: Icons.arrow_back_ios,
+      labelBack: 'Anterior',
       onPressedBack: () {
         vm.currentForm = 1;
         vm.vinData = null;
       },
-      iconNext: AppIcons.save,
+      iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
       // onPressedNext: () => vm.solicitudCredito(context),
       onPressedNext: () => vm.goToFotos(context),
@@ -82,23 +82,17 @@ class VehiculoForm extends StatelessWidget {
                 children: [
                   BaseTextFieldNoEdit(
                     label: 'Marca',
-                    initialValue: vm.solicitudCola != null
-                        ? vm.solicitudCola!.descripcionMarca ?? ''
-                        : vm.solicitud?.marca ?? '',
+                    initialValue: vm.solicitud?.marca ?? '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Modelo',
-                    initialValue: vm.solicitudCola != null
-                        ? vm.solicitudCola!.descripcionModelo ?? ''
-                        : vm.solicitud?.modelo ?? '',
+                    initialValue: vm.solicitud?.modelo ?? '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Año',
-                    initialValue: vm.solicitudCola != null
-                        ? vm.solicitudCola!.ano.toString()
-                        : vm.solicitud?.ano ?? '',
+                    initialValue: vm.solicitud?.ano ?? '',
                   ),
-                  if (vm.vinData != null || vm.solicitudCola != null)
+                  if (vm.vinData != null)
                     Column(
                       children: [
                         // TIPO DE VEHICULO
@@ -108,55 +102,48 @@ class VehiculoForm extends StatelessWidget {
                                 label: 'Tipo',
                                 initialValue: vm.vinData?.tipoVehiculo ?? '',
                               )
-                            : !vm.isEditable()
-                                ? BaseTextFieldNoEdit(
-                                    label: 'Tipo',
-                                    initialValue: vm.solicitudCola
-                                            ?.descripcionTipoVehiculoLocal ??
-                                        '',
-                                  )
-                                : DropdownSearch<TipoVehiculoData>(
-                                    asyncItems: (text) =>
-                                        vm.getTipoVehiculo(text),
-                                    dropdownBuilder: (context, tipo) {
-                                      return Text(
-                                        tipo == null
-                                            ? vm.solicitudCola
-                                                    ?.descripcionTipoVehiculoLocal ??
-                                                'Seleccione'
-                                            : tipo.descripcion,
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                      );
-                                    },
-                                    onChanged: (v) => vm.tipoVehiculo = v,
-                                    dropdownDecoratorProps:
-                                        const DropDownDecoratorProps(
-                                            dropdownSearchDecoration:
-                                                InputDecoration(
-                                                    label: Text('Tipo'),
-                                                    border:
-                                                        UnderlineInputBorder())),
-                                    popupProps: PopupProps.menu(
-                                      itemBuilder: (context, otp, isSelected) {
-                                        return ListTile(
-                                          title: Text(otp.descripcion),
-                                          selected: isSelected,
-                                        );
-                                      },
-                                      emptyBuilder: (_, __) => const Center(
-                                        child: Text('No hay resultados'),
-                                      ),
+                            : DropdownSearch<TipoVehiculoData>(
+                                asyncItems: (text) => vm.getTipoVehiculo(text),
+                                dropdownBuilder: (context, tipo) {
+                                  return Text(
+                                    tipo == null
+                                        ? vm.solicitudCola
+                                                ?.descripcionTipoVehiculoLocal ??
+                                            'Seleccione'
+                                        : tipo.descripcion,
+                                    style: const TextStyle(
+                                      fontSize: 15,
                                     ),
-                                    validator: (v) {
-                                      if (v == null) {
-                                        return 'Seleccione un tipo';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
+                                  );
+                                },
+                                onChanged: (v) => vm.tipoVehiculo = v,
+                                dropdownDecoratorProps:
+                                    const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                                label: Text('Tipo'),
+                                                border:
+                                                    UnderlineInputBorder())),
+                                popupProps: PopupProps.menu(
+                                  itemBuilder: (context, otp, isSelected) {
+                                    return ListTile(
+                                      title: Text(otp.descripcion),
+                                      selected: isSelected,
+                                    );
+                                  },
+                                  emptyBuilder: (_, __) => const Center(
+                                    child: Text('No hay resultados'),
                                   ),
+                                ),
+                                validator: (v) {
+                                  if (v == null) {
+                                    return 'Seleccione un tipo';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+
                         const SizedBox(height: 10),
 
                         // SISTEMA DE TRANSMISIÓN
@@ -166,53 +153,46 @@ class VehiculoForm extends StatelessWidget {
                                 label: 'Sistema de cambio',
                                 initialValue: vm.vinData?.sistemaCambio,
                               )
-                            : !vm.isEditable()
-                                ? BaseTextFieldNoEdit(
-                                    label: 'Sistema de cambio',
-                                    initialValue: vm.solicitudCola
-                                            ?.descripcionSistemaTransmision ??
-                                        '',
-                                  )
-                                : DropdownSearch<TransmisionesData>(
-                                    asyncItems: (text) =>
-                                        vm.getTransmisiones(text),
-                                    dropdownBuilder: (context, tipo) {
-                                      return Text(
-                                          tipo == null
-                                              ? vm.solicitudCola
-                                                      ?.descripcionSistemaTransmision ??
-                                                  'Seleccione'
-                                              : tipo.descripcion,
-                                          style: const TextStyle(fontSize: 15));
-                                    },
-                                    onChanged: (v) => vm.transmision = v,
-                                    dropdownDecoratorProps:
-                                        const DropDownDecoratorProps(
-                                            dropdownSearchDecoration:
-                                                InputDecoration(
-                                                    label: Text(
-                                                        'Sistema de cambios'),
-                                                    border:
-                                                        UnderlineInputBorder())),
-                                    popupProps: PopupProps.menu(
-                                      itemBuilder: (context, otp, isSelected) {
-                                        return ListTile(
-                                          title: Text(otp.descripcion),
-                                          selected: isSelected,
-                                        );
-                                      },
-                                      emptyBuilder: (_, __) => const Center(
-                                        child: Text('No hay resultados'),
-                                      ),
-                                    ),
-                                    validator: (v) {
-                                      if (v == null) {
-                                        return 'Seleccione un sistema de cambios';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
+                            : DropdownSearch<TransmisionesData>(
+                                asyncItems: (text) => vm.getTransmisiones(text),
+                                dropdownBuilder: (context, tipo) {
+                                  return Text(
+                                      tipo == null
+                                          ? vm.solicitudCola
+                                                  ?.descripcionSistemaTransmision ??
+                                              'Seleccione'
+                                          : tipo.descripcion,
+                                      style: const TextStyle(fontSize: 15));
+                                },
+                                onChanged: (v) => vm.transmision = v,
+                                dropdownDecoratorProps:
+                                    const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                                label:
+                                                    Text('Sistema de cambios'),
+                                                border:
+                                                    UnderlineInputBorder())),
+                                popupProps: PopupProps.menu(
+                                  itemBuilder: (context, otp, isSelected) {
+                                    return ListTile(
+                                      title: Text(otp.descripcion),
+                                      selected: isSelected,
+                                    );
+                                  },
+                                  emptyBuilder: (_, __) => const Center(
+                                    child: Text('No hay resultados'),
                                   ),
+                                ),
+                                validator: (v) {
+                                  if (v == null) {
+                                    return 'Seleccione un sistema de cambios';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+
                         const SizedBox(height: 10),
 
                         // SISTEMA DE TRACCION
@@ -222,54 +202,46 @@ class VehiculoForm extends StatelessWidget {
                                 label: 'Tracción',
                                 initialValue: vm.vinData?.traccion,
                               )
-                            : !vm.isEditable()
-                                ? BaseTextFieldNoEdit(
-                                    label: 'Tracción',
-                                    initialValue:
-                                        vm.solicitudCola?.descripcionTraccion ??
-                                            '',
-                                  )
-                                : DropdownSearch<TraccionesData>(
-                                    asyncItems: (text) =>
-                                        vm.getTracciones(text),
-                                    dropdownBuilder: (context, tipo) {
-                                      return Text(
-                                          tipo == null
-                                              ? vm.solicitudCola
-                                                      ?.descripcionTraccion ??
-                                                  'Seleccione'
-                                              : tipo.descripcion,
-                                          style: const TextStyle(fontSize: 15));
-                                    },
-                                    onChanged: (v) => vm.traccion = v,
-                                    dropdownDecoratorProps:
-                                        const DropDownDecoratorProps(
-                                            dropdownSearchDecoration:
-                                                InputDecoration(
-                                                    label: Text('Tracción'),
-                                                    border:
-                                                        UnderlineInputBorder())),
-                                    popupProps: PopupProps.menu(
-                                      itemBuilder: (context, otp, isSelected) {
-                                        return ListTile(
-                                          title: Text(otp.descripcion),
-                                          subtitle:
-                                              Text(otp.descripcion2 ?? ''),
-                                          selected: isSelected,
-                                        );
-                                      },
-                                      emptyBuilder: (_, __) => const Center(
-                                        child: Text('No hay resultados'),
-                                      ),
-                                    ),
-                                    validator: (v) {
-                                      if (v == null) {
-                                        return 'Seleccione una tracción';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
+                            : DropdownSearch<TraccionesData>(
+                                asyncItems: (text) => vm.getTracciones(text),
+                                dropdownBuilder: (context, tipo) {
+                                  return Text(
+                                      tipo == null
+                                          ? vm.solicitudCola
+                                                  ?.descripcionTraccion ??
+                                              'Seleccione'
+                                          : tipo.descripcion,
+                                      style: const TextStyle(fontSize: 15));
+                                },
+                                onChanged: (v) => vm.traccion = v,
+                                dropdownDecoratorProps:
+                                    const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                                label: Text('Tracción'),
+                                                border:
+                                                    UnderlineInputBorder())),
+                                popupProps: PopupProps.menu(
+                                  itemBuilder: (context, otp, isSelected) {
+                                    return ListTile(
+                                      title: Text(otp.descripcion),
+                                      subtitle: Text(otp.descripcion2 ?? ''),
+                                      selected: isSelected,
+                                    );
+                                  },
+                                  emptyBuilder: (_, __) => const Center(
+                                    child: Text('No hay resultados'),
                                   ),
+                                ),
+                                validator: (v) {
+                                  if (v == null) {
+                                    return 'Seleccione una tracción';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+
                         const SizedBox(height: 10),
 
                         // Numero de puertas
@@ -279,119 +251,101 @@ class VehiculoForm extends StatelessWidget {
                                 label: 'No. de puertas',
                                 initialValue: vm.vinData?.numeroPuertas,
                               )
-                            : !vm.isEditable()
-                                ? BaseTextFieldNoEdit(
-                                    label: 'No. de puertas',
-                                    initialValue: vm.solicitudCola?.noPuertas
-                                            .toString() ??
-                                        '',
-                                  )
-                                : DropdownSearch<int>(
-                                    // asyncItems: (text) => vm.getTracciones(text),
-                                    items: const [2, 3, 4, 5],
-                                    dropdownBuilder: (context, nPuertas) {
-                                      return Text(
-                                          nPuertas == null
-                                              ? vm.solicitudCola?.noPuertas
-                                                      .toString() ??
-                                                  'Seleccione'
-                                              : nPuertas.toString(),
-                                          style: const TextStyle(fontSize: 15));
-                                    },
-                                    onChanged: (v) => vm.nPuertas = v,
-                                    dropdownDecoratorProps:
-                                        const DropDownDecoratorProps(
-                                            dropdownSearchDecoration:
-                                                InputDecoration(
-                                                    label:
-                                                        Text('No. de puertas'),
-                                                    border:
-                                                        UnderlineInputBorder())),
-                                    popupProps: PopupProps.menu(
-                                      itemBuilder: (context, otp, isSelected) {
-                                        return ListTile(
-                                          title: Text(otp.toString()),
-                                          selected: isSelected,
-                                        );
-                                      },
-                                      emptyBuilder: (_, __) => const Center(
-                                        child: Text('No hay resultados'),
-                                      ),
-                                    ),
-                                    validator: (v) {
-                                      if (v == null) {
-                                        return 'Seleccione número de puertas';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
+                            : DropdownSearch<int>(
+                                // asyncItems: (text) => vm.getTracciones(text),
+                                items: const [2, 3, 4, 5],
+                                dropdownBuilder: (context, nPuertas) {
+                                  return Text(
+                                      nPuertas == null
+                                          ? vm.solicitudCola?.noPuertas
+                                                  .toString() ??
+                                              'Seleccione'
+                                          : nPuertas.toString(),
+                                      style: const TextStyle(fontSize: 15));
+                                },
+                                onChanged: (v) => vm.nPuertas = v,
+                                dropdownDecoratorProps:
+                                    const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                                label: Text('No. de puertas'),
+                                                border:
+                                                    UnderlineInputBorder())),
+                                popupProps: PopupProps.menu(
+                                  itemBuilder: (context, otp, isSelected) {
+                                    return ListTile(
+                                      title: Text(otp.toString()),
+                                      selected: isSelected,
+                                    );
+                                  },
+                                  emptyBuilder: (_, __) => const Center(
+                                    child: Text('No hay resultados'),
                                   ),
+                                ),
+                                validator: (v) {
+                                  if (v == null) {
+                                    return 'Seleccione número de puertas';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+
                         const SizedBox(height: 10),
 
-// Numero de cilindros
+                        // Numero de cilindros
 
                         vm.vinData?.numeroCilindros != null
                             ? BaseTextFieldNoEdit(
                                 label: 'No. de cilindros',
                                 initialValue: vm.vinData?.numeroCilindros,
                               )
-                            : !vm.isEditable()
-                                ? BaseTextFieldNoEdit(
-                                    label: 'No. de cilindros',
-                                    initialValue: vm.solicitudCola?.noCilindros
-                                            .toString() ??
-                                        '',
-                                  )
-                                : DropdownSearch<int>(
-                                    // asyncItems: (text) => vm.getTracciones(text),
-                                    items: const [3, 4, 5, 6, 8, 10, 12],
-                                    dropdownBuilder: (context, nCilindros) {
-                                      return Text(
-                                          nCilindros == null
-                                              ? vm.solicitudCola?.noCilindros
-                                                      .toString() ??
-                                                  'Seleccione'
-                                              : nCilindros.toString(),
-                                          style: const TextStyle(fontSize: 15));
-                                    },
-                                    onChanged: (v) => vm.nCilindros = v,
-                                    dropdownDecoratorProps:
-                                        const DropDownDecoratorProps(
-                                            dropdownSearchDecoration:
-                                                InputDecoration(
-                                                    label: Text(
-                                                        'No. de cilindros'),
-                                                    border:
-                                                        UnderlineInputBorder())),
-                                    popupProps: PopupProps.menu(
-                                      itemBuilder:
-                                          (context, nCilindros, isSelected) {
-                                        return ListTile(
-                                          title: Text(nCilindros.toString()),
-                                          selected: isSelected,
-                                        );
-                                      },
-                                      emptyBuilder: (_, __) => const Center(
-                                        child: Text('No hay resultados'),
-                                      ),
-                                    ),
-                                    validator: (v) {
-                                      if (v == null) {
-                                        return 'Seleccione número de cilindros';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
+                            : DropdownSearch<int>(
+                                // asyncItems: (text) => vm.getTracciones(text),
+                                items: const [3, 4, 5, 6, 8, 10, 12],
+                                dropdownBuilder: (context, nCilindros) {
+                                  return Text(
+                                      nCilindros == null
+                                          ? vm.solicitudCola?.noCilindros
+                                                  .toString() ??
+                                              'Seleccione'
+                                          : nCilindros.toString(),
+                                      style: const TextStyle(fontSize: 15));
+                                },
+                                onChanged: (v) => vm.nCilindros = v,
+                                dropdownDecoratorProps:
+                                    const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                                label: Text('No. de cilindros'),
+                                                border:
+                                                    UnderlineInputBorder())),
+                                popupProps: PopupProps.menu(
+                                  itemBuilder:
+                                      (context, nCilindros, isSelected) {
+                                    return ListTile(
+                                      title: Text(nCilindros.toString()),
+                                      selected: isSelected,
+                                    );
+                                  },
+                                  emptyBuilder: (_, __) => const Center(
+                                    child: Text('No hay resultados'),
                                   ),
+                                ),
+                                validator: (v) {
+                                  if (v == null) {
+                                    return 'Seleccione número de cilindros';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
 
-// Fuerza Motriz
+                        // Fuerza Motriz
 
                         BaseTextField(
                             label: 'Fuerza motriz',
-                            initialValue:
-                                vm.solicitudCola?.fuerzaMotriz.toString() ??
-                                    vm.vinData?.fuerzaMotriz ??
-                                    '',
+                            controller: vm.tcFuerzaMotriz,
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba la fuerza motriz';
@@ -405,9 +359,8 @@ class VehiculoForm extends StatelessWidget {
                         ),
                         BaseTextField(
                             label: 'Kilometraje',
-                            initialValue: '',
                             keyboardType: TextInputType.number,
-                            onChanged: (v) => vm.kilometraje = v,
+                            controller: vm.tcKilometraje,
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba el Kilometraje';
@@ -417,54 +370,45 @@ class VehiculoForm extends StatelessWidget {
                             }),
                         const SizedBox(height: 10),
 
-                        !vm.isEditable()
-                            ? BaseTextFieldNoEdit(
-                                label: 'Color',
-                                initialValue:
-                                    vm.solicitudCola?.descripcionColor ?? '',
-                              )
-                            : DropdownSearch<ColorVehiculo>(
-                                asyncItems: (text) => vm.getColores(text),
-                                dropdownBuilder: (context, tipo) {
-                                  return Text(
-                                      tipo == null
-                                          ? vm.solicitudCola
-                                                  ?.descripcionColor ??
-                                              'Seleccione'
-                                          : tipo.descripcion,
-                                      style: const TextStyle(fontSize: 15));
-                                },
-                                onChanged: (v) => vm.colorVehiculo = v,
-                                dropdownDecoratorProps:
-                                    const DropDownDecoratorProps(
-                                        dropdownSearchDecoration:
-                                            InputDecoration(
-                                                label: Text('Color'),
-                                                border:
-                                                    UnderlineInputBorder())),
-                                popupProps: PopupProps.menu(
-                                  itemBuilder: (context, otp, isSelected) {
-                                    return ListTile(
-                                      title: Text(otp.descripcion),
-                                      selected: isSelected,
-                                    );
-                                  },
-                                  // showSearchBox: true,
+                        DropdownSearch<ColorVehiculo>(
+                            asyncItems: (text) => vm.getColores(text),
+                            dropdownBuilder: (context, tipo) {
+                              return Text(
+                                  tipo == null
+                                      ? vm.solicitudCola?.descripcionColor ??
+                                          'Seleccione'
+                                      : tipo.descripcion,
+                                  style: const TextStyle(fontSize: 15));
+                            },
+                            onChanged: (v) => vm.colorVehiculo = v,
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                                    dropdownSearchDecoration: InputDecoration(
+                                        label: Text('Color'),
+                                        border: UnderlineInputBorder())),
+                            popupProps: PopupProps.menu(
+                              itemBuilder: (context, otp, isSelected) {
+                                return ListTile(
+                                  title: Text(otp.descripcion),
+                                  selected: isSelected,
+                                );
+                              },
+                              // showSearchBox: true,
 
-                                  emptyBuilder: (_, __) => const Center(
-                                    child: Text('No hay resultados'),
-                                  ),
-                                ),
-                                validator: (v) {
-                                  if (v == null) {
-                                    return 'Seleccione un color';
-                                  } else {
-                                    return null;
-                                  }
-                                }),
+                              emptyBuilder: (_, __) => const Center(
+                                child: Text('No hay resultados'),
+                              ),
+                            ),
+                            validator: (v) {
+                              if (v == null) {
+                                return 'Seleccione un color';
+                              } else {
+                                return null;
+                              }
+                            }),
                         BaseTextField(
                             label: 'Placa',
-                            initialValue: '',
+                            controller: vm.tcPlaca,
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba el número de placa';

@@ -1,5 +1,8 @@
+import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
+
 import '../../authentication_client.dart';
 import '../../models/seguridad_entidades_generales/adjuntos_response.dart';
+import '../api_status.dart';
 import '../http.dart';
 
 class AdjuntosApi {
@@ -62,5 +65,45 @@ class AdjuntosApi {
         return AdjuntosPOSTResponse.fromJson(data);
       },
     );
+  }
+
+  Future<Object> addFotosTasacion({
+    required int noTasacion,
+    required List<Map<String, dynamic>> adjuntos,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/add-fotos-tasacion',
+        method: "POST",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "noTasacion": noTasacion,
+          "adjuntos": adjuntos,
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getFotosTasacion({required int noTasacion}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/get/$noTasacion',
+        method: "GET",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return AdjuntosFotoResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

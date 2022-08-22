@@ -47,6 +47,8 @@ class SolicitudCreditoData {
     this.nombreOficialNegocios,
     this.chasis,
     this.estado,
+    this.codModelo,
+    this.codMarca,
   });
 
   int? noSolicitud;
@@ -67,6 +69,8 @@ class SolicitudCreditoData {
   String? nombreOficialNegocios;
   String? chasis;
   int? estado;
+  int? codModelo;
+  int? codMarca;
 
   factory SolicitudCreditoData.fromJson(Map<String, dynamic> json) =>
       SolicitudCreditoData(
@@ -75,7 +79,9 @@ class SolicitudCreditoData {
         nombreCliente: json["nombreCliente"],
         noIdentificacion: json["noIdentificacion"],
         marca: json["marca"],
+        codMarca: json["codigoMarca"],
         modelo: json["modelo"],
+        codModelo: json["codigoModelo"],
         ano: json["ano"],
         precio: json["precio"],
         producto: json["producto"],
@@ -95,7 +101,9 @@ class SolicitudCreditoData {
         "noCotizacion": noCotizacion,
         "nombreCliente": nombreCliente,
         "noIdentificacion": noIdentificacion,
+        "codigoMarca": codMarca,
         "marca": marca,
+        "codigoModelo": codModelo,
         "modelo": modelo,
         "ano": ano,
         "precio": precio,

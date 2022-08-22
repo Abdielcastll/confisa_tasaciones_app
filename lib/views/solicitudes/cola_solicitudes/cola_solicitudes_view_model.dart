@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
+import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
+import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
 
 import '../../../core/api/api_status.dart';
+import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../widgets/app_dialogs.dart';
@@ -13,10 +16,12 @@ import '../../../widgets/app_dialogs.dart';
 class ColaSolicitudesViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final _solicitudesApi = locator<SolicitudesApi>();
+  final _authenticationAPI = locator<AuthenticationClient>();
   final listController = ScrollController();
   late GetSolicitudesResponse solicitudesResponse;
   List<SolicitudesData> solicitudes = [];
   TextEditingController tcBuscar = TextEditingController();
+  List<String> roles = [];
 
   bool _loading = true;
   int pageNumber = 1;
@@ -53,6 +58,8 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   }
 
   Future<void> onInit(BuildContext context) async {
+    Session data = _authenticationAPI.loadSession;
+    roles = data.role;
     var resp = await _solicitudesApi.getColaSolicitudes();
     if (resp is Success) {
       solicitudesResponse = resp.response as GetSolicitudesResponse;
@@ -133,9 +140,11 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   }
 
   goToSolicitud(SolicitudesData s) {
-    _navigatorService.navigateToPage(
-      SolicitudEstimacionView.routeName,
-      arguments: s,
-    );
+    if (roles.contains("OficialNegocios") || roles.contains("Administrador")) {
+      _navigatorService.navigateToPage(
+        ConsultarModificarView.routeName,
+        arguments: s,
+      );
+    }
   }
 }

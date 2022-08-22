@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../theme/theme.dart';
 import '../../../base_widgets/base_form_widget.dart';
 import '../../../base_widgets/base_text_field_widget.dart';
-import '../../solicitud_tasacion_view_model.dart';
+import '../../consultar_modificar_view_model.dart';
 
 class GeneralesB extends StatelessWidget {
   const GeneralesB(
@@ -11,7 +11,7 @@ class GeneralesB extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final SolicitudTasacionViewModel vm;
+  final ConsultarModificarViewModel vm;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class GeneralesB extends StatelessWidget {
       },
       iconNext: AppIcons.save,
       labelNext: 'Guardar',
-      onPressedNext: () => vm.guardarTasacion(context),
+      onPressedNext: () => Navigator.of(context).pop(),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,

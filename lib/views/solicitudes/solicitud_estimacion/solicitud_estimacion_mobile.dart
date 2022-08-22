@@ -8,14 +8,8 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Solicitud de estimación')),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _form(),
-          ],
-        ),
-      ),
+      appBar: AppBar(title: const Text('Solicitud de Estimación')),
+      body: _form(),
     );
   }
 

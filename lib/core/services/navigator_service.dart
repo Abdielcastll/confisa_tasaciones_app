@@ -6,6 +6,7 @@ class NavigatorService extends BaseService {
 
   Future<dynamic> navigateToPage(String routeName, {dynamic arguments}) async {
     log.i('navigateToPage: routeName: $routeName');
+    print(arguments);
     return navigatorKey.currentState!
         .pushNamed(routeName, arguments: arguments);
   }

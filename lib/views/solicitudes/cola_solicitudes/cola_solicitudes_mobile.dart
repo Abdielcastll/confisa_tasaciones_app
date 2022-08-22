@@ -11,13 +11,15 @@ class _ColaSolicitudesMobile extends StatelessWidget {
       inAsyncCall: vm.loading,
       opacity: false,
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 3,
-          title: const Text(
-            'Solicitudes',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-          ),
-          backgroundColor: AppColors.brownLight,
+        appBar: const Appbar(
+          textSize: 20,
+          titulo: 'Cola de solicitudes',
+
+          // title: const Text(
+          //   'Solicitudes',
+          //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          // ),
+          // backgroundColor: AppColors.brownLight,
         ),
         body: _home(context),
       ),
