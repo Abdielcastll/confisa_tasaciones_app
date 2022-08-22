@@ -14,6 +14,7 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_generales/parametros
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_default.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_suplidor_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_eliminacion_data_grafica_api.dart';
@@ -77,6 +78,8 @@ abstract class DependencyInjection {
         ComponentesVehiculoApi(http, authenticationClient);
     final accesoriosApi = AccesoriosApi(http, authenticationClient);
     final alarmasApi = AlarmasApi(http, authenticationClient);
+    final accesoriosSuplidorApi =
+        AccesoriosSuplidorApi(http, authenticationClient);
     final vencimientoEstadosApi =
         VencimientoEstadosApi(http, authenticationClient);
     final periodoEliminacionDataGraficaApi =
@@ -133,5 +136,6 @@ abstract class DependencyInjection {
     locator.registerSingleton<SolicitudesApi>(solicitudesAPI);
     locator.registerSingleton<PeriodoTasacionPromedioApi>(
         periodoTasacionPromedioApi);
+    locator.registerSingleton<AccesoriosSuplidorApi>(accesoriosSuplidorApi);
   }
 }

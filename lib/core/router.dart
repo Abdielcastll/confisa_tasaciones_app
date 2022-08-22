@@ -14,6 +14,7 @@ import 'package:tasaciones_app/views/entidades_seguridad/endpoints/endpoints_vie
 import 'package:tasaciones_app/views/entidades_seguridad/roles/roles_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/usuarios/usuarios_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/accesorios/accesorios_view.dart';
+import 'package:tasaciones_app/views/entidades_solicitudes/accesorios_suplidor/accesorios_suplidor_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/componentes_vehiculo/componentes_vehiculo_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/condiciones_componentes_vehiculo.dart/condiciones_componentes_vehiculo_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/periodo_eliminacion_data_grafica/periodo_eliminacion_data_grafica_view.dart';
@@ -150,6 +151,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case PeriodoTasacionPromedioView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const PeriodoTasacionPromedioView());
+
+    case AccesoriosSuplidorView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const AccesoriosSuplidorView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());
