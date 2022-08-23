@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
 
 import '../../authentication_client.dart';
@@ -16,42 +17,50 @@ class SuplidoresApi {
     int? codigoRelacionado,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/suplidores/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "CodigoRelacionado": codigoRelacionado,
-        "Nombre": nombre,
-        "Identificacion": identificacion,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return SuplidoresResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/suplidores/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "CodigoRelacionado": codigoRelacionado,
+          "Nombre": nombre,
+          "Identificacion": identificacion,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return SuplidoresResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> getSuplidoresPorId({
     required int codigoRelacionado,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/suplidores/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "CodigoRelacionado": codigoRelacionado,
-      },
-      parser: (data) {
-        return SuplidoresResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/suplidores/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "CodigoRelacionado": codigoRelacionado,
+        },
+        parser: (data) {
+          return SuplidoresResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   /* Future<Object> createSuplidores({required String descripcion}) async {

@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/componentes_vehiculo_response.dart';
 
 import '../../authentication_client.dart';
@@ -16,38 +17,46 @@ class ComponentesVehiculoApi {
     String descripcion = '',
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/componentes-vehiculo/get',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Descripcion": descripcion,
-        "Id": id,
-        "IdSegmento": idSegmento,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return ComponentesVehiculoResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/componentes-vehiculo/get',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Descripcion": descripcion,
+          "Id": id,
+          "IdSegmento": idSegmento,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return ComponentesVehiculoResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createComponentesVehiculo(
       {required String descripcion, required int idSegmento}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/componentes-vehiculo/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"descripcion": descripcion, "idSegmento": idSegmento},
-      parser: (data) {
-        return ComponentesVehiculoPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/componentes-vehiculo/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"descripcion": descripcion, "idSegmento": idSegmento},
+        parser: (data) {
+          return ComponentesVehiculoPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updateComponentesVehiculo(
@@ -55,30 +64,38 @@ class ComponentesVehiculoApi {
       required int id,
       required int idSegmento}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/componentes-vehiculo/update',
-      method: "PUT",
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"id": id, "descripcion": descripcion, "idSegmento": idSegmento},
-      parser: (data) {
-        return ComponentesVehiculoPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/componentes-vehiculo/update',
+        method: "PUT",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"id": id, "descripcion": descripcion, "idSegmento": idSegmento},
+        parser: (data) {
+          return ComponentesVehiculoPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> deleteComponentesVehiculo({required int id}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/componentes-vehiculo/delete/$id',
-      method: "DELETE",
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return ComponentesVehiculoPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/componentes-vehiculo/delete/$id',
+        method: "DELETE",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return ComponentesVehiculoPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

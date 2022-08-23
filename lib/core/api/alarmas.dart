@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
@@ -20,29 +21,33 @@ class AlarmasApi {
       int pageNumber = 1,
       int? id}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/alarmas-solicitud/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "IdSolicitud": idSolicitud,
-        "FechaHora": fechaHora,
-        "Usuario": usuario,
-        "FechaCompromiso": fechaCompromiso,
-        "Titulo": titulo,
-        "Correo": correo,
-        "Enviado": enviado,
-        "Descripcion": descripcion,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return AlarmasResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/alarmas-solicitud/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "IdSolicitud": idSolicitud,
+          "FechaHora": fechaHora,
+          "Usuario": usuario,
+          "FechaCompromiso": fechaCompromiso,
+          "Titulo": titulo,
+          "Correo": correo,
+          "Enviado": enviado,
+          "Descripcion": descripcion,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return AlarmasResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createAlarma({
@@ -53,23 +58,27 @@ class AlarmasApi {
     required String correo,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/alarmas-solicitud/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "idSolicitud": idSolicitud,
-        "descripcion": descripcion,
-        "fechaCompromiso": fechaCompromiso,
-        "titulo": titulo,
-        "correo": correo
-      },
-      parser: (data) {
-        return AlarmasData.fromJson(data["data"]);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/alarmas-solicitud/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "idSolicitud": idSolicitud,
+          "descripcion": descripcion,
+          "fechaCompromiso": fechaCompromiso,
+          "titulo": titulo,
+          "correo": correo
+        },
+        parser: (data) {
+          return AlarmasData.fromJson(data["data"]);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updateAlarma({
@@ -80,38 +89,46 @@ class AlarmasApi {
     required String correo,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/alarmas-solicitud/update',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "id": id,
-        "descripcion": descripcion,
-        "fechaCompromiso": fechaCompromiso,
-        "titulo": titulo,
-        "correo": correo
-      },
-      parser: (data) {
-        return AlarmasPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/alarmas-solicitud/update',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "id": id,
+          "descripcion": descripcion,
+          "fechaCompromiso": fechaCompromiso,
+          "titulo": titulo,
+          "correo": correo
+        },
+        parser: (data) {
+          return AlarmasPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> deleteAlarma({
     required int id,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/alarmas-solicitud/delete/$id',
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return AlarmasPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/alarmas-solicitud/delete/$id',
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return AlarmasPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

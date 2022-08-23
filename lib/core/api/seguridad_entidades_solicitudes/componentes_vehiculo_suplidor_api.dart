@@ -1,3 +1,5 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
+
 import '../../authentication_client.dart';
 import '../../models/seguridad_entidades_solicitudes/componentes_vehiculo_suplidor_response.dart';
 import '../http.dart';
@@ -16,57 +18,69 @@ class ComponentesVehiculoSuplidorApi {
       String componenteDescripcion = "",
       int? id}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/componentes-vehiculo-suplidor/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "IdComponenete": idComponente,
-        "IdSuplidor": idSuplidor,
-        "ComponenteDescripcion": componenteDescripcion,
-        "Estado": estado,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return ComponentesVehiculoSuplidorResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/componentes-vehiculo-suplidor/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "IdComponenete": idComponente,
+          "IdSuplidor": idSuplidor,
+          "ComponenteDescripcion": componenteDescripcion,
+          "Estado": estado,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return ComponentesVehiculoSuplidorResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createComponenteVehiculoSuplidor(
       {required List<int> idComponentes, required int idSuplidor}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/componentes-vehiculo-suplidor/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "idComponentes": idComponentes,
-        "idSuplidor": idSuplidor,
-      },
-      parser: (data) {
-        return ComponentesVehiculoSuplidorData.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/componentes-vehiculo-suplidor/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "idComponentes": idComponentes,
+          "idSuplidor": idSuplidor,
+        },
+        parser: (data) {
+          return ComponentesVehiculoSuplidorData.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> deleteComponentesVehiculoSuplidor({required int id}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/componentes-vehiculo-suplidor/delete/$id',
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return ComponentesVehiculoSuplidorPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/componentes-vehiculo-suplidor/delete/$id',
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return ComponentesVehiculoSuplidorPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

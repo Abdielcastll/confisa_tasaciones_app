@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_default_response.dart';
 
 import '../../authentication_client.dart';
@@ -16,6 +17,10 @@ class SuplidoresDefaultApi {
       int? id,
       int? idCatalogoParametro}) async {
     String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+    } else {
+      return TokenFail();
+    }
     return _http.request(
       '/api/suplidor-default/get',
       method: 'GET',
@@ -39,19 +44,23 @@ class SuplidoresDefaultApi {
   Future<Object> createOrUpdateSuplidoresDefault(
       {required String codigoEntidad, required String valor}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/suplidor-default/create-or-update',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "valor": valor,
-        "codigoEntidad": codigoEntidad,
-      },
-      parser: (data) {
-        return SuplidoresDefaultPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/suplidor-default/create-or-update',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "valor": valor,
+          "codigoEntidad": codigoEntidad,
+        },
+        parser: (data) {
+          return SuplidoresDefaultPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

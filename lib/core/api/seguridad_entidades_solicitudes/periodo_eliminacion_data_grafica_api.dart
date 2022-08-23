@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/periodo_eliminacion_data_grafica_response.dart';
 
 import '../../authentication_client.dart';
@@ -15,22 +16,26 @@ class PeriodoEliminacionDataGraficaApi {
     int? id,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodoeliminaciondatagrafica/get-vencida',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "Descripcion": descripcion,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return PeriodoEliminacionDataGraficaResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodoeliminaciondatagrafica/get-vencida',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "Descripcion": descripcion,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return PeriodoEliminacionDataGraficaResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updatePeriodoEliminacionDataGraficaVencida({
@@ -38,17 +43,21 @@ class PeriodoEliminacionDataGraficaApi {
     required String descripcion,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodoeliminaciondatagrafica/update-vencida',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"id": id, "descripcion": descripcion},
-      parser: (data) {
-        return PeriodoEliminacionDataGraficaPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodoeliminaciondatagrafica/update-vencida',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"id": id, "descripcion": descripcion},
+        parser: (data) {
+          return PeriodoEliminacionDataGraficaPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> getPeriodoEliminacionDataGraficaValorada({
@@ -58,22 +67,26 @@ class PeriodoEliminacionDataGraficaApi {
     int? id,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodoeliminaciondatagrafica/get-valorada',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "Descripcion": descripcion,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return PeriodoEliminacionDataGraficaResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodoeliminaciondatagrafica/get-valorada',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "Descripcion": descripcion,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return PeriodoEliminacionDataGraficaResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updatePeriodoEliminacionDataGraficaValorada({
@@ -81,17 +94,21 @@ class PeriodoEliminacionDataGraficaApi {
     required String descripcion,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodoeliminaciondatagrafica/update-valorada',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"id": id, "descripcion": descripcion},
-      parser: (data) {
-        return PeriodoEliminacionDataGraficaPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodoeliminaciondatagrafica/update-valorada',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"id": id, "descripcion": descripcion},
+        parser: (data) {
+          return PeriodoEliminacionDataGraficaPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> getPeriodoEliminacionDataGraficaRechazada({
@@ -101,22 +118,26 @@ class PeriodoEliminacionDataGraficaApi {
     int? id,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodoeliminaciondatagrafica/get-rechazada',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "Descripcion": descripcion,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return PeriodoEliminacionDataGraficaResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodoeliminaciondatagrafica/get-rechazada',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "Descripcion": descripcion,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return PeriodoEliminacionDataGraficaResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updatePeriodoEliminacionDataGraficaRechazada({
@@ -124,16 +145,20 @@ class PeriodoEliminacionDataGraficaApi {
     required String descripcion,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodoeliminaciondatagrafica/update-rechazada',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"id": id, "descripcion": descripcion},
-      parser: (data) {
-        return PeriodoEliminacionDataGraficaPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodoeliminaciondatagrafica/update-rechazada',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"id": id, "descripcion": descripcion},
+        parser: (data) {
+          return PeriodoEliminacionDataGraficaPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

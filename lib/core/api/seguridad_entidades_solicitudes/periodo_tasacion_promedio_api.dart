@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/periodo_eliminacion_data_grafica_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/periodo_tasacion_promedio_response.dart';
 
@@ -14,16 +15,20 @@ class PeriodoTasacionPromedioApi {
     int pageNumber = 1,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodo-tasacion-promedio/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return PeriodoTasacionPromedioResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodo-tasacion-promedio/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return PeriodoTasacionPromedioResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> getOpcionesPeriodoTasacionPromedio({
@@ -31,16 +36,20 @@ class PeriodoTasacionPromedioApi {
     int pageNumber = 1,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodo-tasacion-promedio/get-opciones',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return OpcionesPeriodoTasacionPromedioResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodo-tasacion-promedio/get-opciones',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return OpcionesPeriodoTasacionPromedioResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updatePeriodoTasacionPromedio({
@@ -48,16 +57,20 @@ class PeriodoTasacionPromedioApi {
     required String descripcion,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/periodo-tasacion-promedio/update',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"id": id, "descripcion": descripcion},
-      parser: (data) {
-        return PeriodoTasacionPromedioPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/periodo-tasacion-promedio/update',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"id": id, "descripcion": descripcion},
+        parser: (data) {
+          return PeriodoTasacionPromedioPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }
