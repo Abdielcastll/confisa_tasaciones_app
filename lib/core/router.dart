@@ -17,6 +17,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/accesorios/accesorios
 import 'package:tasaciones_app/views/entidades_solicitudes/accesorios_suplidor/accesorios_suplidor_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/componentes_vehiculo/componentes_vehiculo_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/condiciones_componentes_vehiculo.dart/condiciones_componentes_vehiculo_view.dart';
+import 'package:tasaciones_app/views/entidades_solicitudes/fotos/fotos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/periodo_eliminacion_data_grafica/periodo_eliminacion_data_grafica_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/periodo_tasacion_promedio/periodo_tasacion_promedio_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_accesorios_vehiculos/segmentos_accesorios_vehiculos_view.dart';
@@ -160,6 +161,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AccesoriosSuplidorView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const AccesoriosSuplidorView());
+
+    case FotosView.routeName:
+      return CupertinoPageRoute(builder: (context) => const FotosView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());
