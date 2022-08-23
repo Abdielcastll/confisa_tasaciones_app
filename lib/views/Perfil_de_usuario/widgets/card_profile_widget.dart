@@ -42,16 +42,18 @@ class CardProfileWidget extends StatelessWidget {
                                 onChanged: vm.onChangedName,
                                 keyboardType: TextInputType.name,
                               )
-                            : Text(
-                                vm.profile?.nombreCompleto ?? '',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w700,
+                            : Expanded(
+                                child: Text(
+                                  vm.profile?.nombreCompleto ?? '',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                         Visibility(
                           visible: vm.editable(),

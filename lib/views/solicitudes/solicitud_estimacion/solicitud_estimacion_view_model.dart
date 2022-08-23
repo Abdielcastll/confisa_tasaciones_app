@@ -348,7 +348,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
             ? int.parse(vinData?.fuerzaMotriz ?? '')
             : int.parse(tcFuerzaMotriz.text),
         idOficial: solicitud!.codOficialNegocios!,
-        idPromotor: 0,
+        // idPromotor: 0,
         identificacion: solicitud!.noIdentificacion!,
         kilometraje: int.parse(tcKilometraje.text),
         marca: solicitud!.codMarca ?? vinData!.codigoMarca ?? 0,
@@ -361,12 +361,12 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
         placa: tcPlaca.text,
         serie: vinData?.idSerie!,
         sistemaTransmision: _transmision!.id,
-        suplidorTasacion: 0,
+        // suplidorTasacion: 0,
         tipoTasacion: 21,
-        tipoVehiculoLocal: 0,
+        tipoVehiculoLocal: tipoVehiculo.id,
         traccion: _traccion!.id,
         trim: vinData?.idTrim,
-        versionLocal: 0,
+        versionLocal: 0, /* INFO VEHICULOGET VERSIONES   */
       );
       if (resp is Failure) {
         ProgressDialog.dissmiss(context);
