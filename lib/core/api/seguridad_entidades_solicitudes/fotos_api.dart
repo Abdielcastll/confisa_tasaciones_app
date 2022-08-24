@@ -81,12 +81,13 @@ class FotosApi {
     }
   }
 
-  Future<Object> updateTipos({required String descripcion, int? id}) async {
+  Future<Object> updateTipos(
+      {required String descripcion, required int id}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
         '/api/fotos/update-tipos',
-        method: 'GET',
+        method: 'PUT',
         headers: {
           'Authorization': 'Bearer $_token',
         },

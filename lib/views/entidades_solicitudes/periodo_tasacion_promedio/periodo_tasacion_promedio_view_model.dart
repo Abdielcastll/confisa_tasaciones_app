@@ -68,6 +68,16 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    var respopc =
+        await _periodoTasacionPromedioApi.getOpcionesPeriodoTasacionPromedio();
+    if (respopc is Success) {
+      var resp = respopc.response as OpcionesPeriodoTasacionPromedioResponse;
+      opcionPeriodoTasacionPromedioData = resp.data;
+      notifyListeners();
+    }
+    if (respopc is Failure) {
+      Dialogs.error(msg: respopc.messages.first);
+    }
     cargando = false;
   }
 
@@ -135,7 +145,16 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
-
+    var respopc =
+        await _periodoTasacionPromedioApi.getOpcionesPeriodoTasacionPromedio();
+    if (respopc is Success) {
+      var resp = respopc.response as OpcionesPeriodoTasacionPromedioResponse;
+      opcionPeriodoTasacionPromedioData = resp.data;
+      notifyListeners();
+    }
+    if (respopc is Failure) {
+      Dialogs.error(msg: respopc.messages.first);
+    }
     cargando = false;
   }
 

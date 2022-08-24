@@ -31,10 +31,7 @@ class PeriodoTasacionPromedioApi {
     }
   }
 
-  Future<Object> getOpcionesPeriodoTasacionPromedio({
-    int pageSize = 900,
-    int pageNumber = 1,
-  }) async {
+  Future<Object> getOpcionesPeriodoTasacionPromedio() async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(

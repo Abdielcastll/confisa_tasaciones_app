@@ -108,7 +108,7 @@ class CondicionesComponentesVehiculoApi {
         },
         data: {"descripcion": descripcion},
         parser: (data) {
-          return CondicionesComponentesVehiculoResponse.fromJson(data);
+          return CondicionesComponentesVehiculoData.fromJson(data["data"]);
         },
       );
     } else {
