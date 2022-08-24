@@ -5,6 +5,7 @@ import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 
 import '../../../../../core/models/tracciones_response.dart';
+import '../../../../../core/models/versiones_vehiculo_response.dart';
 import '../../../../../theme/theme.dart';
 import '../../../base_widgets/base_form_widget.dart';
 import '../../../base_widgets/base_text_field_widget.dart';
@@ -95,9 +96,45 @@ class VehiculoForm extends StatelessWidget {
                   if (vm.vinData != null)
                     Column(
                       children: [
+                        DropdownSearch<VersionVehiculoData>(
+                          asyncItems: (text) => vm.getversionVehiculo(text),
+                          dropdownBuilder: (context, tipo) {
+                            return Text(
+                              tipo == null ? 'Seleccione' : tipo.descripcion,
+                              style: const TextStyle(
+                                fontSize: 15,
+                              ),
+                            );
+                          },
+                          onChanged: (v) => vm.versionVehiculo = v,
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                  label: Text('Versión'),
+                                  border: UnderlineInputBorder())),
+                          popupProps: PopupProps.menu(
+                            itemBuilder: (context, otp, isSelected) {
+                              return ListTile(
+                                title: Text(otp.descripcion),
+                                selected: isSelected,
+                              );
+                            },
+                            emptyBuilder: (_, __) => const Center(
+                              child: Text('No hay resultados'),
+                            ),
+                          ),
+                          validator: (v) {
+                            if (v == null) {
+                              return 'Seleccione una versión';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
                         // TIPO DE VEHICULO
 
-                        vm.vinData?.tipoVehiculo != null
+                        const SizedBox(height: 10),
+                        vm.vinData?.tipoVehiculo != null &&
+                                vm.vinData?.tipoVehiculo != ''
                             ? BaseTextFieldNoEdit(
                                 label: 'Tipo',
                                 initialValue: vm.vinData?.tipoVehiculo ?? '',
@@ -148,7 +185,8 @@ class VehiculoForm extends StatelessWidget {
 
                         // SISTEMA DE TRANSMISIÓN
 
-                        vm.vinData?.sistemaCambio != null
+                        vm.vinData?.sistemaCambio != null &&
+                                vm.vinData?.sistemaCambio != ''
                             ? BaseTextFieldNoEdit(
                                 label: 'Sistema de cambio',
                                 initialValue: vm.vinData?.sistemaCambio,
@@ -197,7 +235,8 @@ class VehiculoForm extends StatelessWidget {
 
                         // SISTEMA DE TRACCION
 
-                        vm.vinData?.traccion != null
+                        vm.vinData?.traccion != null &&
+                                vm.vinData?.traccion != ''
                             ? BaseTextFieldNoEdit(
                                 label: 'Tracción',
                                 initialValue: vm.vinData?.traccion,
@@ -246,7 +285,8 @@ class VehiculoForm extends StatelessWidget {
 
                         // Numero de puertas
 
-                        vm.vinData?.numeroPuertas != null
+                        vm.vinData?.numeroPuertas != null &&
+                                vm.vinData?.numeroPuertas != ''
                             ? BaseTextFieldNoEdit(
                                 label: 'No. de puertas',
                                 initialValue: vm.vinData?.numeroPuertas,
@@ -295,7 +335,8 @@ class VehiculoForm extends StatelessWidget {
 
                         // Numero de cilindros
 
-                        vm.vinData?.numeroCilindros != null
+                        vm.vinData?.numeroCilindros != null &&
+                                vm.vinData?.numeroCilindros != ''
                             ? BaseTextFieldNoEdit(
                                 label: 'No. de cilindros',
                                 initialValue: vm.vinData?.numeroCilindros,

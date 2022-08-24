@@ -73,6 +73,8 @@ abstract class Dialogs {
     required String tittle,
     required String description,
     required Function confirm,
+    String? textAceptar,
+    String? textCancelar,
   }) {
     showDialog(
         context: context,
@@ -128,13 +130,13 @@ abstract class Dialogs {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         AppButton(
-                            text: 'NO',
+                            text: textCancelar ?? 'NO',
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                             color: Colors.red),
                         AppButton(
-                            text: 'SI',
+                            text: textAceptar ?? 'SI',
                             onPressed: () {
                               Navigator.pop(_);
                               confirm();

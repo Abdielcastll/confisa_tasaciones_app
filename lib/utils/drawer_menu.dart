@@ -17,11 +17,11 @@ List<Widget> menu(MenuResponse menu) {
             element.nombre,
             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
           ),
-          children: element.recursos.map((e) {
-            if (e.moduloPadre != null) {
+          children: element.recursos!.map((e) {
+            if (e.recursos != null) {
               return ExpansionTile(
                 title: Text(e.nombre),
-                children: e.recursos
+                children: e.recursos!
                     .map((e2) => ListTile(
                           title: Text(
                             e2.nombre,

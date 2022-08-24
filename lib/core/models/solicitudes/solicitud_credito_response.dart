@@ -47,8 +47,10 @@ class SolicitudCreditoData {
     this.nombreOficialNegocios,
     this.chasis,
     this.estado,
-    this.codModelo,
-    this.codMarca,
+    this.codigoMarcaEasybank,
+    this.codigoModeloEasybank,
+    this.idMarcaTasaciones,
+    this.idModeloTasaciones,
   });
 
   int? noSolicitud;
@@ -69,8 +71,10 @@ class SolicitudCreditoData {
   String? nombreOficialNegocios;
   String? chasis;
   int? estado;
-  int? codModelo;
-  int? codMarca;
+  int? codigoMarcaEasybank;
+  int? codigoModeloEasybank;
+  int? idMarcaTasaciones;
+  int? idModeloTasaciones;
 
   factory SolicitudCreditoData.fromJson(Map<String, dynamic> json) =>
       SolicitudCreditoData(
@@ -79,9 +83,7 @@ class SolicitudCreditoData {
         nombreCliente: json["nombreCliente"],
         noIdentificacion: json["noIdentificacion"],
         marca: json["marca"],
-        codMarca: json["codigoMarca"],
         modelo: json["modelo"],
-        codModelo: json["codigoModelo"],
         ano: json["ano"],
         precio: json["precio"],
         producto: json["producto"],
@@ -94,6 +96,10 @@ class SolicitudCreditoData {
         nombreOficialNegocios: json["nombreOficialNegocios"],
         chasis: json["chasis"],
         estado: json["estado"],
+        codigoMarcaEasybank: json["codigoMarcaEasybank"],
+        codigoModeloEasybank: json["codigoModeloEasybank"],
+        idMarcaTasaciones: json["idMarcaTasaciones"],
+        idModeloTasaciones: json["idModeloTasaciones"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -101,9 +107,7 @@ class SolicitudCreditoData {
         "noCotizacion": noCotizacion,
         "nombreCliente": nombreCliente,
         "noIdentificacion": noIdentificacion,
-        "codigoMarca": codMarca,
         "marca": marca,
-        "codigoModelo": codModelo,
         "modelo": modelo,
         "ano": ano,
         "precio": precio,
@@ -117,5 +121,9 @@ class SolicitudCreditoData {
         "nombreOficialNegocios": nombreOficialNegocios,
         "chasis": chasis,
         "estado": estado,
+        "codigoMarcaEasybank": codigoMarcaEasybank,
+        "codigoModeloEasybank": codigoModeloEasybank,
+        "idMarcaTasaciones": idMarcaTasaciones,
+        "idModeloTasaciones": idModeloTasaciones,
       };
 }
