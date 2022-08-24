@@ -7,7 +7,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/periodo_eliminacion_d
 import 'package:tasaciones_app/widgets/progress_widget.dart';
 import 'package:tasaciones_app/widgets/refresh_widget.dart';
 
-part 'periodo_eliminacion_data_grafica.dart';
+part 'periodo_eliminacion_data_grafica_mobile.dart';
 
 class PeriodoEliminacionDataGraficaView extends StatelessWidget {
   static const routeName = 'Períodos Eliminación Data Gráfica';

@@ -17,6 +17,7 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesori
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_suplidor_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/fotos_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_eliminacion_data_grafica_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_tasacion_promedio_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_api.dart';
@@ -89,6 +90,7 @@ abstract class DependencyInjection {
         CondicionesComponentesVehiculoApi(http, authenticationClient);
     final periodoTasacionPromedioApi =
         PeriodoTasacionPromedioApi(http, authenticationClient);
+    final fotosApi = FotosApi(http, authenticationClient);
     final rolesAPI = RolesAPI(http, authenticationClient);
     final permisosAPI = PermisosAPI(http, authenticationClient);
     final recursosAPI = RecursosAPI(http, authenticationClient);
@@ -137,5 +139,6 @@ abstract class DependencyInjection {
     locator.registerSingleton<PeriodoTasacionPromedioApi>(
         periodoTasacionPromedioApi);
     locator.registerSingleton<AccesoriosSuplidorApi>(accesoriosSuplidorApi);
+    locator.registerSingleton<FotosApi>(fotosApi);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/parametors_servidor_email_response.dart';
 
 import '../../authentication_client.dart';
@@ -18,26 +19,30 @@ class ParametrosServidorEmailApi {
       int pageNumber = 1,
       int? id}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/parametros-servidor-email/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "Remitente": remitente,
-        "Host": host,
-        "Puerto": puerto,
-        "Usuario": usuario,
-        "Password": password,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return ParametrosServidorEmailResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/parametros-servidor-email/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "Remitente": remitente,
+          "Host": host,
+          "Puerto": puerto,
+          "Usuario": usuario,
+          "Password": password,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return ParametrosServidorEmailResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createParametrosServidorEmail(
@@ -47,23 +52,27 @@ class ParametrosServidorEmailApi {
       required String usuario,
       required String password}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/parametros-servidor-email/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "remitente": remitente,
-        "host": host,
-        "puerto": puerto,
-        "usuario": usuario,
-        "password": password,
-      },
-      parser: (data) {
-        return ParametrosServidorEmailResponse2.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/parametros-servidor-email/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "remitente": remitente,
+          "host": host,
+          "puerto": puerto,
+          "usuario": usuario,
+          "password": password,
+        },
+        parser: (data) {
+          return ParametrosServidorEmailResponse2.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updateParametrosServidorEmail(
@@ -74,6 +83,10 @@ class ParametrosServidorEmailApi {
       required String usuario,
       required String password}) async {
     String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+    } else {
+      return TokenFail();
+    }
     return _http.request(
       '/api/parametros-servidor-email/update',
       method: 'PUT',
@@ -96,15 +109,19 @@ class ParametrosServidorEmailApi {
 
   Future<Object> deleteParametrosServidorEmail({required int id}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/parametros-servidor-email/delete/$id',
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return ParametrosServidorEmailPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/parametros-servidor-email/delete/$id',
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return ParametrosServidorEmailPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

@@ -16,55 +16,67 @@ class AdjuntosApi {
       int pageNumber = 1,
       int? id}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/tipos-adjuntos/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "Descripcion": descripcion,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return AdjuntosResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/tipos-adjuntos/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "Descripcion": descripcion,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return AdjuntosResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createAdjunto({required String descripcion}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/tipos-adjuntos/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "descripcion": descripcion,
-      },
-      parser: (data) {
-        return AdjuntosData.fromJson(data["data"]);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/tipos-adjuntos/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "descripcion": descripcion,
+        },
+        parser: (data) {
+          return AdjuntosData.fromJson(data["data"]);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updateAdjunto(
       {required int id, required String descripcion}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/tipos-adjuntos/update',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"id": id, "descripcion": descripcion},
-      parser: (data) {
-        return AdjuntosPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/tipos-adjuntos/update',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"id": id, "descripcion": descripcion},
+        parser: (data) {
+          return AdjuntosPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> addFotosTasacion({

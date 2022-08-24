@@ -361,8 +361,7 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
                                 Dialogs.success(
-                                    msg:
-                                        'Tipo parametroServidorEmail Actualizado');
+                                    msg: 'Servidor Email Actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }

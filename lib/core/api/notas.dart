@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/models/notas_response.dart';
@@ -20,29 +21,33 @@ class NotasApi {
       int pageNumber = 1,
       int? id}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/notassolicitud/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "IdSolicitud": idSolicitud,
-        "FechaHora": fechaHora,
-        "Usuario": usuario,
-        "FechaCompromiso": fechaCompromiso,
-        "Titulo": titulo,
-        "Correo": correo,
-        "Enviado": enviado,
-        "Descripcion": descripcion,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return NotasResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/notassolicitud/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "IdSolicitud": idSolicitud,
+          "FechaHora": fechaHora,
+          "Usuario": usuario,
+          "FechaCompromiso": fechaCompromiso,
+          "Titulo": titulo,
+          "Correo": correo,
+          "Enviado": enviado,
+          "Descripcion": descripcion,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return NotasResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> createNota({
@@ -51,21 +56,25 @@ class NotasApi {
     required String titulo,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/notassolicitud/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "idSolicitud": idSolicitud,
-        "descripcion": descripcion,
-        "titulo": titulo,
-      },
-      parser: (data) {
-        return NotasData.fromJson(data["data"]);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/notassolicitud/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "idSolicitud": idSolicitud,
+          "descripcion": descripcion,
+          "titulo": titulo,
+        },
+        parser: (data) {
+          return NotasData.fromJson(data["data"]);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> updateNota({
@@ -74,36 +83,44 @@ class NotasApi {
     required String titulo,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/notassolicitud/update',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "id": id,
-        "descripcion": descripcion,
-        "titulo": titulo,
-      },
-      parser: (data) {
-        return NotasPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/notassolicitud/update',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "id": id,
+          "descripcion": descripcion,
+          "titulo": titulo,
+        },
+        parser: (data) {
+          return NotasPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   Future<Object> deleteNota({
     required int id,
   }) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/notassolicitud/delete/$id',
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return NotasPOSTResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/notassolicitud/delete/$id',
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return NotasPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }

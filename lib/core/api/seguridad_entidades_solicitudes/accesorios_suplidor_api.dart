@@ -1,3 +1,4 @@
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/accesorios_suplidor_response.dart';
 
 import '../../authentication_client.dart';
@@ -17,25 +18,29 @@ class AccesoriosSuplidorApi {
       int? id,
       int? idAccesorio}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/accesoriossuplidor/get',
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      queryParameters: {
-        "Id": id,
-        "IdAccesorio": idAccesorio,
-        "IdSuplidor": idSuplidor,
-        "SuplidorNombre": suplidorNombre,
-        "AccesorioDescripcion": accesorioDescripcion,
-        "PageSize": pageSize,
-        "PageNumber": pageNumber,
-      },
-      parser: (data) {
-        return AccesoriosSuplidorResponse.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/accesoriossuplidor/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Id": id,
+          "IdAccesorio": idAccesorio,
+          "IdSuplidor": idSuplidor,
+          "SuplidorNombre": suplidorNombre,
+          "AccesorioDescripcion": accesorioDescripcion,
+          "PageSize": pageSize,
+          "PageNumber": pageNumber,
+        },
+        parser: (data) {
+          return AccesoriosSuplidorResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 
   /* Future<Object> updateAccesoriosSuplidor(
@@ -59,16 +64,20 @@ class AccesoriosSuplidorApi {
   Future<Object> createAccesoriosSuplidor(
       {required int idSuplidor, required List<int> idAccesorios}) async {
     String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/accesoriossuplidor/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"idSuplidor": idSuplidor, "idAccesorios": idAccesorios},
-      parser: (data) {
-        return AccesoriosSuplidorData.fromJson(data);
-      },
-    );
+    if (_token != null) {
+      return _http.request(
+        '/api/accesoriossuplidor/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"idSuplidor": idSuplidor, "idAccesorios": idAccesorios},
+        parser: (data) {
+          return AccesoriosSuplidorData.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
 }
