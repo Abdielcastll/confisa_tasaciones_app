@@ -3,6 +3,8 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_tasacion_promedio_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/periodo_tasacion_promedio_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/buscador.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_roles.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -72,7 +74,7 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
         await _periodoTasacionPromedioApi.getOpcionesPeriodoTasacionPromedio();
     if (respopc is Success) {
       var resp = respopc.response as OpcionesPeriodoTasacionPromedioResponse;
-      opcionPeriodoTasacionPromedioData = resp.data;
+      opcionPeriodoTasacionPromedioData = resp.data.first;
       notifyListeners();
     }
     if (respopc is Failure) {
@@ -149,7 +151,7 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
         await _periodoTasacionPromedioApi.getOpcionesPeriodoTasacionPromedio();
     if (respopc is Success) {
       var resp = respopc.response as OpcionesPeriodoTasacionPromedioResponse;
-      opcionPeriodoTasacionPromedioData = resp.data;
+      opcionPeriodoTasacionPromedioData = resp.data.first;
       notifyListeners();
     }
     if (respopc is Failure) {
@@ -160,130 +162,123 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
 
   Future<void> modificarPeriodoTasacionPromedio(BuildContext ctx,
       PeriodoTasacionPromedioData periodoTasacionPromedio) async {
-    tcNewDescripcion.text = periodoTasacionPromedio.description;
-    final GlobalKey<FormState> _formKey = GlobalKey();
+    List<String> list = [];
+    List<String> listaSelected = [];
+    Size size = MediaQuery.of(ctx).size;
+
+    list = opcionPeriodoTasacionPromedioData!.descripcion.split(",");
+    listaSelected.add(periodoTasacionPromedio.value.toString());
+    print(list.join());
+
+    list.sort((a, b) {
+      return a.toLowerCase().compareTo(b.toLowerCase());
+    });
     showDialog(
         context: ctx,
         builder: (BuildContext context) {
-          return AlertDialog(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            contentPadding: EdgeInsets.zero,
-            content: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              insetPadding: const EdgeInsets.all(15),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              contentPadding: EdgeInsets.zero,
+              content: SizedBox(
+                width: MediaQuery.of(context).size.width * .75,
+                child: dialogMostrarInformacionRoles(
                   Container(
-                    height: 80,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    color: AppColors.brownLight,
-                    child: const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        'Modificar Período Tasación Promedio',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
+                    height: size.height * .08,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10)),
+                      color: AppColors.gold,
+                    ),
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Text("Opciones de períodos tasación promedio",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              color: AppColors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold)),
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewDescripcion,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
-                          } else {
-                            return null;
-                          }
+                  [
+                    DataTable(
+                        onSelectAll: (isSelectedAll) {
+                          setState(() => {
+                                listaSelected =
+                                    isSelectedAll! ? list.toList() : [],
+                              });
                         },
-                        decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            label: Text("Descripcion")),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewDescripcion.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            if ((tcNewDescripcion.text.trim() !=
-                                periodoTasacionPromedio.description)) {
-                              ProgressDialog.show(context);
-                              var resp = await _periodoTasacionPromedioApi
-                                  .updatePeriodoTasacionPromedio(
-                                      descripcion: tcNewDescripcion.text.trim(),
-                                      id: periodoTasacionPromedio.value);
-                              ProgressDialog.dissmiss(context);
-                              if (resp is Success) {
-                                Dialogs.success(
-                                    msg:
-                                        'Período Tasación Promedio Actualizado');
-                                Navigator.of(context).pop();
-                                await onRefresh();
-                              }
-                              if (resp is Failure) {
-                                ProgressDialog.dissmiss(context);
-                                Dialogs.error(msg: resp.messages[0]);
-                              }
-                              tcNewDescripcion.clear();
-                            } else {
-                              Dialogs.success(
-                                  msg: 'Período Tasación Promedio Actualizado');
-                              Navigator.of(context).pop();
-                            }
+                        columns: const [
+                          DataColumn(
+                            label: Text("Períodos"),
+                          ),
+                        ],
+                        rows: list
+                            .map((e) => DataRow(
+                                    selected: listaSelected
+                                        .any((element) => element == e),
+                                    onSelectChanged: (isSelected) =>
+                                        setState(() {
+                                          isSelected!
+                                              ? listaSelected.add(e)
+                                              : listaSelected.removeWhere(
+                                                  (element) => element == e);
+                                        }),
+                                    cells: [
+                                      DataCell(
+                                        Text(
+                                          e,
+                                        ),
+                                        onTap: null,
+                                      ),
+                                    ]))
+                            .toList())
+                  ],
+                  size,
+                  () async {
+                    /* ProgressDialog.show(context);
+                    String descripcion = "";
+                    descripcion = listaSelected.join(",");
+                    var resp = await _periodoTasacionPromedioApi.updateTipos(
+                        descripcion: descripcion, id: foto.id!);
+                    if (resp is Success<EntidadPOSTResponse>) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.success(msg: "Actualización exitosa");
+                      Navigator.of(context).pop();
+                      onInit();
+                    } else if (resp is Failure) {
+                      ProgressDialog.dissmiss(context);
+                      Dialogs.error(msg: resp.messages.first);
+                    } */
+                  },
+                  buscador(
+                    text: 'Buscar tipos...',
+                    onChanged: (value) {
+                      setState(() {
+                        list = [];
+                        for (var element in opcionPeriodoTasacionPromedioData!
+                            .descripcion
+                            .split(",")) {
+                          if (element
+                              .toLowerCase()
+                              .contains(value.toLowerCase())) {
+                            list.add(element);
                           }
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.save,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
-                    ],
+                        }
+                        list.sort((a, b) {
+                          return a.toLowerCase().compareTo(b.toLowerCase());
+                        });
+                      });
+                    },
                   ),
-                  const SizedBox(height: 10),
-                ],
+                ),
               ),
-            ),
-          );
+            );
+          });
         });
   }
 

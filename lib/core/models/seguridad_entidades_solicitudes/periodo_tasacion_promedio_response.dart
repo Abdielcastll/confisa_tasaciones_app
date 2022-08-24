@@ -79,7 +79,7 @@ class OpcionesPeriodoTasacionPromedioResponse {
       required this.hasPreviousPage,
       required this.nextPageUrl});
 
-  OpcionesPeriodoTasacionPromedioData data;
+  List<OpcionesPeriodoTasacionPromedioData> data;
   String nextPageUrl;
   int totalCount, pageSize, currentPage, totalPages;
   bool hasNextPage, hasPreviousPage;
@@ -87,7 +87,10 @@ class OpcionesPeriodoTasacionPromedioResponse {
   factory OpcionesPeriodoTasacionPromedioResponse.fromJson(
           Map<String, dynamic> json) =>
       OpcionesPeriodoTasacionPromedioResponse(
-          data: OpcionesPeriodoTasacionPromedioData.fromJson(json["data"]),
+          data: json["data"]
+              .map<OpcionesPeriodoTasacionPromedioData>(
+                  (e) => OpcionesPeriodoTasacionPromedioData.fromJson(e))
+              .toList(),
           totalCount: json["meta"]["totalCount"],
           totalPages: json["meta"]["totalPages"],
           pageSize: json["meta"]["pageSize"],
@@ -97,7 +100,7 @@ class OpcionesPeriodoTasacionPromedioResponse {
           nextPageUrl: json["meta"]["nextPageUrl"]);
 
   Map<String, dynamic> toJson() => {
-        "data": data,
+        "data": data.map((e) => e.toJson()),
         "totalCount": totalCount,
         "totalPage": totalPages,
         "pageSize": pageSize,
