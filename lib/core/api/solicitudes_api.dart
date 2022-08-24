@@ -1,9 +1,11 @@
+import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
+import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 
 import '../authentication_client.dart';
 import '../models/solicitudes/solicitud_create_data.dart';
@@ -16,6 +18,7 @@ class SolicitudesApi {
   SolicitudesApi(this._http, this._authenticationClient);
   final Http _http;
   final AuthenticationClient _authenticationClient;
+  var l = Logger();
 
   Future<Object> getSolicitudCredito({required int idSolicitud}) async {
     String? _token = await _authenticationClient.accessToken;
@@ -69,6 +72,24 @@ class SolicitudesApi {
         },
         parser: (data) {
           return TipoVehiculoResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getVersionVehiculo() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/infovehiculos/get-versiones',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return VersionesVehiculoResponse.fromJson(data);
         },
       );
     } else {
@@ -130,7 +151,7 @@ class SolicitudesApi {
     }
   }
 
-  Future<Object> getCantidadFotos() async {
+  Future<Object> getCantidadFotos({String? idSuplidor}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -197,41 +218,43 @@ class SolicitudesApi {
   }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
+      final body = {
+        "codigoEntidad": codigoEntidad,
+        "codigoSucursal": codigoSucursal,
+        "nombreCliente": nombreCliente,
+        "identificacion": identificacion,
+        "chasis": chasis,
+        "placa": placa,
+        "tipoTasacion": tipoTasacion,
+        "noSolicitudCredito": noSolicitudCredito,
+        "idOficial": idOficial,
+        "marca": marca,
+        "modelo": modelo,
+        "ano": ano,
+        "tipoVehiculoLocal": tipoVehiculoLocal,
+        "versionLocal": versionLocal,
+        "sistemaTransmision": sistemaTransmision,
+        "traccion": traccion,
+        "noPuertas": noPuertas,
+        "noCilindros": noCilindros,
+        "fuerzaMotriz": fuerzaMotriz,
+        "nuevoUsado": nuevoUsado,
+        "kilometraje": kilometraje,
+        "color": color,
+        "edicion": edicion,
+        "suplidorTasacion": suplidorTasacion,
+        "serie": serie,
+        "trim": trim,
+        "idPromotor": idPromotor,
+      };
+      l.d(body);
       return _http.request(
         '/api/solicitudes/create',
         method: 'POST',
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {
-          "codigoEntidad": codigoEntidad,
-          "codigoSucursal": codigoSucursal,
-          "nombreCliente": nombreCliente,
-          "identificacion": identificacion,
-          "chasis": chasis,
-          "placa": placa,
-          "tipoTasacion": tipoTasacion,
-          "noSolicitudCredito": noSolicitudCredito,
-          "idOficial": idOficial,
-          "marca": marca,
-          "modelo": modelo,
-          "ano": ano,
-          "tipoVehiculoLocal": tipoVehiculoLocal,
-          "versionLocal": versionLocal,
-          "sistemaTransmision": sistemaTransmision,
-          "traccion": traccion,
-          "noPuertas": noPuertas,
-          "noCilindros": noCilindros,
-          "fuerzaMotriz": fuerzaMotriz,
-          "nuevoUsado": nuevoUsado,
-          "kilometraje": kilometraje,
-          "color": color,
-          "edicion": edicion,
-          "suplidorTasacion": suplidorTasacion,
-          "serie": serie,
-          "trim": trim,
-          "idPromotor": idPromotor,
-        },
+        data: body,
         // parser: (data) {
         //   return EntidadResponse.fromJson(data);
         // },
@@ -253,22 +276,24 @@ class SolicitudesApi {
   }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
+      final body = {
+        "codigoEntidad": codigoEntidad,
+        "codigoSucursal": codigoSucursal,
+        "nombreCliente": nombreCliente,
+        "identificacion": identificacion,
+        "tipoTasacion": tipoTasacion,
+        "noSolicitudCredito": noSolicitudCredito,
+        "idOficial": idOficial,
+        "suplidorTasacion": suplidorTasacion,
+      };
+      l.d(body);
       return _http.request(
         '/api/solicitudes/create',
         method: 'POST',
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {
-          "codigoEntidad": codigoEntidad,
-          "codigoSucursal": codigoSucursal,
-          "nombreCliente": nombreCliente,
-          "identificacion": identificacion,
-          "tipoTasacion": tipoTasacion,
-          "noSolicitudCredito": noSolicitudCredito,
-          "idOficial": idOficial,
-          "suplidorTasacion": suplidorTasacion,
-        },
+        data: body,
         // parser: (data) {
         //   return EntidadResponse.fromJson(data);
         // },

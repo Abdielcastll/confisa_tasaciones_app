@@ -39,7 +39,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int _currentForm = 1;
   VinDecoderData? _vinData;
   late SolicitudesData solicitudCola;
-  late SolicitudCreditoData solicitud;
+  late SolicitudesData solicitud;
 
   TextEditingController tcFuerzaMotriz = TextEditingController();
   TextEditingController tcKilometraje = TextEditingController();
@@ -79,10 +79,14 @@ class ConsultarModificarViewModel extends BaseViewModel {
     if (formKey.currentState!.validate()) {
       ProgressDialog.show(context);
 
-      var resp = await _solicitudesApi.getSolicitudCredito(
-          idSolicitud: solicitudCola.noSolicitudCredito!);
-      if (resp is Success<SolicitudCreditoResponse>) {
-        solicitud = resp.response.data;
+      var resp = await _solicitudesApi.getColaSolicitudes(
+          noSolicitud: solicitudCola.noSolicitudCredito!);
+      if (resp is Success<GetSolicitudesResponse>) {
+        solicitud = resp.response.data[0];
+        tcVIN.text = solicitud.chasis ?? '';
+        tcKilometraje.text = solicitud.kilometraje.toString();
+        tcFuerzaMotriz.text = solicitud.fuerzaMotriz.toString();
+        tcPlaca.text = solicitud.placa ?? '';
         currentForm = 2;
       }
       if (resp is Failure) {
@@ -147,64 +151,63 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> consultarVIN(BuildContext context) async {
-    if (formKey2.currentState!.validate()) {
-      ProgressDialog.show(context);
-      var resp = await _solicitudesApi.getVinDecoder(
-          chasisCode: tcVIN.text, noSolicitud: solicitud.noSolicitud!);
-      if (resp is Success) {
-        var data = resp.response as VinDecoderResponse;
-        vinData = data.data;
-        int currentYear = DateTime.now().year;
-        int anio = int.parse(data.data.ano!);
-        if (currentYear <= anio) {
-          _estado = 'NUEVO';
-          notifyListeners();
-        } else {
-          _estado = 'USADO';
-          notifyListeners();
-        }
-      }
-      if (resp is Failure) {
-        Dialogs.error(msg: resp.messages[0]);
-      }
-      if (resp is TokenFail) {
-        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        Dialogs.error(msg: 'su sesión a expirado');
-      }
-      ProgressDialog.dissmiss(context);
-    }
-  }
+  // Future<void> consultarVIN(BuildContext context) async {
+  //   if (formKey2.currentState!.validate()) {
+  //     ProgressDialog.show(context);
+  //     var resp = await _solicitudesApi.getVinDecoder(
+  //         chasisCode: tcVIN.text, noSolicitud: solicitud.);
+  //     if (resp is Success) {
+  //       var data = resp.response as VinDecoderResponse;
+  //       vinData = data.data;
+  //       int currentYear = DateTime.now().year;
+  //       int anio = int.parse(data.data.ano!);
+  //       if (currentYear <= anio) {
+  //         _estado = 'NUEVO';
+  //         notifyListeners();
+  //       } else {
+  //         _estado = 'USADO';
+  //         notifyListeners();
+  //       }
+  //     }
+  //     if (resp is Failure) {
+  //       Dialogs.error(msg: resp.messages[0]);
+  //     }
+  //     if (resp is TokenFail) {
+  //       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+  //       Dialogs.error(msg: 'su sesión a expirado');
+  //     }
+  //     ProgressDialog.dissmiss(context);
+  //   }
+  // }
 
   Future goToFotos(BuildContext context) async {
-    if (vinData == null) {
-      Dialogs.error(msg: 'Debe consultar el No. VIN');
-    } else {
-      ProgressDialog.show(context);
-      var resp = await _adjuntosApi.getFotosTasacion(
-          noTasacion: solicitudCola.noTasacion!);
-      if (resp is Success<AdjuntosFotoResponse>) {
-        fotosAdjuntos = resp.response.data;
-        // fotos = List.generate(fotosAdjuntos.length, (i) => File(''));
-        currentForm = 3;
-      }
-      if (resp is Failure) {
-        Dialogs.error(msg: resp.messages[0]);
-      }
-      // if (formKey3.currentState!.validate()) {
-      //   ProgressDialog.show(context);
-      //   var resp = await _solicitudesApi.getCantidadFotos();
-      //   if (resp is Success<EntidadResponse>) {
-      //     int cantidad = int.parse(resp.response.data.descripcion ?? '0');
-      //     fotos = List.generate(cantidad, (i) => File(''));
-      //     fotosPermitidas = cantidad;
-      //     currentForm = 3;
-      //     ProgressDialog.dissmiss(context);
-      //   }
-      //   print('VALIDO');
-      // }
-      ProgressDialog.dissmiss(context);
+    // if (vinData == null) {
+    //   Dialogs.error(msg: 'Debe consultar el No. VIN');
+    // } else {
+    ProgressDialog.show(context);
+    var resp = await _adjuntosApi.getFotosTasacion(
+        noTasacion: solicitudCola.noTasacion!);
+    if (resp is Success<AdjuntosFotoResponse>) {
+      fotosAdjuntos = resp.response.data;
+      // fotos = List.generate(fotosAdjuntos.length, (i) => File(''));
+      currentForm = 3;
     }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    // if (formKey3.currentState!.validate()) {
+    //   ProgressDialog.show(context);
+    //   var resp = await _solicitudesApi.getCantidadFotos();
+    //   if (resp is Success<EntidadResponse>) {
+    //     int cantidad = int.parse(resp.response.data.descripcion ?? '0');
+    //     fotos = List.generate(cantidad, (i) => File(''));
+    //     fotosPermitidas = cantidad;
+    //     currentForm = 3;
+    //     ProgressDialog.dissmiss(context);
+    //   }
+    //   print('VALIDO');
+    // }
+    ProgressDialog.dissmiss(context);
   }
 
   // Future<void> guardarTasacion(BuildContext context) async {

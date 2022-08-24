@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../theme/theme.dart';
@@ -23,7 +24,15 @@ class FotosForm extends StatelessWidget {
       onPressedBack: () => vm.currentForm = 2,
       iconNext: AppIcons.save,
       labelNext: 'Guardar',
-      onPressedNext: () => vm.crearSolicitud(context),
+      onPressedNext: () => Dialogs.confirm(
+        context,
+        tittle: 'ATENCIÓN',
+        description:
+            'Después de ser enviada la solicitud para su valoración no podrá ser modificada',
+        confirm: () => vm.crearSolicitud(context),
+        textAceptar: 'Enviar',
+        textCancelar: 'Cancelar',
+      ),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
@@ -45,9 +54,9 @@ class FotosForm extends StatelessWidget {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: AppColors.brown)),
-                        child: foto.path != ''
+                        child: foto.file!.path != ''
                             ? Image.file(
-                                foto,
+                                foto.file!,
                                 fit: BoxFit.cover,
                               )
                             : Icon(
@@ -57,18 +66,64 @@ class FotosForm extends StatelessWidget {
                               ),
                       ),
                     ),
-                    if (foto.path != '')
+                    if (foto.descripcion != '')
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            // 'Descripción:\n${foto.uri}',
-                            'Descripción:\n${foto.path.split('/').last}',
-                            style: const TextStyle(fontSize: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                // 'Descripción:\n${foto.uri}',
+                                'Descripción: ',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              // DropdownSearch<TipoVehiculoData>(
+                              //   asyncItems: (text) => vm.getTipoVehiculo(text),
+                              //   dropdownBuilder: (context, tipo) {
+                              //     return Text(
+                              //       tipo == null
+                              //           ? vm.solicitudCola
+                              //                   ?.descripcionTipoVehiculoLocal ??
+                              //               'Seleccione'
+                              //           : tipo.descripcion,
+                              //       style: const TextStyle(
+                              //         fontSize: 15,
+                              //       ),
+                              //     );
+                              //   },
+                              //   onChanged: (v) => vm.tipoVehiculo = v,
+                              //   dropdownDecoratorProps:
+                              //       const DropDownDecoratorProps(
+                              //           dropdownSearchDecoration:
+                              //               InputDecoration(
+                              //                   label: Text('Tipo'),
+                              //                   border:
+                              //                       UnderlineInputBorder())),
+                              //   popupProps: PopupProps.menu(
+                              //     itemBuilder: (context, otp, isSelected) {
+                              //       return ListTile(
+                              //         title: Text(otp.descripcion),
+                              //         selected: isSelected,
+                              //       );
+                              //     },
+                              //     emptyBuilder: (_, __) => const Center(
+                              //       child: Text('No hay resultados'),
+                              //     ),
+                              //   ),
+                              //   validator: (v) {
+                              //     if (v == null) {
+                              //       return 'Seleccione un tipo';
+                              //     } else {
+                              //       return null;
+                              //     }
+                              //   },
+                              // ),
+                            ],
                           ),
                         ),
                       ),
-                    if (foto.path != '')
+                    if (foto.file!.path != '')
                       SizedBox(
                         height: 100,
                         child: Column(
@@ -90,9 +145,7 @@ class FotosForm extends StatelessWidget {
                             const Spacer(),
                             IconButton(
                                 onPressed: () {
-                                  if (foto.path != '') {
-                                    vm.editarFoto(i);
-                                  }
+                                  vm.editarFoto(i);
                                 },
                                 icon: const Icon(
                                   AppIcons.pencilAlt,

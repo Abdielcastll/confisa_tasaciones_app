@@ -140,7 +140,13 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   }
 
   goToSolicitud(SolicitudesData s) {
-    if (roles.contains("OficialNegocios") || roles.contains("Administrador")) {
+    if (roles.contains("OficialNegocios")) {
+      _navigatorService.navigateToPage(
+        ConsultarModificarView.routeName,
+        arguments: s,
+      );
+    }
+    if (roles.contains("Administrador")) {
       _navigatorService.navigateToPage(
         ConsultarModificarView.routeName,
         arguments: s,

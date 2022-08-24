@@ -14,6 +14,7 @@ import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
+import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
@@ -37,7 +38,8 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
   GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
   TextEditingController tcNoSolicitud = TextEditingController();
-  TextEditingController tcVIN = TextEditingController();
+  TextEditingController tcVIN =
+      TextEditingController(text: '1GNFK13047R140555');
   TextEditingController tcFuerzaMotriz = TextEditingController();
   TextEditingController tcKilometraje = TextEditingController();
   TextEditingController tcPlaca = TextEditingController();
@@ -46,12 +48,14 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   VinDecoderData? _vinData;
   TipoVehiculoData? _tipoVehiculos;
   TransmisionesData? _transmision;
+  VersionVehiculoData? _versionVehiculo;
   TraccionesData? _traccion;
   int? _nPuertas;
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
   late int _fotosPermitidas;
-  late List<File> fotos;
+  // late List<File> fotos;
+  late List<FotoData> fotos;
   final _picker = ImagePicker();
   SolicitudesData? solicitudCola;
 
@@ -89,6 +93,13 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
 
   set tipoVehiculo(TipoVehiculoData? value) {
     _tipoVehiculos = value;
+    notifyListeners();
+  }
+
+  VersionVehiculoData get versionVehiculo => _versionVehiculo!;
+
+  set versionVehiculo(VersionVehiculoData? value) {
+    _versionVehiculo = value;
     notifyListeners();
   }
 
@@ -166,12 +177,17 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
         var data = resp.response as VinDecoderResponse;
         vinData = data.data;
         int currentYear = DateTime.now().year;
-        int anio = int.parse(data.data.ano!);
-        if (currentYear <= anio) {
-          _estado = 'NUEVO';
-          notifyListeners();
+        if (data.data.ano != '') {
+          int anio = int.parse(data.data.ano!);
+          if (currentYear <= anio) {
+            _estado = 'NUEVO';
+            notifyListeners();
+          } else {
+            _estado = 'USADO';
+            notifyListeners();
+          }
         } else {
-          _estado = 'USADO';
+          _estado = '';
           notifyListeners();
         }
       }
@@ -179,6 +195,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
         Dialogs.error(msg: resp.messages[0]);
       }
       if (resp is TokenFail) {
+        _navigatorService.pop();
         _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
         Dialogs.error(msg: 'su sesión a expirado');
       }
@@ -206,6 +223,16 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     var resp = await _solicitudesApi.getTipoVehiculo(text);
     if (resp is Success) {
       var data = resp.response as TipoVehiculoResponse;
+      return data.data;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<VersionVehiculoData>> getversionVehiculo(String text) async {
+    var resp = await _solicitudesApi.getVersionVehiculo();
+    if (resp is Success) {
+      var data = resp.response as VersionesVehiculoResponse;
       return data.data;
     } else {
       return [];
@@ -247,7 +274,8 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       source: ImageSource.camera,
     );
     if (img != null) {
-      fotos[i] = File(img.path);
+      fotos[i] = FotoData(file: File(img.path));
+
       // fotoBase = base64Encode(foto.readAsBytesSync());
       // log(fotoBase);
       // bytesImage = const Base64Decoder().convert(fotoBase);
@@ -257,18 +285,22 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   void borrarFoto(int i) {
-    fotos[i] = File('');
+    fotos[i] = FotoData(
+      file: File(''),
+      tipoAdjunto: null,
+      descripcion: null,
+    );
     notifyListeners();
   }
 
   Future<void> subirFotos() async {
     List<Map<String, dynamic>> dataList = [];
-    for (File e in fotos) {
-      var fotoBase = base64Encode(e.readAsBytesSync());
+    for (var e in fotos) {
+      var fotoBase = e.file!.readAsBytesSync().toList();
       Map<String, dynamic> data = {
         "adjuntoInBytes": fotoBase,
         "tipoAdjunto": 0,
-        "descripcion": e.path,
+        "descripcion": e.descripcion,
       };
       dataList.add(data);
     }
@@ -286,7 +318,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
 
   Future<void> editarFoto(int i) async {
     var croppedFile = await ImageCropper().cropImage(
-      sourcePath: fotos[i].path,
+      sourcePath: fotos[i].file!.path,
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
@@ -308,7 +340,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
         ),
       ],
     );
-    fotos[i] = File(croppedFile?.path ?? fotos[i].path);
+    fotos[i] = FotoData(file: File(croppedFile!.path));
     notifyListeners();
   }
 
@@ -317,75 +349,80 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       Dialogs.error(msg: 'Debe consultar el No. VIN');
     } else {
       if (formKey3.currentState!.validate()) {
-        ProgressDialog.show(context);
+        // ProgressDialog.show(context);
+        await crearSolicitud(context);
         var resp = await _solicitudesApi.getCantidadFotos();
         if (resp is Success) {
           var data = resp.response as EntidadResponse;
           int cantidad = int.parse(data.data.descripcion ?? '0');
-          fotos = List.generate(cantidad, (i) => File(''));
+          fotos = List.generate(cantidad, (i) => FotoData(file: File('')));
           fotosPermitidas = cantidad;
           currentForm = 3;
-          ProgressDialog.dissmiss(context);
+          // ProgressDialog.dissmiss(context);
         }
         print('VALIDO');
       }
     }
   }
 
-  Future<void> crearSolicitud(BuildContext context) async {
-    if (fotos.any((e) => e.path == '')) {
-      Dialogs.error(msg: 'Debe cargar todas las fotos');
-    } else {
-      ProgressDialog.show(context);
-      var resp = await _solicitudesApi.createNewSolicitudEstimacion(
-        ano: int.parse(solicitud!.ano!),
-        chasis: solicitud!.chasis ?? tcVIN.text,
-        codigoEntidad: solicitud!.codEntidad!,
-        codigoSucursal: solicitud!.codEntidad!,
-        color: colorVehiculo.id,
-        edicion: vinData?.idTrim ?? 0,
-        fuerzaMotriz: vinData?.fuerzaMotriz != null
-            ? int.parse(vinData?.fuerzaMotriz ?? '')
-            : int.parse(tcFuerzaMotriz.text),
-        idOficial: solicitud!.codOficialNegocios!,
-        // idPromotor: 0,
-        identificacion: solicitud!.noIdentificacion!,
-        kilometraje: int.parse(tcKilometraje.text),
-        marca: solicitud!.codMarca ?? vinData!.codigoMarca ?? 0,
-        modelo: solicitud!.codModelo ?? vinData!.codigoModelo ?? 0,
-        noCilindros: _nCilindros!,
-        noPuertas: _nPuertas!,
-        noSolicitudCredito: solicitud!.noSolicitud!,
-        nombreCliente: solicitud!.nombreCliente!,
-        nuevoUsado: _estado == 'Nuevo' ? 0 : 1,
-        placa: tcPlaca.text,
-        serie: vinData?.idSerie!,
-        sistemaTransmision: _transmision!.id,
-        // suplidorTasacion: 0,
-        tipoTasacion: 21,
-        tipoVehiculoLocal: tipoVehiculo.id,
-        traccion: _traccion!.id,
-        trim: vinData?.idTrim,
-        versionLocal: 0, /* INFO VEHICULOGET VERSIONES   */
-      );
-      if (resp is Failure) {
-        ProgressDialog.dissmiss(context);
-        Dialogs.error(msg: resp.messages[0]);
-      }
-      if (resp is TokenFail) {
-        ProgressDialog.dissmiss(context);
-        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        Dialogs.error(msg: 'su sesión a expirado');
-      }
-      if (resp is Success) {
-        print('SUCCESS');
-        await subirFotos();
-        ProgressDialog.dissmiss(context);
-        Dialogs.success(msg: 'Solicitud creada correctamente');
-        _navigatorService
-            .navigateToPageAndRemoveUntil(ColaSolicitudesView.routeName);
-      }
+  Future<bool> crearSolicitud(BuildContext context) async {
+    // if (fotos.any((e) => e.file!.path == '') ||
+    //     fotos.any((e) => e.descripcion == '')) {
+    //   Dialogs.error(msg: 'Debe cargar todas las fotos');
+    // } else {
+    ProgressDialog.show(context);
+    var resp = await _solicitudesApi.createNewSolicitudEstimacion(
+      ano: int.parse(solicitud!.ano!),
+      chasis: solicitud!.chasis ?? tcVIN.text,
+      codigoEntidad: solicitud!.codEntidad!,
+      codigoSucursal: solicitud!.codSucursal!,
+      color: colorVehiculo.id,
+      edicion: vinData?.idTrim ?? 0,
+      fuerzaMotriz: vinData?.fuerzaMotriz != null && vinData?.fuerzaMotriz != ''
+          ? int.parse(vinData?.fuerzaMotriz ?? '')
+          : int.parse(tcFuerzaMotriz.text),
+      idOficial: solicitud!.codOficialNegocios!,
+      // idPromotor: 0,
+      identificacion: solicitud!.noIdentificacion!,
+      kilometraje: int.parse(tcKilometraje.text),
+      marca: solicitud!.idMarcaTasaciones ?? vinData!.codigoMarca ?? 0,
+      modelo: solicitud!.idModeloTasaciones ?? vinData!.codigoModelo ?? 0,
+      noCilindros: _nCilindros!,
+      noPuertas: _nPuertas!,
+      noSolicitudCredito: solicitud!.noSolicitud!,
+      nombreCliente: solicitud!.nombreCliente!,
+      nuevoUsado: _estado == 'Nuevo' ? 0 : 1,
+      placa: tcPlaca.text,
+      serie: vinData?.idSerie!,
+      sistemaTransmision: _transmision!.id,
+      // suplidorTasacion: 0,
+      tipoTasacion: 21,
+      tipoVehiculoLocal: tipoVehiculo.id,
+      traccion: _traccion!.id,
+      trim: vinData?.idTrim,
+      versionLocal: versionVehiculo.id, /* INFO VEHICULOGET VERSIONES   */
+    );
+    if (resp is Failure) {
+      ProgressDialog.dissmiss(context);
+      Dialogs.error(msg: resp.messages[0]);
+      return false;
     }
+    if (resp is TokenFail) {
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'su sesión a expirado');
+      return false;
+    }
+    if (resp is Success) {
+      print('SUCCESS');
+      // await subirFotos();
+      ProgressDialog.dissmiss(context);
+      Dialogs.success(msg: 'Solicitud creada correctamente');
+      return true;
+      // _navigatorService
+      //     .navigateToPageAndRemoveUntil(ColaSolicitudesView.routeName);
+    }
+    return false;
   }
 
   Future<void> escanearVIN() async {
@@ -404,4 +441,15 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     tcKilometraje.dispose();
     super.dispose();
   }
+}
+
+class FotoData {
+  File? file;
+  int? tipoAdjunto;
+  String? descripcion;
+  FotoData({
+    this.file,
+    this.tipoAdjunto,
+    this.descripcion,
+  });
 }

@@ -4,6 +4,7 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/personal_api.dart';
@@ -87,21 +88,23 @@ class SolicitudTasacionViewModel extends BaseViewModel {
       noSolicitudCredito: solicitud.noSolicitud!,
       nombreCliente: solicitud.nombreCliente!,
       tipoTasacion: 22,
-      suplidorTasacion: 0,
+      // suplidorTasacion: 0,
     );
     if (resp is Success) {
+      ProgressDialog.dissmiss(context);
       Dialogs.success(msg: 'Solicitud de tasación creada');
-      currentForm = 1;
+      Navigator.of(context).pop();
     }
     if (resp is Failure) {
+      ProgressDialog.dissmiss(context);
       Dialogs.error(msg: resp.messages[0]);
     }
     if (resp is TokenFail) {
       ProgressDialog.dissmiss(context);
       Dialogs.error(msg: 'su sesión a expirado');
+      Navigator.of(context).pop();
       Navigator.pushNamedAndRemoveUntil(
           context, LoginView.routeName, (route) => false);
     }
-    ProgressDialog.dissmiss(context);
   }
 }
