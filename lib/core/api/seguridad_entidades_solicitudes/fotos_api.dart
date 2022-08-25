@@ -31,11 +31,11 @@ class FotosApi {
     if (_token != null) {
       return _http.request(
         '/api/fotos/update-cantidad',
-        method: 'GET',
+        method: 'PUT',
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {"id": id, "descripcion": descripcion},
+        data: {"idSuplidor": id, "descripcion": descripcion},
         parser: (data) {
           return EntidadPOSTResponse.fromJson(data);
         },

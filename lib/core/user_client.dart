@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasaciones_app/core/api/usuarios_api.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 
 class UserClient {
@@ -14,14 +15,14 @@ class UserClient {
     _storage = await SharedPreferences.getInstance();
   }
 
-  UsuariosData get loadUsuario {
+  Profile get loadProfile {
     final data = _storage.getString('USUARIO') ?? '';
-    final usuario = UsuariosData.fromJson(jsonDecode(data));
-    return usuario;
+    final profile = Profile.fromJson(jsonDecode(data));
+    return profile;
   }
 
-  void saveUsuario(UsuariosData usuario) {
-    final data = jsonEncode(usuario.toJson());
+  void saveProfile(Profile perfil) {
+    final data = jsonEncode(perfil.toJson());
     _storage.setString('USUARIO', data);
   }
 

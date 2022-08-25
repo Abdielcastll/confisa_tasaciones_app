@@ -3,6 +3,7 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesorios_suplidor_api.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/accesorios_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/accesorios_suplidor_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
@@ -29,6 +30,8 @@ class AccesoriosSuplidorViewModel extends BaseViewModel {
   List<AccesoriosSuplidorData> accesoriosSuplidor = [];
   List<AccesoriosData> accesorios = [];
   List<SuplidorData> suplidores = [];
+  List<AccesoriosData> accesoriosAprobador = [];
+  List<AccesoriosData> accesoriosSelected = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
@@ -36,7 +39,7 @@ class AccesoriosSuplidorViewModel extends BaseViewModel {
   late AccesoriosSuplidorResponse accesoriosSuplidorResponse;
   late SuplidoresResponse suplidoresResponse;
   SuplidorData? suplidor;
-  UsuariosData? usuario;
+  Profile? usuario;
   AccesoriosData? componente;
 
   AccesoriosSuplidorViewModel() {
@@ -62,6 +65,15 @@ class AccesoriosSuplidorViewModel extends BaseViewModel {
   }
 
   void ordenar() {
+    if (usuario!.idSuplidor != 0 ||
+        usuario!.roles!
+            .any((element) => element.roleName == "AprobadorTasaciones")) {
+      accesorios.sort((a, b) {
+        return a.descripcion
+            .toLowerCase()
+            .compareTo(b.descripcion.toLowerCase());
+      });
+    }
     suplidores.sort((a, b) {
       return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
     });
@@ -69,7 +81,40 @@ class AccesoriosSuplidorViewModel extends BaseViewModel {
 
   Future<void> onInit() async {
     cargando = true;
-    usuario = _userClient.loadUsuario;
+    usuario = _userClient.loadProfile;
+    accesoriosSelected = [];
+    if (usuario!.idSuplidor != 0 ||
+        usuario!.roles!
+            .any((element) => element.roleName == "AprobadorTasaciones")) {
+      var respacc = await _accesoriosApi.getAccesorios();
+      if (respacc is Success) {
+        var data = respacc.response as AccesoriosResponse;
+        accesorios = data.data;
+        accesoriosAprobador = data.data;
+      }
+      if (respacc is Failure) {
+        Dialogs.error(msg: respacc.messages.first);
+      }
+      var resp = await _accesoriosSuplidorApi.getAccesoriosSuplidor(
+          idSuplidor: usuario!.idSuplidor);
+      if (resp is Success) {
+        var data = resp.response as AccesoriosSuplidorResponse;
+        accesoriosSuplidor = data.data;
+        for (var element in accesoriosSuplidor) {
+          accesoriosSelected.add(AccesoriosData(
+              id: element.idAccesorio,
+              descripcion: element.accesorioDescripcion,
+              idSegmento: 0,
+              segmentoDescripcion: ""));
+        }
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+      cargando = false;
+      ordenar();
+      return;
+    }
     var respsupli = await _suplidorApi.getSuplidores();
     if (respsupli is Success) {
       suplidoresResponse = respsupli.response as SuplidoresResponse;
@@ -89,6 +134,55 @@ class AccesoriosSuplidorViewModel extends BaseViewModel {
       Dialogs.error(msg: respcomp.messages.first);
     }
     cargando = false;
+  }
+
+  void selectAll(bool select) async {
+    accesoriosSelected = select ? accesoriosAprobador.toList() : [];
+    notifyListeners();
+  }
+
+  bool select(AccesoriosData componente) {
+    return accesoriosSelected.any((element) => element.id == componente.id);
+  }
+
+  Future<void> guardar(BuildContext context) async {
+    ProgressDialog.show(context);
+    List<int> accesorios = [];
+    for (var element in accesoriosSelected) {
+      accesorios.add(element.id);
+    }
+    var resp = await _accesoriosSuplidorApi.createAccesoriosSuplidor(
+        idSuplidor: usuario!.idSuplidor!, idAccesorios: accesorios);
+    if (resp is Success<AccesoriosSuplidorData>) {
+      ProgressDialog.dissmiss(context);
+      Dialogs.success(msg: "Actualización exitosa");
+      onInit();
+    } else if (resp is Failure) {
+      Dialogs.error(msg: resp.messages.first);
+      ProgressDialog.dissmiss(context);
+      onInit();
+    }
+  }
+
+  void selectChange(bool select, AccesoriosData componente) {
+    select
+        ? accesoriosSelected.add(componente)
+        : accesoriosSelected
+            .removeWhere((element) => element.id == componente.id);
+    notifyListeners();
+  }
+
+  void buscarAprobadorSuplidor(String query) async {
+    accesoriosAprobador = [];
+    for (var element in accesorios) {
+      if (element.descripcion.toLowerCase().contains(query.toLowerCase())) {
+        accesoriosAprobador.add(element);
+      }
+    }
+    accesoriosAprobador.sort((a, b) {
+      return a.descripcion.toLowerCase().compareTo(b.descripcion.toLowerCase());
+    });
+    notifyListeners();
   }
 
   Future<void> cargarMasAccesoriosSuplidor() async {
@@ -141,6 +235,39 @@ class AccesoriosSuplidorViewModel extends BaseViewModel {
   Future<void> onRefresh() async {
     suplidores = [];
     cargando = true;
+    accesoriosSelected = [];
+    if (usuario!.idSuplidor != 0 ||
+        usuario!.roles!
+            .any((element) => element.roleName == "AprobadorTasaciones")) {
+      var respacc = await _accesoriosApi.getAccesorios();
+      if (respacc is Success) {
+        var data = respacc.response as AccesoriosResponse;
+        accesorios = data.data;
+        accesoriosAprobador = data.data;
+      }
+      if (respacc is Failure) {
+        Dialogs.error(msg: respacc.messages.first);
+      }
+      var resp = await _accesoriosSuplidorApi.getAccesoriosSuplidor(
+          idSuplidor: usuario!.idSuplidor);
+      if (resp is Success) {
+        var data = resp.response as AccesoriosSuplidorResponse;
+        accesoriosSuplidor = data.data;
+        for (var element in accesoriosSuplidor) {
+          accesoriosSelected.add(AccesoriosData(
+              id: element.idAccesorio,
+              descripcion: element.accesorioDescripcion,
+              idSegmento: 0,
+              segmentoDescripcion: ""));
+        }
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+      cargando = false;
+      ordenar();
+      return;
+    }
     var resp = await _suplidorApi.getSuplidores();
     if (resp is Success) {
       var temp = resp.response as SuplidoresResponse;

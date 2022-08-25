@@ -351,12 +351,11 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                               ProgressDialog.show(context);
                               var resp = await _parametrosServidorEmailApi
                                   .updateParametrosServidorEmail(
-                                      host: parametroServidorEmail.host,
-                                      password: parametroServidorEmail.password,
-                                      puerto: parametroServidorEmail.puerto,
-                                      remitente:
-                                          parametroServidorEmail.remitente,
-                                      usuario: parametroServidorEmail.usuario,
+                                      host: tcNewHost.text,
+                                      password: tcNewPassword.text,
+                                      puerto: tcNewPuerto.text,
+                                      remitente: tcNewRemitente.text,
+                                      usuario: tcNewUsuario.text,
                                       id: parametroServidorEmail.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {

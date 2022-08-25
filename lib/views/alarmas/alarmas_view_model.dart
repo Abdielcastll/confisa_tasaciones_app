@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
@@ -28,7 +29,7 @@ class AlarmasViewModel extends BaseViewModel {
   bool _busqueda = false;
   bool hasNextPage = false;
   late AlarmasResponse alarmasResponse;
-  UsuariosData? usuario;
+  Profile? usuario;
 
   AlarmasViewModel() {
     listController.addListener(() {
@@ -60,9 +61,9 @@ class AlarmasViewModel extends BaseViewModel {
 
   Future<void> onInit() async {
     cargando = true;
-    usuario = _userClient.loadUsuario;
+    usuario = _userClient.loadProfile;
     var resp = await _alarmasApi.getAlarmas(
-        pageNumber: pageNumber, usuario: usuario!.email);
+        pageNumber: pageNumber, usuario: usuario!.email ?? "");
     if (resp is Success) {
       alarmasResponse = resp.response as AlarmasResponse;
       alarmas = alarmasResponse.data;

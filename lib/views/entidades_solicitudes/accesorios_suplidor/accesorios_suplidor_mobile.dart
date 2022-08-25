@@ -21,7 +21,7 @@ class _AccesoriosSuplidorMobile extends StatelessWidget {
           backgroundColor: AppColors.brownLight,
         ),
         body: !(vm.usuario!.idSuplidor != 0 ||
-                vm.usuario!.roles.any(
+                vm.usuario!.roles!.any(
                     (element) => element.roleName == "AprobadorTasaciones"))
             ? Column(
                 children: [
@@ -147,7 +147,75 @@ class _AccesoriosSuplidorMobile extends StatelessWidget {
                   )
                 ],
               )
-            : Container(),
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buscador(
+                      text: 'Buscar accesorio...',
+                      onChanged: (value) => vm.buscarAprobadorSuplidor(value)),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DataTable(
+                                onSelectAll: (isSelectedAll) =>
+                                    vm.selectAll(isSelectedAll!),
+                                columns: const [
+                                  DataColumn(
+                                    label: Text("Accesorio"),
+                                  ),
+                                ],
+                                rows: vm.accesoriosAprobador
+                                    .map((e) => DataRow(
+                                            selected: vm.select(e),
+                                            onSelectChanged: (isSelected) =>
+                                                vm.selectChange(isSelected!, e),
+                                            cells: [
+                                              DataCell(
+                                                Text(
+                                                  e.descripcion,
+                                                ),
+                                                onTap: null,
+                                              ),
+                                            ]))
+                                    .toList()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () => vm.guardar(context),
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Guardar"), // text
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
       ),
     );
   }

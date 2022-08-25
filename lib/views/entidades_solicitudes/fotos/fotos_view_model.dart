@@ -341,7 +341,7 @@ class FotosViewModel extends BaseViewModel {
 
   Future<void> modificarFotosCantidad(
       BuildContext ctx, EntidadData foto) async {
-    /* tcNewDescripcion.text = foto.descripcion!;
+    tcNewDescripcion.text = foto.descripcion!;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -385,6 +385,9 @@ class FotosViewModel extends BaseViewModel {
                           if (value!.trim() == '') {
                             return 'Escriba una descripción';
                           } else {
+                            if (int.parse(value.trim()) >= 20) {
+                              return 'La cantidad de fotos no puede ser mayor a 20';
+                            }
                             return null;
                           }
                         },
@@ -422,21 +425,10 @@ class FotosViewModel extends BaseViewModel {
                             if ((tcNewDescripcion.text.trim() !=
                                 foto.descripcion.toString())) {
                               ProgressDialog.show(context);
-                              Object resp;
-                              switch (_opcion) {
-                                case "Cantidad":
-                                  resp = await _fotosApi.updateCantidad(
-                                      descripcion: tcNewDescripcion.text,
-                                      id: foto.id);
-                                  break;
-                                case "Tipo":
-                                  resp = await _fotosApi.updateTipos(
-                                      descripcion: tcNewDescripcion.text,
-                                      id: foto.id);
-                                  break;
-                                default:
-                                  resp = "";
-                              }
+
+                              var resp = await _fotosApi.updateCantidad(
+                                  descripcion: tcNewDescripcion.text,
+                                  id: foto.id);
 
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
@@ -477,7 +469,7 @@ class FotosViewModel extends BaseViewModel {
               ),
             ),
           );
-        }); */
+        });
   }
 
   @override

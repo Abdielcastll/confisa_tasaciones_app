@@ -4,6 +4,7 @@ import 'package:tasaciones_app/core/api/notas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/notas_response.dart';
 import 'package:tasaciones_app/core/models/notas_response.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
@@ -27,7 +28,7 @@ class NotasViewModel extends BaseViewModel {
   bool _busqueda = false;
   bool hasNextPage = false;
   late NotasResponse notasResponse;
-  UsuariosData? usuario;
+  Profile? usuario;
 
   NotasViewModel() {
     listController.addListener(() {
@@ -59,7 +60,7 @@ class NotasViewModel extends BaseViewModel {
 
   Future<void> onInit() async {
     cargando = true;
-    usuario = _userClient.loadUsuario;
+    usuario = _userClient.loadProfile;
     var resp = await _notasApi.getNotas(pageNumber: pageNumber);
     if (resp is Success) {
       notasResponse = resp.response as NotasResponse;
