@@ -15,13 +15,14 @@ import 'package:tasaciones_app/views/entidades_seguridad/roles/roles_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/usuarios/usuarios_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/accesorios/accesorios_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/accesorios_suplidor/accesorios_suplidor_view.dart';
+import 'package:tasaciones_app/views/entidades_solicitudes/cantidad_fotos/cantidad_fotos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/componentes_vehiculo/componentes_vehiculo_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/condiciones_componentes_vehiculo.dart/condiciones_componentes_vehiculo_view.dart';
-import 'package:tasaciones_app/views/entidades_solicitudes/fotos/fotos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/periodo_eliminacion_data_grafica/periodo_eliminacion_data_grafica_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/periodo_tasacion_promedio/periodo_tasacion_promedio_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_accesorios_vehiculos/segmentos_accesorios_vehiculos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_componentes_vehiculos/segmentos_componentes_vehiculos_view.dart';
+import 'package:tasaciones_app/views/entidades_solicitudes/tipos_fotos/tipos_fotos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/vencimiento_estados/vencimiento_estados_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
@@ -162,8 +163,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return CupertinoPageRoute(
           builder: (context) => const AccesoriosSuplidorView());
 
-    case FotosView.routeName:
-      return CupertinoPageRoute(builder: (context) => const FotosView());
+    case TiposFotosView.routeName:
+      return CupertinoPageRoute(builder: (context) => const TiposFotosView());
+
+    case CantidadFotosView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const CantidadFotosView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

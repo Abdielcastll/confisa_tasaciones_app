@@ -11,9 +11,10 @@ class _ColaSolicitudesMobile extends StatelessWidget {
       inAsyncCall: vm.loading,
       opacity: false,
       child: Scaffold(
-        appBar: const Appbar(
+        appBar: Appbar(
           textSize: 20,
           titulo: 'Cola de solicitudes',
+          alarmas: vm.alarmas,
 
           // title: const Text(
           //   'Solicitudes',

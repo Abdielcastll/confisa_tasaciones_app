@@ -142,13 +142,13 @@ class AlarmasViewModel extends BaseViewModel {
     cargando = false;
   }
 
-  Future<void> modificarAlarma(BuildContext ctx, AlarmasData adjunto) async {
-    tcNewDescription.text = adjunto.descripcion;
-    tcNewTitulo.text = adjunto.titulo;
-    int idx = adjunto.fechaHora.indexOf("T");
+  Future<void> modificarAlarma(BuildContext ctx, AlarmasData alarma) async {
+    tcNewDescription.text = alarma.descripcion;
+    tcNewTitulo.text = alarma.titulo;
+    int idx = alarma.fechaHora.indexOf("T");
     List parts = [
-      adjunto.fechaHora.substring(0, idx).trim(),
-      adjunto.fechaHora.substring(idx + 1).trim()
+      alarma.fechaHora.substring(0, idx).trim(),
+      alarma.fechaHora.substring(idx + 1).trim()
     ];
     tcNewFechaCompromiso.text = parts[0];
     tcNewHoraCompromiso.text = parts[1];
@@ -281,7 +281,7 @@ class AlarmasViewModel extends BaseViewModel {
                           Dialogs.confirm(ctx,
                               tittle: 'Eliminar Módulo',
                               description:
-                                  '¿Esta seguro de eliminar el tipo adjunto ${adjunto.descripcion}?',
+                                  '¿Esta seguro de eliminar el tipo alarma ${alarma.descripcion}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
                             var resp = await _.delete(id: modulo.id);
@@ -331,16 +331,26 @@ class AlarmasViewModel extends BaseViewModel {
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            /* if (tcNewDescription.text.trim() !=
-                                adjunto.descripcion) {
+                            if (tcNewDescription.text.trim() !=
+                                    alarma.descripcion ||
+                                tcNewFechaCompromiso.text.trim() +
+                                        "T" +
+                                        tcNewHoraCompromiso.text.trim() !=
+                                    alarma.fechaCompromiso ||
+                                tcNewTitulo.text.trim() != alarma.titulo) {
                               ProgressDialog.show(context);
-                              var resp = await _.updateAdjunto(
-                                  descripcion: tcNewDescription.text,
-                                  id: adjunto.id);
+                              var resp = await _alarmasApi.updateAlarma(
+                                  correo: alarma.correo,
+                                  titulo: tcNewTitulo.text.trim(),
+                                  fechaCompromiso:
+                                      tcNewFechaCompromiso.text.trim() +
+                                          "T" +
+                                          tcNewHoraCompromiso.text.trim(),
+                                  descripcion: tcNewDescription.text.trim(),
+                                  id: alarma.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(
-                                    msg: 'Tipo Adjunto Actualizado');
+                                Dialogs.success(msg: 'Tipo alarma Actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -351,9 +361,9 @@ class AlarmasViewModel extends BaseViewModel {
                               }
                               tcNewDescription.clear();
                             } else {
-                              Dialogs.success(msg: 'Tipo Adjunto Actualizado');
+                              Dialogs.success(msg: 'Tipo alarma Actualizado');
                               Navigator.of(context).pop();
-                            } */
+                            }
                           }
                         }, // button pressed
                         child: Column(
@@ -533,26 +543,34 @@ class AlarmasViewModel extends BaseViewModel {
                       ),
                       TextButton(
                         onPressed: () async {
-                          /* if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             ProgressDialog.show(context);
-                            var resp = await _.createAdjunto(
+                            var resp = await _alarmasApi.createAlarma(
+                                correo: usuario!.email!,
+                                fechaCompromiso:
+                                    tcNewFechaCompromiso.text.trim() +
+                                        "T" +
+                                        tcNewHoraCompromiso.text.trim(),
+                                titulo: tcNewTitulo.text.trim(),
+                                idSolicitud: 1,
                                 descripcion: tcNewDescription.text.trim());
-                            ProgressDialog.dissmiss(context);
+
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Tipo Adjunto Creado');
+                              ProgressDialog.dissmiss(context);
+                              Dialogs.success(msg: 'Tipo alarma Creado');
                               Navigator.of(context).pop();
                               await onRefresh();
+                              tcNewDescription.clear();
+                              tcNewFechaCompromiso.clear();
+                              tcNewHoraCompromiso.clear();
+                              tcNewTitulo.clear();
                             }
 
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
                             }
-                            tcNewDescription.clear();
-                            tcNewFechaCompromiso.clear();
-                          tcNewHoraCompromiso.clear();
-                          tcNewTitulo.clear();
-                          } */
+                          }
                         }, // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

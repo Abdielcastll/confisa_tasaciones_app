@@ -1,9 +1,9 @@
-part of fotos_view;
+part of tipos_fotos_view;
 
-class _FotosMobile extends StatelessWidget {
-  final FotosViewModel vm;
+class _TiposFotosMobile extends StatelessWidget {
+  final TiposFotosViewModel vm;
 
-  const _FotosMobile(this.vm);
+  const _TiposFotosMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class _FotosMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Parametros Fotos',
+            'Parámetro Tipo Fotos',
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
@@ -23,20 +23,6 @@ class _FotosMobile extends StatelessWidget {
         body: Column(
           children: [
             const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: DropdownButton<String>(
-                            value: vm.opcion,
-                            items: vm.opciones(),
-                            onChanged: (String? value) => vm.opcion = value!)),
-                  ),
-                ),
-              ],
-            ),
             Expanded(
               child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
@@ -48,9 +34,7 @@ class _FotosMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 3, horizontal: 5),
                       child: MaterialButton(
-                        onPressed: vm.opcion == "Cantidad"
-                            ? () => vm.modificarFotosCantidad(context, foto)
-                            : () => vm.modificarFotosTipo(context, foto),
+                        onPressed: () => vm.modificarFotosTipo(context, foto),
                         color: Colors.white,
                         elevation: 4,
                         shape: RoundedRectangleBorder(

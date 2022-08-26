@@ -114,13 +114,28 @@ class _SuplidoresMobile extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  suplidor.nombre,
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      suplidor.nombre,
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w800,
+                                          overflow: TextOverflow.ellipsis),
+                                    ),
+                                    suplidor.detalles != ""
+                                        ? Text(
+                                            "Detalle: ${suplidor.detalles}",
+                                            style: const TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          )
+                                        : const SizedBox(),
+                                  ],
                                 ),
                               ),
                             ),

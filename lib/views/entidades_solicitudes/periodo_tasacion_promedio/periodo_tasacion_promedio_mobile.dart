@@ -22,19 +22,53 @@ class _PeriodoTasacionPromedioMobile extends StatelessWidget {
         ),
         body: Column(
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+              child: MaterialButton(
+                color: Colors.white,
+                height: 70,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                elevation: 4,
+                onPressed: () => vm.modificarPeriodoTasacionPromedio(
+                    context), // button pressed
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const <Widget>[
+                    Icon(
+                      AppIcons.save,
+                      color: AppColors.green,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ), // icon
+                    Text(
+                      "Actualizar",
+                      style: TextStyle(
+                        color: AppColors.brownDark,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ), // text
+                  ],
+                ),
+              ),
+            ),
             Expanded(
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.periodoTasacionPromedio.isEmpty
+                child: vm.periodosTasacionPromedio.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.periodoTasacionPromedio.length + 1,
+                        itemCount: vm.periodosTasacionPromedio.length + 1,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          if (i >= vm.periodoTasacionPromedio.length) {
+                          if (i >= vm.periodosTasacionPromedio.length) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 30),
                               child: !vm.hasNextPage
@@ -44,14 +78,12 @@ class _PeriodoTasacionPromedioMobile extends StatelessWidget {
                             );
                           }
                           var periodoTasacionPromedio =
-                              vm.periodoTasacionPromedio[i];
+                              vm.periodosTasacionPromedio[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
-                            child: MaterialButton(
-                              onPressed: () =>
-                                  vm.modificarPeriodoTasacionPromedio(
-                                      context, periodoTasacionPromedio),
+                            child: Card(
+                              margin: EdgeInsets.zero,
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(

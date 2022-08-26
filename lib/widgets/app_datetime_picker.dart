@@ -27,7 +27,9 @@ abstract class Pickers {
     );
     if (picked != null) selectedTime = picked;
     hour = selectedTime.hour.toString();
+    hour = hour.length == 1 ? "0" + hour : hour;
     minute = selectedTime.minute.toString();
+    minute = minute.length == 1 ? "0" + minute : minute;
     time = hour + ':' + minute + ":00.000";
     return time;
   }

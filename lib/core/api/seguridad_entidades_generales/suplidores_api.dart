@@ -12,6 +12,9 @@ class SuplidoresApi {
   Future<Object> getSuplidores({
     String nombre = "",
     String identificacion = "",
+    int? estado,
+    String direccion = "",
+    String email = "",
     int pageSize = 900,
     int pageNumber = 1,
     int? codigoRelacionado,
@@ -28,6 +31,9 @@ class SuplidoresApi {
           "CodigoRelacionado": codigoRelacionado,
           "Nombre": nombre,
           "Identificacion": identificacion,
+          "Estado": estado,
+          "Direccion": direccion,
+          "Email": email,
           "PageSize": pageSize,
           "PageNumber": pageNumber,
         },
@@ -63,50 +69,31 @@ class SuplidoresApi {
     }
   }
 
-  /* Future<Object> createSuplidores({required String descripcion}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/tipo-acciones-solicitud/create',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {
-        "descripcion": descripcion,
-      },
-      parser: (data) {
-        return SuplidoresPOSTResponse.fromJson(data["data"]);
-      },
-    );
+  Future<Object> updateSuplidor(
+      {required int idSuplidor,
+      required int estado,
+      required String detalles,
+      required String registro}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/suplidores/update',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "idSuplidor": idSuplidor,
+          "estado": estado,
+          "detalles": detalles,
+          "registro": registro
+        },
+        parser: (data) {
+          return SuplidoresPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
   }
-
-  Future<Object> updateSuplidores(
-      {required int id, required String descripcion}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/tipo-acciones-solicitud/update',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"id": id, "descripcion": descripcion},
-      parser: (data) {
-        return SuplidoresPOSTResponse.fromJson(data);
-      },
-    );
-  }
-
-  Future<Object> deleteSuplidores({required int id}) async {
-    String _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/tipo-acciones-solicitud/delete/$id',
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      parser: (data) {
-        return SuplidoresPOSTResponse.fromJson(data);
-      },
-    );
-  } */
 }

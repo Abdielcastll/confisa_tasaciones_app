@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_tasacion/solicitud_tasacion_view.dart';
 
 import '../theme/theme.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
-  const Appbar({
-    Key? key,
-    required this.titulo,
-    required this.textSize,
-  }) : super(key: key);
+  const Appbar(
+      {Key? key,
+      required this.titulo,
+      required this.textSize,
+      required this.alarmas})
+      : super(key: key);
   final String titulo;
   final double textSize;
+  final List<AlarmasData>? alarmas;
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -109,12 +112,16 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             IconButton(
                 onPressed: () {},
-                icon: SvgPicture.asset('assets/img/notification.svg')),
-            /*Positioned(
+                icon: const Icon(
+                  AppIcons.bell,
+                  size: 22,
+                )),
+            Positioned(
               top: 15,
               left: 6,
               child: Container(
-                child: const Text("5", style: TextStyle(fontSize: 12)),
+                child: Text(alarmas!.length.toString(),
+                    style: const TextStyle(fontSize: 12)),
                 alignment: AlignmentDirectional.center,
                 height: 13,
                 width: 13,
@@ -123,7 +130,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-            ),*/
+            ),
           ],
         ),
         // IconButton(
