@@ -24,7 +24,7 @@ class AuthenticationClient {
     final difference =
         session.tokenExpiryTime.difference(currentDate).inMinutes;
     logger.wtf(difference);
-    if (difference >= 15) {
+    if (difference >= 25) {
       return session.token;
     } else if (difference <= 0) {
       logger.wtf('IR A LOGIN');

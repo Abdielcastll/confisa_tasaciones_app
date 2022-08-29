@@ -25,15 +25,14 @@ class GeneralesA extends StatelessWidget {
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
       onPressedNext: () => vm.solicitudCredito(context),
-      // onPressedNext: () => vm.currentForm = 2,
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
         child: Column(
           children: [
-            const BaseTextField(
+            BaseTextField(
               label: 'Tipo de tasación',
-              initialValue: 'Tasación',
+              initialValue: vm.incautado ? 'Tasación de Incautado' : 'Tasación',
               enabled: false,
             ),
             BaseTextField(

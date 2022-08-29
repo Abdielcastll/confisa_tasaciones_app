@@ -10,7 +10,9 @@ part 'solicitud_tasacion_mobile.dart';
 
 class SolicitudTasacionView extends StatelessWidget {
   static const routeName = 'solicitudTasacion';
-  const SolicitudTasacionView({Key? key}) : super(key: key);
+  const SolicitudTasacionView({Key? key, this.incautado = false})
+      : super(key: key);
+  final bool incautado;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class SolicitudTasacionView extends StatelessWidget {
     return ViewModelBuilder<SolicitudTasacionViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          viewModel.onInit(context);
+          viewModel.onInit(t: incautado);
         },
         builder: (context, viewModel, child) {
           return _SolicitudTasacionMobile(viewModel);

@@ -2,49 +2,52 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
-import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
-import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
+import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
-import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
-import 'package:tasaciones_app/core/models/tracciones_response.dart';
-import 'package:tasaciones_app/core/models/transmisiones_response.dart';
-import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
-import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
-import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
-import 'package:tasaciones_app/widgets/escaner.dart';
 
 import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
 import '../../../core/base/base_view_model.dart';
+import '../../../core/models/adjunto_foto_response.dart';
+import '../../../core/models/cantidad_fotos_response.dart';
+import '../../../core/models/colores_vehiculos_response.dart';
+import '../../../core/models/componente_condicion.dart';
 import '../../../core/models/solicitudes/solicitud_credito_response.dart';
+import '../../../core/models/tipo_vehiculo_response.dart';
+import '../../../core/models/tracciones_response.dart';
+import '../../../core/models/transmisiones_response.dart';
+import '../../../core/models/versiones_vehiculo_response.dart';
+import '../../../core/models/vin_decoder_response.dart';
 import '../../../core/services/navigator_service.dart';
+import '../../../theme/theme.dart';
+import '../../../widgets/escaner.dart';
 import '../../auth/login/login_view.dart';
 
-class SolicitudEstimacionViewModel extends BaseViewModel {
+class TrabajarViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final _solicitudesApi = locator<SolicitudesApi>();
   final _adjuntosApi = locator<AdjuntosApi>();
   late DateTime fechaActual;
   String? _estado;
+  int? _estadoID;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
   GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyFotos = GlobalKey<FormState>();
-  TextEditingController tcNoSolicitud = TextEditingController();
+  GlobalKey<FormState> formKeyCondiciones = GlobalKey<FormState>();
   TextEditingController tcVIN = TextEditingController();
   TextEditingController tcFuerzaMotriz = TextEditingController();
   TextEditingController tcKilometraje = TextEditingController();
   TextEditingController tcPlaca = TextEditingController();
+  List<AdjuntoFoto> fotosAdjuntos = [];
   int _currentForm = 1;
-  SolicitudCreditoData? solicitud;
+  late SolicitudesData solicitud;
   VinDecoderData? _vinData;
   TipoVehiculoData? _tipoVehiculos;
   TransmisionesData? _transmision;
@@ -54,25 +57,22 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
   late int _fotosPermitidas;
-  // late List<File> fotos;
   late List<FotoData> fotos;
   final _picker = ImagePicker();
-  SolicitudesData? solicitudCola;
   List<DescripcionFotoVehiculos> descripcionFotos = [];
+  SolicitudCreditoData? solicitudData;
+  List<ComponenteTasacion> componentes = [];
+  List<CondicionComponenteVehiculoCreate> condicionesData = [];
 
-  SolicitudEstimacionViewModel() {
-    fechaActual = DateTime.now();
+  int get currentForm => _currentForm;
+  set currentForm(int i) {
+    _currentForm = i;
+    notifyListeners();
   }
 
   VinDecoderData? get vinData => _vinData;
   set vinData(VinDecoderData? data) {
     _vinData = data;
-    notifyListeners();
-  }
-
-  int get currentForm => _currentForm;
-  set currentForm(int i) {
-    _currentForm = i;
     notifyListeners();
   }
 
@@ -133,8 +133,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
 
   void onInit(SolicitudesData? arg) async {
     if (arg != null) {
-      solicitudCola = arg;
-      tcNoSolicitud.text = arg.noSolicitudCredito.toString();
+      solicitud = arg;
       tcVIN.text = arg.chasis!;
       notifyListeners();
     }
@@ -145,50 +144,45 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   Future<void> solicitudCredito(BuildContext context) async {
-    if (solicitudCola == null) {
-      if (formKey.currentState!.validate()) {
-        ProgressDialog.show(context);
-        var resp = await _solicitudesApi.getSolicitudCredito(
-            idSolicitud: int.parse(tcNoSolicitud.text));
-        if (resp is Success) {
-          var data = resp.response as SolicitudCreditoResponse;
-          solicitud = data.data;
-          currentForm = 2;
-        }
-        if (resp is Failure) {
-          Dialogs.error(msg: resp.messages[0]);
-        }
-        if (resp is TokenFail) {
-          ProgressDialog.dissmiss(context);
-          Dialogs.error(msg: 'su sesión a expirado');
-          _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        }
-        ProgressDialog.dissmiss(context);
-      }
-    } else {
+    ProgressDialog.show(context);
+    var resp = await _solicitudesApi.getSolicitudCredito(
+        idSolicitud: solicitud.noSolicitudCredito!);
+    if (resp is Success) {
+      var data = resp.response as SolicitudCreditoResponse;
+      solicitudData = data.data;
+      tcVIN.text = data.data.chasis ?? '';
       currentForm = 2;
     }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      ProgressDialog.dissmiss(context);
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
+    ProgressDialog.dissmiss(context);
   }
 
   Future<void> consultarVIN(BuildContext context) async {
     if (formKey2.currentState!.validate()) {
       ProgressDialog.show(context);
       var resp = await _solicitudesApi.getVinDecoder(
-          chasisCode: tcVIN.text,
-          noSolicitud: solicitudCola != null
-              ? solicitudCola!.noSolicitudCredito!
-              : solicitud!.noSolicitud!);
+        chasisCode: tcVIN.text,
+        noSolicitud: solicitud.noSolicitudCredito!,
+      );
       if (resp is Success) {
         var data = resp.response as VinDecoderResponse;
         vinData = data.data;
-
         int currentYear = DateTime.now().year;
         if (data.data.ano != null) {
           int anio = data.data.ano!;
           if (currentYear <= anio) {
             _estado = 'NUEVO';
+            _estadoID = 0;
             notifyListeners();
           } else {
+            _estadoID = 1;
             _estado = 'USADO';
             notifyListeners();
           }
@@ -209,6 +203,117 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
+  Future<void> escanearVIN() async {
+    _navigatorService.navigateToPage(EscanerPage.routeName).then((value) {
+      tcVIN.text = value;
+      notifyListeners();
+    });
+  }
+
+  Future goToCondiciones(BuildContext context) async {
+    if (formKey3.currentState!.validate()) {
+      if (vinData == null) {
+        Dialogs.error(msg: 'Debe consultar el No. VIN');
+      } else {
+        ProgressDialog.show(context);
+        var upResp = await _solicitudesApi.updateEstimacion(
+          id: solicitud.id!,
+          sistemaTransmision: transmision.id,
+          traccion: traccion.id,
+          noPuertas: nPuertas!,
+          noCilindros: nCilindros!,
+          fuerzaMotriz: double.tryParse(tcFuerzaMotriz.text)!.round(),
+          ano: solicitud.ano ?? vinData?.ano ?? 0,
+          nuevoUsado: _estadoID ?? 0,
+          kilometraje: double.tryParse(tcKilometraje.text)!.round(),
+          // kilometraje: double.tryParse(tcKilometraje.text)!.round(),
+          color: colorVehiculo.id,
+          placa: tcPlaca.text,
+        );
+        if (upResp is Success) {
+          Dialogs.success(msg: 'Datos actualizados');
+          var resp = await _solicitudesApi.getComponentesTasacion();
+          if (resp is Success<List<ComponenteTasacion>>) {
+            componentes = resp.response;
+            currentForm = 3;
+          }
+          if (resp is Failure) {
+            Dialogs.error(msg: resp.messages[0]);
+          }
+          if (resp is TokenFail) {
+            ProgressDialog.dissmiss(context);
+            Dialogs.error(msg: 'su sesión a expirado');
+            _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+          }
+          ProgressDialog.dissmiss(context);
+        }
+        if (upResp is Failure) {
+          Dialogs.error(msg: upResp.messages[0]);
+          ProgressDialog.dissmiss(context);
+        }
+      }
+    }
+  }
+
+  void addCondicion(CondicionComponente? c) {
+    condicionesData.add(CondicionComponenteVehiculoCreate(
+        c!.idComponente!, c.idCondicionParametroG!));
+  }
+
+  Future<void> goToAccesorios(BuildContext context) async {
+    if (formKeyCondiciones.currentState!.validate()) {
+      ProgressDialog.show(context);
+      Map<String, dynamic> data = {
+        "idSolicitud": solicitudData!.noSolicitud,
+        "condicionesComponenteVehiculo": List.from(
+          condicionesData.map((x) => x.toJson()),
+        ),
+      };
+      log.d(jsonEncode(data));
+      var resp = await _solicitudesApi.createCondicionComponente(data: data);
+      if (resp is Success) {
+        currentForm = 4;
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages[0]);
+      }
+      if (resp is TokenFail) {
+        Dialogs.error(msg: 'su sesión a expirado');
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      }
+      ProgressDialog.dissmiss(context);
+    }
+  }
+
+  Future goToFotos(BuildContext context) async {
+    ProgressDialog.show(context);
+    var resp = await _adjuntosApi.getFotosTasacion(noTasacion: 100013);
+    if (resp is Success<AdjuntosFotoResponse>) {
+      fotosAdjuntos = resp.response.data;
+      currentForm = 4;
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    ProgressDialog.dissmiss(context);
+  }
+
+  Future goToFotosTasacion(BuildContext context) async {
+    if (vinData == null) {
+      Dialogs.error(msg: 'Debe consultar el No. VIN');
+    } else {
+      var resp = await _solicitudesApi.getCantidadFotos();
+      if (resp is Success) {
+        var data = resp.response as EntidadResponse;
+        int cantidad = int.parse(data.data.descripcion ?? '0');
+        fotos = List.generate(cantidad, (i) => FotoData(file: File('')));
+        fotosPermitidas = cantidad;
+        currentForm = 3;
+        ProgressDialog.dissmiss(context);
+      }
+    }
+  }
+
   String? noSolicitudValidator(String? value) {
     if (value?.trim() == '') {
       return 'Ingrese el número de solicitud';
@@ -217,11 +322,50 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
+  Future<void> editarFoto(int i) async {
+    var croppedFile = await ImageCropper().cropImage(
+      sourcePath: fotos[i].file!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Editar foto',
+          toolbarColor: AppColors.orange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+          showCropGrid: true,
+        ),
+        IOSUiSettings(
+          title: 'Editar foto',
+        ),
+      ],
+    );
+    fotos[i] = FotoData(file: File(croppedFile!.path));
+    notifyListeners();
+  }
+
   String? noVINValidator(String? value) {
     if (value?.trim() == '') {
       return 'Ingrese el número VIN';
     } else {
       return null;
+    }
+  }
+
+  Future<List<CondicionComponente>> getCondiciones(
+      {required int idComponente}) async {
+    var resp = await _solicitudesApi.getCondicionComponente(
+        idComponente: idComponente);
+    if (resp is Success<List<CondicionComponente>>) {
+      return resp.response;
+    } else {
+      return [];
     }
   }
 
@@ -304,7 +448,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       Dialogs.error(msg: 'Fotos incompletas');
     } else {
       if (formKeyFotos.currentState!.validate()) {
-        // ProgressDialog.show(context);
+        ProgressDialog.show(context);
         List<Map<String, dynamic>> dataList = [];
         for (var e in fotos) {
           var fotoBase = e.file!.readAsBytesSync();
@@ -316,7 +460,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
           dataList.add(data);
         }
         var resp = await _adjuntosApi.addFotosTasacion(
-            noTasacion: solicitud!.noSolicitud!, adjuntos: dataList);
+            noTasacion: solicitud.noSolicitudCredito!, adjuntos: dataList);
 
         if (resp is Failure) {
           Dialogs.error(msg: resp.messages[0]);
@@ -330,140 +474,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       }
     }
   }
-
-  Future<void> editarFoto(int i) async {
-    var croppedFile = await ImageCropper().cropImage(
-      sourcePath: fotos[i].file!.path,
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Editar foto',
-          toolbarColor: AppColors.orange,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-          showCropGrid: true,
-        ),
-        IOSUiSettings(
-          title: 'Editar foto',
-        ),
-      ],
-    );
-    fotos[i] = FotoData(file: File(croppedFile!.path));
-    notifyListeners();
-  }
-
-  Future goToFotos(BuildContext context) async {
-    if (vinData == null) {
-      Dialogs.error(msg: 'Debe consultar el No. VIN');
-    } else {
-      if (formKey3.currentState!.validate()) {
-        // ProgressDialog.show(context);
-        var crearResp = await crearSolicitud(context);
-        if (crearResp) {
-          var resp = await _solicitudesApi.getCantidadFotos();
-          if (resp is Success) {
-            var data = resp.response as EntidadResponse;
-            int cantidad = int.parse(data.data.descripcion ?? '0');
-            fotos = List.generate(cantidad, (i) => FotoData(file: File('')));
-            fotosPermitidas = cantidad;
-            currentForm = 3;
-            ProgressDialog.dissmiss(context);
-          }
-        }
-      }
-    }
-  }
-
-  Future<bool> crearSolicitud(BuildContext context) async {
-    // if (fotos.any((e) => e.file!.path == '') ||
-    //     fotos.any((e) => e.descripcion == '')) {
-    //   Dialogs.error(msg: 'Debe cargar todas las fotos');
-    // } else {
-    ProgressDialog.show(context);
-    var resp = await _solicitudesApi.createNewSolicitudEstimacion(
-      ano: int.parse(solicitud!.ano!),
-      chasis: solicitud!.chasis ?? tcVIN.text,
-      codigoEntidad: solicitud!.codEntidad!,
-      codigoSucursal: solicitud!.codSucursal!,
-      color: colorVehiculo.id,
-      edicion: vinData?.idTrim ?? 0,
-      fuerzaMotriz: vinData?.fuerzaMotriz ?? int.parse(tcFuerzaMotriz.text),
-      idOficial: solicitud!.codOficialNegocios!,
-      // idPromotor: 0,
-      identificacion: solicitud!.noIdentificacion!,
-      kilometraje: int.parse(tcKilometraje.text),
-      marca: solicitud!.idMarcaTasaciones ?? vinData!.codigoMarca ?? 0,
-      modelo: solicitud!.idModeloTasaciones ?? vinData!.codigoModelo ?? 0,
-      noCilindros: vinData?.numeroCilindros ?? _nCilindros!,
-      noPuertas: vinData?.numeroPuertas ?? _nPuertas!,
-      noSolicitudCredito: solicitud!.noSolicitud!,
-      nombreCliente: solicitud!.nombreCliente!,
-      nuevoUsado: _estado == 'Nuevo' ? 0 : 1,
-      placa: tcPlaca.text,
-      serie: vinData?.idSerie!,
-      sistemaTransmision: _transmision!.id,
-      // suplidorTasacion: 0,
-      tipoTasacion: 21,
-      tipoVehiculoLocal: tipoVehiculo.id,
-      traccion: _traccion!.id,
-      trim: vinData?.idTrim,
-      versionLocal: versionVehiculo.id, /* INFO VEHICULOGET VERSIONES   */
-    );
-    if (resp is Failure) {
-      // ProgressDialog.dissmiss(context);
-      Dialogs.error(msg: resp.messages[0]);
-      // TODO::: Cambiar a false
-      return true;
-    }
-    if (resp is TokenFail) {
-      ProgressDialog.dissmiss(context);
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'su sesión a expirado');
-      return false;
-    }
-    if (resp is Success) {
-      // await subirFotos();
-      // ProgressDialog.dissmiss(context);
-      Dialogs.success(msg: 'Solicitud creada correctamente');
-      return true;
-      // _navigatorService
-      //     .navigateToPageAndRemoveUntil(ColaSolicitudesView.routeName);
-    }
-    resetData();
-    return false;
-  }
-
-  Future<void> escanearVIN() async {
-    _navigatorService.navigateToPage(EscanerPage.routeName).then((value) {
-      tcVIN.text = value;
-      notifyListeners();
-    });
-  }
-
-  void resetData() {
-    tcVIN.clear();
-    tcPlaca.clear();
-    tcNoSolicitud.clear();
-    tcFuerzaMotriz.clear();
-    tcKilometraje.clear();
-  }
-
-  @override
-  void dispose() {
-    tcVIN.dispose();
-    tcPlaca.dispose();
-    tcNoSolicitud.dispose();
-    tcFuerzaMotriz.dispose();
-    tcKilometraje.dispose();
-    super.dispose();
-  }
 }
 
 class FotoData {
@@ -475,4 +485,19 @@ class FotoData {
     this.tipoAdjunto,
     this.descripcion,
   });
+}
+
+class CondicionComponenteVehiculoCreate {
+  int idComponenteVehiculo;
+  int idCondicionComponenteVehiculo;
+
+  CondicionComponenteVehiculoCreate(
+      this.idComponenteVehiculo, this.idCondicionComponenteVehiculo);
+
+  Map<String, dynamic> toJson() {
+    return {
+      "idComponenteVehiculo": idComponenteVehiculo,
+      "idCondicionComponenteVehiculo": idCondicionComponenteVehiculo,
+    };
+  }
 }

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../base_widgets/base_form_widget.dart';
-import '../../../base_widgets/base_text_field_widget.dart';
-import '../../consultar_modificar_view_model.dart';
+import '../../../../base_widgets/base_form_widget.dart';
+import '../../../../base_widgets/base_text_field_widget.dart';
+import '../../../trabajar_view_model.dart';
 
-class GeneralesA extends StatelessWidget {
-  const GeneralesA(
+class GeneralesTasacionForm extends StatelessWidget {
+  const GeneralesTasacionForm(
     this.vm, {
     Key? key,
   }) : super(key: key);
 
-  final ConsultarModificarViewModel vm;
+  final TrabajarViewModel vm;
 
   @override
   Widget build(BuildContext context) {
@@ -30,24 +30,22 @@ class GeneralesA extends StatelessWidget {
         child: Column(
           children: [
             BaseTextField(
-              label: 'Tipo de solicitud',
-              initialValue: vm.solicitudCola.descripcionTipoTasacion ?? '',
+              label: 'Tipo de tasación',
+              initialValue: vm.solicitud.descripcionTipoTasacion ?? '',
               enabled: false,
             ),
             BaseTextField(
               label: 'Fecha de solicitud',
               initialValue: DateFormat.yMMMMd('es')
-                  .format(vm.solicitudCola.fechaCreada!)
+                  .format(vm.solicitud.fechaCreada!)
                   .toUpperCase(),
               enabled: false,
             ),
-            Form(
-              key: vm.formKey,
-              child: BaseTextFieldNoEdit(
-                label: 'No. de solicitud',
-                initialValue: vm.solicitudCola.noSolicitudCredito.toString(),
-              ),
-            ),
+            BaseTextField(
+              label: 'No. de solicitud de crédito',
+              initialValue: vm.solicitud.noSolicitudCredito.toString(),
+              enabled: false,
+            )
           ],
         ),
       ),

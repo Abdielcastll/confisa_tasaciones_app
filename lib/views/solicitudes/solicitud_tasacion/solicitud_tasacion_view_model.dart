@@ -26,6 +26,7 @@ class SolicitudTasacionViewModel extends BaseViewModel {
   GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
   int _currentForm = 1;
   late SolicitudCreditoData solicitud;
+  late bool incautado;
 
   SolicitudTasacionViewModel() {
     fechaActual = DateTime.now();
@@ -42,7 +43,10 @@ class SolicitudTasacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onInit(BuildContext context) {}
+  void onInit({bool t = false}) {
+    incautado = t;
+    notifyListeners();
+  }
 
   Future<void> solicitudCredito(BuildContext context) async {
     if (formKey.currentState!.validate()) {
@@ -87,7 +91,7 @@ class SolicitudTasacionViewModel extends BaseViewModel {
       identificacion: solicitud.noIdentificacion!,
       noSolicitudCredito: solicitud.noSolicitud!,
       nombreCliente: solicitud.nombreCliente!,
-      tipoTasacion: 22,
+      tipoTasacion: incautado ? 23 : 22,
       // suplidorTasacion: 0,
     );
     if (resp is Success) {

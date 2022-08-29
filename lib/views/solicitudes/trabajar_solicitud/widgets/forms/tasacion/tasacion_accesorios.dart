@@ -4,31 +4,30 @@ import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 
-import '../../../../../core/models/tracciones_response.dart';
-import '../../../../../core/models/versiones_vehiculo_response.dart';
-import '../../../../../theme/theme.dart';
-import '../../../base_widgets/base_form_widget.dart';
-import '../../../base_widgets/base_text_field_widget.dart';
-import '../../solicitud_estimacion_view_model.dart';
+import '../../../../../../core/models/tracciones_response.dart';
+import '../../../../../../core/models/versiones_vehiculo_response.dart';
+import '../../../../../../theme/theme.dart';
+import '../../../../base_widgets/base_form_widget.dart';
+import '../../../../base_widgets/base_text_field_widget.dart';
+import '../../../trabajar_view_model.dart';
 
-class VehiculoForm extends StatelessWidget {
-  const VehiculoForm(
+class AccesoriosTasacionForm extends StatelessWidget {
+  const AccesoriosTasacionForm(
     this.vm, {
     Key? key,
   }) : super(key: key);
 
-  final SolicitudEstimacionViewModel vm;
+  final TrabajarViewModel vm;
 
   @override
   Widget build(BuildContext context) {
     return BaseFormWidget(
       iconHeader: Icons.add_chart_sharp,
-      titleHeader: 'Vehículo',
+      titleHeader: 'Accesorios',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
       onPressedBack: () {
-        vm.currentForm = 1;
-        vm.vinData = null;
+        vm.currentForm = 2;
       },
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
@@ -39,59 +38,21 @@ class VehiculoForm extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Form(
-                    key: vm.formKey2,
-                    child: BaseTextField(
-                      label: 'No. VIN',
-                      hint: 'Ingrese el número VIN del vehículo',
-                      validator: vm.noVINValidator,
-                      controller: vm.tcVIN,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  iconSize: 50,
-                  onPressed: () => vm.consultarVIN(context),
-                  icon: const CircleAvatar(
-                    child: Icon(
-                      Icons.search,
-                      color: AppColors.white,
-                    ),
-                    backgroundColor: AppColors.brownDark,
-                  ),
-                ),
-                IconButton(
-                  iconSize: 50,
-                  onPressed: () async => await vm.escanearVIN(),
-                  icon: const CircleAvatar(
-                    child: Icon(
-                      Icons.qr_code,
-                      color: AppColors.white,
-                    ),
-                    backgroundColor: AppColors.brownDark,
-                  ),
-                ),
-              ],
-            ),
             Form(
               key: vm.formKey3,
               child: Column(
                 children: [
                   BaseTextFieldNoEdit(
                     label: 'Marca',
-                    initialValue: vm.solicitud?.marca ?? '',
+                    initialValue: vm.solicitud.descripcionMarca ?? '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Modelo',
-                    initialValue: vm.solicitud?.modelo ?? '',
+                    initialValue: vm.solicitud.descripcionModelo ?? '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Año',
-                    initialValue: vm.solicitud?.ano ?? '',
+                    initialValue: vm.solicitud.ano.toString(),
                   ),
                   if (vm.vinData != null)
                     Column(
@@ -133,14 +94,19 @@ class VehiculoForm extends StatelessWidget {
                         // TIPO DE VEHICULO
 
                         const SizedBox(height: 10),
-
+                        // vm.vinData?.tipoVehiculo != null &&
+                        //         vm.vinData?.tipoVehiculo != ''
+                        //     ? BaseTextFieldNoEdit(
+                        //         label: 'Tipo',
+                        //         initialValue: vm.vinData?.tipoVehiculo ?? '',
+                        //       )
+                        //     :
                         DropdownSearch<TipoVehiculoData>(
                           asyncItems: (text) => vm.getTipoVehiculo(text),
                           dropdownBuilder: (context, tipo) {
                             return Text(
                               tipo == null
-                                  ? vm.solicitudCola
-                                          ?.descripcionTipoVehiculoLocal ??
+                                  ? vm.solicitud.descripcionTipoVehiculoLocal ??
                                       'Seleccione'
                                   : tipo.descripcion,
                               style: const TextStyle(
@@ -188,8 +154,8 @@ class VehiculoForm extends StatelessWidget {
                                 dropdownBuilder: (context, tipo) {
                                   return Text(
                                       tipo == null
-                                          ? vm.solicitudCola
-                                                  ?.descripcionSistemaTransmision ??
+                                          ? vm.solicitud
+                                                  .descripcionSistemaTransmision ??
                                               'Seleccione'
                                           : tipo.descripcion,
                                       style: const TextStyle(fontSize: 15));
@@ -238,8 +204,7 @@ class VehiculoForm extends StatelessWidget {
                                 dropdownBuilder: (context, tipo) {
                                   return Text(
                                       tipo == null
-                                          ? vm.solicitudCola
-                                                  ?.descripcionTraccion ??
+                                          ? vm.solicitud.descripcionTraccion ??
                                               'Seleccione'
                                           : tipo.descripcion,
                                       style: const TextStyle(fontSize: 15));
@@ -289,9 +254,7 @@ class VehiculoForm extends StatelessWidget {
                                 dropdownBuilder: (context, nPuertas) {
                                   return Text(
                                       nPuertas == null
-                                          ? vm.solicitudCola?.noPuertas
-                                                  .toString() ??
-                                              'Seleccione'
+                                          ? '${vm.solicitud.noPuertas ?? 'Seleccione'}'
                                           : nPuertas.toString(),
                                       style: const TextStyle(fontSize: 15));
                                 },
@@ -339,9 +302,7 @@ class VehiculoForm extends StatelessWidget {
                                 dropdownBuilder: (context, nCilindros) {
                                   return Text(
                                       nCilindros == null
-                                          ? vm.solicitudCola?.noCilindros
-                                                  .toString() ??
-                                              'Seleccione'
+                                          ? '${vm.solicitud.noCilindros ?? 'Seleccione'}'
                                           : nCilindros.toString(),
                                       style: const TextStyle(fontSize: 15));
                                 },
@@ -375,22 +336,17 @@ class VehiculoForm extends StatelessWidget {
                               ),
 
                         // Fuerza Motriz
-                        vm.vinData?.fuerzaMotriz != null
-                            ? BaseTextFieldNoEdit(
-                                label: 'Fuerza motriz',
-                                initialValue:
-                                    vm.vinData!.fuerzaMotriz.toString(),
-                              )
-                            : BaseTextField(
-                                label: 'Fuerza motriz',
-                                controller: vm.tcFuerzaMotriz,
-                                validator: (v) {
-                                  if (v?.trim() == '') {
-                                    return 'Escriba la fuerza motriz';
-                                  } else {
-                                    return null;
-                                  }
-                                }),
+
+                        BaseTextField(
+                            label: 'Fuerza motriz',
+                            controller: vm.tcFuerzaMotriz,
+                            validator: (v) {
+                              if (v?.trim() == '') {
+                                return 'Escriba la fuerza motriz';
+                              } else {
+                                return null;
+                              }
+                            }),
                         BaseTextFieldNoEdit(
                           label: 'Estado del vehículo',
                           initialValue: vm.estado,
@@ -413,7 +369,7 @@ class VehiculoForm extends StatelessWidget {
                             dropdownBuilder: (context, tipo) {
                               return Text(
                                   tipo == null
-                                      ? vm.solicitudCola?.descripcionColor ??
+                                      ? vm.solicitud.descripcionColor ??
                                           'Seleccione'
                                       : tipo.descripcion,
                                   style: const TextStyle(fontSize: 15));

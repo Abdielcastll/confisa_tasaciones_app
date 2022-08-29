@@ -10,8 +10,6 @@ import 'package:tasaciones_app/views/notas/notas_view.dart';
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';
 import '../views/auth/login/login_view.dart';
-import '../views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
-import '../views/solicitudes/solicitud_tasacion/solicitud_tasacion_view.dart';
 
 class GlobalDrawerDartDesktop extends StatelessWidget {
   GlobalDrawerDartDesktop({Key? key, required this.menuApp}) : super(key: key);
@@ -31,9 +29,7 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                color: AppColors.gold,
-              ),
+              decoration: const BoxDecoration(color: AppColors.gold),
               height: size.height * .2,
               width: double.infinity,
               child: Padding(
@@ -68,7 +64,7 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                     child: Column(
                         /* Recorrido de la lista de role claims que devuelve las opciones del menu */
                         children: [
-                          ...menu(menuApp),
+                          if (menuApp.data.isNotEmpty) ...menu(menuApp),
                           // ListTile(
                           //   leading:
                           //       const Icon(Icons.document_scanner_outlined),

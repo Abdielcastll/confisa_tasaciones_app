@@ -8,7 +8,10 @@ class _SolicitudTasacionMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Solicitud de Tasación')),
+      appBar: AppBar(
+          title: Text(vm.incautado
+              ? 'Tasación de Incautado'
+              : 'Solicitud de Tasación')),
       body: _form(),
     );
   }

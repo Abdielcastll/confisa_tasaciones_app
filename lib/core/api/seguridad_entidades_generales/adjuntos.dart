@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
 
 import '../../authentication_client.dart';
@@ -9,6 +10,7 @@ class AdjuntosApi {
   final Http _http;
   final AuthenticationClient _authenticationClient;
   AdjuntosApi(this._http, this._authenticationClient);
+  Logger _logger = Logger();
 
   Future<Object> getAdjuntos(
       {String descripcion = "",
@@ -85,16 +87,18 @@ class AdjuntosApi {
   }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
+      final body = {
+        "noTasacion": noTasacion,
+        "adjuntos": adjuntos,
+      };
+      // _logger.i(body);
       return _http.request(
         '/api/adjuntos/add-fotos-tasacion',
         method: "POST",
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {
-          "noTasacion": noTasacion,
-          "adjuntos": adjuntos,
-        },
+        data: body,
       );
     } else {
       return TokenFail();

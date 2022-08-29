@@ -15,31 +15,31 @@ String getSolicitudesResponseToJson(GetSolicitudesResponse data) =>
 class GetSolicitudesResponse {
   GetSolicitudesResponse({
     required this.data,
-    required this.totalCount,
-    required this.totalPages,
-    required this.pageSize,
-    required this.currentPage,
-    required this.hasNextPage,
-    required this.hasPreviousPage,
-    required this.nextPageUrl,
+    this.totalCount,
+    this.totalPages,
+    this.pageSize,
+    this.currentPage,
+    this.hasNextPage,
+    this.hasPreviousPage,
+    this.nextPageUrl,
   });
 
   List<SolicitudesData> data;
-  String nextPageUrl;
-  int totalCount, pageSize, currentPage, totalPages;
-  bool hasNextPage, hasPreviousPage;
+  String? nextPageUrl;
+  int? totalCount, pageSize, currentPage, totalPages;
+  bool? hasNextPage, hasPreviousPage;
 
   factory GetSolicitudesResponse.fromJson(Map<String, dynamic> json) =>
       GetSolicitudesResponse(
           data: List<SolicitudesData>.from(
               json["data"].map((x) => SolicitudesData.fromJson(x))),
-          totalCount: json["meta"]["totalCount"],
-          totalPages: json["meta"]["totalPages"],
-          pageSize: json["meta"]["pageSize"],
-          currentPage: json["meta"]["currentPage"],
-          hasNextPage: json["meta"]["hasNextPage"],
-          hasPreviousPage: json["meta"]["hasPreviousPage"],
-          nextPageUrl: json["meta"]["nextPageUrl"]);
+          totalCount: json["meta"]?["totalCount"],
+          totalPages: json["meta"]?["totalPages"],
+          pageSize: json["meta"]?["pageSize"],
+          currentPage: json["meta"]?["currentPage"],
+          hasNextPage: json["meta"]?["hasNextPage"],
+          hasPreviousPage: json["meta"]?["hasPreviousPage"],
+          nextPageUrl: json["meta"]?["nextPageUrl"]);
 
   Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data.map((x) => x.toJson())),

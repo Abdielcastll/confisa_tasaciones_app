@@ -8,9 +8,8 @@ class _ConsultarModificarMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-              'Solicitud de ${vm.solicitudCola.descripcionTipoTasacion ?? ''}')),
+      appBar:
+          AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')),
       body: _form(),
     );
   }
@@ -20,7 +19,8 @@ class _ConsultarModificarMobile extends StatelessWidget {
       case 1:
         return GeneralesA(vm);
       case 2:
-        return vm.solicitudCola.tipoTasacion == 22
+        return vm.solicitudCola.tipoTasacion == 22 ||
+                vm.solicitudCola.tipoTasacion == 23
             ? GeneralesB(vm)
             : VehiculoForm(vm);
       case 3:

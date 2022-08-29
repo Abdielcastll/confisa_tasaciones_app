@@ -11,35 +11,14 @@ class _ColaSolicitudesMobile extends StatelessWidget {
       inAsyncCall: vm.loading,
       opacity: false,
       child: Scaffold(
-        appBar: const Appbar(
+        appBar: Appbar(
           textSize: 20,
           titulo: 'Cola de solicitudes',
-
-          // title: const Text(
-          //   'Solicitudes',
-          //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-          // ),
-          // backgroundColor: AppColors.brownLight,
         ),
         body: _home(context),
       ),
     );
   }
-
-  // Widget _body(BuildContext context) {
-  //   switch (vm.currentForm) {
-  //     case 0:
-  //       return _home(context);
-  //     case 1:
-  //       return GeneralesFormModificar(vm);
-  //     case 2:
-  //       return VehiculoFormModificar(vm);
-  //     case 3:
-  //       return FotosFormModificar(vm);
-  //     default:
-  //       return Container();
-  //   }
-  // }
 
   Widget _home(BuildContext context) {
     return Column(
@@ -83,22 +62,6 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                 ),
               ),
             ),
-            // MaterialButton(
-            //   onPressed: () => vm.crearAccion(context),
-            //   color: Colors.white,
-            //   minWidth: 30,
-            //   height: 48,
-            //   shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(5)),
-            //   elevation: 4,
-            //   child: const Padding(
-            //     padding: EdgeInsets.all(8.0),
-            //     child: Icon(
-            //       AppIcons.iconPlus,
-            //       color: AppColors.green,
-            //     ),
-            //   ),
-            // ),
             const SizedBox(width: 5),
           ],
         ),

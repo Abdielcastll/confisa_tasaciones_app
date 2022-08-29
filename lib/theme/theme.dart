@@ -82,4 +82,4 @@ TextStyle appDropdown = const TextStyle(
 
 /* Durations */
 
-Duration durationLoading = const Duration(seconds: 30);
+Duration durationLoading = const Duration(seconds: 60);

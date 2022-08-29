@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
+import 'package:tasaciones_app/core/models/componente_condicion.dart';
+import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
@@ -8,6 +13,7 @@ import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 
 import '../authentication_client.dart';
+import '../models/descripcion_foto_vehiculo.dart';
 import '../models/solicitudes/solicitud_create_data.dart';
 import '../models/solicitudes/solicitud_credito_response.dart';
 import '../models/vin_decoder_response.dart';
@@ -187,6 +193,83 @@ class SolicitudesApi {
     }
   }
 
+  Future<Object> getDescripcionFotosVehiculos() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/tipos-adjuntos/get',
+        method: 'GET',
+        queryParameters: {
+          'EsFotoVehiculo': '1',
+        },
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return descripcionFotoVehiculosFromJson(jsonEncode(data['data']));
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getComponentesTasacion() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/condicioncomponentetasacion/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return componenteTasacionFromJson(jsonEncode(data['data']));
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getCondicionComponente({required int idComponente}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/condiciones-componentes-vehiculo/get-asociados',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          'IdComponente': idComponente,
+        },
+        parser: (data) {
+          return condicionComponenteFromJson(jsonEncode(data['data']));
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> createCondicionComponente(
+      {required Map<String, dynamic> data}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/condicioncomponentetasacion/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: data,
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
   Future<Object> createNewSolicitudEstimacion({
     required String codigoEntidad,
     required String codigoSucursal,
@@ -304,10 +387,18 @@ class SolicitudesApi {
   }
 
   Future<Object> getColaSolicitudes({
+    int? estado,
     int? noSolicitud,
     int pageNumber = 1,
     int pageSize = 20,
   }) async {
+    final params = {
+      "EstadoTasacion": estado,
+      "NoSolicitudCredito": noSolicitud,
+      "PageSize": pageSize,
+      "PageNumber": pageNumber,
+    };
+    l.d(params);
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -316,14 +407,70 @@ class SolicitudesApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        queryParameters: {
-          "NoSolicitudCredito": noSolicitud,
-          "PageSize": pageSize,
-          "PageNumber": pageNumber,
+        queryParameters: params,
+        parser: (data) {
+          return GetSolicitudesResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getProcesarSolicitudes() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/procesarsolicitudes/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
         },
         parser: (data) {
           return GetSolicitudesResponse.fromJson(data);
         },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateEstimacion({
+    required int id,
+    required int sistemaTransmision,
+    required int traccion,
+    required int noPuertas,
+    required int noCilindros,
+    required int fuerzaMotriz,
+    required int ano,
+    required int nuevoUsado,
+    required int kilometraje,
+    required int color,
+    required String placa,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+
+    if (_token != null) {
+      final body = {
+        "id": id,
+        "sistemaTransmision": sistemaTransmision,
+        "traccion": traccion,
+        "noPuertas": noPuertas,
+        "noCilindros": noCilindros,
+        "fuerzaMotriz": fuerzaMotriz,
+        "ano": ano,
+        "nuevoUsado": nuevoUsado,
+        "kilometraje": kilometraje,
+        "placa": placa,
+        "color": color,
+      };
+      return _http.request(
+        '/api/solicitudes/update-estimacion',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: body,
       );
     } else {
       return TokenFail();

@@ -12,6 +12,7 @@ import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../widgets/app_dialogs.dart';
+import '../trabajar_solicitud/trabajar_view.dart';
 
 class ColaSolicitudesViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
@@ -60,19 +61,35 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   Future<void> onInit(BuildContext context) async {
     Session data = _authenticationAPI.loadSession;
     roles = data.role;
-    var resp = await _solicitudesApi.getColaSolicitudes();
-    if (resp is Success) {
-      solicitudesResponse = resp.response as GetSolicitudesResponse;
-      solicitudes = solicitudesResponse.data;
+    if (roles.contains('Tasador')) {
+      var resp = await _solicitudesApi.getProcesarSolicitudes();
+      if (resp is Success) {
+        solicitudesResponse = resp.response as GetSolicitudesResponse;
+        solicitudes = solicitudesResponse.data;
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages[0]);
+      }
+      if (resp is TokenFail) {
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
+      loading = false;
+    } else {
+      var resp = await _solicitudesApi.getColaSolicitudes();
+      if (resp is Success) {
+        solicitudesResponse = resp.response as GetSolicitudesResponse;
+        solicitudes = solicitudesResponse.data;
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages[0]);
+      }
+      if (resp is TokenFail) {
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
+      loading = false;
     }
-    if (resp is Failure) {
-      Dialogs.error(msg: resp.messages[0]);
-    }
-    if (resp is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'Sesión expirada');
-    }
-    loading = false;
   }
 
   Future<void> cargarMas() async {
@@ -83,7 +100,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       solicitudesResponse.data.addAll(temp.data);
       solicitudes.addAll(temp.data);
       ordenar();
-      hasNextPage = temp.hasNextPage;
+      hasNextPage = temp.hasNextPage ?? false;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -115,7 +132,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       var temp = resp.response as GetSolicitudesResponse;
       solicitudes = temp.data;
       ordenar();
-      hasNextPage = temp.hasNextPage;
+      hasNextPage = temp.hasNextPage ?? false;
       _busqueda = true;
       notifyListeners();
     }
@@ -146,9 +163,15 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         arguments: s,
       );
     }
-    if (roles.contains("Administrador")) {
+    // if (roles.contains("Administrador")) {
+    //   _navigatorService.navigateToPage(
+    //     ConsultarModificarView.routeName,
+    //     arguments: s,
+    //   );
+    // }
+    if (roles.contains("Tasador")) {
       _navigatorService.navigateToPage(
-        ConsultarModificarView.routeName,
+        TrabajarView.routeName,
         arguments: s,
       );
     }
