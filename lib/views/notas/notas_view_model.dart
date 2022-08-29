@@ -360,23 +360,23 @@ class NotasViewModel extends BaseViewModel {
                     children: [
                       TextButton(
                         onPressed: () {
-                          /* Navigator.pop(context);
+                          Navigator.pop(context);
                           Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Módulo',
+                              tittle: 'Eliminar Nota',
                               description:
-                                  '¿Esta seguro de eliminar el tipo nota ${nota.descripcion}?',
+                                  '¿Esta seguro de eliminar la nota ${nota.titulo}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
-                            var resp = await _.delete(id: modulo.id);
+                            var resp = await _notasApi.deleteNota(id: nota.id);
                             ProgressDialog.dissmiss(ctx);
                             if (resp is Failure) {
                               Dialogs.error(msg: resp.messages[0]);
                             }
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Módulo eliminado');
+                              Dialogs.success(msg: 'Nota eliminada');
                               await onRefresh();
                             }
-                          }); */
+                          });
                         }, // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

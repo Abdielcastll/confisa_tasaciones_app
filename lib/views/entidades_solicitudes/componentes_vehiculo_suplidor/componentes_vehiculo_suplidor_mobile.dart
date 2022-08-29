@@ -156,35 +156,46 @@ class _ComponentesVehiculoSuplidorMobile extends StatelessWidget {
                   Expanded(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: DataTable(
-                                onSelectAll: (isSelectedAll) =>
-                                    vm.selectAll(isSelectedAll!),
-                                columns: const [
-                                  DataColumn(
-                                    label: Text("Componente"),
-                                  ),
-                                ],
-                                rows: vm.componentesAprobador
-                                    .map((e) => DataRow(
-                                            selected: vm.select(e),
-                                            onSelectChanged: (isSelected) =>
-                                                vm.selectChange(isSelected!, e),
-                                            cells: [
-                                              DataCell(
-                                                Text(
-                                                  e.descripcion,
-                                                ),
-                                                onTap: null,
-                                              ),
-                                            ]))
-                                    .toList()),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border:
+                                  Border.all(color: AppColors.gold, width: 2),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: DataTable(
+                                    onSelectAll: (isSelectedAll) =>
+                                        vm.selectAll(isSelectedAll!),
+                                    columns: const [
+                                      DataColumn(
+                                        label: Text("Componente"),
+                                      ),
+                                    ],
+                                    rows: vm.componentesAprobador
+                                        .map((e) => DataRow(
+                                                selected: vm.select(e),
+                                                onSelectChanged: (isSelected) =>
+                                                    vm.selectChange(
+                                                        isSelected!, e),
+                                                cells: [
+                                                  DataCell(
+                                                    Text(
+                                                      e.descripcion,
+                                                    ),
+                                                    onTap: null,
+                                                  ),
+                                                ]))
+                                        .toList()),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),

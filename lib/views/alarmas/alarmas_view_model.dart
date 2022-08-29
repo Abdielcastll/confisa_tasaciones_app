@@ -367,23 +367,24 @@ class AlarmasViewModel extends BaseViewModel {
                     children: [
                       TextButton(
                         onPressed: () {
-                          /* Navigator.pop(context);
+                          Navigator.pop(context);
                           Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Módulo',
+                              tittle: 'Eliminar Alarma',
                               description:
-                                  '¿Esta seguro de eliminar el tipo alarma ${alarma.descripcion}?',
+                                  '¿Esta seguro de eliminar la alarma ${alarma.titulo}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
-                            var resp = await _.delete(id: modulo.id);
+                            var resp =
+                                await _alarmasApi.deleteAlarma(id: alarma.id);
                             ProgressDialog.dissmiss(ctx);
                             if (resp is Failure) {
                               Dialogs.error(msg: resp.messages[0]);
                             }
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Módulo eliminado');
+                              Dialogs.success(msg: 'Nota eliminada');
                               await onRefresh();
                             }
-                          }); */
+                          });
                         }, // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
