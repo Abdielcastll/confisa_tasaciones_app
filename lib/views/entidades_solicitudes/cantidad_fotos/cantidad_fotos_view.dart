@@ -5,6 +5,7 @@ import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/cantidad_fotos/cantidad_fotos_view_model.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';
+import 'package:tasaciones_app/widgets/refresh_widget.dart';
 
 part 'cantidad_fotos_mobile.dart';
 

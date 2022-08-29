@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/widgets/forms/fotos.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/widgets/forms/vehiculo.dart';
+import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import '../../../core/models/solicitudes/solicitudes_get_response.dart';
 import 'consultar_modificar_view_model.dart';
 import 'widgets/forms/generales_a.dart';

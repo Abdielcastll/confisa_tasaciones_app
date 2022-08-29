@@ -5,17 +5,23 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
+import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/locator.dart';
+import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
+import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -31,6 +37,9 @@ import '../../home/home_view.dart';
 class SolicitudEstimacionViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final _solicitudesApi = locator<SolicitudesApi>();
+  final _authenticationAPI = locator<AuthenticationClient>();
+  final _usuarioApi = locator<UserClient>();
+  final _alarmasApi = locator<AlarmasApi>();
   final _adjuntosApi = locator<AdjuntosApi>();
   late DateTime fechaActual;
   String? _estado;
@@ -44,8 +53,11 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   TextEditingController tcKilometraje = TextEditingController();
   TextEditingController tcPlaca = TextEditingController();
   int _currentForm = 1;
+  List<AlarmasData> alarmas = [];
   SolicitudCreditoData? solicitud;
+
   VinDecoderData? _vinData;
+  AlarmasResponse? alarmasResponse;
   TipoVehiculoData? _tipoVehiculos;
   TransmisionesData? _transmision;
   VersionVehiculoData? _versionVehiculo;
@@ -291,6 +303,26 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       descripcion: null,
     );
     notifyListeners();
+  }
+
+  Future<void> cargarAlarmas() async {
+    Session data = _authenticationAPI.loadSession;
+    Profile perfil = _usuarioApi.loadProfile;
+    Object respalarm;
+    data.role.any((element) => element == "AprobadorTasaciones")
+        ? respalarm = await _alarmasApi.getAlarmas()
+        : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
+    if (respalarm is Success) {
+      alarmasResponse = respalarm.response as AlarmasResponse;
+      alarmas = alarmasResponse!.data;
+    }
+    if (respalarm is Failure) {
+      Dialogs.error(msg: respalarm.messages[0]);
+    }
+    if (respalarm is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
   }
 
   Future<void> subirFotos() async {

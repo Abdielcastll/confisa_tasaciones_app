@@ -15,6 +15,9 @@ class _PerfilMobile extends StatelessWidget {
           titulo: 'Perfil de usuario',
           textSize: 20,
           alarmas: [],
+          esColaSolicitud: false,
+          currentForm: 0,
+          idSolicitud: 0,
         ),
         body: Column(
           children: [

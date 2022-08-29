@@ -114,13 +114,27 @@ class _TiposAdjuntosMobile extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  adjunto.descripcion,
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      adjunto.descripcion,
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    Text(
+                                      adjunto.prefijo != ""
+                                          ? "Prefijo: ${adjunto.prefijo}"
+                                          : "",
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

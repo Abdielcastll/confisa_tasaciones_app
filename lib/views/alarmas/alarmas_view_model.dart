@@ -14,6 +14,7 @@ import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 
 class AlarmasViewModel extends BaseViewModel {
+  final int idSolicitud;
   final _alarmasApi = locator<AlarmasApi>();
   final _userClient = locator<UserClient>();
   final listController = ScrollController();
@@ -31,7 +32,7 @@ class AlarmasViewModel extends BaseViewModel {
   late AlarmasResponse alarmasResponse;
   Profile? usuario;
 
-  AlarmasViewModel() {
+  AlarmasViewModel({required this.idSolicitud}) {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
@@ -55,15 +56,46 @@ class AlarmasViewModel extends BaseViewModel {
 
   void ordenar() {
     alarmas.sort((a, b) {
-      return a.titulo.toLowerCase().compareTo(b.titulo.toLowerCase());
+      return a.fechaCompromiso
+          .toLowerCase()
+          .compareTo(b.fechaCompromiso.toLowerCase());
     });
+    alarmas = alarmas.reversed.toList();
   }
 
   Future<void> onInit() async {
     cargando = true;
     usuario = _userClient.loadProfile;
-    var resp = await _alarmasApi.getAlarmas(
-        pageNumber: pageNumber, usuario: usuario!.email ?? "");
+    Object resp = Failure;
+    if (idSolicitud == 0) {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
+          break;
+        case false:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber, usuario: usuario!.id ?? "");
+          break;
+        default:
+      }
+    } else {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber, idSolicitud: idSolicitud);
+          break;
+        case false:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber,
+              usuario: usuario!.id ?? "",
+              idSolicitud: idSolicitud);
+          break;
+        default:
+      }
+    }
+
     if (resp is Success) {
       alarmasResponse = resp.response as AlarmasResponse;
       alarmas = alarmasResponse.data;
@@ -79,7 +111,8 @@ class AlarmasViewModel extends BaseViewModel {
 
   Future<void> cargarMasAlarmas() async {
     pageNumber += 1;
-    var resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
+    var resp = await _alarmasApi.getAlarmas(
+        pageNumber: pageNumber, usuario: usuario!.id ?? "");
     if (resp is Success) {
       var temp = resp.response as AlarmasResponse;
       alarmasResponse.data.addAll(temp.data);
@@ -96,10 +129,39 @@ class AlarmasViewModel extends BaseViewModel {
 
   Future<void> buscarAlarmas(String query) async {
     cargando = true;
-    var resp = await _alarmasApi.getAlarmas(
-      titulo: query,
-      pageSize: 0,
-    );
+    Object resp = Failure;
+    if (idSolicitud == 0) {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber, titulo: query);
+          break;
+        case false:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber,
+              usuario: usuario!.id ?? "",
+              titulo: query);
+          break;
+        default:
+      }
+    } else {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber, idSolicitud: idSolicitud, titulo: query);
+          break;
+        case false:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber,
+              usuario: usuario!.id ?? "",
+              idSolicitud: idSolicitud,
+              titulo: query);
+          break;
+        default:
+      }
+    }
     if (resp is Success) {
       var temp = resp.response as AlarmasResponse;
       alarmas = temp.data;
@@ -127,7 +189,35 @@ class AlarmasViewModel extends BaseViewModel {
   Future<void> onRefresh() async {
     alarmas = [];
     cargando = true;
-    var resp = await _alarmasApi.getAlarmas();
+    Object resp = Failure;
+    if (idSolicitud == 0) {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
+          break;
+        case false:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber, usuario: usuario!.id ?? "");
+          break;
+        default:
+      }
+    } else {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber, idSolicitud: idSolicitud);
+          break;
+        case false:
+          resp = await _alarmasApi.getAlarmas(
+              pageNumber: pageNumber,
+              usuario: usuario!.id ?? "",
+              idSolicitud: idSolicitud);
+          break;
+        default:
+      }
+    }
     if (resp is Success) {
       var temp = resp.response as AlarmasResponse;
       alarmasResponse = temp;
@@ -552,7 +642,7 @@ class AlarmasViewModel extends BaseViewModel {
                                         "T" +
                                         tcNewHoraCompromiso.text.trim(),
                                 titulo: tcNewTitulo.text.trim(),
-                                idSolicitud: 1,
+                                idSolicitud: idSolicitud,
                                 descripcion: tcNewDescription.text.trim());
 
                             if (resp is Success) {

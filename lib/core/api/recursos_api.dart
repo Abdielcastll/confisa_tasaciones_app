@@ -11,7 +11,7 @@ class RecursosAPI {
   RecursosAPI(this._http, this._authenticationClient);
 
   Future<Object> getRecursos(
-      {int pageNumber = 1, int pageSize = 20, String name = ''}) async {
+      {int pageNumber = 1, int pageSize = 999, String name = ''}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(

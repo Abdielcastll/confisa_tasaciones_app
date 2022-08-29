@@ -2,8 +2,10 @@ part of alarmas_view;
 
 class _AlarmasMobile extends StatelessWidget {
   final AlarmasViewModel vm;
+  final bool showCreate;
+  final int idSolicitud;
 
-  const _AlarmasMobile(this.vm);
+  const _AlarmasMobile(this.vm, this.showCreate, this.idSolicitud);
 
   @override
   Widget build(BuildContext context) {
@@ -60,22 +62,24 @@ class _AlarmasMobile extends StatelessWidget {
                     ),
                   ),
                 ),
-                MaterialButton(
-                  onPressed: () => vm.crearAlarmas(context),
-                  color: Colors.white,
-                  minWidth: 30,
-                  height: 48,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  elevation: 4,
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      AppIcons.iconPlus,
-                      color: AppColors.green,
-                    ),
-                  ),
-                ),
+                showCreate
+                    ? MaterialButton(
+                        onPressed: () => vm.crearAlarmas(context),
+                        color: Colors.white,
+                        minWidth: 30,
+                        height: 48,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        elevation: 4,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            AppIcons.iconPlus,
+                            color: AppColors.green,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
                 const SizedBox(width: 5),
               ],
             ),
@@ -114,13 +118,36 @@ class _AlarmasMobile extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  alarma.titulo,
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      alarma.titulo,
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Solicitud: " +
+                                          alarma.idSolicitud.toString(),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Fecha: " +
+                                          alarma.fechaCompromiso
+                                              .split("T")
+                                              .join(" Hora: ")
+                                              .toString(),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

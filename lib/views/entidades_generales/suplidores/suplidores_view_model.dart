@@ -235,20 +235,15 @@ class SuplidoresViewModel extends BaseViewModel {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: DropdownSearch<String>(
-                          selectedItem: selectEstado,
-                          items: const <String>["Activo", "Inactivo"],
-                          onChanged: (newEstado) {
-                            selectEstado = newEstado!;
-                            notifyListeners();
-                          },
-                          popupProps: const PopupProps.menu(
-                              fit: FlexFit.loose,
-                              searchDelay: Duration(microseconds: 0)),
-                          dropdownDecoratorProps: const DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                  border: UnderlineInputBorder(),
-                                  label: Text("Estado")))),
+                      child: TextFormField(
+                        enabled: false,
+                        initialValue:
+                            suplidor.estado == 1 ? "Activo" : "Inactivo",
+                        decoration: const InputDecoration(
+                          labelText: "Estado",
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
                     ),
                     suplidor.email != ""
                         ? SizedBox(
@@ -299,6 +294,51 @@ class SuplidoresViewModel extends BaseViewModel {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         TextButton(
+                          onPressed: () async {
+                            ProgressDialog.show(context);
+                            var resp = await _suplidoresApi.updateSuplidor(
+                                detalles: suplidor.detalles,
+                                registro: suplidor.registro,
+                                estado: suplidor.estado == 1 ? 0 : 1,
+                                idSuplidor: suplidor.codigoRelacionado);
+                            ProgressDialog.dissmiss(context);
+                            if (resp is Success) {
+                              Dialogs.success(
+                                  msg:
+                                      'Estado ${suplidor.estado == 1 ? "inactivado" : "activado"}');
+                              Navigator.of(context).pop();
+                              await onRefresh();
+                            }
+
+                            if (resp is Failure) {
+                              ProgressDialog.dissmiss(context);
+                              Dialogs.error(msg: resp.messages[0]);
+                            }
+                            tcNewDetalle.clear();
+                            tcNewRegistro.clear();
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                suplidor.estado == 1
+                                    ? AppIcons.trash
+                                    : AppIcons.iconPlus,
+                                color: suplidor.estado == 1
+                                    ? AppColors.grey
+                                    : AppColors.gold,
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text(
+                                suplidor.estado == 1 ? "Inactivar" : "Activar",
+                                overflow: TextOverflow.ellipsis,
+                              ), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                             tcNewDetalle.clear();
@@ -331,7 +371,7 @@ class SuplidoresViewModel extends BaseViewModel {
                                 var resp = await _suplidoresApi.updateSuplidor(
                                     detalles: tcNewDetalle.text.trim(),
                                     registro: tcNewRegistro.text.trim(),
-                                    estado: selectEstado == "Activo" ? 1 : 0,
+                                    estado: suplidor.estado,
                                     idSuplidor: suplidor.codigoRelacionado);
                                 ProgressDialog.dissmiss(context);
                                 if (resp is Success) {

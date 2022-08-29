@@ -11,11 +11,16 @@ part 'notas_mobile.dart';
 
 class NotasView extends StatelessWidget {
   static const routeName = 'Notas';
-  const NotasView({Key? key}) : super(key: key);
+  final int idSolicitud;
+  final bool showCreate;
+  const NotasView(
+      {Key? key, required this.idSolicitud, required this.showCreate})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    NotasViewModel viewModel = NotasViewModel();
+    NotasViewModel viewModel =
+        NotasViewModel(idSolicitud: idSolicitud, showCreate: showCreate);
     return ViewModelBuilder<NotasViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
@@ -23,7 +28,7 @@ class NotasView extends StatelessWidget {
           // Do something once your viewModel is initialized
         },
         builder: (context, viewModel, child) {
-          return _NotasMobile(viewModel);
+          return _NotasMobile(viewModel, idSolicitud, showCreate);
         });
   }
 }

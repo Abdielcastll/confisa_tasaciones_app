@@ -8,9 +8,15 @@ class _ConsultarModificarMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-              'Solicitud de ${vm.solicitudCola.descripcionTipoTasacion ?? ''}')),
+      appBar: Appbar(
+        titulo:
+            "Solicitud de ${vm.solicitudCola.descripcionTipoTasacion ?? ''}",
+        esColaSolicitud: false,
+        textSize: 18,
+        alarmas: vm.alarmas,
+        currentForm: vm.currentForm,
+        idSolicitud: vm.currentForm == 3 ? vm.solicitud.id! : 0,
+      ),
       body: _form(),
     );
   }

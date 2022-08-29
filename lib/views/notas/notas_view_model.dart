@@ -15,11 +15,16 @@ import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 
 class NotasViewModel extends BaseViewModel {
+  final int idSolicitud;
+  final bool showCreate;
+
   final _notasApi = locator<NotasApi>();
   final _userClient = locator<UserClient>();
   final listController = ScrollController();
   TextEditingController tcNewDescription = TextEditingController();
   TextEditingController tcNewTitulo = TextEditingController();
+  TextEditingController tcNewFechaCompromiso = TextEditingController();
+  TextEditingController tcNewHoraCompromiso = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
   List<NotasData> notas = [];
@@ -30,7 +35,7 @@ class NotasViewModel extends BaseViewModel {
   late NotasResponse notasResponse;
   Profile? usuario;
 
-  NotasViewModel() {
+  NotasViewModel({required this.showCreate, required this.idSolicitud}) {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
@@ -61,7 +66,36 @@ class NotasViewModel extends BaseViewModel {
   Future<void> onInit() async {
     cargando = true;
     usuario = _userClient.loadProfile;
-    var resp = await _notasApi.getNotas(pageNumber: pageNumber);
+
+    Object resp = Failure;
+    if (idSolicitud == 0) {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _notasApi.getNotas(pageNumber: pageNumber);
+          break;
+        case false:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber, usuario: usuario!.id ?? "");
+          break;
+        default:
+      }
+    } else {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber, idSolicitud: idSolicitud);
+          break;
+        case false:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber,
+              usuario: usuario!.id ?? "",
+              idSolicitud: idSolicitud);
+          break;
+        default:
+      }
+    }
     if (resp is Success) {
       notasResponse = resp.response as NotasResponse;
       notas = notasResponse.data;
@@ -94,10 +128,41 @@ class NotasViewModel extends BaseViewModel {
 
   Future<void> buscarNotas(String query) async {
     cargando = true;
-    var resp = await _notasApi.getNotas(
-      titulo: query,
-      pageSize: 0,
-    );
+
+    Object resp = Failure;
+    if (idSolicitud == 0) {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp =
+              await _notasApi.getNotas(pageNumber: pageNumber, titulo: query);
+          break;
+        case false:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber,
+              usuario: usuario!.id ?? "",
+              titulo: query);
+          break;
+        default:
+      }
+    } else {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber, idSolicitud: idSolicitud, titulo: query);
+          break;
+        case false:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber,
+              usuario: usuario!.id ?? "",
+              idSolicitud: idSolicitud,
+              titulo: query);
+          break;
+        default:
+      }
+    }
+
     if (resp is Success) {
       var temp = resp.response as NotasResponse;
       notas = temp.data;
@@ -125,7 +190,35 @@ class NotasViewModel extends BaseViewModel {
   Future<void> onRefresh() async {
     notas = [];
     cargando = true;
-    var resp = await _notasApi.getNotas();
+    Object resp = Failure;
+    if (idSolicitud == 0) {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _notasApi.getNotas(pageNumber: pageNumber);
+          break;
+        case false:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber, usuario: usuario!.id ?? "");
+          break;
+        default:
+      }
+    } else {
+      switch (usuario!.roles!
+          .any((element) => element.roleName == "AprobadorTasaciones")) {
+        case true:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber, idSolicitud: idSolicitud);
+          break;
+        case false:
+          resp = await _notasApi.getNotas(
+              pageNumber: pageNumber,
+              usuario: usuario!.id ?? "",
+              idSolicitud: idSolicitud);
+          break;
+        default:
+      }
+    }
     if (resp is Success) {
       var temp = resp.response as NotasResponse;
       notasResponse = temp;
@@ -143,6 +236,13 @@ class NotasViewModel extends BaseViewModel {
   Future<void> modificarNota(BuildContext ctx, NotasData nota) async {
     tcNewDescription.text = nota.descripcion;
     tcNewTitulo.text = nota.titulo;
+    int idx = nota.fechaHora.indexOf("T");
+    List parts = [
+      nota.fechaHora.substring(0, idx).trim(),
+      nota.fechaHora.substring(idx + 1).trim()
+    ];
+    tcNewFechaCompromiso.text = parts[0];
+    tcNewHoraCompromiso.text = parts[1];
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -164,7 +264,7 @@ class NotasViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Modificar Nota',
+                      'Modificar nota',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -196,8 +296,51 @@ class NotasViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        keyboardType: TextInputType.datetime,
+                        readOnly: true,
+                        controller: tcNewFechaCompromiso,
+                        validator: (value) {
+                          if (value!.trim() == '') {
+                            return 'Seleccione una fecha';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Fecha"),
+                          suffixIcon: Icon(Icons.calendar_today),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.datetime,
+                        readOnly: true,
+                        controller: tcNewHoraCompromiso,
+                        validator: (value) {
+                          if (value!.trim() == '') {
+                            return 'Seleccione una hora';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Hora"),
+                          suffixIcon: Icon(Icons.alarm),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
                         controller: tcNewDescription,
-                        maxLines: 5,
                         validator: (value) {
                           if (value!.trim() == '') {
                             return 'Escriba una descripción';
@@ -271,16 +414,21 @@ class NotasViewModel extends BaseViewModel {
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            /* if (tcNewDescription.text.trim() !=
-                                nota.descripcion) {
+                            if (tcNewDescription.text.trim() !=
+                                    nota.descripcion ||
+                                tcNewFechaCompromiso.text.trim() +
+                                        "T" +
+                                        tcNewHoraCompromiso.text.trim() !=
+                                    nota.fechaHora ||
+                                tcNewTitulo.text.trim() != nota.titulo) {
                               ProgressDialog.show(context);
-                              var resp = await _.updatenota(
-                                  descripcion: tcNewDescription.text,
+                              var resp = await _notasApi.updateNota(
+                                  titulo: tcNewTitulo.text.trim(),
+                                  descripcion: tcNewDescription.text.trim(),
                                   id: nota.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(
-                                    msg: 'Tipo nota Actualizado');
+                                Dialogs.success(msg: 'Tipo nota Actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -293,7 +441,7 @@ class NotasViewModel extends BaseViewModel {
                             } else {
                               Dialogs.success(msg: 'Tipo nota Actualizado');
                               Navigator.of(context).pop();
-                            } */
+                            }
                           }
                         }, // button pressed
                         child: Column(
@@ -417,9 +565,11 @@ class NotasViewModel extends BaseViewModel {
                       ),
                       TextButton(
                         onPressed: () async {
-                          /* if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             ProgressDialog.show(context);
-                            var resp = await _.createnota(
+                            var resp = await _notasApi.createNota(
+                                titulo: tcNewTitulo.text.trim(),
+                                idSolicitud: idSolicitud,
                                 descripcion: tcNewDescription.text.trim());
                             ProgressDialog.dissmiss(context);
                             if (resp is Success) {
@@ -434,9 +584,9 @@ class NotasViewModel extends BaseViewModel {
                             }
                             tcNewDescription.clear();
                             tcNewFechaCompromiso.clear();
-                          tcNewHoraCompromiso.clear();
-                          tcNewTitulo.clear();
-                          } */
+                            tcNewHoraCompromiso.clear();
+                            tcNewTitulo.clear();
+                          }
                         }, // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

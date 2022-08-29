@@ -142,10 +142,18 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return CupertinoPageRoute(builder: (context) => const EscanerPage());
 
     case AlarmasView.routeName:
-      return CupertinoPageRoute(builder: (context) => const AlarmasView());
+      return CupertinoPageRoute(
+          builder: (context) => const AlarmasView(
+                showCreate: true,
+                idSolicitud: 0,
+              ));
 
     case NotasView.routeName:
-      return CupertinoPageRoute(builder: (context) => const NotasView());
+      return CupertinoPageRoute(
+          builder: (context) => const NotasView(
+                idSolicitud: 0,
+                showCreate: false,
+              ));
 
     case VencimientoEstadosView.routeName:
       return CupertinoPageRoute(

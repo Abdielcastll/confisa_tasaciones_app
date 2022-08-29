@@ -12,10 +12,12 @@ class _ColaSolicitudesMobile extends StatelessWidget {
       opacity: false,
       child: Scaffold(
         appBar: Appbar(
-          textSize: 20,
+          textSize: 18,
           titulo: 'Cola de solicitudes',
           alarmas: vm.alarmas,
-
+          esColaSolicitud: true,
+          currentForm: 0,
+          idSolicitud: 0,
           // title: const Text(
           //   'Solicitudes',
           //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),

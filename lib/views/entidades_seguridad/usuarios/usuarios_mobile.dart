@@ -115,39 +115,52 @@ class _UsuariosMobile extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   height: 86,
                                   padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: Row(
                                     children: [
-                                      Text(
-                                        usuario.nombreCompleto,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w800,
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              usuario.nombreCompleto,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Correo/Usuario: ${usuario.email}",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  color: AppColors.brownDark,
+                                                  fontSize: 12),
+                                            ),
+                                            Text(
+                                              "Roles: " +
+                                                  (usuario.roles
+                                                      .map((e) => e.description)
+                                                      .toList()
+                                                      .join(", ")
+                                                      .toString()),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  color: AppColors.brownDark,
+                                                  fontSize: 12),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Text(
-                                        "Correo/Usuario: ${usuario.email}",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 12),
-                                      ),
-                                      Text(
-                                        "Roles: " +
-                                            (usuario.roles
-                                                .map((e) => e.description)
-                                                .toList()
-                                                .join(", ")
-                                                .toString()),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 12),
-                                      ),
+                                      Icon(
+                                        usuario.isActive
+                                            ? AppIcons.checkCircle
+                                            : AppIcons.nonCheckCircle,
+                                        color: AppColors.gold,
+                                      )
                                     ],
                                   ),
                                 ),

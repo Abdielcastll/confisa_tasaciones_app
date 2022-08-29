@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/endpoints_response.dart';
 
@@ -30,274 +31,278 @@ class CrearEndpointForm extends StatelessWidget {
 
   final _navigationService = locator<NavigatorService>();
 
+  final List<String> _listaOpciones = ["GET", "POST", "PUT", "DELETE"];
+
   @override
   Widget build(BuildContext context) {
     String controlador = "";
     String nombre = "";
     String metodo = "";
     String httpVerbo = "";
-    return SizedBox(
-      width: size.width * .75,
-      child: Form(
+    String selectedItem = endpointsData.httpVerbo;
+    return SingleChildScrollView(
+      child: SizedBox(
+        width: size.width * .75,
+        child: Form(
           key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: size.height * .08,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)),
-                    color: AppColors.gold,
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(titulo,
-                        style: const TextStyle(
-                            color: AppColors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
-                  ),
+          child: Column(
+            children: [
+              Container(
+                height: size.height * .08,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  color: AppColors.gold,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        initialValue: endpointsData.nombre,
-                        decoration: const InputDecoration(
-                          labelText: "Nombre",
-                          border: UnderlineInputBorder(),
-                        ),
-                        onSaved: (value) {
-                          nombre = value!;
-                        },
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length < 5) {
-                            return 'Debe ingresar un nombre válido';
-                          }
-                          return null;
-                        },
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(titulo,
+                      style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      initialValue: endpointsData.nombre,
+                      decoration: const InputDecoration(
+                        labelText: "Nombre",
+                        border: UnderlineInputBorder(),
                       ),
-                      const SizedBox(
-                        height: 15,
+                      onSaved: (value) {
+                        nombre = value!;
+                      },
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 5) {
+                          return 'Debe ingresar un nombre válido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      initialValue: endpointsData.controlador,
+                      decoration: const InputDecoration(
+                        labelText: "Controlador",
+                        border: UnderlineInputBorder(),
                       ),
-                      TextFormField(
-                        initialValue: endpointsData.controlador,
-                        decoration: const InputDecoration(
-                          labelText: "Controlador",
-                          border: UnderlineInputBorder(),
-                        ),
-                        onSaved: (value) {
-                          controlador = value!;
-                        },
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length < 5) {
-                            return 'Debe ingresar un controlador válido';
-                          }
-                          return null;
-                        },
+                      onSaved: (value) {
+                        controlador = value!;
+                      },
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 5) {
+                          return 'Debe ingresar un controlador válido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      initialValue: endpointsData.metodo,
+                      decoration: const InputDecoration(
+                        labelText: "Metodo",
+                        border: UnderlineInputBorder(),
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      TextFormField(
-                        initialValue: endpointsData.metodo,
-                        decoration: const InputDecoration(
-                          labelText: "Metodo",
-                          border: UnderlineInputBorder(),
-                        ),
-                        onSaved: (value) {
-                          metodo = value!;
-                        },
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length < 5) {
-                            return 'Debe ingresar un método válido';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      TextFormField(
-                        initialValue: endpointsData.httpVerbo,
-                        decoration: const InputDecoration(
-                          labelText: "Verbo HTTP",
-                          border: UnderlineInputBorder(),
-                        ),
-                        onSaved: (value) {
-                          httpVerbo = value!;
-                        },
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length < 3) {
-                            return 'Debe ingresar un verbo http válido';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      showEliminar
-                          ? TextFormField(
-                              enabled: false,
-                              initialValue:
-                                  endpointsData.estado ? "Activo" : "Inactivo",
-                              decoration: const InputDecoration(
-                                labelText: "Estado",
-                                border: UnderlineInputBorder(),
+                      onSaved: (value) {
+                        metodo = value!;
+                      },
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 5) {
+                          return 'Debe ingresar un método válido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    DropdownSearch<String>(
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 3) {
+                          return 'Debe seleccionar un verbo http';
+                        }
+                        return null;
+                      },
+                      selectedItem: selectedItem,
+                      items: _listaOpciones,
+                      onChanged: ((value) => selectedItem = value!),
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                              label: Text("Verbo HTTP"),
+                              border: UnderlineInputBorder())),
+                      popupProps: const PopupProps.menu(fit: FlexFit.loose),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    showEliminar
+                        ? TextFormField(
+                            enabled: false,
+                            initialValue:
+                                endpointsData.estado ? "Activo" : "Inactivo",
+                            decoration: const InputDecoration(
+                              labelText: "Estado",
+                              border: UnderlineInputBorder(),
+                            ),
+                          )
+                        : const SizedBox(),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        showEliminar
+                            ? endpointsData.estado
+                                ? TextButton(
+                                    onPressed: () =>
+                                        eliminar(), // button pressed
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const <Widget>[
+                                        Icon(
+                                          AppIcons.trash,
+                                          color: AppColors.grey,
+                                        ),
+                                        SizedBox(
+                                          height: 3,
+                                        ), // icon
+                                        Text(
+                                          "Inactivar",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 10),
+                                        ), // text
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox()
+                            : const SizedBox(),
+                        TextButton(
+                          onPressed: () {
+                            _navigationService.pop();
+                          },
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.closeCircle,
+                                color: Colors.red,
                               ),
-                            )
-                          : const SizedBox(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          showEliminar
-                              ? endpointsData.estado
-                                  ? TextButton(
-                                      onPressed: () =>
-                                          eliminar(), // button pressed
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const <Widget>[
-                                          Icon(
-                                            AppIcons.trash,
-                                            color: AppColors.grey,
-                                          ),
-                                          SizedBox(
-                                            height: 3,
-                                          ), // icon
-                                          Text(
-                                            "Inactivar",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 10),
-                                          ), // text
-                                        ],
-                                      ),
-                                    )
-                                  : const SizedBox()
-                              : const SizedBox(),
-                          TextButton(
-                            onPressed: () {
-                              _navigationService.pop();
-                            },
-                            // button pressed
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const <Widget>[
-                                Icon(
-                                  AppIcons.closeCircle,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                  height: 3,
-                                ), // icon
-                                Text(
-                                  "Cancelar",
-                                  style: TextStyle(fontSize: 10),
-                                ), // text
-                              ],
-                            ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text(
+                                "Cancelar",
+                                style: TextStyle(fontSize: 10),
+                              ), // text
+                            ],
                           ),
-                          showEliminar
-                              ? !endpointsData.estado
-                                  ? TextButton(
-                                      onPressed: () =>
-                                          eliminar(), // button pressed
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const <Widget>[
-                                          Icon(
-                                            AppIcons.checkCircle,
-                                            color: AppColors.grey,
-                                          ),
-                                          SizedBox(
-                                            height: 3,
-                                          ), // icon
-                                          Text(
-                                            "Activar",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 10),
-                                          ), // text
-                                        ],
-                                      ),
-                                    )
-                                  : const SizedBox()
-                              : const SizedBox(),
-                          !showEliminar
-                              ? const Expanded(child: SizedBox())
-                              : const SizedBox(),
-                          showEliminar
-                              ? TextButton(
-                                  onPressed: () =>
-                                      asignarPermiso(), // button pressed
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const <Widget>[
-                                      Icon(
-                                        AppIcons.iconPlus,
-                                        color: AppColors.gold,
-                                      ),
-                                      SizedBox(
-                                        height: 3,
-                                      ), // icon
-                                      Text(
-                                        "Permiso",
-                                        style: TextStyle(fontSize: 10),
-                                      ), // text
-                                    ],
-                                  ),
-                                )
-                              : const SizedBox(),
-                          TextButton(
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                formKey.currentState?.save();
-                                modificar(
-                                    nombre, controlador, metodo, httpVerbo);
-                              }
-                            },
-                            // button pressed
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const <Widget>[
-                                Icon(
-                                  AppIcons.save,
-                                  color: AppColors.green,
+                        ),
+                        showEliminar
+                            ? !endpointsData.estado
+                                ? TextButton(
+                                    onPressed: () =>
+                                        eliminar(), // button pressed
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const <Widget>[
+                                        Icon(
+                                          AppIcons.checkCircle,
+                                          color: AppColors.grey,
+                                        ),
+                                        SizedBox(
+                                          height: 3,
+                                        ), // icon
+                                        Text(
+                                          "Activar",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 10),
+                                        ), // text
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox()
+                            : const SizedBox(),
+                        !showEliminar
+                            ? const Expanded(child: SizedBox())
+                            : const SizedBox(),
+                        showEliminar
+                            ? TextButton(
+                                onPressed: () =>
+                                    asignarPermiso(), // button pressed
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const <Widget>[
+                                    Icon(
+                                      AppIcons.iconPlus,
+                                      color: AppColors.gold,
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ), // icon
+                                    Text(
+                                      "Permiso",
+                                      style: TextStyle(fontSize: 10),
+                                    ), // text
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: 3,
-                                ), // icon
-                                Text(
-                                  "Guardar",
-                                  style: TextStyle(fontSize: 10),
-                                ), // text
-                              ],
-                            ),
+                              )
+                            : const SizedBox(),
+                        TextButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState?.save();
+                              modificar(
+                                  nombre, controlador, metodo, selectedItem);
+                            }
+                          },
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text(
+                                "Guardar",
+                                style: TextStyle(fontSize: 10),
+                              ), // text
+                            ],
                           ),
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
-              ],
-            ),
-          )),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

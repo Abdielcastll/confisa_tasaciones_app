@@ -114,27 +114,44 @@ class _SuplidoresMobile extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
                                   children: [
-                                    Text(
-                                      suplidor.nombre,
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w800,
-                                          overflow: TextOverflow.ellipsis),
-                                    ),
-                                    suplidor.detalles != ""
-                                        ? Text(
-                                            "Detalle: ${suplidor.detalles}",
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            suplidor.nombre,
                                             style: const TextStyle(
-                                                overflow: TextOverflow.ellipsis,
                                                 color: AppColors.brownDark,
-                                                fontSize: 12),
-                                          )
-                                        : const SizedBox(),
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w800,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          ),
+                                          suplidor.detalles != ""
+                                              ? Text(
+                                                  "Detalle: ${suplidor.detalles}",
+                                                  style: const TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color:
+                                                          AppColors.brownDark,
+                                                      fontSize: 12),
+                                                )
+                                              : const SizedBox(),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      suplidor.estado == 1
+                                          ? AppIcons.checkCircle
+                                          : AppIcons.nonCheckCircle,
+                                      color: AppColors.gold,
+                                    )
                                   ],
                                 ),
                               ),

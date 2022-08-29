@@ -11,11 +11,15 @@ part 'alarmas_mobile.dart';
 
 class AlarmasView extends StatelessWidget {
   static const routeName = 'Alarmas';
-  const AlarmasView({Key? key}) : super(key: key);
+  final bool showCreate;
+  final int idSolicitud;
+  const AlarmasView(
+      {Key? key, required this.showCreate, required this.idSolicitud})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    AlarmasViewModel viewModel = AlarmasViewModel();
+    AlarmasViewModel viewModel = AlarmasViewModel(idSolicitud: idSolicitud);
     return ViewModelBuilder<AlarmasViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
@@ -23,7 +27,7 @@ class AlarmasView extends StatelessWidget {
           // Do something once your viewModel is initialized
         },
         builder: (context, viewModel, child) {
-          return _AlarmasMobile(viewModel);
+          return _AlarmasMobile(viewModel, showCreate, idSolicitud);
         });
   }
 }

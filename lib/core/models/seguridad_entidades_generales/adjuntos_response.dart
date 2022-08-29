@@ -48,14 +48,22 @@ class AdjuntosResponse {
 }
 
 class AdjuntosData {
-  AdjuntosData({required this.id, required this.descripcion});
+  AdjuntosData(
+      {required this.id,
+      required this.descripcion,
+      required this.esFotoVehiculo,
+      required this.orden,
+      required this.prefijo});
 
-  String descripcion;
-  int id;
+  String descripcion, prefijo;
+  int id, esFotoVehiculo, orden;
 
   factory AdjuntosData.fromJson(Map<String, dynamic> json) => AdjuntosData(
         id: json["id"] ?? 0,
         descripcion: json["descripcion"] ?? '',
+        prefijo: json["prefijo"] ?? '',
+        esFotoVehiculo: json["esFotoVehiculo"] ?? 0,
+        orden: json["orden"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {"id": id, "descripcion": descripcion};

@@ -18,6 +18,7 @@ class FotosForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    vm.solicitud.id;
     return BaseFormWidget(
       iconHeader: Icons.add_chart_sharp,
       titleHeader: 'Fotos',
