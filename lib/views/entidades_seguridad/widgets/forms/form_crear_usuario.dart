@@ -420,18 +420,36 @@ Future<dynamic> dialogCrearUsuario(
                                               ),
                                               TextFormField(
                                                 readOnly: true,
+                                                onChanged: (value) {
+                                                  dropdown = value;
+                                                  suplidor['nombre'] = value;
+                                                  suplidor["codigoRelacional"] =
+                                                      suplidores
+                                                          .firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .nombre ==
+                                                                  value)
+                                                          .codigoRelacionado;
+
+                                                  suplidor["identificacion"] =
+                                                      suplidores
+                                                          .firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .nombre ==
+                                                                  value)
+                                                          .identificacion;
+                                                },
                                                 initialValue:
                                                     suplidores.first.nombre,
                                                 decoration: const InputDecoration(
-                                                    label: Text("Email"),
+                                                    label: Text("Suplidor"),
                                                     border:
                                                         UnderlineInputBorder()),
                                                 validator: (value) {
                                                   if (value == null ||
-                                                      value.isEmpty ||
-                                                      value.length < 4 ||
-                                                      !EmailValidator.validate(
-                                                          value, true, true)) {
+                                                      value.isEmpty) {
                                                     return 'No posee un suplidor';
                                                   }
 

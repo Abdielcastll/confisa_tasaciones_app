@@ -120,21 +120,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
         esColaSolicitud
             ? Row(
                 children: [
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotasView(
-                                    showCreate: false,
-                                    idSolicitud: idSolicitud,
-                                  )),
-                        );
-                      },
-                      icon: const Icon(
-                        AppIcons.pencilAlt,
-                        size: 22,
-                      )),
                   Stack(
                     alignment: AlignmentDirectional.center,
                     children: [
