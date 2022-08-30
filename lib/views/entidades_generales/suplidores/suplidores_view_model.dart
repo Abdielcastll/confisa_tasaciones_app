@@ -209,42 +209,6 @@ class SuplidoresViewModel extends BaseViewModel {
                             ),
                           )
                         : const SizedBox(),
-                    SizedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: tcNewDetalle,
-                          decoration: const InputDecoration(
-                            label: Text("Detalle"),
-                            border: UnderlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: tcNewRegistro,
-                          decoration: const InputDecoration(
-                            label: Text("Registro"),
-                            border: UnderlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        enabled: false,
-                        initialValue:
-                            suplidor.estado == 1 ? "Activo" : "Inactivo",
-                        decoration: const InputDecoration(
-                          labelText: "Estado",
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
                     suplidor.email != ""
                         ? SizedBox(
                             child: Padding(
@@ -290,6 +254,42 @@ class SuplidoresViewModel extends BaseViewModel {
                             ),
                           )
                         : const SizedBox(),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewRegistro,
+                          decoration: const InputDecoration(
+                            label: Text("Registro"),
+                            border: UnderlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewDetalle,
+                          decoration: const InputDecoration(
+                            label: Text("Detalle"),
+                            border: UnderlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        enabled: false,
+                        initialValue:
+                            suplidor.estado == 1 ? "Activo" : "Inactivo",
+                        decoration: const InputDecoration(
+                          labelText: "Estado",
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [

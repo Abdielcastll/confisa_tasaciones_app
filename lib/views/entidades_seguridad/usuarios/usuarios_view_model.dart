@@ -166,7 +166,7 @@ class UsuariosViewModel extends BaseViewModel {
     String email = "", telefono = "", nombre = "";
     int idSuplidor = 0;
     GlobalKey<FormState> _key = GlobalKey();
-    if (user.role.any((element) => element == "AprobadorTasaciones")) {
+    /* if (user.role.any((element) => element == "AprobadorTasaciones")) {
       ProgressDialog.show(context);
       var resp = await _usuariosApi.getUsuarios(email: user.email);
       if (resp is Success<UsuariosResponse>) {
@@ -191,7 +191,7 @@ class UsuariosViewModel extends BaseViewModel {
           _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
         }
       }
-    }
+    } */
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -550,6 +550,7 @@ class UsuariosViewModel extends BaseViewModel {
             Dialogs.error(msg: creacion.messages[0]);
           }
         } else {
+          ProgressDialog.show(context);
           var creacion = await _usuariosApi.createUsuarios(
               email: emailf,
               phoneNumber: telefonof,
