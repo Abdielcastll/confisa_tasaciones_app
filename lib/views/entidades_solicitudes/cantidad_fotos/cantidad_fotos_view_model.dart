@@ -150,10 +150,11 @@ class CantidadFotosViewModel extends BaseViewModel {
     foto = EntidadData();
     cargando = true;
     usuario = _userClient.loadProfile;
-    if (usuario!.idSuplidor != 0 ||
+    if (usuario!.idSuplidor != 0 &&
         usuario!.roles!
             .any((element) => element.roleName == "AprobadorTasaciones")) {
-      var resp = await _cantidadfotosApi.getCantidadFotos();
+      var resp = await _cantidadfotosApi.getCantidadFotos(
+          idSuplidor: usuario!.idSuplidor);
 
       if (resp is Success) {
         cantidadfotosResponse = resp.response as EntidadResponse;
