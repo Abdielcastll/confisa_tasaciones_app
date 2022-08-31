@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
@@ -177,6 +178,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case CantidadFotosView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const CantidadFotosView());
+
+    case AccionesSolicitudView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const AccionesSolicitudView(
+                idSolicitud: 0,
+                showCreate: false,
+              ));
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

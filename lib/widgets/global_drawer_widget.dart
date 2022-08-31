@@ -4,6 +4,7 @@ import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
+import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 
@@ -134,6 +135,19 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                               _navigationService.pop();
                               _navigationService
                                   .navigateToPage(NotasView.routeName);
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.person_pin),
+                            title: const Text(
+                              'Acciones Solicitud',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                            onTap: () {
+                              _navigationService.pop();
+                              _navigationService.navigateToPage(
+                                  AccionesSolicitudView.routeName);
                             },
                           ),
                           ListTile(
