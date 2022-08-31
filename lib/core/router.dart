@@ -182,8 +182,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AccionesSolicitudView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const AccionesSolicitudView(
-                idSolicitud: 0,
-                showCreate: false,
+                idSolicitud: 1,
+                showCreate: true,
               ));
 
     default:

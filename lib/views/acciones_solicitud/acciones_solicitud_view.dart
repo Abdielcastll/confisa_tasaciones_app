@@ -10,7 +10,7 @@ import 'acciones_solicitud_view_model.dart';
 part 'acciones_solicitud_mobile.dart';
 
 class AccionesSolicitudView extends StatelessWidget {
-  static const routeName = 'AccionesSolicitud';
+  static const routeName = 'Listado Acciones Solicitud';
   final bool showCreate;
   final int idSolicitud;
   const AccionesSolicitudView(
