@@ -68,8 +68,9 @@ class AlarmasViewModel extends BaseViewModel {
     usuario = _userClient.loadProfile;
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
           break;
@@ -131,8 +132,9 @@ class AlarmasViewModel extends BaseViewModel {
     cargando = true;
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _alarmasApi.getAlarmas(
               pageNumber: pageNumber, titulo: query);
@@ -191,8 +193,9 @@ class AlarmasViewModel extends BaseViewModel {
     cargando = true;
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
           break;

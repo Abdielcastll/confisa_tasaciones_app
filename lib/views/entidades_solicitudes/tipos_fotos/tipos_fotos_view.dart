@@ -9,7 +9,7 @@ import 'package:tasaciones_app/widgets/progress_widget.dart';
 part 'tipos_fotos_mobile.dart';
 
 class TiposFotosView extends StatelessWidget {
-  static const routeName = 'Parámetro Tipo Fotos';
+  static const routeName = 'Tipo Fotos';
   const TiposFotosView({Key? key}) : super(key: key);
 
   @override

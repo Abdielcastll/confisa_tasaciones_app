@@ -69,8 +69,9 @@ class NotasViewModel extends BaseViewModel {
 
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _notasApi.getNotas(pageNumber: pageNumber);
           break;
@@ -131,8 +132,9 @@ class NotasViewModel extends BaseViewModel {
 
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp =
               await _notasApi.getNotas(pageNumber: pageNumber, titulo: query);
@@ -192,8 +194,9 @@ class NotasViewModel extends BaseViewModel {
     cargando = true;
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _notasApi.getNotas(pageNumber: pageNumber);
           break;

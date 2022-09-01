@@ -176,100 +176,108 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewRemitente,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un remitente';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Remitente"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: tcNewHost,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un host';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Host"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewUsuario,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un usuario';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Usuario"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewPassword,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una contraseña';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Contraseña"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewPuerto,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un puerto';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Puerto"),
-                          border: UnderlineInputBorder(),
-                        ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewRemitente,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un remitente';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Remitente"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: tcNewHost,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un host';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Host"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewUsuario,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un usuario';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Usuario"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewPassword,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba una contraseña';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Contraseña"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewPuerto,
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un puerto';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Puerto"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -440,100 +448,108 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewRemitente,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un remitente';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "Remitente",
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewHost,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un host';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "Host",
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewUsuario,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un usuario';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "Usuario",
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewPassword,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una contraseña';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "Contraseña",
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewPuerto,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un puerto';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "Puerto",
-                          border: UnderlineInputBorder(),
-                        ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewRemitente,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un remitente';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Remitente",
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewHost,
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un host';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Host",
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewUsuario,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un usuario';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Usuario",
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewPassword,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba una contraseña';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Contraseña",
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewPuerto,
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un puerto';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Puerto",
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

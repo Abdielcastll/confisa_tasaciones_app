@@ -226,9 +226,8 @@ class RecursosViewModel extends BaseViewModel {
                                           value: e,
                                         ))
                                     .toList(),
-                                hint: Text(modulos
-                                    .firstWhere((e) => e.id == recurso.idModulo)
-                                    .nombre),
+                                value: modulos.firstWhere(
+                                    (e) => e.id == recurso.idModulo),
                                 onChanged: (value) {
                                   modulo = value;
                                 },

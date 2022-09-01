@@ -176,10 +176,9 @@ class AccionesPendientesViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
+                        decoration: const InputDecoration(
+                          label: Text("Descripción"),
+                          border: UnderlineInputBorder(),
                         ),
                       ),
                     ),
@@ -340,11 +339,9 @@ class AccionesPendientesViewModel extends BaseViewModel {
                             return null;
                           }
                         },
-                        decoration: InputDecoration(
-                          hintText: "Descripción",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
+                        decoration: const InputDecoration(
+                          label: Text("Descripción"),
+                          border: UnderlineInputBorder(),
                         ),
                       ),
                     ),

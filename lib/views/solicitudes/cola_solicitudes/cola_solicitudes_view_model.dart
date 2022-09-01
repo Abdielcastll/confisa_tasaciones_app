@@ -92,7 +92,8 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       Dialogs.error(msg: 'Sesión expirada');
     }
     Object respalarm;
-    data.role.any((element) => element == "AprobadorTasaciones")
+    data.role.any((element) =>
+            element == "AprobadorTasaciones" || element == "Administrador")
         ? respalarm = await _alarmasApi.getAlarmas()
         : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
     if (respalarm is Success) {

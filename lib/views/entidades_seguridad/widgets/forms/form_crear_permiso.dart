@@ -89,7 +89,6 @@ Form formCrearPermiso(
                           value == null ? 'Debe escojer una acción' : null,
                       dropdownDecoratorProps: const DropDownDecoratorProps(
                           dropdownSearchDecoration: InputDecoration(
-                              hintText: "Acciones",
                               border: UnderlineInputBorder(),
                               label: Text("Acción"))),
                       items: acciones.map((e) => e.nombre).toList(),
@@ -116,6 +115,7 @@ Form formCrearPermiso(
                           value == null ? 'Debe escojer un recurso' : null,
                       popupProps: const PopupProps.menu(
                           showSelectedItems: true,
+                          fit: FlexFit.loose,
                           isFilterOnline: true,
                           showSearchBox: true,
                           searchDelay: Duration(microseconds: 0)),
