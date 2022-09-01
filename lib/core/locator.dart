@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasaciones_app/core/api/acciones_api.dart';
+import 'package:tasaciones_app/core/api/acciones_solicitud_api.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
@@ -102,6 +103,8 @@ abstract class DependencyInjection {
     final suplidoresDefaultAPI =
         SuplidoresDefaultApi(http, authenticationClient);
     final solicitudesAPI = SolicitudesApi(http, authenticationClient);
+    final accionesSolicitudApi =
+        AccionesSolicitudApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
@@ -140,5 +143,6 @@ abstract class DependencyInjection {
         periodoTasacionPromedioApi);
     locator.registerSingleton<AccesoriosSuplidorApi>(accesoriosSuplidorApi);
     locator.registerSingleton<FotosApi>(fotosApi);
+    locator.registerSingleton<AccionesSolicitudApi>(accionesSolicitudApi);
   }
 }

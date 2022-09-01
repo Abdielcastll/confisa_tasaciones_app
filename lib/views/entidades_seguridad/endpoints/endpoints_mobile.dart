@@ -119,7 +119,7 @@ class _EndpointsMobile extends StatelessWidget {
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [

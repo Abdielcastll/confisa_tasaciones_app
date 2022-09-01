@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
+import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/menu_response.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/providers/menu_provider.dart';
@@ -25,6 +27,7 @@ class LoginViewModel extends BaseViewModel {
   final _authenticationAPI = locator<AuthenticationAPI>();
   final _recursosAPI = locator<RecursosAPI>();
   final _usuariosAPI = locator<UsuariosAPI>();
+  final _personalApi = locator<PersonalApi>();
   final _autenticationClient = locator<AuthenticationClient>();
   final _userClient = locator<UserClient>();
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -56,11 +59,10 @@ class LoginViewModel extends BaseViewModel {
         if (resp1 is Success<MenuResponse>) {
           Provider.of<MenuProvider>(context, listen: false).menu =
               resp1.response;
-          var resp2 =
-              await _usuariosAPI.getUsuarios(email: resp.response.data.email);
-          if (resp2 is Success<UsuariosResponse>) {
+          var resp2 = await _personalApi.getProfile();
+          if (resp2 is Success<ProfileResponse>) {
             loading = false;
-            _userClient.saveUsuario(resp2.response.data.first);
+            _userClient.saveProfile(resp2.response.data);
             _navigationService
                 .navigateToPageWithReplacement(HomeView.routeName);
           } else if (resp2 is Failure) {

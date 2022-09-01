@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componentes_vehiculo_api.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/componentes_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
@@ -29,6 +30,8 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
 
   List<ComponentesVehiculoSuplidorData> componentesVehiculoSuplidor = [];
   List<ComponentesVehiculoData> componentes = [];
+  List<ComponentesVehiculoData> componentesAprobador = [];
+  List<ComponentesVehiculoData> componentesSelected = [];
   List<SuplidorData> suplidores = [];
   int pageNumber = 1;
   bool _cargando = false;
@@ -36,7 +39,7 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
   bool hasNextPage = false;
   late SuplidoresResponse suplidoresResponse;
   SuplidorData? suplidor;
-  UsuariosData? usuario;
+  Profile? usuario;
   ComponentesVehiculoData? componente;
 
   ComponentesVehiculoSuplidorViewModel() {
@@ -62,6 +65,15 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
   }
 
   void ordenar() {
+    if (usuario!.idSuplidor != 0 ||
+        usuario!.roles!
+            .any((element) => element.roleName == "AprobadorTasaciones")) {
+      componentes.sort((a, b) {
+        return a.descripcion
+            .toLowerCase()
+            .compareTo(b.descripcion.toLowerCase());
+      });
+    }
     suplidores.sort((a, b) {
       return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
     });
@@ -69,7 +81,40 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
 
   Future<void> onInit() async {
     cargando = true;
-    usuario = _userClient.loadUsuario;
+    usuario = _userClient.loadProfile;
+    componentesSelected = [];
+    if (usuario!.idSuplidor != 0 ||
+        usuario!.roles!
+            .any((element) => element.roleName == "AprobadorTasaciones")) {
+      var respcomp = await _componentesVehiculoApi.getComponentesVehiculo();
+      if (respcomp is Success) {
+        var data = respcomp.response as ComponentesVehiculoResponse;
+        componentes = data.data;
+        componentesAprobador = data.data;
+      }
+      if (respcomp is Failure) {
+        Dialogs.error(msg: respcomp.messages.first);
+      }
+      var resp = await _componentesVehiculoSuplidorApi
+          .getComponentesVehiculoSuplidor(idSuplidor: usuario!.idSuplidor);
+      if (resp is Success) {
+        var data = resp.response as ComponentesVehiculoSuplidorResponse;
+        componentesVehiculoSuplidor = data.data;
+        for (var element in componentesVehiculoSuplidor) {
+          componentesSelected.add(ComponentesVehiculoData(
+              id: element.idComponente,
+              descripcion: element.componenteDescripcion,
+              idSegmento: 0,
+              segmentoDescripcion: ""));
+        }
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+      cargando = false;
+      ordenar();
+      return;
+    }
     var respsupli = await _suplidorApi.getSuplidores();
     if (respsupli is Success) {
       suplidoresResponse = respsupli.response as SuplidoresResponse;
@@ -108,6 +153,55 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
       Dialogs.error(msg: resp.messages[0]);
     }
   } */
+  void selectAll(bool select) async {
+    componentesSelected = select ? componentesAprobador.toList() : [];
+    notifyListeners();
+  }
+
+  bool select(ComponentesVehiculoData componente) {
+    return componentesSelected.any((element) => element.id == componente.id);
+  }
+
+  Future<void> guardar(BuildContext context) async {
+    ProgressDialog.show(context);
+    List<int> componentes = [];
+    for (var element in componentesSelected) {
+      componentes.add(element.id);
+    }
+    var resp =
+        await _componentesVehiculoSuplidorApi.createComponenteVehiculoSuplidor(
+            idSuplidor: usuario!.idSuplidor!, idComponentes: componentes);
+    if (resp is Success<ComponentesVehiculoSuplidorData>) {
+      ProgressDialog.dissmiss(context);
+      Dialogs.success(msg: "Actualización exitosa");
+      onInit();
+    } else if (resp is Failure) {
+      Dialogs.error(msg: resp.messages.first);
+      ProgressDialog.dissmiss(context);
+      onInit();
+    }
+  }
+
+  void selectChange(bool select, ComponentesVehiculoData componente) {
+    select
+        ? componentesSelected.add(componente)
+        : componentesSelected
+            .removeWhere((element) => element.id == componente.id);
+    notifyListeners();
+  }
+
+  void buscarAprobadorSuplidor(String query) async {
+    componentesAprobador = [];
+    for (var element in componentes) {
+      if (element.descripcion.toLowerCase().contains(query.toLowerCase())) {
+        componentesAprobador.add(element);
+      }
+    }
+    componentesAprobador.sort((a, b) {
+      return a.descripcion.toLowerCase().compareTo(b.descripcion.toLowerCase());
+    });
+    notifyListeners();
+  }
 
   Future<void> buscarComponentesVehiculoSuplidor(String query) async {
     cargando = true;
@@ -141,6 +235,37 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
   Future<void> onRefresh() async {
     suplidores = [];
     cargando = true;
+    if (usuario!.idSuplidor != 0 ||
+        usuario!.roles!
+            .any((element) => element.roleName == "AprobadorTasaciones")) {
+      var respcomp = await _componentesVehiculoApi.getComponentesVehiculo();
+      if (respcomp is Success) {
+        var data = respcomp.response as ComponentesVehiculoResponse;
+        componentes = data.data;
+        componentesAprobador = data.data;
+      }
+      if (respcomp is Failure) {
+        Dialogs.error(msg: respcomp.messages.first);
+      }
+      var resp = await _componentesVehiculoSuplidorApi
+          .getComponentesVehiculoSuplidor(idSuplidor: usuario!.idSuplidor);
+      if (resp is Success) {
+        var data = resp.response as ComponentesVehiculoSuplidorResponse;
+        componentesVehiculoSuplidor = data.data;
+        for (var element in componentesVehiculoSuplidor) {
+          componentesSelected.add(ComponentesVehiculoData(
+              id: element.idComponente,
+              descripcion: element.componenteDescripcion,
+              idSegmento: 0,
+              segmentoDescripcion: ""));
+        }
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+      cargando = false;
+      return;
+    }
     var resp = await _suplidorApi.getSuplidores();
     if (resp is Success) {
       var temp = resp.response as SuplidoresResponse;

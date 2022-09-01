@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:tasaciones_app/core/models/roles_response.dart';
+
 ProfileResponse profileResponseFromJson(String str) =>
     ProfileResponse.fromJson(json.decode(str));
 
@@ -28,21 +30,21 @@ class ProfileResponse {
 }
 
 class Profile {
-  Profile({
-    this.id,
-    this.userName,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.isActive,
-    this.emailConfirmed,
-    this.phoneNumber,
-    this.imageUrl,
-    this.nombreCompleto,
-    this.idSuplidor,
-    this.nombreSuplidor,
-    this.empresa,
-  });
+  Profile(
+      {this.id,
+      this.userName,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.isActive,
+      this.emailConfirmed,
+      this.phoneNumber,
+      this.imageUrl,
+      this.nombreCompleto,
+      this.idSuplidor,
+      this.nombreSuplidor,
+      this.empresa,
+      this.roles});
 
   String? id;
   String? userName;
@@ -57,6 +59,7 @@ class Profile {
   int? idSuplidor;
   String? nombreSuplidor;
   String? empresa;
+  List<RolData2>? roles;
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
         id: json["id"] ?? '',
@@ -71,6 +74,8 @@ class Profile {
         nombreCompleto: json["nombreCompleto"] ?? '',
         idSuplidor: json["idSuplidor"] ?? 0,
         nombreSuplidor: json["nombreSuplidor"] ?? '',
+        roles:
+            json["roles"].map<RolData2>((e) => RolData2.fromJson(e)).toList(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -86,5 +91,6 @@ class Profile {
         "nombreCompleto": nombreCompleto,
         "idSuplidor": idSuplidor,
         "nombreSuplidor": nombreSuplidor,
+        "roles": List<dynamic>.from(roles!.map((x) => x)),
       };
 }

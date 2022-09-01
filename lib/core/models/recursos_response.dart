@@ -48,16 +48,17 @@ class RecursosResponse {
 }
 
 class RecursosData {
-  RecursosData({
-    required this.id,
-    required this.estado,
-    required this.nombre,
-    required this.idModulo,
-    required this.esMenuConfiguracion,
-    required this.descripcionMenuConfiguracion,
-  });
+  RecursosData(
+      {required this.id,
+      required this.estado,
+      required this.nombre,
+      required this.idModulo,
+      required this.esMenuConfiguracion,
+      required this.descripcionMenuConfiguracion,
+      required this.nombreModulo});
 
   String nombre;
+  String nombreModulo;
   int id;
   int estado;
   int idModulo;
@@ -68,6 +69,7 @@ class RecursosData {
         id: json["id"] ?? 0,
         estado: json["estado"] ?? 0,
         idModulo: json["idModulo"] ?? 0,
+        nombreModulo: json["nombreModulo"] ?? '',
         nombre: json["nombre"] ?? '',
         esMenuConfiguracion: json["esMenuConfiguracion"] ?? 0,
         descripcionMenuConfiguracion:
@@ -79,6 +81,7 @@ class RecursosData {
         "estado": estado,
         "nombre": nombre,
         "idModulo": idModulo,
+        "nombreModulo": nombreModulo,
         "esMenuConfiguracion": esMenuConfiguracion,
         "descripcionMenuConfiguracion": descripcionMenuConfiguracion,
       };

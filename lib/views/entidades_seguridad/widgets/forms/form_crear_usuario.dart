@@ -8,6 +8,7 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/roles_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
+import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -41,11 +42,13 @@ Future<dynamic> dialogCrearUsuario(
   final _usuariosApi = locator<UsuariosAPI>();
   final _suplidoresApi = locator<SuplidoresApi>();
   final user = locator<AuthenticationClient>().loadSession;
+  final usuario = locator<UserClient>().loadProfile;
   final _navigationService = locator<NavigatorService>();
   List<SuplidorData> suplidores = [];
   return showDialog(
       context: context,
       builder: (BuildContext context) {
+        codSuplidor = usuario.idSuplidor ?? 0;
         return StatefulBuilder(builder: ((BuildContext context, setState) {
           return AlertDialog(
             content: SizedBox(
@@ -96,6 +99,7 @@ Future<dynamic> dialogCrearUsuario(
                                   );
 
                                   dropdown = value;
+
                                   rol1['nombre'] = value;
                                   rol1["id"] = roles
                                       .firstWhere(
@@ -264,6 +268,194 @@ Future<dynamic> dialogCrearUsuario(
                                                       },
                                                     )
                                                   : Container(),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      _navigationService.pop();
+                                                    },
+                                                    // button pressed
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: const <Widget>[
+                                                        Icon(
+                                                          AppIcons.closeCircle,
+                                                          color: Colors.red,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 3,
+                                                        ), // icon
+                                                        Text(
+                                                            "Cancelar"), // text
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: const <Widget>[
+                                                        Icon(
+                                                          AppIcons.save,
+                                                          color: Colors.green,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 3,
+                                                        ), // icon
+                                                        Text("Crear"), // text
+                                                      ],
+                                                    ),
+                                                    onPressed: () {
+                                                      // Validate returns true if the form is valid, or false otherwise.
+                                                      _formKey.currentState
+                                                          ?.save();
+                                                      if (_formKey.currentState!
+                                                          .validate()) {
+                                                        _formKey.currentState
+                                                            ?.save();
+                                                        modificar(
+                                                            nombreCompleto,
+                                                            email,
+                                                            telefono,
+                                                            codSuplidor);
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ];
+                                          }));
+                                        } else if (resp is Failure) {
+                                          ProgressDialog.dissmiss(context);
+                                          Dialogs.error(msg: resp.messages[0]);
+                                        }
+                                      } else if (user.role.any((element) =>
+                                          element == "AprobadorTasaciones")) {
+                                        ProgressDialog.show(context);
+                                        var resp = await _suplidoresApi
+                                            .getSuplidoresPorId(
+                                                codigoRelacionado: codSuplidor);
+                                        if (resp
+                                            is Success<SuplidoresResponse>) {
+                                          ProgressDialog.dissmiss(context);
+                                          suplidores = resp.response.data;
+                                          setState((() {
+                                            permisoRol = [
+                                              TextFormField(
+                                                decoration: const InputDecoration(
+                                                    labelText:
+                                                        'Nombre Completo',
+                                                    border:
+                                                        UnderlineInputBorder()),
+                                                onSaved: (value) {
+                                                  nombreCompleto = value!;
+                                                },
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 8) {
+                                                    return 'Debe ingresar un nombre válido';
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                    labelText: 'Teléfono',
+                                                    border:
+                                                        UnderlineInputBorder()),
+                                                onSaved: (value) {
+                                                  telefono = value!;
+                                                },
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 9) {
+                                                    return 'Debe ingresar un teléfono válido';
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              TextFormField(
+                                                decoration: const InputDecoration(
+                                                    labelText: 'Email',
+                                                    border:
+                                                        UnderlineInputBorder()),
+                                                onSaved: (value) {
+                                                  email = value!;
+                                                },
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      value.length < 8 ||
+                                                      !EmailValidator.validate(
+                                                          value, true, true)) {
+                                                    return 'Debe ingresar un email valido';
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              TextFormField(
+                                                readOnly: true,
+                                                onChanged: (value) {
+                                                  dropdown = value;
+                                                  suplidor['nombre'] = value;
+                                                  suplidor["codigoRelacional"] =
+                                                      suplidores
+                                                          .firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .nombre ==
+                                                                  value)
+                                                          .codigoRelacionado;
+
+                                                  suplidor["identificacion"] =
+                                                      suplidores
+                                                          .firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .nombre ==
+                                                                  value)
+                                                          .identificacion;
+                                                },
+                                                initialValue:
+                                                    suplidores.first.nombre,
+                                                decoration: const InputDecoration(
+                                                    label: Text("Suplidor"),
+                                                    border:
+                                                        UnderlineInputBorder()),
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'No posee un suplidor';
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
                                               const SizedBox(
                                                 height: 5,
                                               ),

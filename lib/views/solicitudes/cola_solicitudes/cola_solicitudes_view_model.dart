@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
+import 'package:tasaciones_app/core/models/alarma_response.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
@@ -17,10 +21,14 @@ import '../trabajar_solicitud/trabajar_view.dart';
 class ColaSolicitudesViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final _solicitudesApi = locator<SolicitudesApi>();
+  final _alarmasApi = locator<AlarmasApi>();
   final _authenticationAPI = locator<AuthenticationClient>();
+  final _usuarioApi = locator<UserClient>();
   final listController = ScrollController();
   late GetSolicitudesResponse solicitudesResponse;
+  AlarmasResponse? alarmasResponse;
   List<SolicitudesData> solicitudes = [];
+  List<AlarmasData> alarmas = [];
   TextEditingController tcBuscar = TextEditingController();
   List<String> roles = [];
 
@@ -60,18 +68,41 @@ class ColaSolicitudesViewModel extends BaseViewModel {
 
   Future<void> onInit(BuildContext context) async {
     Session data = _authenticationAPI.loadSession;
+    Profile perfil = _usuarioApi.loadProfile;
     roles = data.role;
+// <<<<<<< HEAD
     var resp = await _solicitudesApi.getColaSolicitudes(
       estado: roles.contains('Tasador') ? 'Solicitada' : null,
     );
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudesResponse = resp.response;
+// =======
+      // loading = true;
+      // var resp = await _solicitudesApi.getColaSolicitudes();
+      // if (resp is Success) {
+      //   solicitudesResponse = resp.response as GetSolicitudesResponse;
+// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
       solicitudes = solicitudesResponse.data;
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
     if (resp is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    Object respalarm;
+    data.role.any((element) => element == "AprobadorTasaciones")
+        ? respalarm = await _alarmasApi.getAlarmas()
+        : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
+    if (respalarm is Success) {
+      alarmasResponse = respalarm.response as AlarmasResponse;
+      alarmas = alarmasResponse!.data;
+    }
+    if (respalarm is Failure) {
+      Dialogs.error(msg: respalarm.messages[0]);
+    }
+    if (respalarm is TokenFail) {
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }

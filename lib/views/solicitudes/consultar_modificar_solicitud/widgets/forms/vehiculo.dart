@@ -33,8 +33,15 @@ class VehiculoForm extends StatelessWidget {
       },
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
-      // onPressedNext: () => vm.solicitudCredito(context),
-      onPressedNext: () => vm.goToFotos(context),
+// <<<<<<< HEAD
+//       // onPressedNext: () => vm.solicitudCredito(context),
+//       onPressedNext: () => vm.goToFotos(context),
+// =======
+      onPressedNext: () {
+        vm.cargarAlarmas(vm.solicitud.id!);
+        vm.goToFotos(context);
+      },
+// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,

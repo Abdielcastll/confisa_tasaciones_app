@@ -1,17 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
+import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
+import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+// <<<<<<< HEAD
 import 'package:tasaciones_app/core/utils/create_file_from_string.dart';
+// =======
+import 'package:tasaciones_app/core/user_client.dart';
+// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/personal_api.dart';
@@ -21,7 +28,6 @@ import '../../../core/models/cantidad_fotos_response.dart';
 import '../../../core/models/colores_vehiculos_response.dart';
 import '../../../core/models/descripcion_foto_vehiculo.dart';
 import '../../../core/models/ediciones_vehiculo_response.dart';
-import '../../../core/models/solicitudes/solicitud_credito_response.dart';
 import '../../../core/models/tipo_vehiculo_response.dart';
 import '../../../core/models/tracciones_response.dart';
 import '../../../core/models/transmisiones_response.dart';
@@ -38,6 +44,9 @@ class ConsultarModificarViewModel extends BaseViewModel {
   final _solicitudesApi = locator<SolicitudesApi>();
   final _personalApi = locator<PersonalApi>();
   final _adjuntosApi = locator<AdjuntosApi>();
+  final _authenticationAPI = locator<AuthenticationClient>();
+  final _usuarioApi = locator<UserClient>();
+  final _alarmasApi = locator<AlarmasApi>();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
@@ -54,6 +63,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   TextEditingController tcVIN = TextEditingController();
   TipoVehiculoData? _tipoVehiculos;
   TransmisionesData? _transmision;
+  AlarmasResponse? alarmasResponse;
   TraccionesData? _traccion;
   VersionVehiculoData? _versionVehiculo;
   EdicionVehiculo? _edicionVehiculos;
@@ -65,6 +75,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   late List<FotoData> fotos;
 
   List<AdjuntoFoto> fotosAdjuntos = [];
+  List<AlarmasData> alarmas = [];
   final _picker = ImagePicker();
 
   ConsultarModificarViewModel();
@@ -145,6 +156,28 @@ class ConsultarModificarViewModel extends BaseViewModel {
         _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       }
     }
+  }
+
+  Future<void> cargarAlarmas(int idSolicitud) async {
+    Session data = _authenticationAPI.loadSession;
+    Profile perfil = _usuarioApi.loadProfile;
+    Object respalarm;
+    data.role.any((element) => element == "AprobadorTasaciones")
+        ? respalarm = await _alarmasApi.getAlarmas(idSolicitud: idSolicitud)
+        : respalarm = await _alarmasApi.getAlarmas(
+            usuario: perfil.id!, idSolicitud: idSolicitud);
+    if (respalarm is Success) {
+      alarmasResponse = respalarm.response as AlarmasResponse;
+      alarmas = alarmasResponse!.data;
+    }
+    if (respalarm is Failure) {
+      Dialogs.error(msg: respalarm.messages[0]);
+    }
+    if (respalarm is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    notifyListeners();
   }
 
   String? noSolicitudValidator(String? value) {

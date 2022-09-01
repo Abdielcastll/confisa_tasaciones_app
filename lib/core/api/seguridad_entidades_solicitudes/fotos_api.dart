@@ -8,7 +8,7 @@ class FotosApi {
   final Http _http;
   final AuthenticationClient _authenticationClient;
 
-  Future<Object> getCantidadFotos() async {
+  Future<Object> getCantidadFotos({int? idSuplidor}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -17,6 +17,7 @@ class FotosApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
+        queryParameters: {"IdSuplidor": idSuplidor},
         parser: (data) {
           return EntidadResponse.fromJson(data);
         },
@@ -31,11 +32,11 @@ class FotosApi {
     if (_token != null) {
       return _http.request(
         '/api/fotos/update-cantidad',
-        method: 'GET',
+        method: 'PUT',
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {"id": id, "descripcion": descripcion},
+        data: {"idSuplidor": id, "descripcion": descripcion},
         parser: (data) {
           return EntidadPOSTResponse.fromJson(data);
         },

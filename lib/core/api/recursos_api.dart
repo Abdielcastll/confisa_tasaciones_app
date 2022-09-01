@@ -11,7 +11,10 @@ class RecursosAPI {
   RecursosAPI(this._http, this._authenticationClient);
 
   Future<Object> getRecursos(
-      {int pageNumber = 1, int pageSize = 20, String name = ''}) async {
+      {int pageNumber = 1,
+      int pageSize = 999,
+      String name = '',
+      String nombreModulo = ""}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -22,6 +25,7 @@ class RecursosAPI {
         },
         queryParameters: {
           "Nombre": name,
+          "NombreModulo": nombreModulo,
           "PageSize": pageSize,
           "PageNumber": pageNumber,
         },
@@ -79,11 +83,12 @@ class RecursosAPI {
     }
   }
 
-  Future<Object> updateRecursos({
-    required int id,
-    required String nombre,
-    required int idModulo,
-  }) async {
+  Future<Object> updateRecursos(
+      {required int id,
+      required String nombre,
+      required int idModulo,
+      required String descripcionMenuConfiguracion,
+      required int esMenuConfiguracion}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -96,6 +101,8 @@ class RecursosAPI {
           "id": id,
           "nombre": nombre,
           "idModulo": idModulo,
+          "esMenuConfiguracion": esMenuConfiguracion,
+          "descripcionMenuConfiguracion": descripcionMenuConfiguracion
         },
       );
     } else {

@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
@@ -12,7 +13,8 @@ import '../../../theme/theme.dart';
 class SuplidoresViewModel extends BaseViewModel {
   final _suplidoresApi = locator<SuplidoresApi>();
   final listController = ScrollController();
-  TextEditingController tcNewNombre = TextEditingController();
+  TextEditingController tcNewDetalle = TextEditingController();
+  TextEditingController tcNewRegistro = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
   List<SuplidorData> suplidores = [];
@@ -133,7 +135,9 @@ class SuplidoresViewModel extends BaseViewModel {
 
   Future<void> modificarSuplidor(
       BuildContext ctx, SuplidorData suplidor) async {
-    tcNewNombre.text = suplidor.nombre;
+    tcNewDetalle.text = suplidor.detalles;
+    tcNewRegistro.text = suplidor.registro;
+    String selectEstado = suplidor.estado == 1 ? "Activo" : "Inactivo";
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -144,189 +148,269 @@ class SuplidoresViewModel extends BaseViewModel {
               borderRadius: BorderRadius.circular(10),
             ),
             contentPadding: EdgeInsets.zero,
-            content: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 80,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    color: AppColors.brownLight,
-                    child: const Text(
-                      'Modificar suplidor',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        enabled: false,
-                        initialValue: suplidor.nombre,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Nombre"),
-                          border: UnderlineInputBorder(),
+            content: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      color: AppColors.brownLight,
+                      child: const Text(
+                        'Modificar suplidor',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        enabled: false,
-                        initialValue: suplidor.identificacion,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Identificación"),
-                          border: UnderlineInputBorder(),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          readOnly: true,
+                          initialValue: suplidor.nombre,
+                          decoration: const InputDecoration(
+                            label: Text("Nombre"),
+                            border: UnderlineInputBorder(),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  suplidor.direccion != ""
-                      ? SizedBox(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: suplidor.direccion,
-                              validator: (value) {
-                                if (value!.trim() == '') {
-                                  return 'Escriba una descripción';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              decoration: const InputDecoration(
-                                label: Text("Dirección"),
-                                border: UnderlineInputBorder(),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          readOnly: true,
+                          initialValue: suplidor.identificacion,
+                          decoration: const InputDecoration(
+                            label: Text("Identificación"),
+                            border: UnderlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    suplidor.direccion != ""
+                        ? SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: suplidor.direccion,
+                                decoration: const InputDecoration(
+                                  label: Text("Dirección"),
+                                  border: UnderlineInputBorder(),
+                                ),
                               ),
                             ),
+                          )
+                        : const SizedBox(),
+                    suplidor.email != ""
+                        ? SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: suplidor.email,
+                                decoration: const InputDecoration(
+                                  label: Text("Email"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    suplidor.celular != ""
+                        ? SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: suplidor.celular,
+                                decoration: const InputDecoration(
+                                  label: Text("Celular"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    suplidor.telefono != ""
+                        ? SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: suplidor.telefono,
+                                decoration: const InputDecoration(
+                                  label: Text("Teléfono"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewRegistro,
+                          decoration: const InputDecoration(
+                            label: Text("Registro"),
+                            border: UnderlineInputBorder(),
                           ),
-                        )
-                      : const SizedBox(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      /* TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Módulo',
-                              description:
-                                  '¿Esta seguro de eliminar el tipo suplidor ${suplidor.descripcion}?',
-                              confirm: () async {
-                            ProgressDialog.show(ctx);
-                            var resp =
-                                await _SuplidoresApi.delete(id: modulo.id);
-                            ProgressDialog.dissmiss(ctx);
-                            if (resp is Failure) {
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is Success) {
-                              Dialogs.success(msg: 'Módulo eliminado');
-                              await onRefresh();
-                            }
-                          });
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.trash,
-                              color: AppColors.grey,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Eliminar"), // text
-                          ],
-                        ),
-                      ), */
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewNombre.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
                         ),
                       ),
-                      /* TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            if (tcNewNombre.text.trim() != suplidor.nombre) {
-                              ProgressDialog.show(context);
-                              var resp = await _SuplidoresApi.updatesuplidor(
-                                  descripcion: tcNewNombre.text,
-                                  id: suplidor.id);
-                              ProgressDialog.dissmiss(context);
-                              if (resp is Success) {
-                                Dialogs.success(
-                                    msg: 'Tipo suplidor Actualizado');
-                                Navigator.of(context).pop();
-                                await onRefresh();
-                              }
-
-                              if (resp is Failure) {
-                                ProgressDialog.dissmiss(context);
-                                Dialogs.error(msg: resp.messages[0]);
-                              }
-                              tcNewNombre.clear();
-                            } else {
-                              Dialogs.success(msg: 'Tipo suplidor Actualizado');
-                              Navigator.of(context).pop();
-                            }
-                          }
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.save,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
+                    ),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewDetalle,
+                          decoration: const InputDecoration(
+                            label: Text("Detalle"),
+                            border: UnderlineInputBorder(),
+                          ),
                         ),
-                      ), */
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        enabled: false,
+                        initialValue:
+                            suplidor.estado == 1 ? "Activo" : "Inactivo",
+                        decoration: const InputDecoration(
+                          labelText: "Estado",
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () async {
+                            ProgressDialog.show(context);
+                            var resp = await _suplidoresApi.updateSuplidor(
+                                detalles: suplidor.detalles,
+                                registro: suplidor.registro,
+                                estado: suplidor.estado == 1 ? 0 : 1,
+                                idSuplidor: suplidor.codigoRelacionado);
+                            ProgressDialog.dissmiss(context);
+                            if (resp is Success) {
+                              Dialogs.success(
+                                  msg:
+                                      'Estado ${suplidor.estado == 1 ? "inactivado" : "activado"}');
+                              Navigator.of(context).pop();
+                              await onRefresh();
+                            }
+
+                            if (resp is Failure) {
+                              ProgressDialog.dissmiss(context);
+                              Dialogs.error(msg: resp.messages[0]);
+                            }
+                            tcNewDetalle.clear();
+                            tcNewRegistro.clear();
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                suplidor.estado == 1
+                                    ? AppIcons.trash
+                                    : AppIcons.iconPlus,
+                                color: suplidor.estado == 1
+                                    ? AppColors.grey
+                                    : AppColors.gold,
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text(
+                                suplidor.estado == 1 ? "Inactivar" : "Activar",
+                                overflow: TextOverflow.ellipsis,
+                              ), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            tcNewDetalle.clear();
+                            tcNewRegistro.clear();
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.closeCircle,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (tcNewDetalle.text.trim() !=
+                                      suplidor.detalles ||
+                                  tcNewRegistro.text.trim() !=
+                                      suplidor.registro ||
+                                  suplidor.estado !=
+                                      (selectEstado == "Activo" ? 1 : 0)) {
+                                ProgressDialog.show(context);
+                                var resp = await _suplidoresApi.updateSuplidor(
+                                    detalles: tcNewDetalle.text.trim(),
+                                    registro: tcNewRegistro.text.trim(),
+                                    estado: suplidor.estado,
+                                    idSuplidor: suplidor.codigoRelacionado);
+                                ProgressDialog.dissmiss(context);
+                                if (resp is Success) {
+                                  Dialogs.success(msg: 'Suplidor Actualizado');
+                                  Navigator.of(context).pop();
+                                  await onRefresh();
+                                }
+
+                                if (resp is Failure) {
+                                  ProgressDialog.dissmiss(context);
+                                  Dialogs.error(msg: resp.messages[0]);
+                                }
+                                tcNewDetalle.clear();
+                                tcNewRegistro.clear();
+                              } else {
+                                Dialogs.success(msg: 'Suplidor Actualizado');
+                                Navigator.of(context).pop();
+                              }
+                            }
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Guardar"), // text
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
             ),
           );
@@ -454,7 +538,8 @@ class SuplidoresViewModel extends BaseViewModel {
   @override
   void dispose() {
     listController.dispose();
-    tcNewNombre.dispose();
+    tcNewDetalle.dispose();
+    tcNewRegistro.dispose();
     tcBuscar.dispose();
     super.dispose();
   }

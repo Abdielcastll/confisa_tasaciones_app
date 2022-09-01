@@ -10,7 +10,7 @@ class AccionesApi {
 
   Future<Object> getAcciones({
     int pageNumber = 1,
-    int pageSize = 20,
+    int pageSize = 999,
     String name = '',
   }) async {
     String? _token = await _authenticationClient.accessToken;

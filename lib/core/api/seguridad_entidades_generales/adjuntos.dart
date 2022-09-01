@@ -15,11 +15,15 @@ class AdjuntosApi {
   AdjuntosApi(this._http, this._authenticationClient);
   Logger _logger = Logger();
 
-  Future<Object> getAdjuntos(
-      {String descripcion = "",
-      int pageSize = 900,
-      int pageNumber = 1,
-      int? id}) async {
+  Future<Object> getAdjuntos({
+    String descripcion = "",
+    String prefijo = "",
+    int pageSize = 900,
+    int pageNumber = 1,
+    int? id,
+    int? esFotoVehiculo,
+    int? orden,
+  }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -31,6 +35,9 @@ class AdjuntosApi {
         queryParameters: {
           "Id": id,
           "Descripcion": descripcion,
+          "Prefijo": prefijo,
+          "EsFotoVehiculo": esFotoVehiculo,
+          "Ordon": orden,
           "PageSize": pageSize,
           "PageNumber": pageNumber,
         },
@@ -43,7 +50,11 @@ class AdjuntosApi {
     }
   }
 
-  Future<Object> createAdjunto({required String descripcion}) async {
+  Future<Object> createAdjunto(
+      {required String descripcion,
+      required String prefijo,
+      required int esFotoVehiculo,
+      required int orden}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -54,6 +65,9 @@ class AdjuntosApi {
         },
         data: {
           "descripcion": descripcion,
+          "esFotoVehiculo": esFotoVehiculo,
+          "orden": orden,
+          "prefijo": prefijo
         },
         parser: (data) {
           return AdjuntosData.fromJson(data["data"]);
@@ -65,7 +79,11 @@ class AdjuntosApi {
   }
 
   Future<Object> updateAdjunto(
-      {required int id, required String descripcion}) async {
+      {required int id,
+      required String descripcion,
+      required String prefijo,
+      required int esFotoVehiculo,
+      required int orden}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -74,7 +92,13 @@ class AdjuntosApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {"id": id, "descripcion": descripcion},
+        data: {
+          "id": id,
+          "descripcion": descripcion,
+          "esFotoVehiculo": esFotoVehiculo,
+          "orden": orden,
+          "prefijo": prefijo
+        },
         parser: (data) {
           return AdjuntosPOSTResponse.fromJson(data);
         },

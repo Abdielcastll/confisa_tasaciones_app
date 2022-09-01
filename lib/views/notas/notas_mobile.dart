@@ -2,8 +2,10 @@ part of notas_view;
 
 class _NotasMobile extends StatelessWidget {
   final NotasViewModel vm;
+  final int idSolicitud;
+  final bool showCreate;
 
-  const _NotasMobile(this.vm);
+  const _NotasMobile(this.vm, this.idSolicitud, this.showCreate);
 
   @override
   Widget build(BuildContext context) {
@@ -60,22 +62,24 @@ class _NotasMobile extends StatelessWidget {
                     ),
                   ),
                 ),
-                MaterialButton(
-                  onPressed: () => vm.crearNotas(context),
-                  color: Colors.white,
-                  minWidth: 30,
-                  height: 48,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  elevation: 4,
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      AppIcons.iconPlus,
-                      color: AppColors.green,
-                    ),
-                  ),
-                ),
+                showCreate
+                    ? MaterialButton(
+                        onPressed: () => vm.crearNotas(context),
+                        color: Colors.white,
+                        minWidth: 30,
+                        height: 48,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        elevation: 4,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            AppIcons.iconPlus,
+                            color: AppColors.green,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
                 const SizedBox(width: 5),
               ],
             ),
@@ -113,13 +117,25 @@ class _NotasMobile extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  nota.titulo,
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      nota.titulo,
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Solicitud: ${nota.idSolicitud}",
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

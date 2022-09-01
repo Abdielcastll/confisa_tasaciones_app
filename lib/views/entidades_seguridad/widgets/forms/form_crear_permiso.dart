@@ -24,6 +24,10 @@ Form formCrearPermiso(
     String buttonTittle,
     bool showEliminar,
     PermisosData permiso) {
+  recurso['nombre'] = permiso.recursoNombre;
+  recurso["id"] = permiso.idRecurso;
+  accion['nombre'] = permiso.accionNombre;
+  accion["id"] = permiso.idAccion;
   final _navigationService = locator<NavigatorService>();
   return Form(
       key: _formKey,

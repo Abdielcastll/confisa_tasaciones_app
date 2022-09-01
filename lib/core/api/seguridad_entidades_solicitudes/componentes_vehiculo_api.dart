@@ -80,22 +80,4 @@ class ComponentesVehiculoApi {
       return TokenFail();
     }
   }
-
-  Future<Object> deleteComponentesVehiculo({required int id}) async {
-    String? _token = await _authenticationClient.accessToken;
-    if (_token != null) {
-      return _http.request(
-        '/api/componentes-vehiculo/delete/$id',
-        method: "DELETE",
-        headers: {
-          'Authorization': 'Bearer $_token',
-        },
-        parser: (data) {
-          return ComponentesVehiculoPOSTResponse.fromJson(data);
-        },
-      );
-    } else {
-      return TokenFail();
-    }
-  }
 }

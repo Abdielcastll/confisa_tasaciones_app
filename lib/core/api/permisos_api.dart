@@ -72,7 +72,7 @@ class PermisosAPI {
     if (_token != null) {
       return _http.request(
         '/api/permisos/update',
-        method: 'POST',
+        method: 'PUT',
         data: {
           "id": id,
           "descripcion": descripcion,

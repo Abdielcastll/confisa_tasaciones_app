@@ -114,13 +114,33 @@ class _ModulosMobile extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  modulo.nombre,
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            modulo.nombre,
+                                            style: const TextStyle(
+                                              color: AppColors.brownDark,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      modulo.estado == 1
+                                          ? AppIcons.checkCircle
+                                          : AppIcons.nonCheckCircle,
+                                      color: AppColors.gold,
+                                    )
+                                  ],
                                 ),
                               ),
                             ),

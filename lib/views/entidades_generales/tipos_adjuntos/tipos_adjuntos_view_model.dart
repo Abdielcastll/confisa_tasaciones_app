@@ -12,7 +12,10 @@ class TiposAdjuntosViewModel extends BaseViewModel {
   final _adjuntosApi = locator<AdjuntosApi>();
   final listController = ScrollController();
   TextEditingController tcNewDescription = TextEditingController();
+  TextEditingController tcNewPrefijo = TextEditingController();
+  TextEditingController tcNewOrden = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
+  bool esFoto = false;
 
   List<AdjuntosData> adjuntos = [];
   int pageNumber = 1;
@@ -132,126 +135,340 @@ class TiposAdjuntosViewModel extends BaseViewModel {
 
   Future<void> modificarAdjunto(BuildContext ctx, AdjuntosData adjunto) async {
     tcNewDescription.text = adjunto.descripcion;
+    tcNewPrefijo.text = adjunto.prefijo;
+    tcNewOrden.text = adjunto.orden.toString();
+    esFoto = adjunto.esFotoVehiculo == 1 ? true : false;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
         builder: (BuildContext context) {
-          return AlertDialog(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            contentPadding: EdgeInsets.zero,
-            content: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 80,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    color: AppColors.brownLight,
-                    child: const Text(
-                      'Modificar Adjunto',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: EdgeInsets.zero,
+              content: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      color: AppColors.brownLight,
+                      child: const Text(
+                        'Modificar Adjunto',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewDescription,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewDescription,
+                          validator: (value) {
+                            if (value!.trim() == '') {
+                              return 'Escriba una descripción';
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            label: Text("Descripción"),
+                            border: UnderlineInputBorder(),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      /* TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Módulo',
-                              description:
-                                  '¿Esta seguro de eliminar el tipo adjunto ${adjunto.descripcion}?',
-                              confirm: () async {
-                            ProgressDialog.show(ctx);
-                            var resp =
-                                await _adjuntosApi.delete(id: modulo.id);
-                            ProgressDialog.dissmiss(ctx);
-                            if (resp is Failure) {
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is Success) {
-                              Dialogs.success(msg: 'Módulo eliminado');
-                              await onRefresh();
-                            }
-                          });
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.trash,
-                              color: AppColors.grey,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Eliminar"), // text
-                          ],
-                        ),
-                      ), */
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewDescription.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: tcNewOrden,
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value!.trim() == '') {
+                            return 'Escriba un orden';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Orden"),
+                          border: UnderlineInputBorder(),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            if (tcNewDescription.text.trim() !=
-                                adjunto.descripcion) {
-                              ProgressDialog.show(context);
-                              var resp = await _adjuntosApi.updateAdjunto(
-                                  descripcion: tcNewDescription.text,
-                                  id: adjunto.id);
-                              ProgressDialog.dissmiss(context);
-                              if (resp is Success) {
+                    ),
+                    CheckboxListTile(
+                        title: const Text(
+                          "Foto de Vehículo",
+                        ),
+                        value: esFoto,
+                        onChanged: (newValue) {
+                          setState(() {
+                            esFoto = newValue!;
+                          });
+                        }),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: tcNewPrefijo,
+                        maxLength: 3,
+                        validator: (value) {
+                          if (value!.trim() == '') {
+                            return 'Escriba un prefijo';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Prefijo"),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            tcNewDescription.clear();
+                            tcNewOrden.clear();
+                            tcNewPrefijo.clear();
+                            esFoto = false;
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.closeCircle,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (tcNewDescription.text.trim() !=
+                                      adjunto.descripcion ||
+                                  tcNewOrden.text.trim() !=
+                                      adjunto.orden.toString() ||
+                                  tcNewPrefijo.text.trim() != adjunto.prefijo ||
+                                  adjunto.esFotoVehiculo !=
+                                      (esFoto == true ? 1 : 0)) {
+                                ProgressDialog.show(context);
+                                var resp = await _adjuntosApi.updateAdjunto(
+                                    esFotoVehiculo: esFoto == true ? 1 : 0,
+                                    orden: int.parse(tcNewOrden.text.trim()),
+                                    prefijo: tcNewPrefijo.text.trim(),
+                                    descripcion: tcNewDescription.text.trim(),
+                                    id: adjunto.id);
+                                ProgressDialog.dissmiss(context);
+                                if (resp is Success) {
+                                  Dialogs.success(
+                                      msg: 'Tipo Adjunto Actualizado');
+                                  Navigator.of(context).pop();
+                                  await onRefresh();
+                                  tcNewDescription.clear();
+                                  tcNewOrden.clear();
+                                  tcNewPrefijo.clear();
+                                  esFoto = false;
+                                }
+
+                                if (resp is Failure) {
+                                  ProgressDialog.dissmiss(context);
+                                  Dialogs.error(msg: resp.messages[0]);
+                                }
+                              } else {
                                 Dialogs.success(
                                     msg: 'Tipo Adjunto Actualizado');
+                                tcNewDescription.clear();
+                                tcNewOrden.clear();
+                                tcNewPrefijo.clear();
+                                esFoto = false;
                                 Navigator.of(context).pop();
+                              }
+                            }
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Guardar"), // text
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            );
+          });
+        });
+  }
+
+  Future<void> crearAdjunto(BuildContext ctx) async {
+    tcNewDescription.clear();
+    tcNewOrden.clear();
+    tcNewPrefijo.clear();
+    esFoto = false;
+    final GlobalKey<FormState> _formKey = GlobalKey();
+    showDialog(
+        context: ctx,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: EdgeInsets.zero,
+              content: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      color: AppColors.brownLight,
+                      child: const Text(
+                        'Crear Tipo Adjunto',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewDescription,
+                          validator: (value) {
+                            if (value!.trim() == '') {
+                              return 'Escriba una descripción';
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            label: Text("Descripción"),
+                            border: UnderlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: tcNewOrden,
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value!.trim() == '') {
+                            return 'Escriba un orden';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Orden"),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    CheckboxListTile(
+                        title: const Text(
+                          "Foto de Vehículo",
+                        ),
+                        value: esFoto,
+                        onChanged: (newValue) {
+                          setState(() {
+                            esFoto = newValue!;
+                          });
+                        }),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: tcNewPrefijo,
+                        maxLength: 3,
+                        validator: (value) {
+                          if (value!.trim() == '') {
+                            return 'Escriba un prefijo';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          label: Text("Prefijo"),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            tcNewDescription.clear();
+                            tcNewOrden.clear();
+                            tcNewPrefijo.clear();
+                            esFoto = false;
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.closeCircle,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              ProgressDialog.show(context);
+                              var resp = await _adjuntosApi.createAdjunto(
+                                  orden: int.parse(tcNewOrden.text.trim()),
+                                  prefijo: tcNewPrefijo.text,
+                                  esFotoVehiculo: esFoto == true ? 1 : 0,
+                                  descripcion: tcNewDescription.text.trim());
+                              ProgressDialog.dissmiss(context);
+                              if (resp is Success) {
+                                Dialogs.success(msg: 'Tipo Adjunto Creado');
+                                Navigator.of(context).pop();
+                                tcNewDescription.clear();
+                                tcNewOrden.clear();
+                                tcNewPrefijo.clear();
+                                esFoto = false;
                                 await onRefresh();
                               }
 
@@ -259,152 +476,30 @@ class TiposAdjuntosViewModel extends BaseViewModel {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
                               }
-                              tcNewDescription.clear();
-                            } else {
-                              Dialogs.success(msg: 'Tipo Adjunto Actualizado');
-                              Navigator.of(context).pop();
                             }
-                          }
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.save,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Future<void> crearAdjunto(BuildContext ctx) async {
-    tcNewDescription.clear();
-    final GlobalKey<FormState> _formKey = GlobalKey();
-    showDialog(
-        context: ctx,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            contentPadding: EdgeInsets.zero,
-            content: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 80,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    color: AppColors.brownLight,
-                    child: const Text(
-                      'Crear Tipo Adjunto',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewDescription,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                          hintText: "Descripción",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Guardar"), // text
+                            ],
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewDescription.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            ProgressDialog.show(context);
-                            var resp = await _adjuntosApi.createAdjunto(
-                                descripcion: tcNewDescription.text.trim());
-                            ProgressDialog.dissmiss(context);
-                            if (resp is Success) {
-                              Dialogs.success(msg: 'Tipo Adjunto Creado');
-                              Navigator.of(context).pop();
-                              await onRefresh();
-                            }
-
-                            if (resp is Failure) {
-                              ProgressDialog.dissmiss(context);
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            tcNewDescription.clear();
-                          }
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.save,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                ],
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          }));
         });
   }
 
@@ -412,6 +507,8 @@ class TiposAdjuntosViewModel extends BaseViewModel {
   void dispose() {
     listController.dispose();
     tcNewDescription.dispose();
+    tcNewOrden.dispose();
+    tcNewPrefijo.dispose();
     tcBuscar.dispose();
     super.dispose();
   }

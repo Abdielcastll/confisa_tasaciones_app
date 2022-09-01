@@ -8,6 +8,7 @@ class _ConsultarModificarMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+// <<<<<<< HEAD
       appBar:
           AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')),
       body: Column(
@@ -23,6 +24,18 @@ class _ConsultarModificarMobile extends StatelessWidget {
           Expanded(child: _form(context)),
         ],
       ),
+// =======
+//       appBar: Appbar(
+//         titulo:
+//             "Solicitud de ${vm.solicitudCola.descripcionTipoTasacion ?? ''}",
+//         esColaSolicitud: false,
+//         textSize: 18,
+//         alarmas: vm.alarmas,
+//         currentForm: vm.currentForm,
+//         idSolicitud: vm.currentForm == 3 ? vm.solicitud.id! : 0,
+//       ),
+//       body: _form(),
+// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
     );
   }
 

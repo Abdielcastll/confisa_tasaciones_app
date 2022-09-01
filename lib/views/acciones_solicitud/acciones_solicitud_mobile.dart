@@ -1,9 +1,11 @@
-part of suplidores_view;
+part of acciones_solicitud_view;
 
-class _SuplidoresMobile extends StatelessWidget {
-  final SuplidoresViewModel vm;
+class _AccionesSolicitudMobile extends StatelessWidget {
+  final AccionesSolicitudViewModel vm;
+  final bool showCreate;
+  final int idSolicitud;
 
-  const _SuplidoresMobile(this.vm);
+  const _AccionesSolicitudMobile(this.vm, this.showCreate, this.idSolicitud);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class _SuplidoresMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Suplidores',
+            'AccionesSolicitud',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
@@ -30,7 +32,7 @@ class _SuplidoresMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscarSuplidor,
+                        onSubmitted: vm.buscarAccionesSolicitud,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -39,14 +41,14 @@ class _SuplidoresMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Suplidores...',
+                          hintText: 'Buscar AccionesSolicitud...',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
-                                  onPressed: () =>
-                                      vm.buscarSuplidor(vm.tcBuscar.text),
+                                  onPressed: () => vm.buscarAccionesSolicitud(
+                                      vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(
@@ -60,37 +62,39 @@ class _SuplidoresMobile extends StatelessWidget {
                     ),
                   ),
                 ),
-                /* MaterialButton(
-                  onPressed: () => vm.crearsuplidor(context),
-                  color: Colors.white,
-                  minWidth: 30,
-                  height: 48,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  elevation: 4,
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      AppIcons.iconPlus,
-                      color: AppColors.green,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 5), */
+                showCreate
+                    ? MaterialButton(
+                        onPressed: () => vm.crearAccionesSolicitud(context),
+                        color: Colors.white,
+                        minWidth: 30,
+                        height: 48,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        elevation: 4,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            AppIcons.iconPlus,
+                            color: AppColors.green,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+                const SizedBox(width: 5),
               ],
             ),
             Expanded(
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.suplidores.isEmpty
+                child: vm.accionesSolicitud.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.suplidores.length + 1,
+                        itemCount: vm.accionesSolicitud.length + 1,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          if (i >= vm.suplidores.length) {
+                          if (i >= vm.accionesSolicitud.length) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 30),
                               child: !vm.hasNextPage
@@ -99,13 +103,13 @@ class _SuplidoresMobile extends StatelessWidget {
                                       child: CircularProgressIndicator()),
                             );
                           }
-                          var suplidor = vm.suplidores[i];
+                          var accionSolicitud = vm.accionesSolicitud[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
-                              onPressed: () =>
-                                  vm.modificarSuplidor(context, suplidor),
+                              onPressed: () => vm.modificarAccionSolicitud(
+                                  context, accionSolicitud),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
@@ -114,44 +118,36 @@ class _SuplidoresMobile extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
-                                child: Row(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            suplidor.nombre,
-                                            style: const TextStyle(
-                                                color: AppColors.brownDark,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w800,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                          ),
-                                          suplidor.detalles != ""
-                                              ? Text(
-                                                  "Detalle: ${suplidor.detalles}",
-                                                  style: const TextStyle(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      color:
-                                                          AppColors.brownDark,
-                                                      fontSize: 12),
-                                                )
-                                              : const SizedBox(),
-                                        ],
+                                    Text(
+                                      accionSolicitud.notas,
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
                                       ),
                                     ),
-                                    Icon(
-                                      suplidor.estado == 1
-                                          ? AppIcons.checkCircle
-                                          : AppIcons.nonCheckCircle,
-                                      color: AppColors.gold,
-                                    )
+                                    Text(
+                                      "Solicitud: " +
+                                          accionSolicitud.idSolicitud
+                                              .toString(),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Fecha: " +
+                                          accionSolicitud.fechaHora
+                                              .split("T")
+                                              .join(" Hora: ")
+                                              .toString(),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
                                   ],
                                 ),
                               ),

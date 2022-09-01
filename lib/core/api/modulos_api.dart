@@ -32,7 +32,8 @@ class ModulosApi {
     }
   }
 
-  Future<Object> createModulos({required String name}) async {
+  Future<Object> createModulos(
+      {required String name, required int idModuloPadre}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -41,16 +42,18 @@ class ModulosApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {
-          "nombre": name,
-        },
+        data: {"nombre": name, "moduloPadre": idModuloPadre},
       );
     } else {
       return TokenFail();
     }
   }
 
-  Future<Object> updateModulos({required String name, required int id}) async {
+  Future<Object> updateModulos(
+      {required String name,
+      required int id,
+      required int moduloPadre,
+      required int estado}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -62,6 +65,8 @@ class ModulosApi {
         data: {
           "id": id,
           "nombre": name,
+          "moduloPadre": moduloPadre,
+          "estado": estado
         },
       );
     } else {

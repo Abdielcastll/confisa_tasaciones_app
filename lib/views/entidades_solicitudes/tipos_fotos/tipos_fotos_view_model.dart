@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
-import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_tasacion_promedio_api.dart';
-import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/periodo_tasacion_promedio_response.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/fotos_api.dart';
+import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/buscador.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_roles.dart';
@@ -11,31 +11,20 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 
-class PeriodoTasacionPromedioViewModel extends BaseViewModel {
-  final _periodoTasacionPromedioApi = locator<PeriodoTasacionPromedioApi>();
+class TiposFotosViewModel extends BaseViewModel {
+  final _tiposfotosApi = locator<FotosApi>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewDescripcion = TextEditingController();
 
-  List<PeriodoTasacionPromedioData> periodosTasacionPromedio = [];
-  List<OpcionesPeriodoTasacionPromedioData> opcionesPeriodoTasacionPromedio =
-      [];
+  EntidadData foto = EntidadData();
+  EntidadData opcionesTipos = EntidadData();
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
-  bool hasNextPage = false;
-  late PeriodoTasacionPromedioResponse periodoTasacionPromedioResponse;
-  OpcionesPeriodoTasacionPromedioData? opcionPeriodoTasacionPromedioData;
 
-  PeriodoTasacionPromedioViewModel() {
-    listController.addListener(() {
-      if (listController.position.maxScrollExtent == listController.offset) {
-        if (hasNextPage) {
-          cargarMasPeriodoTasacionPromedio();
-        }
-      }
-    });
-  }
+  late EntidadResponse tiposfotosResponse;
+  EntidadResponse? opcionesResponse;
 
   bool get cargando => _cargando;
   set cargando(bool value) {
@@ -49,131 +38,53 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void ordenar() {
-    periodosTasacionPromedio.sort((a, b) {
-      return a.value.compareTo(b.value);
-    });
-  }
-
   Future<void> onInit() async {
     cargando = true;
-    var resp = await _periodoTasacionPromedioApi.getPeriodoTasacionPromedio(
-        pageNumber: pageNumber);
+    var resp = await _tiposfotosApi.getTipoFotos();
+
     if (resp is Success) {
-      periodoTasacionPromedioResponse =
-          resp.response as PeriodoTasacionPromedioResponse;
-      periodosTasacionPromedio = periodoTasacionPromedioResponse.data;
-      ordenar();
-      hasNextPage = periodoTasacionPromedioResponse.hasNextPage;
+      tiposfotosResponse = resp.response as EntidadResponse;
+      foto = tiposfotosResponse.data;
       notifyListeners();
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
-    var respopc =
-        await _periodoTasacionPromedioApi.getOpcionesPeriodoTasacionPromedio();
-    if (respopc is Success) {
-      var resp = respopc.response as OpcionesPeriodoTasacionPromedioResponse;
-      opcionPeriodoTasacionPromedioData = resp.data.first;
-      notifyListeners();
+    var respop = await _tiposfotosApi.getOpcionesTipos();
+    if (respop is Success) {
+      var data = respop.response as EntidadResponse;
+      opcionesTipos = data.data;
     }
-    if (respopc is Failure) {
-      Dialogs.error(msg: respopc.messages.first);
+    if (respop is Failure) {
+      Dialogs.error(msg: respop.messages.first);
     }
     cargando = false;
   }
-
-  Future<void> cargarMasPeriodoTasacionPromedio() async {
-    pageNumber += 1;
-    var resp = await _periodoTasacionPromedioApi.getPeriodoTasacionPromedio(
-        pageNumber: pageNumber);
-    if (resp is Success) {
-      var temp = resp.response as PeriodoTasacionPromedioResponse;
-      periodoTasacionPromedioResponse.data.addAll(temp.data);
-      periodosTasacionPromedio.addAll(temp.data);
-      ordenar();
-      hasNextPage = temp.hasNextPage;
-      notifyListeners();
-    }
-    if (resp is Failure) {
-      pageNumber -= 1;
-      Dialogs.error(msg: resp.messages[0]);
-    }
-  }
-
-  /* Future<void> buscarPeriodoTasacionPromedio(String query) async {
-    cargando = true;
-    var resp =
-        await _periodoTasacionPromedioApi.getPeriodoTasacionPromedio(
-      descripcion: query,
-      pageSize: 0,
-    );
-    if (resp is Success) {
-      var temp = resp.response as PeriodoTasacionPromedioResponse;
-      PeriodoTasacionPromedio = temp.data;
-      ordenar();
-      hasNextPage = temp.hasNextPage;
-      _busqueda = true;
-      notifyListeners();
-    }
-    if (resp is Failure) {
-      Dialogs.error(msg: resp.messages[0]);
-    }
-    cargando = false;
-  } */
-
-  /* void limpiarBusqueda() {
-    _busqueda = false;
-    PeriodoTasacionPromedio = PeriodoTasacionPromedioResponse.data;
-    if (PeriodoTasacionPromedio.length >= 20) {
-      hasNextPage = true;
-    }
-    notifyListeners();
-    tcBuscar.clear();
-  } */
 
   Future<void> onRefresh() async {
-    periodosTasacionPromedio = [];
+    foto = EntidadData();
     cargando = true;
-    var resp = await _periodoTasacionPromedioApi.getPeriodoTasacionPromedio();
+    var resp = await _tiposfotosApi.getTipoFotos();
+
     if (resp is Success) {
-      var temp = resp.response as PeriodoTasacionPromedioResponse;
-      periodoTasacionPromedioResponse = temp;
-      periodosTasacionPromedio = temp.data;
-      ordenar();
-      hasNextPage = temp.hasNextPage;
+      var temp = resp.response as EntidadResponse;
+      tiposfotosResponse = temp;
+      foto = temp.data;
       notifyListeners();
-    }
-    if (resp is Failure) {
-      Dialogs.error(msg: resp.messages[0]);
-    }
-    var respopc =
-        await _periodoTasacionPromedioApi.getOpcionesPeriodoTasacionPromedio();
-    if (respopc is Success) {
-      var resp = respopc.response as OpcionesPeriodoTasacionPromedioResponse;
-      opcionPeriodoTasacionPromedioData = resp.data.first;
-      notifyListeners();
-    }
-    if (respopc is Failure) {
-      Dialogs.error(msg: respopc.messages.first);
     }
     cargando = false;
   }
 
-  Future<void> modificarPeriodoTasacionPromedio(
-    BuildContext ctx,
-  ) async {
+  Future<void> modificarFotosTipo(BuildContext ctx, EntidadData foto) async {
     List<String> list = [];
     List<String> listaSelected = [];
     Size size = MediaQuery.of(ctx).size;
 
-    list = opcionPeriodoTasacionPromedioData!.descripcion.split(",");
-    for (var element in periodosTasacionPromedio) {
-      listaSelected.add(element.value.toString());
-    }
+    list = opcionesTipos.descripcion!.split(",");
+    listaSelected = foto.descripcion!.split(",");
 
     list.sort((a, b) {
-      return int.parse(a).compareTo(int.parse(b));
+      return a.toLowerCase().compareTo(b.toLowerCase());
     });
     showDialog(
         context: ctx,
@@ -197,7 +108,7 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
                     ),
                     child: const Align(
                       alignment: Alignment.center,
-                      child: Text("Opciones de períodos tasación promedio",
+                      child: Text("Opciones de tipos fotos",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               overflow: TextOverflow.ellipsis,
@@ -216,7 +127,7 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
                         },
                         columns: const [
                           DataColumn(
-                            label: Text("Períodos"),
+                            label: Text("Tipos"),
                           ),
                         ],
                         rows: list
@@ -245,11 +156,9 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
                     ProgressDialog.show(context);
                     String descripcion = "";
                     descripcion = listaSelected.join(",");
-                    var resp = await _periodoTasacionPromedioApi
-                        .updatePeriodoTasacionPromedio(
-                            descripcion: descripcion,
-                            id: opcionPeriodoTasacionPromedioData!.id);
-                    if (resp is Success<PeriodoTasacionPromedioPOSTResponse>) {
+                    var resp = await _tiposfotosApi.updateTipos(
+                        descripcion: descripcion, id: foto.id!);
+                    if (resp is Success<EntidadPOSTResponse>) {
                       ProgressDialog.dissmiss(context);
                       Dialogs.success(msg: "Actualización exitosa");
                       Navigator.of(context).pop();
@@ -260,13 +169,12 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
                     }
                   },
                   buscador(
-                    text: 'Buscar periodos...',
+                    text: 'Buscar tipos...',
                     onChanged: (value) {
                       setState(() {
                         list = [];
-                        for (var element in opcionPeriodoTasacionPromedioData!
-                            .descripcion
-                            .split(",")) {
+                        for (var element
+                            in opcionesTipos.descripcion!.split(",")) {
                           if (element
                               .toLowerCase()
                               .contains(value.toLowerCase())) {
@@ -274,7 +182,7 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
                           }
                         }
                         list.sort((a, b) {
-                          return int.parse(a).compareTo(int.parse(b));
+                          return a.toLowerCase().compareTo(b.toLowerCase());
                         });
                       });
                     },
