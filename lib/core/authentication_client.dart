@@ -34,7 +34,7 @@ class AuthenticationClient {
           token: session.token, refreshToken: session.refreshToken);
       if (resp is Success<SignInResponse>) {
         saveSession(resp.response.data);
-        logger.wtf('TOKEN ACTUALIZADO');
+        logger.wtf('TOKEN ACTUALIZADO: ${resp.response.data.token}');
         return resp.response.data.token;
       } else {
         return null;

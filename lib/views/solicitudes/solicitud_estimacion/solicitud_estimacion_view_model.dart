@@ -11,6 +11,7 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
+import 'package:tasaciones_app/core/models/ediciones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
@@ -39,7 +40,8 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyFotos = GlobalKey<FormState>();
   TextEditingController tcNoSolicitud = TextEditingController();
-  TextEditingController tcVIN = TextEditingController();
+  TextEditingController tcVIN =
+      TextEditingController(text: "1GNFK13047R140555");
   TextEditingController tcFuerzaMotriz = TextEditingController();
   TextEditingController tcKilometraje = TextEditingController();
   TextEditingController tcPlaca = TextEditingController();
@@ -47,6 +49,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   SolicitudCreditoData? solicitud;
   VinDecoderData? _vinData;
   TipoVehiculoData? _tipoVehiculos;
+  EdicionVehiculo? _edicionVehiculos;
   TransmisionesData? _transmision;
   VersionVehiculoData? _versionVehiculo;
   TraccionesData? _traccion;
@@ -54,11 +57,10 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
   late int _fotosPermitidas;
-  // late List<File> fotos;
   late List<FotoData> fotos;
   final _picker = ImagePicker();
   SolicitudesData? solicitudCola;
-  List<DescripcionFotoVehiculos> descripcionFotos = [];
+  SolicitudesData? solicitudCreada;
 
   SolicitudEstimacionViewModel() {
     fechaActual = DateTime.now();
@@ -104,6 +106,13 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  EdicionVehiculo get edicionVehiculo => _edicionVehiculos!;
+
+  set edicionVehiculo(EdicionVehiculo? value) {
+    _edicionVehiculos = value;
+    notifyListeners();
+  }
+
   TransmisionesData get transmision => _transmision!;
 
   set transmision(TransmisionesData? value) {
@@ -138,10 +147,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       tcVIN.text = arg.chasis!;
       notifyListeners();
     }
-    var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
-    if (resp is Success<List<DescripcionFotoVehiculos>>) {
-      descripcionFotos = resp.response;
-    }
   }
 
   Future<void> solicitudCredito(BuildContext context) async {
@@ -154,6 +159,20 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
           var data = resp.response as SolicitudCreditoResponse;
           solicitud = data.data;
           currentForm = 2;
+          int currentYear = DateTime.now().year;
+          if (data.data.ano != null) {
+            int anio = int.tryParse(data.data.ano!)!;
+            if (currentYear <= anio) {
+              _estado = 'NUEVO';
+              notifyListeners();
+            } else {
+              _estado = 'USADO';
+              notifyListeners();
+            }
+          } else {
+            _estado = '';
+            notifyListeners();
+          }
         }
         if (resp is Failure) {
           Dialogs.error(msg: resp.messages[0]);
@@ -192,9 +211,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
             _estado = 'USADO';
             notifyListeners();
           }
-        } else {
-          _estado = '';
-          notifyListeners();
         }
       }
       if (resp is Failure) {
@@ -255,6 +271,26 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
+  Future<List<EdicionVehiculo>> getEdiciones(String text) async {
+    var resp = await _solicitudesApi.getEdicionesVehiculos(
+        modeloid: solicitud!.idModeloTasaciones!);
+    if (resp is Success<List<EdicionVehiculo>>) {
+      return resp.response;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<DescripcionFotoVehiculos>> getDescripcionFotos(
+      String text) async {
+    var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
+    if (resp is Success<List<DescripcionFotoVehiculos>>) {
+      return resp.response;
+    } else {
+      return [];
+    }
+  }
+
   Future<List<TraccionesData>> getTracciones(String text) async {
     var resp = await _solicitudesApi.getTraccion();
     if (resp is Success) {
@@ -304,20 +340,26 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       Dialogs.error(msg: 'Fotos incompletas');
     } else {
       if (formKeyFotos.currentState!.validate()) {
-        // ProgressDialog.show(context);
+        ProgressDialog.show(context);
         List<Map<String, dynamic>> dataList = [];
         for (var e in fotos) {
-          var fotoBase = e.file!.readAsBytesSync();
+          var fotoBase = base64Encode(e.file!.readAsBytesSync());
           Map<String, dynamic> data = {
             "adjuntoInBytes": fotoBase,
             "tipoAdjunto": e.descripcion!.id,
             "descripcion": e.descripcion!.descripcion,
           };
+          // log.d(jsonEncode(data['tipoAdjunto']));
           dataList.add(data);
         }
         var resp = await _adjuntosApi.addFotosTasacion(
-            noTasacion: solicitud!.noSolicitud!, adjuntos: dataList);
+            noTasacion: solicitudCreada!.noTasacion!, adjuntos: dataList);
 
+        if (resp is Success) {
+          Dialogs.success(msg: 'Fotos guardadas');
+          ProgressDialog.dissmiss(context);
+          currentForm = 4;
+        }
         if (resp is Failure) {
           Dialogs.error(msg: resp.messages[0]);
           ProgressDialog.dissmiss(context);
@@ -364,13 +406,14 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       Dialogs.error(msg: 'Debe consultar el No. VIN');
     } else {
       if (formKey3.currentState!.validate()) {
-        // ProgressDialog.show(context);
-        var crearResp = await crearSolicitud(context);
-        if (crearResp) {
-          var resp = await _solicitudesApi.getCantidadFotos();
-          if (resp is Success) {
-            var data = resp.response as EntidadResponse;
-            int cantidad = int.parse(data.data.descripcion ?? '0');
+        ProgressDialog.show(context);
+        int? idSuplidor = await crearSolicitud(context);
+        if (idSuplidor != null) {
+          log.i('ID SUPLIDOR $idSuplidor');
+          var resp =
+              await _solicitudesApi.getCantidadFotos(idSuplidor: idSuplidor);
+          if (resp is Success<EntidadResponse>) {
+            int cantidad = int.parse(resp.response.data.descripcion ?? '0');
             fotos = List.generate(cantidad, (i) => FotoData(file: File('')));
             fotosPermitidas = cantidad;
             currentForm = 3;
@@ -381,35 +424,24 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
-  Future<bool> crearSolicitud(BuildContext context) async {
-    // if (fotos.any((e) => e.file!.path == '') ||
-    //     fotos.any((e) => e.descripcion == '')) {
-    //   Dialogs.error(msg: 'Debe cargar todas las fotos');
-    // } else {
-    ProgressDialog.show(context);
+  Future<int?> crearSolicitud(BuildContext context) async {
+    // ProgressDialog.show(context);
     var resp = await _solicitudesApi.createNewSolicitudEstimacion(
       ano: int.parse(solicitud!.ano!),
       chasis: solicitud!.chasis ?? tcVIN.text,
-      codigoEntidad: solicitud!.codEntidad!,
-      codigoSucursal: solicitud!.codSucursal!,
       color: colorVehiculo.id,
-      edicion: vinData?.idTrim ?? 0,
+      edicion: edicionVehiculo.id,
       fuerzaMotriz: vinData?.fuerzaMotriz ?? int.parse(tcFuerzaMotriz.text),
-      idOficial: solicitud!.codOficialNegocios!,
-      // idPromotor: 0,
-      identificacion: solicitud!.noIdentificacion!,
       kilometraje: int.parse(tcKilometraje.text),
       marca: solicitud!.idMarcaTasaciones ?? vinData!.codigoMarca ?? 0,
       modelo: solicitud!.idModeloTasaciones ?? vinData!.codigoModelo ?? 0,
       noCilindros: vinData?.numeroCilindros ?? _nCilindros!,
       noPuertas: vinData?.numeroPuertas ?? _nPuertas!,
       noSolicitudCredito: solicitud!.noSolicitud!,
-      nombreCliente: solicitud!.nombreCliente!,
-      nuevoUsado: _estado == 'Nuevo' ? 0 : 1,
+      nuevoUsado: _estado == 'Nuevo' ? 1 : 2,
       placa: tcPlaca.text,
-      serie: vinData?.idSerie!,
+      serie: vinData?.idSerie,
       sistemaTransmision: _transmision!.id,
-      // suplidorTasacion: 0,
       tipoTasacion: 21,
       tipoVehiculoLocal: tipoVehiculo.id,
       traccion: _traccion!.id,
@@ -417,27 +449,31 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       versionLocal: versionVehiculo.id, /* INFO VEHICULOGET VERSIONES   */
     );
     if (resp is Failure) {
-      // ProgressDialog.dissmiss(context);
+      ProgressDialog.dissmiss(context);
       Dialogs.error(msg: resp.messages[0]);
+      // resetData();
+
       // TODO::: Cambiar a false
-      return true;
+      return null;
     }
     if (resp is TokenFail) {
       ProgressDialog.dissmiss(context);
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'su sesión a expirado');
-      return false;
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      return null;
     }
-    if (resp is Success) {
+    if (resp is Success<SolicitudesData>) {
       // await subirFotos();
       // ProgressDialog.dissmiss(context);
       Dialogs.success(msg: 'Solicitud creada correctamente');
-      return true;
+      solicitudCreada = resp.response;
+      var suplidor = resp.response.suplidorTasacion;
+      return suplidor;
       // _navigatorService
       //     .navigateToPageAndRemoveUntil(ColaSolicitudesView.routeName);
     }
     resetData();
-    return false;
+    return null;
   }
 
   Future<void> escanearVIN() async {
@@ -455,6 +491,26 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     tcKilometraje.clear();
   }
 
+  Future<void> enviarSolicitud(BuildContext context) async {
+    ProgressDialog.show(context);
+    var resp = await _solicitudesApi.updateSentToProcess(
+        noTasacion: solicitudCreada!.noTasacion!);
+    if (resp is Success) {
+      Dialogs.success(msg: 'Solicitud enviada');
+      ProgressDialog.dissmiss(context);
+      Navigator.of(context).pop();
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+      ProgressDialog.dissmiss(context);
+    }
+    if (resp is TokenFail) {
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'su sesión a expirado');
+    }
+  }
+
   @override
   void dispose() {
     tcVIN.dispose();
@@ -462,6 +518,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     tcNoSolicitud.dispose();
     tcFuerzaMotriz.dispose();
     tcKilometraje.dispose();
+
     super.dispose();
   }
 }

@@ -9,11 +9,17 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Solicitud de Estimación')),
-      body: _form(),
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          LineProgressWidget(totalItem: 4, currentItem: vm.currentForm),
+          Expanded(child: _form(context)),
+        ],
+      ),
     );
   }
 
-  Widget _form() {
+  Widget _form(BuildContext context) {
     switch (vm.currentForm) {
       case 1:
         return GeneralesForm(vm);
@@ -21,6 +27,11 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
         return VehiculoForm(vm);
       case 3:
         return FotosForm(vm);
+      case 4:
+        return EnviarForm(
+          atras: () => vm.currentForm = 3,
+          enviar: () => vm.enviarSolicitud(context),
+        );
       default:
         return Container();
     }

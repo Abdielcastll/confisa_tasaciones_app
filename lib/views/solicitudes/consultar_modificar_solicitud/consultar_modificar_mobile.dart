@@ -10,11 +10,23 @@ class _ConsultarModificarMobile extends StatelessWidget {
     return Scaffold(
       appBar:
           AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')),
-      body: _form(),
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          LineProgressWidget(
+              totalItem: vm.solicitudCola.tipoTasacion != 21
+                  ? 2
+                  : vm.solicitudCola.estadoTasacion == 9
+                      ? 3
+                      : 4,
+              currentItem: vm.currentForm),
+          Expanded(child: _form(context)),
+        ],
+      ),
     );
   }
 
-  Widget _form() {
+  Widget _form(BuildContext context) {
     switch (vm.currentForm) {
       case 1:
         return GeneralesA(vm);
@@ -25,6 +37,11 @@ class _ConsultarModificarMobile extends StatelessWidget {
             : VehiculoForm(vm);
       case 3:
         return FotosForm(vm);
+      case 4:
+        return EnviarForm(
+          atras: () => vm.currentForm = 3,
+          enviar: () => vm.enviarSolicitud(context),
+        );
       default:
         return Container();
     }

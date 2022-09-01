@@ -10,7 +10,13 @@ class _TrabajarMobile extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: Text(vm.solicitud.descripcionTipoTasacion ?? '')),
         body: vm.solicitud.tipoTasacion == 22 || vm.solicitud.tipoTasacion == 23
-            ? _tasacionForm()
+            ? Column(
+                children: [
+                  const SizedBox(height: 10),
+                  LineProgressWidget(totalItem: 6, currentItem: vm.currentForm),
+                  Expanded(child: _tasacionForm()),
+                ],
+              )
             : Container() //_estimacionForm(),
         );
   }

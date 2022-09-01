@@ -2,6 +2,7 @@ library solicitud_tasacion_view;
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import '../../../widgets/app_progress_widget.dart';
 import 'solicitud_tasacion_view_model.dart';
 import 'widgets/forms/generales_a.dart';
 import 'widgets/forms/generales_b.dart';

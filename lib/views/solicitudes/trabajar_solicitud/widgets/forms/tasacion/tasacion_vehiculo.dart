@@ -4,6 +4,7 @@ import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 
+import '../../../../../../core/models/ediciones_vehiculo_response.dart';
 import '../../../../../../core/models/tracciones_response.dart';
 import '../../../../../../core/models/versiones_vehiculo_response.dart';
 import '../../../../../../theme/theme.dart';
@@ -92,6 +93,16 @@ class VehiculoTasacionForm extends StatelessWidget {
                     label: 'Año',
                     initialValue: vm.solicitudData?.ano.toString(),
                   ),
+                  if (vm.vinData?.serie != null)
+                    BaseTextFieldNoEdit(
+                      label: 'Serie',
+                      initialValue: vm.vinData?.serie ?? '',
+                    ),
+                  if (vm.vinData?.trim != null)
+                    BaseTextFieldNoEdit(
+                      label: 'Trim',
+                      initialValue: vm.vinData?.trim ?? '',
+                    ),
                   if (vm.vinData != null)
                     Column(
                       children: [
@@ -128,9 +139,44 @@ class VehiculoTasacionForm extends StatelessWidget {
                           },
                         ),
 
-                        // TIPO DE VEHICULO
+                        DropdownSearch<EdicionVehiculo>(
+                          asyncItems: (text) => vm.getEdiciones(text),
+                          dropdownBuilder: (context, tipo) {
+                            return Text(
+                              tipo == null
+                                  ? 'Seleccione'
+                                  : tipo.descripcionEasyBank ?? '',
+                              style: const TextStyle(
+                                fontSize: 15,
+                              ),
+                            );
+                          },
+                          onChanged: (v) => vm.edicionVehiculo = v,
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                  label: Text('Edición'),
+                                  border: UnderlineInputBorder())),
+                          popupProps: PopupProps.menu(
+                            itemBuilder: (context, otp, isSelected) {
+                              return ListTile(
+                                title: Text(otp.descripcionEasyBank ?? ''),
+                                selected: isSelected,
+                              );
+                            },
+                            emptyBuilder: (_, __) => const Center(
+                              child: Text('No hay resultados'),
+                            ),
+                          ),
+                          validator: (v) {
+                            if (v == null) {
+                              return 'Seleccione una edición';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
 
-                        const SizedBox(height: 10),
+                        // TIPO DE VEHICULO
 
                         DropdownSearch<TipoVehiculoData>(
                           asyncItems: (text) => vm.getTipoVehiculo(text),
@@ -169,8 +215,6 @@ class VehiculoTasacionForm extends StatelessWidget {
                           },
                         ),
 
-                        const SizedBox(height: 10),
-
                         // SISTEMA DE TRANSMISIÓN
 
                         DropdownSearch<TransmisionesData>(
@@ -207,8 +251,6 @@ class VehiculoTasacionForm extends StatelessWidget {
                             }
                           },
                         ),
-
-                        const SizedBox(height: 10),
 
                         // SISTEMA DE TRACCION
 
@@ -247,8 +289,6 @@ class VehiculoTasacionForm extends StatelessWidget {
                           },
                         ),
 
-                        const SizedBox(height: 10),
-
                         // Numero de puertas
 
                         DropdownSearch<int>(
@@ -286,8 +326,6 @@ class VehiculoTasacionForm extends StatelessWidget {
                             }
                           },
                         ),
-
-                        const SizedBox(height: 10),
 
                         // Numero de cilindros
 
@@ -332,6 +370,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                         BaseTextField(
                             label: 'Fuerza motriz',
                             controller: vm.tcFuerzaMotriz,
+                            keyboardType: TextInputType.number,
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba la fuerza motriz';
@@ -354,7 +393,6 @@ class VehiculoTasacionForm extends StatelessWidget {
                                 return null;
                               }
                             }),
-                        const SizedBox(height: 10),
 
                         DropdownSearch<ColorVehiculo>(
                             asyncItems: (text) => vm.getColores(text),

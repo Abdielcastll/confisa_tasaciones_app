@@ -23,7 +23,7 @@ class GeneralesTasacionForm extends StatelessWidget {
       onPressedBack: () => Navigator.of(context).pop(),
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
-      onPressedNext: () => vm.solicitudCredito(context),
+      onPressedNext: () => vm.currentForm = 2,
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
@@ -41,11 +41,30 @@ class GeneralesTasacionForm extends StatelessWidget {
                   .toUpperCase(),
               enabled: false,
             ),
-            BaseTextField(
+            BaseTextFieldNoEdit(
               label: 'No. de solicitud de crédito',
               initialValue: vm.solicitud.noSolicitudCredito.toString(),
-              enabled: false,
-            )
+            ),
+            BaseTextFieldNoEdit(
+              label: 'Entidad solicitante',
+              initialValue: vm.solicitudData?.entidad ?? '',
+            ),
+            BaseTextFieldNoEdit(
+              label: 'Cédula del cliente',
+              initialValue: vm.solicitudData?.noIdentificacion ?? '',
+            ),
+            BaseTextFieldNoEdit(
+              label: 'Nombre del cliente',
+              initialValue: vm.solicitudData?.nombreCliente ?? '',
+            ),
+            BaseTextFieldNoEdit(
+              label: 'Oficial de negocios',
+              initialValue: vm.solicitudData?.nombreOficialNegocios ?? '',
+            ),
+            BaseTextFieldNoEdit(
+              label: 'Sucursal',
+              initialValue: vm.solicitudData?.sucursal ?? '',
+            ),
           ],
         ),
       ),

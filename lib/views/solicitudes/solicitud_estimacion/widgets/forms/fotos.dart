@@ -26,17 +26,9 @@ class FotosForm extends StatelessWidget {
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
       onPressedBack: () => vm.currentForm = 2,
-      iconNext: AppIcons.save,
-      labelNext: 'Guardar',
-      onPressedNext: () => Dialogs.confirm(
-        context,
-        tittle: 'ATENCIÓN',
-        description:
-            'Después de ser enviada la solicitud para su valoración no podrá ser modificada',
-        confirm: () => vm.subirFotos(context),
-        textAceptar: 'Enviar',
-        textCancelar: 'Cancelar',
-      ),
+      iconNext: Icons.arrow_forward_ios,
+      labelNext: 'Siguiente',
+      onPressedNext: () => vm.subirFotos(context),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
@@ -78,7 +70,7 @@ class FotosForm extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 10),
                             child: DropdownSearch<DescripcionFotoVehiculos>(
                               // asyncItems: (text) => vm.getTipoVehiculo(text),
-                              items: vm.descripcionFotos,
+                              asyncItems: (_) => vm.getDescripcionFotos(_),
                               dropdownBuilder: (context, tipo) {
                                 return Text(
                                   tipo?.descripcion ?? '',

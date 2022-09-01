@@ -36,7 +36,9 @@ class VinDecoderData {
     this.ano,
     this.tipoVehiculo,
     this.sistemaCambio,
+    this.idSistemaCambio,
     this.traccion,
+    this.idTraccion,
     this.numeroPuertas,
     this.numeroCilindros,
     this.fuerzaMotriz,
@@ -53,7 +55,9 @@ class VinDecoderData {
   int? ano;
   String? tipoVehiculo;
   String? sistemaCambio;
+  int? idSistemaCambio;
   String? traccion;
+  int? idTraccion;
   int? numeroPuertas;
   int? numeroCilindros;
   int? fuerzaMotriz;
@@ -63,28 +67,21 @@ class VinDecoderData {
   int? idTrim;
 
   factory VinDecoderData.fromJson(Map<String, dynamic> json) => VinDecoderData(
-        codigoMarca: json["codigoMarca"] == '' ? null : json["codigoMarca"],
-        marca: json["marca"] == '' ? null : json["marca"],
-        codigoModelo: json["codigoModelo"] == '' ? null : json["codigoModelo"],
-        modelo: json["modelo"] == '' ? null : json["modelo"],
-        ano: json["ano"] == '' ? null : int.parse(json["ano"]),
-        tipoVehiculo: json["tipoVehiculo"] == '' ? null : json["tipoVehiculo"],
-        sistemaCambio:
-            json["sistemaCambio"] == '' ? null : json["sistemaCambio"],
-        traccion: json["traccion"] == '' ? null : json["traccion"],
-        numeroPuertas: json["numeroPuertas"] == ''
-            ? null
-            : int.parse(json["numeroPuertas"]),
-        numeroCilindros: json["numeroCilindros"] == ''
-            ? null
-            : int.parse(json["numeroCilindros"]),
-        fuerzaMotriz: json["fuerzaMotriz"] == ''
-            ? null
-            : double.parse(json["fuerzaMotriz"]).round(),
-        serie: json["serie"] == '' ? null : json["serie"],
-        idSerie: json["idSerie"] == '' ? null : json["idSerie"],
-        trim: json["trim"] == '' ? null : json["trim"],
-        idTrim: json["idTrim"] == '' ? null : json["idTrim"],
+        codigoMarca: json["codigoMarca"],
+        marca: json["marca"],
+        codigoModelo: json["codigoModelo"],
+        modelo: json["modelo"],
+        ano: int.tryParse(json["ano"] ?? ''),
+        tipoVehiculo: json["tipoVehiculo"],
+        sistemaCambio: json["sistemaCambio"],
+        traccion: json["traccion"],
+        numeroPuertas: int.tryParse(json["numeroPuertas"] ?? ''),
+        numeroCilindros: int.tryParse(json["numeroCilindros"] ?? ''),
+        fuerzaMotriz: double.tryParse(json["fuerzaMotriz"] ?? '')?.round(),
+        serie: json["serie"],
+        idSerie: json["idSerie"],
+        trim: json["trim"],
+        idTrim: json["idTrim"],
       );
 
   Map<String, dynamic> toJson() => {

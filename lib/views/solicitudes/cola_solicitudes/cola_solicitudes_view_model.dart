@@ -61,35 +61,21 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   Future<void> onInit(BuildContext context) async {
     Session data = _authenticationAPI.loadSession;
     roles = data.role;
-    if (roles.contains('Tasador')) {
-      var resp = await _solicitudesApi.getProcesarSolicitudes();
-      if (resp is Success) {
-        solicitudesResponse = resp.response as GetSolicitudesResponse;
-        solicitudes = solicitudesResponse.data;
-      }
-      if (resp is Failure) {
-        Dialogs.error(msg: resp.messages[0]);
-      }
-      if (resp is TokenFail) {
-        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        Dialogs.error(msg: 'Sesión expirada');
-      }
-      loading = false;
-    } else {
-      var resp = await _solicitudesApi.getColaSolicitudes();
-      if (resp is Success) {
-        solicitudesResponse = resp.response as GetSolicitudesResponse;
-        solicitudes = solicitudesResponse.data;
-      }
-      if (resp is Failure) {
-        Dialogs.error(msg: resp.messages[0]);
-      }
-      if (resp is TokenFail) {
-        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        Dialogs.error(msg: 'Sesión expirada');
-      }
-      loading = false;
+    var resp = await _solicitudesApi.getColaSolicitudes(
+      estado: roles.contains('Tasador') ? 'Solicitada' : null,
+    );
+    if (resp is Success<GetSolicitudesResponse>) {
+      solicitudesResponse = resp.response;
+      solicitudes = solicitudesResponse.data;
     }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    loading = false;
   }
 
   Future<void> cargarMas() async {
@@ -128,11 +114,10 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       noSolicitud: int.parse(query),
       pageSize: 0,
     );
-    if (resp is Success) {
-      var temp = resp.response as GetSolicitudesResponse;
-      solicitudes = temp.data;
+    if (resp is Success<GetSolicitudesResponse>) {
+      solicitudes = resp.response.data;
       ordenar();
-      hasNextPage = temp.hasNextPage ?? false;
+      hasNextPage = resp.response.hasNextPage ?? false;
       _busqueda = true;
       notifyListeners();
     }

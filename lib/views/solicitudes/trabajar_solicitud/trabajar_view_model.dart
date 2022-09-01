@@ -18,6 +18,7 @@ import '../../../core/models/adjunto_foto_response.dart';
 import '../../../core/models/cantidad_fotos_response.dart';
 import '../../../core/models/colores_vehiculos_response.dart';
 import '../../../core/models/componente_condicion.dart';
+import '../../../core/models/ediciones_vehiculo_response.dart';
 import '../../../core/models/solicitudes/solicitud_credito_response.dart';
 import '../../../core/models/tipo_vehiculo_response.dart';
 import '../../../core/models/tracciones_response.dart';
@@ -28,6 +29,7 @@ import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/escaner.dart';
 import '../../auth/login/login_view.dart';
+import '../solicitud_estimacion/solicitud_estimacion_view_model.dart';
 
 class TrabajarViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
@@ -54,6 +56,7 @@ class TrabajarViewModel extends BaseViewModel {
   VersionVehiculoData? _versionVehiculo;
   TraccionesData? _traccion;
   int? _nPuertas;
+  EdicionVehiculo? _edicionVehiculos;
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
   late int _fotosPermitidas;
@@ -111,6 +114,13 @@ class TrabajarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  EdicionVehiculo get edicionVehiculo => _edicionVehiculos!;
+
+  set edicionVehiculo(EdicionVehiculo? value) {
+    _edicionVehiculos = value;
+    notifyListeners();
+  }
+
   TraccionesData get traccion => _traccion!;
 
   set traccion(TraccionesData? value) {
@@ -131,37 +141,50 @@ class TrabajarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onInit(SolicitudesData? arg) async {
+  void onInit(BuildContext context, SolicitudesData? arg) async {
     if (arg != null) {
       solicitud = arg;
-      tcVIN.text = arg.chasis!;
-      notifyListeners();
+      // tcVIN.text = solicitud.chasis ?? '';
+      // tcFuerzaMotriz.text = solicitud.fuerzaMotriz?.toString() ?? '';
+      // tcKilometraje.text = solicitud.kilometraje?.toString() ?? '';
+      // tcPlaca.text = solicitud.placa ?? '';
+      // notifyListeners();
+      await Future.delayed(const Duration(milliseconds: 300));
+      solicitudCredito(context);
     }
-    var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
-    if (resp is Success<List<DescripcionFotoVehiculos>>) {
-      descripcionFotos = resp.response;
+  }
+
+  Future<List<EdicionVehiculo>> getEdiciones(String text) async {
+    var resp = await _solicitudesApi.getEdicionesVehiculos(
+        modeloid: solicitudData?.idModeloTasaciones ?? 0);
+    if (resp is Success<List<EdicionVehiculo>>) {
+      return resp.response;
+    } else {
+      return [];
     }
   }
 
   Future<void> solicitudCredito(BuildContext context) async {
     ProgressDialog.show(context);
     var resp = await _solicitudesApi.getSolicitudCredito(
-        idSolicitud: solicitud.noSolicitudCredito!);
-    if (resp is Success) {
-      var data = resp.response as SolicitudCreditoResponse;
-      solicitudData = data.data;
-      tcVIN.text = data.data.chasis ?? '';
-      currentForm = 2;
+      idSolicitud: solicitud.noSolicitudCredito!,
+    );
+    if (resp is Success<SolicitudCreditoResponse>) {
+      solicitudData = resp.response.data;
+      tcVIN.text = solicitudData?.chasis ?? '';
+      notifyListeners();
+      // currentForm = 2;
+      ProgressDialog.dissmiss(context);
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+      ProgressDialog.dissmiss(context);
     }
     if (resp is TokenFail) {
-      ProgressDialog.dissmiss(context);
       Dialogs.error(msg: 'su sesión a expirado');
+      ProgressDialog.dissmiss(context);
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
-    ProgressDialog.dissmiss(context);
   }
 
   Future<void> consultarVIN(BuildContext context) async {
@@ -264,7 +287,7 @@ class TrabajarViewModel extends BaseViewModel {
     if (formKeyCondiciones.currentState!.validate()) {
       ProgressDialog.show(context);
       Map<String, dynamic> data = {
-        "idSolicitud": solicitudData!.noSolicitud,
+        "idSolicitud": solicitud.noSolicitudCredito,
         "condicionesComponenteVehiculo": List.from(
           condicionesData.map((x) => x.toJson()),
         ),
@@ -476,16 +499,16 @@ class TrabajarViewModel extends BaseViewModel {
   }
 }
 
-class FotoData {
-  File? file;
-  int? tipoAdjunto;
-  DescripcionFotoVehiculos? descripcion;
-  FotoData({
-    this.file,
-    this.tipoAdjunto,
-    this.descripcion,
-  });
-}
+// class FotoData {
+//   File? file;
+//   int? tipoAdjunto;
+//   DescripcionFotoVehiculos? descripcion;
+//   FotoData({
+//     this.file,
+//     this.tipoAdjunto,
+//     this.descripcion,
+//   });
+// }
 
 class CondicionComponenteVehiculoCreate {
   int idComponenteVehiculo;

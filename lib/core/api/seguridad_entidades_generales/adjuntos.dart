@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
 
@@ -91,7 +94,7 @@ class AdjuntosApi {
         "noTasacion": noTasacion,
         "adjuntos": adjuntos,
       };
-      // _logger.i(body);
+      _logger.d(jsonEncode(body));
       return _http.request(
         '/api/adjuntos/add-fotos-tasacion',
         method: "POST",

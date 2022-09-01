@@ -122,11 +122,20 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 3),
                                 Text(
+                                  '${s.descripcionTipoTasacion}',
+                                  style: const TextStyle(
+                                    color: AppColors.brownDark,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
                                   'Cliente: ${s.nombreCliente}',
                                   style: const TextStyle(
                                     color: AppColors.brownDark,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 const SizedBox(height: 3),
@@ -134,8 +143,8 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                                   'Fecha de Solicitud:  ${DateFormat.yMEd('es').format(s.fechaCreada!).toUpperCase()}',
                                   style: const TextStyle(
                                     color: AppColors.brownDark,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],

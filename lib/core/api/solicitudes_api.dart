@@ -6,6 +6,7 @@ import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
 import 'package:tasaciones_app/core/models/componente_condicion.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
+import 'package:tasaciones_app/core/models/ediciones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
@@ -157,15 +158,20 @@ class SolicitudesApi {
     }
   }
 
-  Future<Object> getCantidadFotos({String? idSuplidor}) async {
+  Future<Object> getCantidadFotos({int? idSuplidor}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
+      final body = {
+        "IdSuplidor": idSuplidor,
+      };
+      l.d(body);
       return _http.request(
-        '/api/fotos/get-cantidad',
+        '/api/fotos/get-cantidad?IdSuplidor=$idSuplidor',
         method: 'GET',
         headers: {
           'Authorization': 'Bearer $_token',
         },
+        // data: body,
         parser: (data) {
           return EntidadResponse.fromJson(data);
         },
@@ -253,6 +259,24 @@ class SolicitudesApi {
     }
   }
 
+  Future<Object> getEdicionesVehiculos({required int modeloid}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/infovehiculos/get-ediciones/$modeloid',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return edicionVehiculoFromJson(jsonEncode(data['data']));
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
   Future<Object> createCondicionComponente(
       {required Map<String, dynamic> data}) async {
     String? _token = await _authenticationClient.accessToken;
@@ -271,20 +295,16 @@ class SolicitudesApi {
   }
 
   Future<Object> createNewSolicitudEstimacion({
-    required String codigoEntidad,
-    required String codigoSucursal,
-    required String nombreCliente,
-    required String identificacion,
-    required String chasis,
-    required String placa,
     required int tipoTasacion,
     required int noSolicitudCredito,
-    required int idOficial,
+    required String chasis,
     required int marca,
     required int modelo,
     required int ano,
     required int tipoVehiculoLocal,
     required int versionLocal,
+    int? serie,
+    int? trim,
     required int sistemaTransmision,
     required int traccion,
     required int noPuertas,
@@ -292,30 +312,30 @@ class SolicitudesApi {
     required int fuerzaMotriz,
     required int nuevoUsado,
     required int kilometraje,
+    required String placa,
     required int color,
-    required int edicion,
-    int? suplidorTasacion,
-    int? serie,
-    int? trim,
     int? idPromotor,
+    int? edicion,
+    /* required String codigoEntidad,
+    required String codigoSucursal,
+    required String nombreCliente,
+    required String identificacion,
+    required int idOficial,
+    int? suplidorTasacion,*/
   }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       final body = {
-        "codigoEntidad": codigoEntidad,
-        "codigoSucursal": codigoSucursal,
-        "nombreCliente": nombreCliente,
-        "identificacion": identificacion,
-        "chasis": chasis,
-        "placa": placa,
         "tipoTasacion": tipoTasacion,
         "noSolicitudCredito": noSolicitudCredito,
-        "idOficial": idOficial,
+        "chasis": chasis,
         "marca": marca,
         "modelo": modelo,
         "ano": ano,
         "tipoVehiculoLocal": tipoVehiculoLocal,
         "versionLocal": versionLocal,
+        "serie": serie,
+        "trim": trim,
         "sistemaTransmision": sistemaTransmision,
         "traccion": traccion,
         "noPuertas": noPuertas,
@@ -323,12 +343,10 @@ class SolicitudesApi {
         "fuerzaMotriz": fuerzaMotriz,
         "nuevoUsado": nuevoUsado,
         "kilometraje": kilometraje,
+        "placa": placa,
         "color": color,
-        "edicion": edicion,
-        "suplidorTasacion": suplidorTasacion,
-        "serie": serie,
-        "trim": trim,
         "idPromotor": idPromotor,
+        "edicion": edicion,
       };
       l.d(body);
       return _http.request(
@@ -338,9 +356,9 @@ class SolicitudesApi {
           'Authorization': 'Bearer $_token',
         },
         data: body,
-        // parser: (data) {
-        //   return EntidadResponse.fromJson(data);
-        // },
+        parser: (data) {
+          return SolicitudesData.fromJson(data["data"]);
+        },
       );
     } else {
       return TokenFail();
@@ -387,7 +405,7 @@ class SolicitudesApi {
   }
 
   Future<Object> getColaSolicitudes({
-    int? estado,
+    String? estado,
     int? noSolicitud,
     int pageNumber = 1,
     int pageSize = 20,
@@ -410,6 +428,46 @@ class SolicitudesApi {
         queryParameters: params,
         parser: (data) {
           return GetSolicitudesResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateSentToProcess({required int noTasacion}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/solicitudes/update-send-to-process/$noTasacion',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getSolicitudesSearch({
+    required int noSolicitud,
+    required int noTasacion,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/solicitudes/search',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "NoSolicitud": noSolicitud,
+          "NoTasacion": noTasacion,
+        },
+        parser: (data) {
+          return SolicitudesData.fromJson(data["data"]);
         },
       );
     } else {
@@ -464,6 +522,7 @@ class SolicitudesApi {
         "placa": placa,
         "color": color,
       };
+      l.i(jsonEncode(body));
       return _http.request(
         '/api/solicitudes/update-estimacion',
         method: 'PUT',
@@ -472,6 +531,11 @@ class SolicitudesApi {
         },
         data: body,
       );
+      // await Future.delayed(Duration(milliseconds: 500));
+      // return Failure(
+      //     messages: ['Error prueba'],
+      //     supportMessage: 'supportMessage',
+      //     statusCode: 1000);
     } else {
       return TokenFail();
     }

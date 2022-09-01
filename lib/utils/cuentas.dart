@@ -10,5 +10,5 @@ class AppCuentas {
   String usuarioAprobadorTasacionesid = "aprobadortester@hotmail.com";
   String claveAprobadorTasacionesid = "eXterno!123.";
   String tasador = "tasadortester@hotmail.com";
-  String claveTasador = "123Pa\$\$word!";
+  String claveTasador = "eXterno!123.";
 }

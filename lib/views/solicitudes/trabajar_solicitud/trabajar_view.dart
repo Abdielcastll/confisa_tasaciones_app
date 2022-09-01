@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/views/solicitudes/trabajar_solicitud/trabajar_view_model.dart';
 import '../../../core/models/solicitudes/solicitudes_get_response.dart';
+import '../../../widgets/app_progress_widget.dart';
 import 'widgets/forms/tasacion/tasacion_accesorios.dart';
 import 'widgets/forms/tasacion/tasacion_condiciones.dart';
 import 'widgets/forms/tasacion/tasacion_fotos.dart';
@@ -25,7 +26,7 @@ class TrabajarView extends StatelessWidget {
     return ViewModelBuilder<TrabajarViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          viewModel.onInit(solicitudData);
+          viewModel.onInit(context, solicitudData);
         },
         builder: (context, viewModel, child) {
           return _TrabajarMobile(viewModel);

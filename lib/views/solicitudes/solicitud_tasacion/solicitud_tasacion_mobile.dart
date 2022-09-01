@@ -12,7 +12,13 @@ class _SolicitudTasacionMobile extends StatelessWidget {
           title: Text(vm.incautado
               ? 'Tasación de Incautado'
               : 'Solicitud de Tasación')),
-      body: _form(),
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          LineProgressWidget(totalItem: 2, currentItem: vm.currentForm),
+          Expanded(child: _form()),
+        ],
+      ),
     );
   }
 
