@@ -334,6 +334,9 @@ class RecursosViewModel extends BaseViewModel {
                                     modulo?.id != recurso.idModulo) {
                                   ProgressDialog.show(context);
                                   var resp = await _recursosApi.updateRecursos(
+                                    descripcionMenuConfiguracion:
+                                        tcDecripcionMenu.text.trim(),
+                                    esMenuConfiguracion: mostrarEnMenu ? 1 : 0,
                                     idModulo: modulo == null
                                         ? recurso.idModulo
                                         : modulo!.id,

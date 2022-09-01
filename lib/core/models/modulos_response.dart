@@ -48,13 +48,18 @@ class ModulosResponse {
 }
 
 class ModulosData {
-  ModulosData({required this.id, required this.estado, required this.nombre});
+  ModulosData(
+      {required this.id,
+      required this.estado,
+      required this.nombre,
+      required this.moduloPadre});
 
   String nombre;
-  int id, estado;
+  int id, estado, moduloPadre;
 
   factory ModulosData.fromJson(Map<String, dynamic> json) => ModulosData(
       id: json["id"] ?? 0,
+      moduloPadre: json["moduloPadre"] ?? 0,
       estado: json["estado"] ?? 0,
       nombre: json["nombre"] ?? '');
 

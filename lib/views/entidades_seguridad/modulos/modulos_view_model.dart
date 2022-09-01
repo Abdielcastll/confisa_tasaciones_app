@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/modulos_response.dart';
@@ -24,6 +25,8 @@ class ModulosViewModel extends BaseViewModel {
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
+  int idModuloPadre = 0;
+  bool tieneModuloPadre = false;
   late ModulosResponse modulosResponse;
 
   ModulosViewModel() {
@@ -126,6 +129,8 @@ class ModulosViewModel extends BaseViewModel {
     }
     notifyListeners();
     tcBuscar.clear();
+    idModuloPadre = 0;
+    tieneModuloPadre = false;
   }
 
   Future<void> onRefresh() async {
@@ -150,127 +155,365 @@ class ModulosViewModel extends BaseViewModel {
 
   Future<void> modificarModulo(BuildContext ctx, ModulosData modulo) async {
     tcNewName.text = modulo.nombre;
+    tieneModuloPadre = modulo.moduloPadre == 0 ? false : true;
+    idModuloPadre = modulo.moduloPadre == 0 ? 0 : modulo.moduloPadre;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
         builder: (BuildContext context) {
-          return AlertDialog(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            contentPadding: EdgeInsets.zero,
-            content: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 80,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    color: AppColors.brownLight,
-                    child: const Text(
-                      'Modificar Módulo',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewName,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un nombre';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Nombre"),
-                          border: UnderlineInputBorder(),
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: EdgeInsets.zero,
+              content: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      color: AppColors.brownLight,
+                      child: const Text(
+                        'Modificar Módulo',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Módulo',
-                              description:
-                                  '¿Esta seguro de eliminar el módulo ${modulo.nombre}?',
-                              confirm: () async {
-                            ProgressDialog.show(ctx);
-                            var resp =
-                                await _modulosApi.deleteModulos(id: modulo.id);
-                            ProgressDialog.dissmiss(ctx);
-                            if (resp is Failure) {
-                              Dialogs.error(msg: resp.messages[0]);
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewName,
+                          validator: (value) {
+                            if (value!.trim() == '') {
+                              return 'Escriba un nombre';
+                            } else {
+                              return null;
                             }
-                            if (resp is Success) {
-                              Dialogs.success(msg: 'Módulo eliminado');
-                              await onRefresh();
-                            }
-                            if (resp is TokenFail) {
-                              Dialogs.error(msg: 'su sesión a expirado');
-                              _navigatorService.navigateToPageAndRemoveUntil(
-                                  LoginView.routeName);
-                            }
+                          },
+                          decoration: const InputDecoration(
+                            label: Text("Nombre"),
+                            border: UnderlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    CheckboxListTile(
+                        title: const Text('¿Módulo Padre?'),
+                        value: tieneModuloPadre,
+                        onChanged: (value) {
+                          setState(() {
+                            tieneModuloPadre = value!;
                           });
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.trash,
-                              color: AppColors.grey,
+                        }),
+                    tieneModuloPadre
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DropdownSearch<String>(
+                              selectedItem: tieneModuloPadre
+                                  ? modulos
+                                      .firstWhere((element) =>
+                                          element.moduloPadre ==
+                                          modulo.moduloPadre)
+                                      .nombre
+                                  : "",
+                              dropdownDecoratorProps:
+                                  const DropDownDecoratorProps(
+                                      dropdownSearchDecoration: InputDecoration(
+                                          border: UnderlineInputBorder(),
+                                          label: Text("Módulo Padre"))),
+                              validator: (value) => value == null
+                                  ? tieneModuloPadre
+                                      ? 'Debe escojer un módulo padre o seleccionar ninguno'
+                                      : null
+                                  : null,
+                              popupProps: const PopupProps.menu(
+                                  fit: FlexFit.loose,
+                                  showSelectedItems: true,
+                                  searchDelay: Duration(microseconds: 0)),
+                              items: modulos.map((e) => e.nombre).toList(),
+                              onChanged: (newValue) {
+                                idModuloPadre = modulos
+                                    .firstWhere(
+                                        (element) => element.nombre == newValue)
+                                    .id;
+                              },
                             ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Eliminar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewName.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            if (tcNewName.text.trim() != modulo.nombre) {
-                              ProgressDialog.show(context);
-                              var resp = await _modulosApi.updateModulos(
-                                  name: tcNewName.text, id: modulo.id);
-                              ProgressDialog.dissmiss(context);
+                          )
+                        : const SizedBox(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Dialogs.confirm(ctx,
+                                tittle:
+                                    '${modulo.estado == 1 ? "Inactivar" : "Activar"} Módulo',
+                                description:
+                                    '¿Esta seguro de ${modulo.estado == 1 ? "inactivar" : "activar"} el módulo ${modulo.nombre}?',
+                                confirm: () async {
+                              ProgressDialog.show(ctx);
+                              var resp = await _modulosApi.deleteModulos(
+                                  id: modulo.id);
+                              ProgressDialog.dissmiss(ctx);
+                              if (resp is Failure) {
+                                Dialogs.error(msg: resp.messages[0]);
+                              }
                               if (resp is Success) {
+                                Dialogs.success(
+                                    msg: 'Estado modificado con éxito');
+                                await onRefresh();
+                              }
+                              if (resp is TokenFail) {
+                                Dialogs.error(msg: 'Su sesión a expirado');
+                                _navigatorService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                              }
+                            });
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                modulo.estado == 1
+                                    ? AppIcons.trash
+                                    : AppIcons.checkCircle,
+                                color: AppColors.grey,
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text(modulo.estado == 1
+                                  ? "Inactivar"
+                                  : "Activar"), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            tcNewName.clear();
+                            idModuloPadre = 0;
+                            tieneModuloPadre = false;
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.closeCircle,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (tcNewName.text.trim() != modulo.nombre ||
+                                  idModuloPadre != modulo.moduloPadre ||
+                                  tieneModuloPadre == false) {
+                                ProgressDialog.show(context);
+                                var resp = await _modulosApi.updateModulos(
+                                    estado: modulo.estado,
+                                    moduloPadre:
+                                        tieneModuloPadre ? idModuloPadre : 0,
+                                    name: tcNewName.text,
+                                    id: modulo.id);
+                                ProgressDialog.dissmiss(context);
+                                if (resp is Success) {
+                                  tcNewName.clear();
+                                  idModuloPadre = 0;
+                                  tieneModuloPadre = false;
+                                  Dialogs.success(msg: 'Módulo Actualizado');
+                                  Navigator.of(context).pop();
+                                  await onRefresh();
+                                }
+
+                                if (resp is Failure) {
+                                  ProgressDialog.dissmiss(context);
+                                  Dialogs.error(msg: resp.messages[0]);
+                                }
+                                if (resp is TokenFail) {
+                                  Dialogs.error(msg: 'su sesión a expirado');
+                                  _navigatorService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
+                                }
+                              } else {
+                                tcNewName.clear();
+                                idModuloPadre = 0;
+                                tieneModuloPadre = false;
                                 Dialogs.success(msg: 'Módulo Actualizado');
                                 Navigator.of(context).pop();
+                              }
+                            }
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Guardar"), // text
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            );
+          });
+        });
+  }
+
+  Future<void> crearModulo(BuildContext ctx) async {
+    tcNewName.clear();
+    idModuloPadre = 0;
+    tieneModuloPadre = false;
+    final GlobalKey<FormState> _formKey = GlobalKey();
+    showDialog(
+        context: ctx,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: EdgeInsets.zero,
+              content: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      color: AppColors.brownLight,
+                      child: const Text(
+                        'Crear Módulo',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewName,
+                          validator: (value) {
+                            if (value!.trim() == '') {
+                              return 'Escriba un nombre';
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            label: Text("Nombre"),
+                            border: UnderlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    CheckboxListTile(
+                        title: const Text('¿Módulo Padre?'),
+                        value: tieneModuloPadre,
+                        onChanged: (value) {
+                          setState(() {
+                            tieneModuloPadre = value!;
+                          });
+                        }),
+                    tieneModuloPadre
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DropdownSearch<String>(
+                              dropdownDecoratorProps:
+                                  const DropDownDecoratorProps(
+                                      dropdownSearchDecoration: InputDecoration(
+                                          border: UnderlineInputBorder(),
+                                          label: Text("Módulo Padre"))),
+                              validator: (value) => value == null
+                                  ? tieneModuloPadre
+                                      ? 'Debe escojer un módulo padre o seleccionar ninguno'
+                                      : null
+                                  : null,
+                              popupProps: const PopupProps.menu(
+                                  fit: FlexFit.loose,
+                                  showSelectedItems: true,
+                                  searchDelay: Duration(microseconds: 0)),
+                              items: modulos.map((e) => e.nombre).toList(),
+                              onChanged: (newValue) {
+                                idModuloPadre = modulos
+                                    .firstWhere(
+                                        (element) => element.nombre == newValue)
+                                    .id;
+                              },
+                            ),
+                          )
+                        : const SizedBox(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            tcNewName.clear();
+                            idModuloPadre = 0;
+                            tieneModuloPadre = false;
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.closeCircle,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              ProgressDialog.show(context);
+                              var resp = await _modulosApi.createModulos(
+                                  idModuloPadre:
+                                      tieneModuloPadre ? idModuloPadre : 0,
+                                  name: tcNewName.text.trim());
+                              ProgressDialog.dissmiss(context);
+                              if (resp is Success) {
+                                Dialogs.success(msg: 'Módulo Creado');
+                                Navigator.of(context).pop();
+                                tcNewName.clear();
+                                idModuloPadre = 0;
+                                tieneModuloPadre = false;
                                 await onRefresh();
                               }
 
@@ -283,155 +526,30 @@ class ModulosViewModel extends BaseViewModel {
                                 _navigatorService.navigateToPageAndRemoveUntil(
                                     LoginView.routeName);
                               }
-                              tcNewName.clear();
-                            } else {
-                              Dialogs.success(msg: 'Módulo Actualizado');
-                              Navigator.of(context).pop();
                             }
-                          }
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.save,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
+                          }, // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.save,
+                                color: AppColors.green,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Guardar"), // text
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Future<void> crearModulo(BuildContext ctx) async {
-    tcNewName.clear();
-    final GlobalKey<FormState> _formKey = GlobalKey();
-    showDialog(
-        context: ctx,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            contentPadding: EdgeInsets.zero,
-            content: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 80,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    color: AppColors.brownLight,
-                    child: const Text(
-                      'Crear Módulo',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewName,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un nombre';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Nombre"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewName.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            ProgressDialog.show(context);
-                            var resp = await _modulosApi.createModulos(
-                                name: tcNewName.text.trim());
-                            ProgressDialog.dissmiss(context);
-                            if (resp is Success) {
-                              Dialogs.success(msg: 'Módulo Creado');
-                              Navigator.of(context).pop();
-                              await onRefresh();
-                            }
-
-                            if (resp is Failure) {
-                              ProgressDialog.dissmiss(context);
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is TokenFail) {
-                              Dialogs.error(msg: 'su sesión a expirado');
-                              _navigatorService.navigateToPageAndRemoveUntil(
-                                  LoginView.routeName);
-                            }
-                            tcNewName.clear();
-                          }
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.save,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                ],
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          });
         });
   }
 
@@ -440,6 +558,8 @@ class ModulosViewModel extends BaseViewModel {
     listController.dispose();
     tcBuscar.dispose();
     tcNewName.dispose();
+    idModuloPadre = 0;
+    tieneModuloPadre = false;
     super.dispose();
   }
 }
