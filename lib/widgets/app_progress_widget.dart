@@ -38,6 +38,14 @@ class LineProgressWidget extends StatelessWidget {
                   totalItem,
                   (i) => ClipOval(
                         child: Container(
+                          child: Center(
+                              child: Text(
+                            (i + 1).toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )),
                           height: 30,
                           width: 30,
                           color: currentItem == i + 1
