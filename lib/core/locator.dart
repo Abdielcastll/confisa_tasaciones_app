@@ -25,7 +25,6 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmento
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/vencimiento_estados_api.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
-import 'package:tasaciones_app/core/api/suplidores_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 

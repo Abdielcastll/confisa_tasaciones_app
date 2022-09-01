@@ -1,13 +1,9 @@
 library consultar_modificar_view;
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/widgets/forms/fotos.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/widgets/forms/vehiculo.dart';
-import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import '../../../core/models/solicitudes/solicitudes_get_response.dart';
 import '../../../widgets/app_progress_widget.dart';
 import '../solicitud_estimacion/widgets/forms/enviar.dart';

@@ -17,7 +17,7 @@ class _PerfilMobile extends StatelessWidget {
         appBar: Appbar(
           titulo: 'Perfil de usuario',
           textSize: 20,
-          alarmas: [],
+          alarmas: const [],
           esColaSolicitud: false,
           currentForm: 0,
           idSolicitud: 0,

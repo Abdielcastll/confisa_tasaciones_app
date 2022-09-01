@@ -9,7 +9,6 @@ import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
-import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
 
 import '../../../core/api/api_status.dart';
 import '../../../core/authentication_client.dart';

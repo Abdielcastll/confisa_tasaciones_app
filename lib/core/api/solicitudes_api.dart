@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
@@ -15,7 +14,6 @@ import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 
 import '../authentication_client.dart';
 import '../models/descripcion_foto_vehiculo.dart';
-import '../models/solicitudes/solicitud_create_data.dart';
 import '../models/solicitudes/solicitud_credito_response.dart';
 import '../models/vin_decoder_response.dart';
 import 'api_status.dart';

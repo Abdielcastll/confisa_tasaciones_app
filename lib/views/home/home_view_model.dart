@@ -8,7 +8,6 @@ import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
-import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/providers/permisos_provider.dart';
 
 import '../../../core/api/api_status.dart';

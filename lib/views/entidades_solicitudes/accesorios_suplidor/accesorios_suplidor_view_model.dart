@@ -7,7 +7,6 @@ import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/accesorios_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/accesorios_suplidor_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
-import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/buscador.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_roles.dart';

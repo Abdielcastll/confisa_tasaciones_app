@@ -1,7 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
-import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view_model.dart';
 

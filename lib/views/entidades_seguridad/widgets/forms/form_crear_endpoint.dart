@@ -38,7 +38,6 @@ class CrearEndpointForm extends StatelessWidget {
     String controlador = "";
     String nombre = "";
     String metodo = "";
-    String httpVerbo = "";
     String selectedItem = endpointsData.httpVerbo;
     return Column(
       mainAxisSize: MainAxisSize.min,
