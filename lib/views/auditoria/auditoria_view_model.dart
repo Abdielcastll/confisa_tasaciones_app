@@ -101,7 +101,8 @@ class AuditoriaViewModel extends BaseViewModel {
         auditoriasTemp.removeWhere((element) => element.userId != value);
         break;
       case "Fecha":
-        auditoriasTemp.removeWhere((element) => element.fecha != value);
+        auditoriasTemp
+            .removeWhere((element) => element.fecha.split("T").first != value);
 
         break;
       default:
@@ -216,7 +217,6 @@ class AuditoriaViewModel extends BaseViewModel {
 
   Future<void> modificarAuditoria(
       BuildContext ctx, AuditoriaData auditoria) async {
-    /* tcNewDescripcion.text = auditorias.descripcion;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -230,7 +230,6 @@ class AuditoriaViewModel extends BaseViewModel {
             content: Form(
               key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     height: 80,
@@ -240,7 +239,7 @@ class AuditoriaViewModel extends BaseViewModel {
                     child: const Padding(
                       padding: EdgeInsets.all(12.0),
                       child: Text(
-                        'Modificar Período Eliminación Data Gráfica',
+                        'Visualizar Auditoria',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -250,22 +249,119 @@ class AuditoriaViewModel extends BaseViewModel {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewDescripcion,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            label: Text("Descripción")),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.nombreTabla,
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Nombre Tabla")),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.userId,
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Usuario")),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.fecha.split("T").first,
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Fecha")),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.fecha.split("T")[1],
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Hora")),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.tipo,
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Tipo")),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.columnasAfectadas,
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Columnas Afectadas")),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.valoresAnteriores,
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Valores Anteriores")),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.valoresNuevos,
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Valores Nuevos")),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                readOnly: true,
+                                initialValue: auditoria.primaryKey,
+                                decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    label: Text("Primary Key")),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -291,73 +387,6 @@ class AuditoriaViewModel extends BaseViewModel {
                           ],
                         ),
                       ),
-                      TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            if ((tcNewDescripcion.text.trim() !=
-                                Auditoria.descripcion.toString())) {
-                              ProgressDialog.show(context);
-                              Object resp;
-                              switch (_opcion) {
-                                case "Vencida":
-                                  resp = await _AuditoriaApi
-                                      .updateAuditoriaVencida(
-                                          descripcion: tcNewDescripcion.text,
-                                          id: Auditoria.id);
-                                  break;
-                                case "Valorada":
-                                  resp = await _AuditoriaApi
-                                      .updateAuditoriaValorada(
-                                          descripcion: tcNewDescripcion.text,
-                                          id: Auditoria.id);
-                                  break;
-                                case "Rechazada":
-                                  resp = await _AuditoriaApi
-                                      .updateAuditoriaRechazada(
-                                          descripcion: tcNewDescripcion.text,
-                                          id: Auditoria.id);
-                                  break;
-                                default:
-                                  resp =
-                                      await _AuditoriaApi.getAuditoriaVencida(
-                                          pageNumber: pageNumber);
-                              }
-
-                              ProgressDialog.dissmiss(context);
-                              if (resp is Success) {
-                                Dialogs.success(
-                                    msg:
-                                        'Período Eliminación Data Gráfica Actualizada');
-                                Navigator.of(context).pop();
-                                await onRefresh();
-                              }
-                              if (resp is Failure) {
-                                ProgressDialog.dissmiss(context);
-                                Dialogs.error(msg: resp.messages[0]);
-                              }
-                              tcNewDescripcion.clear();
-                            } else {
-                              Dialogs.success(
-                                  msg:
-                                      'Período Eliminación Data Gráfica Actualizada');
-                              Navigator.of(context).pop();
-                            }
-                          }
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.save,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -365,7 +394,7 @@ class AuditoriaViewModel extends BaseViewModel {
               ),
             ),
           );
-        }); */
+        });
   }
 
   @override

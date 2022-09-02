@@ -25,9 +25,16 @@ class _AuditoriaMobile extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Expanded(
-                  child: Card(
-                    child: Padding(
+                Container(
+                    width: vm.primeraConsulta
+                        ? 150
+                        : MediaQuery.of(context).size.width,
+                    height: 66,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Card(
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: DropdownSearch<String>(
                             selectedItem: vm.opcion1,
@@ -39,11 +46,12 @@ class _AuditoriaMobile extends StatelessWidget {
                                         label: Text("Opciones"),
                                         border: UnderlineInputBorder())),
                             items: vm.opciones(numeroOpcion: 1),
-                            onChanged: (String? value) => vm.opcion = value!)),
-                  ),
-                ),
+                            onChanged: (String? value) => vm.opcion = value!),
+                      ),
+                    )),
                 vm.primeraConsulta
-                    ? Expanded(
+                    ? Flexible(
+                        fit: FlexFit.loose,
                         child: Card(
                           child: Padding(
                               padding:
@@ -56,11 +64,10 @@ class _AuditoriaMobile extends StatelessWidget {
                                           label: Text(vm.opcion1),
                                           border:
                                               const UnderlineInputBorder())),
-                                  selectedItem: vm.auditorias.isEmpty
-                                      ? "Temp"
-                                      : vm.opcion2,
+                                  selectedItem:
+                                      vm.auditorias.isEmpty ? "" : vm.opcion2,
                                   items: vm.auditorias.isEmpty
-                                      ? ["Temp"]
+                                      ? [""]
                                       : vm.opciones(numeroOpcion: 2),
                                   onChanged: (String? value) =>
                                       vm.opcion2 = value!)),
@@ -146,7 +153,7 @@ class _AuditoriaMobile extends StatelessWidget {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "Fecha: ${auditoria.fecha}",
+                                                      "Fecha: ${auditoria.fecha.split("T").first} Hora:${auditoria.fecha.split("T")[1]}",
                                                       style: const TextStyle(
                                                           color: AppColors
                                                               .brownDark,
@@ -184,7 +191,7 @@ class _AuditoriaMobile extends StatelessWidget {
                                                           ),
                                                         ),
                                                         Text(
-                                                          "Fecha: ${auditoria.fecha}",
+                                                          "Fecha: ${auditoria.fecha.split("T").first} Hora:${auditoria.fecha.split("T")[1]}",
                                                           style: const TextStyle(
                                                               color: AppColors
                                                                   .brownDark,
@@ -209,7 +216,7 @@ class _AuditoriaMobile extends StatelessWidget {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              auditoria.fecha,
+                                                              "Fecha: ${auditoria.fecha.split("T").first} Hora:${auditoria.fecha.split("T")[1]}",
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
