@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/views/auditoria/auditoria_view.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/views/entidades_generales/acciones_pendientes/acciones_pendientes_view.dart';
@@ -191,6 +192,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 idSolicitud: 1,
                 showCreate: true,
               ));
+
+    case AuditoriaView.routeName:
+      return CupertinoPageRoute(builder: (context) => const AuditoriaView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());
