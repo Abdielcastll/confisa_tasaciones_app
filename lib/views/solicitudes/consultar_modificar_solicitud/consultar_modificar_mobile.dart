@@ -9,8 +9,14 @@ class _ConsultarModificarMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 // <<<<<<< HEAD
-      appBar:
-          AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')),
+      appBar: Appbar(
+          titulo: vm.solicitudCola.descripcionTipoTasacion ?? '',
+          textSize: 18,
+          alarmas: vm.alarmas,
+          esColaSolicitud: (vm.solicitud.id != null) ? false : true,
+          currentForm: vm.currentForm,
+          idSolicitud: vm.solicitud.id ??
+              0) /* AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')) */,
       body: Column(
         children: [
           const SizedBox(height: 10),

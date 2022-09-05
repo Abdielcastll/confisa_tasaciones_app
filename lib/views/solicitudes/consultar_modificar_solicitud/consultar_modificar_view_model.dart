@@ -55,7 +55,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int _currentForm = 1;
   VinDecoderData? _vinData;
   late SolicitudesData solicitudCola;
-  late SolicitudesData solicitud;
+  late SolicitudesData solicitud = SolicitudesData();
 
   TextEditingController tcFuerzaMotriz = TextEditingController();
   TextEditingController tcKilometraje = TextEditingController();
