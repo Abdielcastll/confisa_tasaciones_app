@@ -16,7 +16,7 @@ class _AlarmasMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: Text(
-            'Alarmas de ${vm.idSolicitud}',
+            'Alarmas ${vm.idSolicitud == 0 ? "" : "de ${vm.idSolicitud}"}',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
