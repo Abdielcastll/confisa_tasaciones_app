@@ -79,8 +79,9 @@ class AlarmasViewModel extends BaseViewModel {
         default:
       }
     } else {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _alarmasApi.getAlarmas(
               pageNumber: pageNumber, idSolicitud: idSolicitud);

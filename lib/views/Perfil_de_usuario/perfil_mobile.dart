@@ -19,7 +19,6 @@ class _PerfilMobile extends StatelessWidget {
           textSize: 20,
           alarmas: const [],
           esColaSolicitud: false,
-          currentForm: 0,
           idSolicitud: 0,
         ),
 // >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932

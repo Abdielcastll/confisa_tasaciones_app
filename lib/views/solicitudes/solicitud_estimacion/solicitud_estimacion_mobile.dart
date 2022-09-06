@@ -14,8 +14,7 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
         esColaSolicitud: false,
         textSize: 20,
         alarmas: vm.alarmas,
-        currentForm: vm.currentForm,
-        idSolicitud: vm.currentForm == 3 ? vm.solicitud!.noSolicitud! : 0,
+        idSolicitud: vm.solicitud!.noSolicitud ?? 0,
       ),
       body: Column(
         children: [

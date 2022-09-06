@@ -1,6 +1,8 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tasaciones_app/core/api/alarmas.dart';
+import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
@@ -27,21 +29,21 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       required this.textSize,
       required this.alarmas,
       required this.esColaSolicitud,
-      required this.currentForm,
       required this.idSolicitud})
       : super(key: key);
   final String titulo;
   final double textSize;
   final List<AlarmasData>? alarmas;
   final _authenticationAPI = locator<AuthenticationClient>();
+  final _alarmasApi = locator<AlarmasApi>();
   final bool esColaSolicitud;
-  final int currentForm;
   final int idSolicitud;
 // >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
   @override
   Widget build(BuildContext context) {
     final pref = _authenticationAPI.loadSession;
     final roles = pref.role;
+
     return AppBar(
       title: Text(
         titulo,
@@ -211,145 +213,60 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               )
-            : currentForm == 3
-                ? Row(
+            : Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotasView(
+                                    showCreate: true,
+                                    idSolicitud: idSolicitud,
+                                  )),
+                        );
+                      },
+                      icon: const Icon(
+                        AppIcons.pencilAlt,
+                        size: 24,
+                      )),
+                  Stack(
+                    alignment: AlignmentDirectional.center,
                     children: [
                       IconButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => NotasView(
+                                  builder: (context) => AlarmasView(
                                         showCreate: true,
                                         idSolicitud: idSolicitud,
                                       )),
                             );
                           },
                           icon: const Icon(
-                            AppIcons.pencilAlt,
+                            AppIcons.bell,
                             size: 24,
                           )),
-                      Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AlarmasView(
-                                            showCreate: true,
-                                            idSolicitud: idSolicitud,
-                                          )),
-                                );
-                              },
-                              icon: const Icon(
-                                AppIcons.bell,
-                                size: 24,
-                              )),
-                          Positioned(
-                            top: 15,
-                            left: 6,
-                            child: Container(
-                              child: Text(alarmas!.length.toString(),
-                                  style: const TextStyle(fontSize: 12)),
-                              alignment: AlignmentDirectional.center,
-                              height: 16,
-                              width: 16,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(30),
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
-                                //   ),
-                                //   textColor: Colors.white,
-                                //   color: AppColors.newBrownDark,
-                                // ),
-// <<<<<<< HEAD
-                                /* const SizedBox(height: 15),
-                            MaterialButton(
-                              height: 50,
-                              minWidth: double.infinity,
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pushNamed(
-                                    context, SolicitudTasacionView.routeName);
-                              },
-                              child: const Text(
-                                'Tasación',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              textColor: Colors.white,
-                              color: AppColors.brown,
-                            ),
-                            const SizedBox(height: 15),
-                            MaterialButton(
-                              height: 50,
-                              minWidth: double.infinity,
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.push(context,
-                                    CupertinoPageRoute(builder: (_) {
-                                  return const SolicitudTasacionView(
-                                      incautado: true);
-                                }));
-                                // Navigator.pushNamed(
-                                //   context,
-                                //   SolicitudTasacionView.routeName,
-                                //   arguments: {'tipo': 'de Incautado'},
-                                // );
-                              },
-                              child: const Text(
-                                'Tasación de Incauto',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              textColor: Colors.white,
-                              color: AppColors.brownLight,
-                            )
-                          ],
+                      Positioned(
+                        top: 15,
+                        left: 6,
+                        child: Container(
+                          child: Text(alarmas!.length.toString(),
+                              style: const TextStyle(fontSize: 12)),
+                          alignment: AlignmentDirectional.center,
+                          height: 16,
+                          width: 16,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
-                      ),
-                    );
-                  });
-            },
-            icon: SvgPicture.asset('assets/img/list.svg'),
-          ),
-        Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-            IconButton(
-                onPressed: () {},
-                icon: SvgPicture.asset('assets/img/notification.svg')),
-            /*Positioned(
-              top: 15,
-              left: 6,
-              child: Container(
-                child: const Text("5", style: TextStyle(fontSize: 12)),
-                alignment: AlignmentDirectional.center,
-                height: 13,
-                width: 13,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-            ),*/
-          ],
-        ),
-=======*/
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                      )
                     ],
-                  )
-                : const SizedBox(),
+                  ),
+                ],
+              ),
 // >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
         // IconButton(
         //     onPressed: () {},

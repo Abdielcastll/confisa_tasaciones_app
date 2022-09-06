@@ -83,6 +83,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int get currentForm => _currentForm;
   set currentForm(int i) {
     _currentForm = i;
+    getAlarmas();
     notifyListeners();
   }
 
@@ -99,8 +100,31 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> getAlarmas() async {
+    if (solicitudCola.id != null) {
+      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCola.id);
+      if (resp is Success<AlarmasResponse>) {
+        alarmasResponse = resp.response;
+        alarmas = resp.response.data;
+      } else if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+    }
+    notifyListeners();
+  }
+
   void onInit(SolicitudesData? data) async {
     solicitudCola = data!;
+
+    if (solicitudCola.id != null) {
+      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCola.id);
+      if (resp is Success<AlarmasResponse>) {
+        alarmasResponse = resp.response;
+        alarmas = resp.response.data;
+      } else if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+    }
     // var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
     // if (resp is Success<List<DescripcionFotoVehiculos>>) {
     //   descripcionFotos = resp.response;

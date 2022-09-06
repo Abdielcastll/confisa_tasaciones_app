@@ -13,9 +13,8 @@ class _ConsultarModificarMobile extends StatelessWidget {
           titulo: vm.solicitudCola.descripcionTipoTasacion ?? '',
           textSize: 18,
           alarmas: vm.alarmas,
-          esColaSolicitud: (vm.solicitud.id != null) ? false : true,
-          currentForm: vm.currentForm,
-          idSolicitud: vm.solicitud.id ??
+          esColaSolicitud: (vm.solicitudCola.id != null) ? false : true,
+          idSolicitud: vm.solicitudCola.id ??
               0) /* AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')) */,
       body: Column(
         children: [
