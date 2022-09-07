@@ -13,6 +13,7 @@ import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
+import 'package:tasaciones_app/core/models/solicitudes/solicitud_credito_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 // <<<<<<< HEAD
 import 'package:tasaciones_app/core/utils/create_file_from_string.dart';
@@ -54,7 +55,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   GlobalKey<FormState> formKeyFotos = GlobalKey<FormState>();
   int _currentForm = 1;
   VinDecoderData? _vinData;
-  late SolicitudesData solicitudCola;
+  SolicitudCreditoData? solicitudCreditoData;
   late SolicitudesData solicitud;
 
   TextEditingController tcFuerzaMotriz = TextEditingController();
@@ -99,13 +100,14 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onInit(SolicitudesData? data) async {
-    solicitudCola = data!;
-    // var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
-    // if (resp is Success<List<DescripcionFotoVehiculos>>) {
-    //   descripcionFotos = resp.response;
-    // }
-    notifyListeners();
+  void onInit(BuildContext context, SolicitudesData? data) async {
+    solicitud = data!;
+    tcVIN.text = solicitud.chasis ?? '';
+    tcKilometraje.text = solicitud.kilometraje.toString();
+    tcPlaca.text = solicitud.placa ?? '';
+    tcFuerzaMotriz.text = solicitud.fuerzaMotriz.toString();
+    await Future.delayed(const Duration(milliseconds: 150));
+    solicitudCredito(context);
   }
 
   Future<List<DescripcionFotoVehiculos>> getDescripcionFotos(
@@ -129,32 +131,22 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   Future<void> solicitudCredito(BuildContext context) async {
-    if (formKey.currentState!.validate()) {
-      ProgressDialog.show(context);
-
-      var resp = await _solicitudesApi.getSolicitudesSearch(
-        noSolicitud: solicitudCola.noSolicitudCredito!,
-        noTasacion: solicitudCola.noTasacion!,
-      );
-      if (resp is Success<SolicitudesData>) {
-        solicitud = resp.response;
-        log.i(jsonEncode(solicitud));
-        tcVIN.text = solicitud.chasis ?? '';
-        tcKilometraje.text = solicitud.kilometraje.toString();
-        tcPlaca.text = solicitud.placa ?? '';
-        tcFuerzaMotriz.text = solicitud.fuerzaMotriz.toString();
-        ProgressDialog.dissmiss(context);
-        currentForm = 2;
-      }
-      if (resp is Failure) {
-        Dialogs.error(msg: resp.messages[0]);
-        ProgressDialog.dissmiss(context);
-      }
-      if (resp is TokenFail) {
-        Dialogs.error(msg: 'su sesión a expirado');
-        ProgressDialog.dissmiss(context);
-        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      }
+    ProgressDialog.show(context);
+    var resp = await _solicitudesApi.getSolicitudCredito(
+        idSolicitud: solicitud.noSolicitudCredito!);
+    if (resp is Success<SolicitudCreditoResponse>) {
+      solicitudCreditoData = resp.response.data;
+      notifyListeners();
+      ProgressDialog.dissmiss(context);
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+      ProgressDialog.dissmiss(context);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
@@ -306,7 +298,10 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   void cargarFotoNuevas(int i) async {
-    var img = await _picker.pickImage(source: ImageSource.camera);
+    var img = await _picker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 720,
+    );
     if (img != null) {
       fotos[i] = FotoData(file: File(img.path));
       notifyListeners();
@@ -314,8 +309,11 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   void cargarFoto(int i) async {
-    if (solicitudCola.estadoTasacion == 34) {
-      var img = await _picker.pickImage(source: ImageSource.camera);
+    if (solicitud.estadoTasacion == 34) {
+      var img = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 720,
+      );
       if (img != null) {
         final foto = File(img.path);
         final fotoBase = base64Encode(foto.readAsBytesSync());
@@ -520,8 +518,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     if (formKey2.currentState!.validate()) {
       ProgressDialog.show(context);
       var resp = await _solicitudesApi.getVinDecoder(
-          chasisCode: tcVIN.text,
-          noSolicitud: solicitudCola.noSolicitudCredito!);
+          chasisCode: tcVIN.text, noSolicitud: solicitud.noSolicitudCredito!);
       if (resp is Success) {
         var data = resp.response as VinDecoderResponse;
         vinData = data.data;

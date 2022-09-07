@@ -86,7 +86,7 @@ class FotosNuevas extends StatelessWidget {
                           ),
                   ),
                 ),
-                if (foto.descripcion != '')
+                if (foto.file?.path != '')
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -103,7 +103,7 @@ class FotosNuevas extends StatelessWidget {
                         onChanged: (v) => foto.descripcion = v,
                         dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                                label: Text('Descripción:'),
+                                label: Text('Tipo:'),
                                 labelStyle: TextStyle(fontSize: 16),
                                 border: UnderlineInputBorder())),
                         popupProps: PopupProps.menu(
@@ -210,14 +210,14 @@ class FotosActuales extends StatelessWidget {
                           ),
                   ),
                 ),
-                vm.solicitudCola.estadoTasacion != 34
+                vm.solicitud.estadoTasacion != 34
                     ?
                     // if (foto.path != '')
                     Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
-                            'Descripción:\n${vm.fotosAdjuntos[i].descripcion}',
+                            'Tipo:\n${vm.fotosAdjuntos[i].descripcion}',
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
@@ -241,7 +241,7 @@ class FotosActuales extends StatelessWidget {
                               dropdownDecoratorProps:
                                   const DropDownDecoratorProps(
                                       dropdownSearchDecoration: InputDecoration(
-                                          label: Text('Descripción:'),
+                                          label: Text('Tipo:'),
                                           labelStyle: TextStyle(fontSize: 16),
                                           border: UnderlineInputBorder())),
                               popupProps: PopupProps.menu(
@@ -264,7 +264,7 @@ class FotosActuales extends StatelessWidget {
                               },
                             ),
                           ),
-                if (vm.solicitudCola.estadoTasacion == 34)
+                if (vm.solicitud.estadoTasacion == 34)
                   foto.adjunto == ''
                       ? const SizedBox()
                       : SizedBox(

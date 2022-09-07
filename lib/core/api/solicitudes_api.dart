@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:logger/logger.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
@@ -14,8 +13,8 @@ import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 
 import '../authentication_client.dart';
+import '../models/accesorios_suplidor_response.dart';
 import '../models/descripcion_foto_vehiculo.dart';
-import '../models/solicitudes/solicitud_create_data.dart';
 import '../models/solicitudes/solicitud_credito_response.dart';
 import '../models/vin_decoder_response.dart';
 import 'api_status.dart';
@@ -220,17 +219,42 @@ class SolicitudesApi {
     }
   }
 
-  Future<Object> getComponentesTasacion() async {
+  Future<Object> getComponenteVehiculoSuplidor(
+      {required int idSuplidor}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
-        '/api/condicioncomponentetasacion/get',
+        '/api/componentes-vehiculo-suplidor/get',
         method: 'GET',
         headers: {
           'Authorization': 'Bearer $_token',
         },
+        queryParameters: {
+          "IdSuplidor": idSuplidor,
+        },
         parser: (data) {
           return componenteTasacionFromJson(jsonEncode(data['data']));
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getAccesorioVehiculoSuplidor({required int idSuplidor}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/accesoriossuplidor/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "IdSuplidor": idSuplidor,
+        },
+        parser: (data) {
+          return accesoriosSuplidorFromJson(jsonEncode(data['data']));
         },
       );
     } else {
@@ -277,10 +301,35 @@ class SolicitudesApi {
     }
   }
 
-  Future<Object> createCondicionComponente(
-      {required Map<String, dynamic> data}) async {
+  Future<Object> updateCondicionComponente({
+    required int idSolicitud,
+    required Map<String, dynamic> data,
+  }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
+      l.d(idSolicitud);
+      l.d(jsonEncode(data));
+      return _http.request(
+        '/api/condicioncomponentetasacion/update/$idSolicitud',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: data,
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> createCondicionComponente({
+    // required int idSolicitud,
+    required Map<String, dynamic> data,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      // l.d(idSolicitud);
+      l.d(jsonEncode(data));
       return _http.request(
         '/api/condicioncomponentetasacion/create',
         method: 'POST',
@@ -288,6 +337,121 @@ class SolicitudesApi {
           'Authorization': 'Bearer $_token',
         },
         data: data,
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateAccesoriosTasacion({
+    required int idSolicitud,
+    required Map<String, dynamic> data,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      l.d(idSolicitud);
+      l.d(jsonEncode(data));
+      return _http.request(
+        '/api/accesoriostasacion/update/$idSolicitud',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: data,
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> createAccesoriosTasacion({
+    // required int idSolicitud,
+    required Map<String, dynamic> data,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      // l.d(idSolicitud);
+      l.d(jsonEncode(data));
+      return _http.request(
+        '/api/accesoriostasacion/create',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: data,
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getReference({
+    required int noTasacion,
+    required String chasis,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request('/api/procesar-solicitudes/get-reference',
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer $_token',
+          },
+          queryParameters: {
+            "NoTasacion": noTasacion,
+            "Chasis": chasis,
+          });
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getSalvamento({required String vin}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request('/api/procesar-solicitudes/get-salvamento',
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer $_token',
+          },
+          queryParameters: {
+            "vin": vin,
+          });
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getTasacionCreditoLast({required String chasis}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/solicitudes/get-tasacion-credito-last/$chasis',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getTasacionCreditoAverage({
+    required String chasis,
+    required int periodoMeses,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/solicitudes/get-tasacion-credito-average',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "Chasis": chasis,
+          "PeriodoMeses": periodoMeses,
+        },
       );
     } else {
       return TokenFail();
@@ -493,6 +657,77 @@ class SolicitudesApi {
     }
   }
 
+  // Future<Object> getSalvamento({required String vin}) async {
+  //   String? _token = await _authenticationClient.accessToken;
+  //   if (_token != null) {
+  //     return _http.request(
+  //       '/api/procesar-solicitudes/get-salvamento',
+  //       method: 'GET',
+  //       headers: {
+  //         'Authorization': 'Bearer $_token',
+  //       },
+  //       queryParameters: {
+  //         "vin": vin,
+  //       },
+  //     );
+  //   } else {
+  //     return TokenFail();
+  //   }
+  // }
+
+  // Future<Object> getReference({
+  //   required String vin,
+  //   required int noTasacion,
+  // }) async {
+  //   String? _token = await _authenticationClient.accessToken;
+  //   if (_token != null) {
+  //     return _http.request(
+  //       '/api/procesar-solicitudes/get-reference',
+  //       method: 'GET',
+  //       headers: {
+  //         'Authorization': 'Bearer $_token',
+  //       },
+  //       queryParameters: {
+  //         "NoTasacion": noTasacion,
+  //         "Chasis": vin,
+  //       },
+  //     );
+  //   } else {
+  //     return TokenFail();
+  //   }
+  // }
+
+  Future<Object> updateValoracion({
+    required int noTasacion,
+    required int valorizacion,
+    required bool valorConsultaSalvamento,
+    required int valorUltimas3Tasaciones,
+    required int valorUltimaEstimacion,
+    required int valorCarrosRD,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      final data = {
+        "noTasacion": noTasacion.toString(),
+        "valorizacion": valorizacion.toString(),
+        "valorConsultaSalvamento": valorConsultaSalvamento.toString(),
+        "valorUltimas3Tasaciones": valorUltimas3Tasaciones.toString(),
+        "valorUltimaEstimacion": valorUltimaEstimacion.toString(),
+        "valorCarrosRD": valorCarrosRD.toString(),
+      };
+      return _http.request(
+        '/api/procesarsolicitudes/update-valoracion',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: data,
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
   Future<Object> updateEstimacion({
     required int id,
     required int sistemaTransmision,
@@ -531,11 +766,65 @@ class SolicitudesApi {
         },
         data: body,
       );
-      // await Future.delayed(Duration(milliseconds: 500));
-      // return Failure(
-      //     messages: ['Error prueba'],
-      //     supportMessage: 'supportMessage',
-      //     statusCode: 1000);
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateTasacion({
+    required int id,
+    required String chasis,
+    required int marca,
+    required int modelo,
+    required int ano,
+    required int tipoVehiculoLocal,
+    required int versionLocal,
+    // required int? serie,
+    // required int? trim,
+    required int sistemaTransmision,
+    required int traccion,
+    required int noPuertas,
+    required int noCilindros,
+    required int fuerzaMotriz,
+    required int nuevoUsado,
+    required int kilometraje,
+    required String placa,
+    required int color,
+    required int edicion,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+
+    if (_token != null) {
+      final body = {
+        "id": id,
+        "chasis": chasis,
+        "marca": marca,
+        "modelo": modelo,
+        "ano": ano,
+        "tipoVehiculoLocal": tipoVehiculoLocal,
+        "versionLocal": versionLocal,
+        // "serie": serie,
+        // "trim": trim,
+        "sistemaTransmision": sistemaTransmision,
+        "traccion": traccion,
+        "noPuertas": noPuertas,
+        "noCilindros": noCilindros,
+        "fuerzaMotriz": fuerzaMotriz,
+        "nuevoUsado": nuevoUsado,
+        "kilometraje": kilometraje,
+        "placa": placa,
+        "color": color,
+        "edicion": edicion,
+      };
+      l.i(jsonEncode(body));
+      return _http.request(
+        '/api/solicitudes/update-tasacion',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: body,
+      );
     } else {
       return TokenFail();
     }

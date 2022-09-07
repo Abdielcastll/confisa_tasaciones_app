@@ -29,7 +29,7 @@ class ConsultarModificarView extends StatelessWidget {
     return ViewModelBuilder<ConsultarModificarViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          viewModel.onInit(solicitudData);
+          viewModel.onInit(context, solicitudData);
         },
         builder: (context, viewModel, child) {
           return _ConsultarModificarMobile(viewModel);

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import '../../../../../theme/theme.dart';
 import '../../../base_widgets/base_form_widget.dart';
 import '../../../base_widgets/base_text_field_widget.dart';
 import '../../solicitud_tasacion_view_model.dart';
@@ -35,12 +32,12 @@ class GeneralesA extends StatelessWidget {
               initialValue: vm.incautado ? 'Tasación de Incautado' : 'Tasación',
               enabled: false,
             ),
-            BaseTextField(
-              label: 'Fecha de solicitud',
-              initialValue:
-                  DateFormat.yMMMMd('es').format(vm.fechaActual).toUpperCase(),
-              enabled: false,
-            ),
+            // BaseTextField(
+            //   label: 'Fecha de solicitud',
+            //   initialValue:
+            //       DateFormat.yMMMMd('es').format(vm.fechaActual).toUpperCase(),
+            //   enabled: false,
+            // ),
             Form(
               key: vm.formKey,
               child: BaseTextField(

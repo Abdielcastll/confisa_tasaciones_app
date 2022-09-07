@@ -52,8 +52,6 @@ class LoginViewModel extends BaseViewModel {
         password: tcPassword.text,
       );
       if (resp is Success<SignInResponse>) {
-        // final rolProvider = RolesProvider.instance;
-        // rolProvider.roles = resp.response.data.role;
         _autenticationClient.saveSession(resp.response.data);
         var resp1 = await _recursosAPI.getMenu();
         if (resp1 is Success<MenuResponse>) {

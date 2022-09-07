@@ -12,22 +12,12 @@ class _ColaSolicitudesMobile extends StatelessWidget {
       opacity: false,
       child: Scaffold(
         appBar: Appbar(
-// <<<<<<< HEAD
-//           textSize: 20,
-//           titulo: 'Cola de solicitudes',
-// =======
           textSize: 18,
           titulo: 'Cola de solicitudes',
           alarmas: vm.alarmas,
           esColaSolicitud: true,
           currentForm: 0,
           idSolicitud: 0,
-          // title: const Text(
-          //   'Solicitudes',
-          //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-          // ),
-          // backgroundColor: AppColors.brownLight,
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
         ),
         body: _home(context),
       ),
@@ -105,64 +95,79 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                             vertical: 3, horizontal: 5),
                         child: MaterialButton(
                           onPressed: () => vm.goToSolicitud(s),
-                          // vm.modificarAccion(context, accion),
                           color: Colors.white,
+                          clipBehavior: Clip.antiAlias,
+                          padding: EdgeInsets.zero,
                           elevation: 4,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)),
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            // height: 90,
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Tasación No.${s.noTasacion}',
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 10, 10, 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Tasación No.${s.noTasacion}',
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      'Solicitud No.${s.noSolicitudCredito}',
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      '${s.descripcionTipoTasacion} - ${s.descripcionEstadoTasacion}',
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      'Cliente: ${s.nombreCliente}',
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      'Fecha de Solicitud:  ${DateFormat.yMEd('es').format(s.fechaCreada!).toUpperCase()}',
+                                      style: const TextStyle(
+                                        color: AppColors.brownDark,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  'Solicitud No.${s.noSolicitudCredito}',
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                              ),
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                bottom: 0,
+                                child: Container(
+                                  color:
+                                      colorSolicitudByStatus(s.estadoTasacion!),
+                                  width: 20,
                                 ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  '${s.descripcionTipoTasacion}',
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  'Cliente: ${s.nombreCliente}',
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  'Fecha de Solicitud:  ${DateFormat.yMEd('es').format(s.fechaCreada!).toUpperCase()}',
-                                  style: const TextStyle(
-                                    color: AppColors.brownDark,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       );

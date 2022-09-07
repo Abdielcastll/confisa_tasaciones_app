@@ -1,16 +1,9 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
 import 'package:tasaciones_app/core/models/componente_condicion.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
-import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
-import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 
-import '../../../../../../core/models/tracciones_response.dart';
-import '../../../../../../core/models/versiones_vehiculo_response.dart';
-import '../../../../../../theme/theme.dart';
 import '../../../../base_widgets/base_form_widget.dart';
-import '../../../../base_widgets/base_text_field_widget.dart';
 import '../../../trabajar_view_model.dart';
 
 class CondicionesTasacionForm extends StatelessWidget {
@@ -54,20 +47,20 @@ class CondicionesTasacionForm extends StatelessWidget {
 
   Widget _itemComponente(ComponenteTasacion e) {
     return DropdownSearch<CondicionComponente>(
-      asyncItems: (_) =>
-          vm.getCondiciones(idComponente: e.idComponenteVehiculo!),
+      asyncItems: (_) => vm.getCondiciones(idComponente: e.id!),
       dropdownBuilder: (context, tipo) {
         return Text(
           tipo == null ? 'Seleccione' : tipo.condicionDescripcion!,
-          style: const TextStyle(
-            fontSize: 15,
-          ),
+          style: const TextStyle(fontSize: 15),
         );
       },
-      onChanged: vm.addCondicion,
+      onChanged: (condicion) {
+        e.descripcionCondicion = condicion!.condicionDescripcion!;
+        e.idCondicion = condicion.id!;
+      },
       dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
-          label: Text(e.descripcionComponenteVehiculo ?? ''),
+          label: Text(e.componenteDescripcion ?? ''),
           border: const UnderlineInputBorder(),
         ),
       ),

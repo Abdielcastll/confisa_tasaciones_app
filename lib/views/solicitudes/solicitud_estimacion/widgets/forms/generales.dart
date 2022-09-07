@@ -24,7 +24,7 @@ class GeneralesForm extends StatelessWidget {
       onPressedBack: () => Navigator.of(context).pop(),
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
-      onPressedNext: () => vm.solicitudCredito(context),
+      onPressedNext: () => vm.goToVehiculo(context),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
@@ -37,22 +37,6 @@ class GeneralesForm extends StatelessWidget {
                   : 'Estimación',
               enabled: false,
             ),
-            // const BaseTextField(
-            //   label: 'Cia tasación',
-            //   initialValue: 'TASADORDEFAULD',
-            //   enabled: false,
-            // ),
-            BaseTextField(
-              label: 'Fecha de solicitud',
-              initialValue: vm.solicitudCola != null
-                  ? DateFormat.yMMMMd('es')
-                      .format(vm.solicitudCola!.fechaCreada!)
-                      .toUpperCase()
-                  : DateFormat.yMMMMd('es')
-                      .format(vm.fechaActual)
-                      .toUpperCase(),
-              enabled: false,
-            ),
             vm.solicitudCola != null
                 ? BaseTextField(
                     label: 'No. de solicitud de crédito',
@@ -60,16 +44,58 @@ class GeneralesForm extends StatelessWidget {
                         vm.solicitudCola!.noSolicitudCredito.toString(),
                     enabled: false,
                   )
-                : Form(
-                    key: vm.formKey,
-                    child: BaseTextField(
-                      label: 'No. de solicitud de crédito',
-                      hint: 'Ingrese el número de solicitud',
-                      keyboardType: TextInputType.number,
-                      validator: vm.noSolicitudValidator,
-                      controller: vm.tcNoSolicitud,
-                    ),
+                : Row(
+                    children: [
+                      Form(
+                        key: vm.formKey,
+                        child: Expanded(
+                          child: BaseTextField(
+                            label: 'No. de solicitud de crédito',
+                            hint: 'Ingrese el número de solicitud',
+                            keyboardType: TextInputType.number,
+                            validator: vm.noSolicitudValidator,
+                            controller: vm.tcNoSolicitud,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        iconSize: 50,
+                        onPressed: () => vm.solicitudCredito(context),
+                        icon: const CircleAvatar(
+                          child: Icon(
+                            Icons.search,
+                            color: AppColors.white,
+                          ),
+                          backgroundColor: AppColors.brownDark,
+                        ),
+                      ),
+                    ],
                   ),
+            if (vm.solicitud != null)
+              Column(
+                children: [
+                  BaseTextFieldNoEdit(
+                    label: 'Entidad solicitante',
+                    initialValue: vm.solicitud?.entidad ?? '',
+                  ),
+                  BaseTextFieldNoEdit(
+                    label: 'Cédula del cliente',
+                    initialValue: vm.solicitud?.noIdentificacion ?? '',
+                  ),
+                  BaseTextFieldNoEdit(
+                    label: 'Nombre del cliente',
+                    initialValue: vm.solicitud?.nombreCliente ?? '',
+                  ),
+                  BaseTextFieldNoEdit(
+                    label: 'Oficial de negocios',
+                    initialValue: vm.solicitud?.nombreOficialNegocios ?? '',
+                  ),
+                  BaseTextFieldNoEdit(
+                    label: 'Sucursal',
+                    initialValue: vm.solicitud?.sucursal ?? '',
+                  ),
+                ],
+              )
           ],
         ),
       ),

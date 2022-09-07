@@ -70,18 +70,11 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     Session data = _authenticationAPI.loadSession;
     Profile perfil = _usuarioApi.loadProfile;
     roles = data.role;
-// <<<<<<< HEAD
     var resp = await _solicitudesApi.getColaSolicitudes(
       estado: roles.contains('Tasador') ? 'Solicitada' : null,
     );
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudesResponse = resp.response;
-// =======
-      // loading = true;
-      // var resp = await _solicitudesApi.getColaSolicitudes();
-      // if (resp is Success) {
-      //   solicitudesResponse = resp.response as GetSolicitudesResponse;
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
       solicitudes = solicitudesResponse.data;
     }
     if (resp is Failure) {
@@ -179,12 +172,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         arguments: s,
       );
     }
-    // if (roles.contains("Administrador")) {
-    //   _navigatorService.navigateToPage(
-    //     ConsultarModificarView.routeName,
-    //     arguments: s,
-    //   );
-    // }
+
     if (roles.contains("Tasador")) {
       _navigatorService.navigateToPage(
         TrabajarView.routeName,

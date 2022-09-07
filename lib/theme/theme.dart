@@ -18,6 +18,34 @@ class AppColors {
   static const cream = Color.fromRGBO(255, 247, 235, 1);
   static const lightGreen = Color.fromRGBO(46, 226, 146, 1);
   static const newBrownDark = Color.fromRGBO(109, 68, 32, 1);
+
+// Estado Solicitudes
+  static const solicitada = Color(0xFFADDB5B);
+  static const iniciada = Color(0xFFDEC0B2);
+  static const pendienteAutorizarar = Color(0xFFE9D4FF);
+  static const valorada = Color(0xFFA5FFFF);
+  static const anulada = Color(0xffcecfff);
+  static const vencida = Color(0xFFFFB1AF);
+}
+
+Color colorSolicitudByStatus(int statusId) {
+  switch (statusId) {
+    case 9:
+      return AppColors.solicitada;
+    case 10:
+      return AppColors.pendienteAutorizarar;
+    case 11:
+      return AppColors.valorada;
+    case 12:
+      return AppColors.anulada;
+    case 13:
+      return AppColors.vencida;
+    case 34:
+      return AppColors.iniciada;
+
+    default:
+      return AppColors.darkOrange;
+  }
 }
 
 class AppIcons {

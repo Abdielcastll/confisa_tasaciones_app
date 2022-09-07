@@ -118,7 +118,7 @@ class AdjuntosApi {
         "noTasacion": noTasacion,
         "adjuntos": adjuntos,
       };
-      _logger.d(jsonEncode(body));
+      _logger.i(body);
       return _http.request(
         '/api/adjuntos/add-fotos-tasacion',
         method: "POST",

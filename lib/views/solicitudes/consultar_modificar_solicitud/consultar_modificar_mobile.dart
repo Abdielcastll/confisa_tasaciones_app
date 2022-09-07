@@ -8,34 +8,21 @@ class _ConsultarModificarMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-// <<<<<<< HEAD
-      appBar:
-          AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')),
+      appBar: AppBar(title: Text(vm.solicitud.descripcionTipoTasacion ?? '')),
       body: Column(
         children: [
           const SizedBox(height: 10),
           LineProgressWidget(
-              totalItem: vm.solicitudCola.tipoTasacion != 21
+              totalItem: vm.solicitud.tipoTasacion == 22 ||
+                      vm.solicitud.tipoTasacion == 23
                   ? 2
-                  : vm.solicitudCola.estadoTasacion == 9
-                      ? 3
-                      : 4,
+                  : vm.solicitud.estadoTasacion == 34
+                      ? 4
+                      : 3,
               currentItem: vm.currentForm),
           Expanded(child: _form(context)),
         ],
       ),
-// =======
-//       appBar: Appbar(
-//         titulo:
-//             "Solicitud de ${vm.solicitudCola.descripcionTipoTasacion ?? ''}",
-//         esColaSolicitud: false,
-//         textSize: 18,
-//         alarmas: vm.alarmas,
-//         currentForm: vm.currentForm,
-//         idSolicitud: vm.currentForm == 3 ? vm.solicitud.id! : 0,
-//       ),
-//       body: _form(),
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
     );
   }
 
@@ -44,8 +31,8 @@ class _ConsultarModificarMobile extends StatelessWidget {
       case 1:
         return GeneralesA(vm);
       case 2:
-        return vm.solicitudCola.tipoTasacion == 22 ||
-                vm.solicitudCola.tipoTasacion == 23
+        return vm.solicitud.tipoTasacion == 22 ||
+                vm.solicitud.tipoTasacion == 23
             ? GeneralesB(vm)
             : VehiculoForm(vm);
       case 3:
