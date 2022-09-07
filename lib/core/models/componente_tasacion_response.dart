@@ -14,38 +14,48 @@ String componenteTasacionToJson(List<ComponenteTasacion> data) =>
 class ComponenteTasacion {
   ComponenteTasacion({
     this.id,
-    this.idSolicitud,
-    this.idComponenteVehiculo,
-    this.descripcionComponenteVehiculo,
-    this.idCondicionComponenteVehiculo,
-    this.descripcionCondicionComponenteVehiculo,
+    this.idComponente,
+    this.idSuplidor,
+    this.componenteDescripcion,
+    this.suplidorDescripcion,
+    this.estado,
+    this.idSegmento,
+    this.descripcionSegmento,
+    this.idCondicion,
+    this.descripcionCondicion,
   });
 
   int? id;
-  int? idSolicitud;
-  int? idComponenteVehiculo;
-  String? descripcionComponenteVehiculo;
-  int? idCondicionComponenteVehiculo;
-  String? descripcionCondicionComponenteVehiculo;
+  int? idComponente;
+  int? idSuplidor;
+  String? componenteDescripcion;
+  String? suplidorDescripcion;
+  int? idSegmento;
+  String? descripcionSegmento;
+  int? idCondicion;
+  String? descripcionCondicion;
+  int? estado;
 
   factory ComponenteTasacion.fromJson(Map<String, dynamic> json) =>
       ComponenteTasacion(
         id: json["id"],
-        idSolicitud: json["idSolicitud"],
-        idComponenteVehiculo: json["idComponenteVehiculo"],
-        descripcionComponenteVehiculo: json["descripcionComponenteVehiculo"],
-        idCondicionComponenteVehiculo: json["idCondicionComponenteVehiculo"],
-        descripcionCondicionComponenteVehiculo:
-            json["descripcionCondicionComponenteVehiculo"],
+        idComponente: json["idComponente"],
+        idSuplidor: json["idSuplidor"],
+        componenteDescripcion: json["componenteDescripcion"],
+        suplidorDescripcion: json[" suplidorDescripcion"],
+        idSegmento: json[" idSegmento"],
+        descripcionSegmento: json[" descripcionSegmento"],
+        estado: json[" estado"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "idSolicitud": idSolicitud,
-        "idComponenteVehiculo": idComponenteVehiculo,
-        "descripcionComponenteVehiculo": descripcionComponenteVehiculo,
-        "idCondicionComponenteVehiculo": idCondicionComponenteVehiculo,
-        "descripcionCondicionComponenteVehiculo":
-            descripcionCondicionComponenteVehiculo,
+        "idComponente": idComponente,
+        "idSuplidor": idSuplidor,
+        "componenteDescripcion": componenteDescripcion,
+        "suplidorDescripcion": suplidorDescripcion,
+        "idSegmento": idSegmento,
+        "descripcionSegmento": descripcionSegmento,
+        "estado": estado,
       };
 }

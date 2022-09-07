@@ -357,7 +357,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                           ),
                           validator: (v) {
                             if (v == null &&
-                                vm.vinData?.numeroCilindros != null) {
+                                vm.vinData?.numeroCilindros == null) {
                               return 'Seleccione número de cilindros';
                             } else {
                               return null;

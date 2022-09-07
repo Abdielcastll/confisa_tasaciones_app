@@ -173,43 +173,42 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   Future<void> solicitudCredito(BuildContext context) async {
-    if (solicitudCola == null) {
-      if (formKey.currentState!.validate()) {
-        ProgressDialog.show(context);
-        var resp = await _solicitudesApi.getSolicitudCredito(
-            idSolicitud: int.parse(tcNoSolicitud.text));
-        if (resp is Success) {
-          var data = resp.response as SolicitudCreditoResponse;
-          solicitud = data.data;
-          currentForm = 2;
-          int currentYear = DateTime.now().year;
-          if (data.data.ano != null) {
-            int anio = int.tryParse(data.data.ano!)!;
-            if (currentYear <= anio) {
-              _estado = 'NUEVO';
-              notifyListeners();
-            } else {
-              _estado = 'USADO';
-              notifyListeners();
-            }
+    // if (solicitudCola == null) {
+    if (formKey.currentState!.validate()) {
+      ProgressDialog.show(context);
+      var resp = await _solicitudesApi.getSolicitudCredito(
+          idSolicitud: int.parse(tcNoSolicitud.text));
+      if (resp is Success) {
+        var data = resp.response as SolicitudCreditoResponse;
+        solicitud = data.data;
+        // currentForm = 2;
+        int currentYear = DateTime.now().year;
+        if (data.data.ano != null) {
+          int anio = int.tryParse(data.data.ano!)!;
+          if (currentYear <= anio) {
+            _estado = 'NUEVO';
+            notifyListeners();
           } else {
-            _estado = '';
+            _estado = 'USADO';
             notifyListeners();
           }
-        }
-        if (resp is Failure) {
-          Dialogs.error(msg: resp.messages[0]);
-        }
-        if (resp is TokenFail) {
-          ProgressDialog.dissmiss(context);
-          Dialogs.error(msg: 'su sesión a expirado');
-          _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        } else {
+          _estado = '';
+          notifyListeners();
         }
         ProgressDialog.dissmiss(context);
       }
-    } else {
-      currentForm = 2;
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages[0]);
+        ProgressDialog.dissmiss(context);
+      }
+      if (resp is TokenFail) {
+        ProgressDialog.dissmiss(context);
+        Dialogs.error(msg: 'su sesión a expirado');
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      }
     }
+    // }
   }
 
   Future<void> consultarVIN(BuildContext context) async {
@@ -337,14 +336,11 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   void cargarFoto(int i) async {
     var img = await _picker.pickImage(
       source: ImageSource.camera,
+      maxWidth: 720,
     );
     if (img != null) {
       fotos[i] = FotoData(file: File(img.path));
 
-      // fotoBase = base64Encode(foto.readAsBytesSync());
-      // log(fotoBase);
-      // bytesImage = const Base64Decoder().convert(fotoBase);
-      // data.img = fotoBase;
       notifyListeners();
     }
   }
@@ -580,6 +576,14 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     tcKilometraje.dispose();
 
     super.dispose();
+  }
+
+  void goToVehiculo(BuildContext context) {
+    if (solicitud == null) {
+      Dialogs.error(msg: 'Consulte No. de solicitud');
+    } else {
+      currentForm = 2;
+    }
   }
 }
 

@@ -17,7 +17,13 @@ class _TrabajarMobile extends StatelessWidget {
                   Expanded(child: _tasacionForm()),
                 ],
               )
-            : Container() //_estimacionForm(),
+            : Column(
+                children: [
+                  const SizedBox(height: 10),
+                  LineProgressWidget(totalItem: 4, currentItem: vm.currentForm),
+                  Expanded(child: _estimacionForm()),
+                ],
+              ) //_estimacionForm(),
         );
   }
 
@@ -40,14 +46,18 @@ class _TrabajarMobile extends StatelessWidget {
     }
   }
 
-  // Widget _estimacionForm() {
-  //   switch (vm.currentForm) {
-  //     case 1:
-  //       return VehiculoForm(vm);
-  //     case 2:
-  //       return FotosForm(vm);
-  //     default:
-  //       return Container();
-  //   }
-  // }
+  Widget _estimacionForm() {
+    switch (vm.currentForm) {
+      case 1:
+        return GeneralesEstimacionForm(vm);
+      case 2:
+        return VehiculoEstimacionForm(vm);
+      case 3:
+        return FotosEstimacionForm(vm);
+      case 4:
+        return ValoracionEstimacionForm(vm);
+      default:
+        return Container();
+    }
+  }
 }

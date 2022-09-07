@@ -1,4 +1,5 @@
 // import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
@@ -153,7 +154,18 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                     MaterialButton(
                                       height: 50,
                                       minWidth: double.infinity,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (_) {
+                                              return const SolicitudTasacionView(
+                                                  incautado: true);
+                                            },
+                                          ),
+                                        );
+                                      },
                                       child: const Text(
                                         'Tasación de Incauto',
                                         style: TextStyle(

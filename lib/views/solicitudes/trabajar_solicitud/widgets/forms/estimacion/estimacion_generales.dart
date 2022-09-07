@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../base_widgets/base_form_widget.dart';
-import '../../../base_widgets/base_text_field_widget.dart';
-import '../../consultar_modificar_view_model.dart';
+import '../../../../base_widgets/base_form_widget.dart';
+import '../../../../base_widgets/base_text_field_widget.dart';
+import '../../../trabajar_view_model.dart';
 
-class GeneralesA extends StatelessWidget {
-  const GeneralesA(
+class GeneralesEstimacionForm extends StatelessWidget {
+  const GeneralesEstimacionForm(
     this.vm, {
     Key? key,
   }) : super(key: key);
 
-  final ConsultarModificarViewModel vm;
+  final TrabajarViewModel vm;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +24,14 @@ class GeneralesA extends StatelessWidget {
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
       onPressedNext: () => vm.currentForm = 2,
+      // vm.goToValorar(context).then((value) => vm.currentForm = 2),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
         child: Column(
           children: [
             BaseTextField(
-              label: 'Tipo de solicitud',
+              label: 'Tipo de tasación',
               initialValue: vm.solicitud.descripcionTipoTasacion ?? '',
               enabled: false,
             ),
@@ -42,29 +43,28 @@ class GeneralesA extends StatelessWidget {
               enabled: false,
             ),
             BaseTextFieldNoEdit(
-              label: 'No. de solicitud',
+              label: 'No. de solicitud de crédito',
               initialValue: vm.solicitud.noSolicitudCredito.toString(),
             ),
             BaseTextFieldNoEdit(
               label: 'Entidad solicitante',
-              initialValue: vm.solicitudCreditoData?.entidad ?? '',
+              initialValue: vm.solicitudData?.entidad ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Cédula del cliente',
-              initialValue: vm.solicitudCreditoData?.noIdentificacion ?? '',
+              initialValue: vm.solicitudData?.noIdentificacion ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Nombre del cliente',
-              initialValue: vm.solicitudCreditoData?.nombreCliente ?? '',
+              initialValue: vm.solicitudData?.nombreCliente ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Oficial de negocios',
-              initialValue:
-                  vm.solicitudCreditoData?.nombreOficialNegocios ?? '',
+              initialValue: vm.solicitudData?.nombreOficialNegocios ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Sucursal',
-              initialValue: vm.solicitudCreditoData?.sucursal ?? '',
+              initialValue: vm.solicitudData?.sucursal ?? '',
             ),
           ],
         ),

@@ -81,7 +81,7 @@ class FotosForm extends StatelessWidget {
                               dropdownDecoratorProps:
                                   const DropDownDecoratorProps(
                                       dropdownSearchDecoration: InputDecoration(
-                                          label: Text('Descripción:'),
+                                          label: Text('Tipo:'),
                                           labelStyle: TextStyle(fontSize: 16),
                                           border: UnderlineInputBorder())),
                               popupProps: PopupProps.menu(
