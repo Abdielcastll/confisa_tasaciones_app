@@ -116,7 +116,7 @@ class _AlarmasMobile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                               child: Container(
                                 alignment: Alignment.centerLeft,
-                                height: 70,
+                                height: 85,
                                 padding: const EdgeInsets.all(10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -132,7 +132,14 @@ class _AlarmasMobile extends StatelessWidget {
                                     ),
                                     Text(
                                       "Solicitud: " +
-                                          alarma.idSolicitud.toString(),
+                                          alarma.noSolicitudCredito.toString(),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Tasación: " +
+                                          alarma.noTasacion.toString(),
                                       style: const TextStyle(
                                           color: AppColors.brownDark,
                                           fontSize: 12),

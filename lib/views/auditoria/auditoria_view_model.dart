@@ -10,7 +10,6 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
-import '../../core/models/auditoria_response.dart';
 
 class AuditoriaViewModel extends BaseViewModel {
   final _auditoriaApi = locator<AuditoriaApi>();
@@ -64,8 +63,8 @@ class AuditoriaViewModel extends BaseViewModel {
         break;
       case "Usuario":
         for (var opcion in auditorias) {
-          if (!opciones2.any((element) => element == opcion.userId)) {
-            opciones2.add(opcion.userId);
+          if (!opciones2.any((element) => element == opcion.userName)) {
+            opciones2.add(opcion.userName);
           }
         }
         break;
@@ -98,7 +97,7 @@ class AuditoriaViewModel extends BaseViewModel {
         auditoriasTemp.removeWhere((element) => element.nombreTabla != value);
         break;
       case "Usuario":
-        auditoriasTemp.removeWhere((element) => element.userId != value);
+        auditoriasTemp.removeWhere((element) => element.userName != value);
         break;
       case "Fecha":
         auditoriasTemp
@@ -270,7 +269,7 @@ class AuditoriaViewModel extends BaseViewModel {
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
                                 readOnly: true,
-                                initialValue: auditoria.userId,
+                                initialValue: auditoria.userName,
                                 decoration: const InputDecoration(
                                     border: UnderlineInputBorder(),
                                     label: Text("Usuario")),

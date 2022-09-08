@@ -1,12 +1,9 @@
 import 'dart:convert';
 
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import 'package:tasaciones_app/views/solicitudes/base_widgets/base_text_field_widget.dart';
 
 import '../../../../../../theme/theme.dart';
-import '../../../../../../widgets/app_dialogs.dart';
 import '../../../../base_widgets/base_form_widget.dart';
 import '../../../trabajar_view_model.dart';
 

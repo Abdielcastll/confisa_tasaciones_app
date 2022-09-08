@@ -50,14 +50,18 @@ class NotasData {
       required this.fechaHora,
       required this.idSolicitud,
       required this.titulo,
-      required this.usuario});
+      required this.usuario,
+      required this.noSolicitudCredito,
+      required this.noTasacion});
 
   String descripcion, fechaHora, usuario, titulo;
-  int id, idSolicitud;
+  int id, idSolicitud, noTasacion, noSolicitudCredito;
 
   factory NotasData.fromJson(Map<String, dynamic> json) => NotasData(
         id: json["id"] ?? 0,
         idSolicitud: json["idSolicitud"] ?? 0,
+        noSolicitudCredito: json["noSolicitudCredito"] ?? 0,
+        noTasacion: json["noTasacion"] ?? 0,
         descripcion: json["descripcion"] ?? '',
         fechaHora: json["fechaHora"] ?? '',
         titulo: json["titulo"] ?? '',
@@ -70,7 +74,9 @@ class NotasData {
         "idSolicitud": idSolicitud,
         "fechaHora": fechaHora,
         "titulo": titulo,
-        "usuario": usuario
+        "usuario": usuario,
+        "noSolicitudCredito": noSolicitudCredito,
+        "noTasacion": noTasacion
       };
 }
 

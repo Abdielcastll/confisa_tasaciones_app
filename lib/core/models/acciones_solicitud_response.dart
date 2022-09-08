@@ -58,16 +58,20 @@ class AccionesSolicitudData {
       required this.idSolicitud,
       required this.tipo,
       required this.usuarioComentario,
-      required this.usuario});
+      required this.usuario,
+      required this.noSolicitudCredito,
+      required this.noTasacion});
 
   String fechaHora, usuario, notas, comentario, usuarioComentario;
-  int id, idSolicitud, tipo;
+  int id, idSolicitud, tipo, noTasacion, noSolicitudCredito;
   bool listo;
 
   factory AccionesSolicitudData.fromJson(Map<String, dynamic> json) =>
       AccionesSolicitudData(
         id: json["id"] ?? 0,
         idSolicitud: json["idSolicitud"] ?? 0,
+        noSolicitudCredito: json["noSolicitudCredito"] ?? 0,
+        noTasacion: json["noTasacion"] ?? 0,
         comentario: json["comentario"] ?? '',
         usuarioComentario: json["usuarioComentario"] ?? '',
         notas: json["notas"] ?? '',
@@ -86,7 +90,9 @@ class AccionesSolicitudData {
         "fechaHora": fechaHora,
         "tipo": tipo,
         "usuario": usuario,
-        "listo": listo
+        "listo": listo,
+        "noSolicitudCredito": noSolicitudCredito,
+        "noTasacion": noTasacion
       };
 }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tasaciones_app/core/api/notas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/notas_response.dart';

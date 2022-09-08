@@ -130,7 +130,14 @@ class _NotasMobile extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Solicitud: ${nota.idSolicitud}",
+                                      "Solicitud: " +
+                                          nota.noSolicitudCredito.toString(),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Tasación: " + nota.noTasacion.toString(),
                                       style: const TextStyle(
                                           color: AppColors.brownDark,
                                           fontSize: 12),

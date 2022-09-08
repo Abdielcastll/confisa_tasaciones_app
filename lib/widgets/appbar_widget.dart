@@ -2,8 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tasaciones_app/core/api/alarmas.dart';
-import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
@@ -36,7 +34,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final double textSize;
   final List<AlarmasData>? alarmas;
   final _authenticationAPI = locator<AuthenticationClient>();
-  final _alarmasApi = locator<AlarmasApi>();
   final bool esColaSolicitud;
   final int idSolicitud;
 // >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932

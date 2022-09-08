@@ -152,7 +152,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   void onInit(SolicitudesData? arg) async {
-    print("hoka");
     if (solicitud!.noSolicitud != null) {
       var resp =
           await _alarmasApi.getAlarmas(idSolicitud: solicitud!.noSolicitud);
