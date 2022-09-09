@@ -56,8 +56,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int _currentForm = 1;
   VinDecoderData? _vinData;
 
-  late SolicitudesData solicitudCola;
-  late SolicitudesData solicitud = SolicitudesData();
+  // late SolicitudesData solicitudCola;
+  late SolicitudesData solicitud;
 
   SolicitudCreditoData? solicitudCreditoData;
 
@@ -105,8 +105,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   Future<void> getAlarmas() async {
-    if (solicitudCola.id != null) {
-      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCola.id);
+    if (solicitud.id != null) {
+      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
       if (resp is Success<AlarmasResponse>) {
         alarmasResponse = resp.response;
         alarmas = resp.response.data;
@@ -118,7 +118,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   void onInit(BuildContext context, SolicitudesData? data) async {
-    solicitudCola = data!;
+    solicitud = data!;
     tcVIN.text = solicitud.chasis ?? '';
     tcKilometraje.text = solicitud.kilometraje.toString();
     tcPlaca.text = solicitud.placa ?? '';
@@ -126,8 +126,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
     await Future.delayed(const Duration(milliseconds: 150));
     solicitudCredito(context);
 
-    if (solicitudCola.id != null) {
-      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCola.id);
+    if (solicitud.id != null) {
+      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
       if (resp is Success<AlarmasResponse>) {
         alarmasResponse = resp.response;
         alarmas = resp.response.data;
