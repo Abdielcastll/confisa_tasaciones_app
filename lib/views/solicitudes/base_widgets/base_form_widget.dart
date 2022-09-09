@@ -13,6 +13,7 @@ class BaseFormWidget extends StatelessWidget {
     required this.labelBack,
     required this.iconBack,
     required this.onPressedBack,
+    this.isValoracion = false,
     Key? key,
   }) : super(key: key);
 
@@ -25,6 +26,7 @@ class BaseFormWidget extends StatelessWidget {
   final IconData iconBack;
   final void Function()? onPressedNext;
   final void Function()? onPressedBack;
+  final bool isValoracion;
 
   @override
   Widget build(BuildContext context) {
@@ -84,23 +86,25 @@ class BaseFormWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  TextButton(
-                    onPressed: onPressedNext, // button pressed
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(
-                          iconNext,
-                          // color: AppColors.green,
-                          size: 30,
+                  isValoracion
+                      ? const SizedBox()
+                      : TextButton(
+                          onPressed: onPressedNext, // button pressed
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Icon(
+                                iconNext,
+                                // color: AppColors.green,
+                                size: 30,
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text(labelNext), // text
+                            ],
+                          ),
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ), // icon
-                        Text(labelNext), // text
-                      ],
-                    ),
-                  ),
                 ],
               ),
             )

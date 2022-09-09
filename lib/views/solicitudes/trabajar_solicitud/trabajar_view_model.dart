@@ -10,6 +10,7 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/accesorios_suplidor_response.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
+import 'package:tasaciones_app/core/models/referencia_valoracion_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -40,7 +41,7 @@ class TrabajarViewModel extends BaseViewModel {
   late DateTime fechaActual;
   String? _estado;
   int? _estadoID;
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValor = GlobalKey<FormState>();
   GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
   GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyFotos = GlobalKey<FormState>();
@@ -69,6 +70,7 @@ class TrabajarViewModel extends BaseViewModel {
   SolicitudCreditoData? solicitudData;
   List<ComponenteTasacion> componentes = [];
   List<AccesoriosSuplidor> accesorios = [];
+  List<ReferenciaValoracion> referencias = [];
   late bool isSalvage;
   late double tasacionPromedio;
 
@@ -667,48 +669,77 @@ class TrabajarViewModel extends BaseViewModel {
   Future<void> goToValorar(BuildContext context) async {
     ProgressDialog.show(context);
     var salvamentoResp =
+        // valorConsultaSalvamento
         await _solicitudesApi.getSalvamento(vin: solicitud.chasis ?? '');
     if (salvamentoResp is Success<Map<String, dynamic>>) {
       isSalvage = salvamentoResp.response['data']['is_salvage'];
-      notifyListeners();
+      // notifyListeners();
     }
     if (salvamentoResp is Failure) {
       Dialogs.error(msg: salvamentoResp.messages[0]);
       isSalvage = false;
-      notifyListeners();
+      // notifyListeners();
     }
+    if (salvamentoResp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
+    // valorUltimas3Tasaciones
     var tasacionPromedioResp = await _solicitudesApi.getTasacionCreditoAverage(
       chasis: solicitud.chasis!,
       periodoMeses: 3,
     );
     if (tasacionPromedioResp is Success<Map<String, dynamic>>) {
       tasacionPromedio = tasacionPromedioResp.response['data'];
-      notifyListeners();
+      // notifyListeners();
     }
     if (tasacionPromedioResp is Failure) {
       Dialogs.error(msg: tasacionPromedioResp.messages[0]);
       tasacionPromedio = 0.0;
-      notifyListeners();
+      // notifyListeners();
     }
-    var resp =
-        await _solicitudesApi.getTasacionCreditoLast(chasis: solicitud.chasis!);
-    var resp2 = await _solicitudesApi.getReference(
+    // valorUltimaEstimacion
+    // var resp =
+    //     await _solicitudesApi.getTasacionCreditoLast(chasis: solicitud.chasis!);
+    // valorCarrosRD
+    var referenceResp = await _solicitudesApi.getReference(
         chasis: solicitud.chasis!, noTasacion: solicitud.noTasacion!);
-
+    if (referenceResp is Success<List<ReferenciaValoracion>>) {
+      referencias = referenceResp.response;
+      // notifyListeners();
+    }
+    notifyListeners();
     ProgressDialog.dissmiss(context);
   }
-}
 
-// class FotoData {
-//   File? file;
-//   int? tipoAdjunto;
-//   DescripcionFotoVehiculos? descripcion;
-//   FotoData({
-//     this.file,
-//     this.tipoAdjunto,
-//     this.descripcion,
-//   });
-// }
+  Future<void> guardarValoracion(BuildContext context) async {
+    if (formKeyValor.currentState!.validate()) {
+      ProgressDialog.show(context);
+      var resp = await _solicitudesApi.updateValoracion(
+          noTasacion: solicitud.noTasacion!,
+          valorizacion: int.tryParse(tcValor.text.trim())!,
+          valorConsultaSalvamento: isSalvage,
+          valorUltimas3Tasaciones: referencias[0].valor!.round(),
+          valorUltimaEstimacion: referencias[1].valor!.round(),
+          valorCarrosRD: referencias[2].valor!.round());
+      if (resp is Success) {
+        Dialogs.success(msg: 'Valor Actualizado');
+        ProgressDialog.dissmiss(context);
+        Navigator.of(context).pop();
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages[0]);
+        ProgressDialog.dissmiss(context);
+      }
+      if (resp is TokenFail) {
+        Dialogs.error(msg: 'su sesión a expirado');
+        ProgressDialog.dissmiss(context);
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      }
+    }
+  }
+}
 
 class CondicionComponenteVehiculoCreate {
   int idComponenteVehiculo;

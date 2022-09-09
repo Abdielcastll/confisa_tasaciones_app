@@ -18,14 +18,10 @@ class _ConsultarModificarMobile extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 10),
-          LineProgressWidget(
-              totalItem: vm.solicitud.tipoTasacion == 22 ||
-                      vm.solicitud.tipoTasacion == 23
-                  ? 2
-                  : vm.solicitud.estadoTasacion == 34
-                      ? 4
-                      : 3,
-              currentItem: vm.currentForm),
+          if (vm.solicitud.tipoTasacion == 21)
+            LineProgressWidget(
+                totalItem: vm.solicitud.estadoTasacion == 34 ? 4 : 3,
+                currentItem: vm.currentForm),
           Expanded(child: _form(context)),
         ],
       ),
@@ -37,10 +33,7 @@ class _ConsultarModificarMobile extends StatelessWidget {
       case 1:
         return GeneralesA(vm);
       case 2:
-        return vm.solicitud.tipoTasacion == 22 ||
-                vm.solicitud.tipoTasacion == 23
-            ? GeneralesB(vm)
-            : VehiculoForm(vm);
+        return VehiculoForm(vm);
       case 3:
         return FotosForm(vm);
       case 4:
