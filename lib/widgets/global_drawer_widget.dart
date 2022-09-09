@@ -106,19 +106,6 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                             },
                           ),
                           ListTile(
-                            leading: const Icon(Icons.person_pin),
-                            title: const Text(
-                              'Acciones Solicitud',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                            onTap: () {
-                              _navigationService.pop();
-                              _navigationService.navigateToPage(
-                                  AccionesSolicitudView.routeName);
-                            },
-                          ),
-                          ListTile(
                             title: const Text(
                               'Salir',
                               style: TextStyle(
