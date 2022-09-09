@@ -53,6 +53,24 @@ class PersonalApi {
     }
   }
 
+  Future<Object> getPermisos() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/personal/permissions',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        method: 'GET',
+        parser: (data) {
+          return ProfilePermisoResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
   Future<Object> changePasswordProfile({
     required String passWord,
     required String newPassword,

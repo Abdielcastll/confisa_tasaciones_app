@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/base/base_view_model.dart';
 import 'package:tasaciones_app/core/locator.dart';
@@ -9,6 +10,8 @@ import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/providers/permisos_provider.dart';
+import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 
 import '../../../core/api/api_status.dart';
 import '../../../core/api/roles_api.dart';
@@ -21,6 +24,7 @@ class HomeViewModel extends BaseViewModel {
   final _authenticationClient = locator<AuthenticationClient>();
   final _navigatorService = locator<NavigatorService>();
   final _userClient = locator<UserClient>();
+  final _personalApi = locator<PersonalApi>();
   final _rolesAPI = locator<RolesAPI>();
   bool _loading = false;
   late Session _user;
@@ -52,9 +56,19 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> onInit(BuildContext context) async {
+    loading = true;
     user = _authenticationClient.loadSession;
     userData = _userClient.loadProfile;
-    // await getRoles(context);
+    var resp1 = await _personalApi.getPermisos();
+    if (resp1 is Success<ProfilePermisoResponse>) {
+      loading = false;
+      Provider.of<ProfilePermisosProvider>(context, listen: false)
+          .profilePermisos = resp1.response;
+    } else if (resp1 is Failure) {
+      Dialogs.error(msg: resp1.messages.first);
+      loading = false;
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
   }
 
   Future<void> getRoles(BuildContext context) async {

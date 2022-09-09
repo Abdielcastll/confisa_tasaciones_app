@@ -11,17 +11,15 @@ class _PerfilMobile extends StatelessWidget {
       inAsyncCall: vm.loading,
       opacity: false,
       child: Scaffold(
-// <<<<<<< HEAD
-        // appBar: Appbar(titulo: 'Perfil de usuario', textSize: 20),
-// =======
-        appBar: Appbar(
-          titulo: 'Perfil de usuario',
-          textSize: 20,
-          alarmas: const [],
-          esColaSolicitud: false,
-          idSolicitud: 0,
+        appBar: AppBar(
+          elevation: 3,
+          title: const Text(
+            'Perfil de usuario',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          ),
+          backgroundColor: AppColors.brownLight,
         ),
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
         body: Column(
           children: [
             Expanded(
