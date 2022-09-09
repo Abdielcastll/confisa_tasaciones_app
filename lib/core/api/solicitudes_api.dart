@@ -6,6 +6,7 @@ import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
 import 'package:tasaciones_app/core/models/componente_condicion.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/ediciones_vehiculo_response.dart';
+import 'package:tasaciones_app/core/models/referencia_valoracion_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
@@ -391,15 +392,19 @@ class SolicitudesApi {
   }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
+      final body = {
+        "NoTasacion": noTasacion,
+        "Chasis": chasis,
+      };
+      l.d(body);
       return _http.request('/api/procesar-solicitudes/get-reference',
           method: 'GET',
           headers: {
             'Authorization': 'Bearer $_token',
           },
-          queryParameters: {
-            "NoTasacion": noTasacion,
-            "Chasis": chasis,
-          });
+          queryParameters: body, parser: (data) {
+        return referenciaValoracionFromJson(jsonEncode(data['data']));
+      });
     } else {
       return TokenFail();
     }
@@ -451,6 +456,36 @@ class SolicitudesApi {
         queryParameters: {
           "Chasis": chasis,
           "PeriodoMeses": periodoMeses,
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateValoracion({
+    required int noTasacion,
+    required int valorizacion,
+    required bool valorConsultaSalvamento,
+    required int valorUltimas3Tasaciones,
+    required int valorUltimaEstimacion,
+    required int valorCarrosRD,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/procesarsolicitudes/update-valoracion',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "noTasacion": noTasacion.toString(),
+          "valorizacion": valorizacion.toString(),
+          "valorConsultaSalvamento": valorConsultaSalvamento.toString(),
+          "valorUltimas3Tasaciones": valorUltimas3Tasaciones.toString(),
+          "valorUltimaEstimacion": valorUltimaEstimacion.toString(),
+          "valorCarrosRD": valorCarrosRD.toString(),
         },
       );
     } else {
@@ -697,36 +732,36 @@ class SolicitudesApi {
   //   }
   // }
 
-  Future<Object> updateValoracion({
-    required int noTasacion,
-    required int valorizacion,
-    required bool valorConsultaSalvamento,
-    required int valorUltimas3Tasaciones,
-    required int valorUltimaEstimacion,
-    required int valorCarrosRD,
-  }) async {
-    String? _token = await _authenticationClient.accessToken;
-    if (_token != null) {
-      final data = {
-        "noTasacion": noTasacion.toString(),
-        "valorizacion": valorizacion.toString(),
-        "valorConsultaSalvamento": valorConsultaSalvamento.toString(),
-        "valorUltimas3Tasaciones": valorUltimas3Tasaciones.toString(),
-        "valorUltimaEstimacion": valorUltimaEstimacion.toString(),
-        "valorCarrosRD": valorCarrosRD.toString(),
-      };
-      return _http.request(
-        '/api/procesarsolicitudes/update-valoracion',
-        method: 'PUT',
-        headers: {
-          'Authorization': 'Bearer $_token',
-        },
-        data: data,
-      );
-    } else {
-      return TokenFail();
-    }
-  }
+  // Future<Object> updateValoracion({
+  //   required int noTasacion,
+  //   required int valorizacion,
+  //   required bool valorConsultaSalvamento,
+  //   required int valorUltimas3Tasaciones,
+  //   required int valorUltimaEstimacion,
+  //   required int valorCarrosRD,
+  // }) async {
+  //   String? _token = await _authenticationClient.accessToken;
+  //   if (_token != null) {
+  //     final data = {
+  //       "noTasacion": noTasacion.toString(),
+  //       "valorizacion": valorizacion.toString(),
+  //       "valorConsultaSalvamento": valorConsultaSalvamento.toString(),
+  //       "valorUltimas3Tasaciones": valorUltimas3Tasaciones.toString(),
+  //       "valorUltimaEstimacion": valorUltimaEstimacion.toString(),
+  //       "valorCarrosRD": valorCarrosRD.toString(),
+  //     };
+  //     return _http.request(
+  //       '/api/procesarsolicitudes/update-valoracion',
+  //       method: 'PUT',
+  //       headers: {
+  //         'Authorization': 'Bearer $_token',
+  //       },
+  //       data: data,
+  //     );
+  //   } else {
+  //     return TokenFail();
+  //   }
+  // }
 
   Future<Object> updateEstimacion({
     required int id,

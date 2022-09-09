@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/widgets/app_buttons.dart';
 
 import '../../../../../../theme/theme.dart';
 import '../../../../base_widgets/base_form_widget.dart';
@@ -22,7 +23,8 @@ class ValoracionEstimacionForm extends StatelessWidget {
       labelBack: 'Anterior',
       onPressedBack: () => vm.currentForm = 3,
       iconNext: AppIcons.save,
-      labelNext: 'Guardar',
+      labelNext: '',
+      isValoracion: true,
       onPressedNext: () => print('valorado'),
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -37,24 +39,76 @@ class ValoracionEstimacionForm extends StatelessWidget {
               label: 'Tasación promedio',
               initialValue: '${vm.tasacionPromedio}',
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             const Text(
               'Referencias',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.brownDark,
-              ),
+              style: TextStyle(color: AppColors.brownDark, fontSize: 16),
+            ),
+            const SizedBox(height: 10),
+            Table(
+              border: TableBorder.all(color: AppColors.brownDark),
+              columnWidths: const {
+                0: FractionColumnWidth(0.70),
+                1: FractionColumnWidth(0.30),
+              },
+              children: [
+                builRow(
+                  ['Fuente', 'Valor'],
+                  isHeader: true,
+                ),
+                builRow([
+                  '${vm.referencias[0].fuente}',
+                  '${vm.referencias[0].valor}'
+                ]),
+                builRow([
+                  '${vm.referencias[1].fuente}',
+                  '${vm.referencias[1].valor}'
+                ]),
+                builRow([
+                  '${vm.referencias[2].fuente}',
+                  '${vm.referencias[2].valor}'
+                ]),
+              ],
             ),
             const SizedBox(height: 20),
-            BaseTextField(
-              label: 'Valor Tasación',
-              controller: vm.tcValor,
-              keyboardType: TextInputType.number,
-            )
+            Form(
+              key: vm.formKeyValor,
+              child: BaseTextField(
+                label: 'Valor Tasación',
+                controller: vm.tcValor,
+                keyboardType: TextInputType.number,
+                validator: (v) {
+                  if (v == '') {
+                    return 'Ingrese el Valor';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 70),
+            AppButton(
+                text: 'Guardar',
+                onPressed: () => vm.guardarValoracion(context),
+                color: AppColors.green)
           ],
         ),
       ),
     );
   }
 }
+
+TableRow builRow(List<String> cells, {bool isHeader = false}) => TableRow(
+    children: cells
+        .map((cell) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                cell,
+                textAlign: isHeader ? TextAlign.center : TextAlign.left,
+                style: TextStyle(
+                  fontWeight: isHeader ? FontWeight.w700 : FontWeight.normal,
+                  color: isHeader ? AppColors.brownDark : Colors.black,
+                ),
+              ),
+            ))
+        .toList());

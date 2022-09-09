@@ -25,7 +25,7 @@ class FotosEstimacionForm extends StatelessWidget {
       titleHeader: 'Fotos',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
-      onPressedBack: () => vm.currentForm = 3,
+      onPressedBack: () => vm.currentForm = 2,
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
       onPressedNext: () =>
