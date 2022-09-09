@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
@@ -6,6 +7,7 @@ import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
@@ -23,8 +25,10 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   final _alarmasApi = locator<AlarmasApi>();
   final _authenticationAPI = locator<AuthenticationClient>();
   final _usuarioApi = locator<UserClient>();
+
   final listController = ScrollController();
   late GetSolicitudesResponse solicitudesResponse;
+
   AlarmasResponse? alarmasResponse;
   List<SolicitudesData> solicitudes = [];
   List<AlarmasData> alarmas = [];

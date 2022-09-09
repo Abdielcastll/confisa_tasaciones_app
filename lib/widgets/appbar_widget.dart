@@ -2,8 +2,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
+import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
+import 'package:tasaciones_app/views/entidades_generales/acciones_pendientes/acciones_pendientes_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_tasacion/solicitud_tasacion_view.dart';
@@ -36,11 +41,15 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final _authenticationAPI = locator<AuthenticationClient>();
   final bool esColaSolicitud;
   final int idSolicitud;
+  late ProfilePermisoResponse profilePermisoResponse;
 // >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
   @override
   Widget build(BuildContext context) {
     final pref = _authenticationAPI.loadSession;
     final roles = pref.role;
+    profilePermisoResponse =
+        Provider.of<ProfilePermisosProvider>(context, listen: false)
+            .profilePermisos;
 
     return AppBar(
       title: Text(
@@ -183,97 +192,120 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                   )
                 : const SizedBox(),
         esColaSolicitud
-            ? Row(
-                children: [
-                  Stack(
-                    alignment: AlignmentDirectional.center,
+            ? tienePermiso("Visualizar Alarmas")
+                ? Row(
                     children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AlarmasView(
-                                        showCreate: false,
-                                        idSolicitud: idSolicitud,
-                                      )),
-                            );
-                          },
-                          icon: const Icon(
-                            AppIcons.bell,
-                            size: 24,
-                          )),
-                      Positioned(
-                        top: 15,
-                        left: 6,
-                        child: Container(
-                          child: Text(alarmas!.length.toString(),
-                              style: const TextStyle(fontSize: 12)),
-                          alignment: AlignmentDirectional.center,
-                          height: 16,
-                          width: 16,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(30),
+                      Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AlarmasView(
+                                            showCreate: false,
+                                            idSolicitud: idSolicitud,
+                                          )),
+                                );
+                              },
+                              icon: const Icon(
+                                AppIcons.bell,
+                                size: 24,
+                              )),
+                          Positioned(
+                            top: 15,
+                            left: 6,
+                            child: Container(
+                              child: Text(alarmas!.length.toString(),
+                                  style: const TextStyle(fontSize: 12)),
+                              alignment: AlignmentDirectional.center,
+                              height: 16,
+                              width: 16,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
-                  ),
-                ],
-              )
+                  )
+                : const SizedBox()
             : Row(
                 children: [
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotasView(
-                                    showCreate: true,
-                                    idSolicitud: idSolicitud,
-                                  )),
-                        );
-                      },
-                      icon: const Icon(
-                        AppIcons.pencilAlt,
-                        size: 24,
-                      )),
-                  Stack(
-                    alignment: AlignmentDirectional.center,
-                    children: [
-                      IconButton(
+                  tienePermiso("Visualizar NotasSolicitud")
+                      ? IconButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AlarmasView(
+                                  builder: (context) => NotasView(
                                         showCreate: true,
                                         idSolicitud: idSolicitud,
                                       )),
                             );
                           },
                           icon: const Icon(
-                            AppIcons.bell,
+                            AppIcons.pencilAlt,
                             size: 24,
-                          )),
-                      Positioned(
-                        top: 15,
-                        left: 6,
-                        child: Container(
-                          child: Text(alarmas!.length.toString(),
-                              style: const TextStyle(fontSize: 12)),
+                          ))
+                      : const SizedBox(),
+                  tienePermiso("Visualizar Alarmas")
+                      ? Stack(
                           alignment: AlignmentDirectional.center,
-                          height: 16,
-                          width: 16,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AlarmasView(
+                                              showCreate: true,
+                                              idSolicitud: idSolicitud,
+                                            )),
+                                  );
+                                },
+                                icon: const Icon(
+                                  AppIcons.bell,
+                                  size: 24,
+                                )),
+                            Positioned(
+                              top: 15,
+                              left: 6,
+                              child: Container(
+                                child: Text(alarmas!.length.toString(),
+                                    style: const TextStyle(fontSize: 12)),
+                                alignment: AlignmentDirectional.center,
+                                height: 16,
+                                width: 16,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      : const SizedBox(),
+                  tienePermiso("Visualizar AccionesPendientes")
+                      ? IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AccionesSolicitudView(
+                                        idSolicitud: idSolicitud,
+                                        showCreate: true,
+                                      )),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.person_pin_circle_sharp,
+                            size: 24,
+                          ))
+                      : const SizedBox(),
                 ],
               ),
 // >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
@@ -289,4 +321,12 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
+  bool tienePermiso(String permisoRequerido) {
+    for (var permisoRol in profilePermisoResponse.data) {
+      for (var permiso in permisoRol.permisos!) {
+        if (permiso.descripcion == permisoRequerido) return true;
+      }
+    }
+    return false;
+  }
 }

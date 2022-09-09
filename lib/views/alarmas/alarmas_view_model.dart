@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_datetime_picker.dart';
@@ -28,6 +30,7 @@ class AlarmasViewModel extends BaseViewModel {
   bool _busqueda = false;
   bool hasNextPage = false;
   late AlarmasResponse alarmasResponse;
+  late ProfilePermisoResponse profilePermisoResponse;
   Profile? usuario;
 
   AlarmasViewModel({required this.idSolicitud}) {
@@ -61,9 +64,12 @@ class AlarmasViewModel extends BaseViewModel {
     alarmas = alarmas.reversed.toList();
   }
 
-  Future<void> onInit() async {
+  Future<void> onInit(BuildContext context) async {
     cargando = true;
     usuario = _userClient.loadProfile;
+    profilePermisoResponse =
+        Provider.of<ProfilePermisosProvider>(context, listen: false)
+            .profilePermisos;
     Object resp = Failure;
     if (idSolicitud == 0) {
       switch (usuario!.roles!.any((element) =>
@@ -107,6 +113,15 @@ class AlarmasViewModel extends BaseViewModel {
       Dialogs.error(msg: resp.messages[0]);
     }
     cargando = false;
+  }
+
+  bool tienePermiso(String permisoRequerido) {
+    for (var permisoRol in profilePermisoResponse.data) {
+      for (var permiso in permisoRol.permisos!) {
+        if (permiso.descripcion == permisoRequerido) return true;
+      }
+    }
+    return false;
   }
 
   Future<void> cargarMasAlarmas() async {
@@ -244,6 +259,10 @@ class AlarmasViewModel extends BaseViewModel {
     ];
     tcNewFechaCompromiso.text = parts[0];
     tcNewHoraCompromiso.text = parts[1];
+
+    bool readOnly = tienePermiso("Actualizar Alarmas");
+    bool eliminar = tienePermiso("Eliminar Alarmas");
+
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -277,6 +296,7 @@ class AlarmasViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        readOnly: !readOnly,
                         controller: tcNewTitulo,
                         validator: (value) {
                           if (value!.trim() == '') {
@@ -297,8 +317,8 @@ class AlarmasViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        keyboardType: TextInputType.datetime,
                         readOnly: true,
+                        keyboardType: TextInputType.datetime,
                         controller: tcNewFechaCompromiso,
                         validator: (value) {
                           if (value!.trim() == '') {
@@ -312,10 +332,12 @@ class AlarmasViewModel extends BaseViewModel {
                           suffixIcon: Icon(Icons.calendar_today),
                           border: UnderlineInputBorder(),
                         ),
-                        onTap: () async {
-                          tcNewFechaCompromiso.text =
-                              await Pickers.selectDate(context);
-                        },
+                        onTap: readOnly
+                            ? () async {
+                                tcNewFechaCompromiso.text =
+                                    await Pickers.selectDate(context);
+                              }
+                            : () {},
                       ),
                     ),
                   ),
@@ -323,8 +345,8 @@ class AlarmasViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        keyboardType: TextInputType.datetime,
                         readOnly: true,
+                        keyboardType: TextInputType.datetime,
                         controller: tcNewHoraCompromiso,
                         validator: (value) {
                           if (value!.trim() == '') {
@@ -338,10 +360,12 @@ class AlarmasViewModel extends BaseViewModel {
                           suffixIcon: Icon(Icons.alarm),
                           border: UnderlineInputBorder(),
                         ),
-                        onTap: () async {
-                          tcNewHoraCompromiso.text =
-                              await Pickers.selectTime(context);
-                        },
+                        onTap: readOnly
+                            ? () async {
+                                tcNewHoraCompromiso.text =
+                                    await Pickers.selectTime(context);
+                              }
+                            : () {},
                       ),
                     ),
                   ),
@@ -349,6 +373,7 @@ class AlarmasViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        readOnly: !readOnly,
                         controller: tcNewDescription,
                         validator: (value) {
                           if (value!.trim() == '') {
@@ -367,60 +392,82 @@ class AlarmasViewModel extends BaseViewModel {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Alarma',
-                              description:
-                                  '¿Esta seguro de eliminar la alarma ${alarma.titulo}?',
-                              confirm: () async {
-                            ProgressDialog.show(ctx);
-                            var resp =
-                                await _alarmasApi.deleteAlarma(id: alarma.id);
-                            ProgressDialog.dissmiss(ctx);
-                            if (resp is Failure) {
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is Success) {
-                              Dialogs.success(msg: 'Nota eliminada');
-                              await onRefresh();
-                            }
-                          });
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.trash,
-                              color: AppColors.grey,
+                      eliminar
+                          ? TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Dialogs.confirm(ctx,
+                                    tittle: 'Eliminar Alarma',
+                                    description:
+                                        '¿Esta seguro de eliminar la alarma ${alarma.titulo}?',
+                                    confirm: () async {
+                                  ProgressDialog.show(ctx);
+                                  var resp = await _alarmasApi.deleteAlarma(
+                                      id: alarma.id);
+                                  ProgressDialog.dissmiss(ctx);
+                                  if (resp is Failure) {
+                                    Dialogs.error(msg: resp.messages[0]);
+                                  }
+                                  if (resp is Success) {
+                                    Dialogs.success(msg: 'Nota eliminada');
+                                    await onRefresh();
+                                  }
+                                });
+                              }, // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    AppIcons.trash,
+                                    color: AppColors.grey,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Eliminar"), // text
+                                ],
+                              ),
+                            )
+                          : TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                tcNewDescription.clear();
+                              }, // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    AppIcons.closeCircle,
+                                    color: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Cancelar"), // text
+                                ],
+                              ),
                             ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Eliminar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewDescription.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
+                      eliminar
+                          ? TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                tcNewDescription.clear();
+                              }, // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    AppIcons.closeCircle,
+                                    color: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Cancelar"), // text
+                                ],
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {

@@ -63,22 +63,24 @@ class _NotasMobile extends StatelessWidget {
                   ),
                 ),
                 showCreate
-                    ? MaterialButton(
-                        onPressed: () => vm.crearNotas(context),
-                        color: Colors.white,
-                        minWidth: 30,
-                        height: 48,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        elevation: 4,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            AppIcons.iconPlus,
-                            color: AppColors.green,
-                          ),
-                        ),
-                      )
+                    ? vm.tienePermiso("Crear NotasSolicitud")
+                        ? MaterialButton(
+                            onPressed: () => vm.crearNotas(context),
+                            color: Colors.white,
+                            minWidth: 30,
+                            height: 48,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                            elevation: 4,
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(
+                                AppIcons.iconPlus,
+                                color: AppColors.green,
+                              ),
+                            ),
+                          )
+                        : const SizedBox()
                     : const SizedBox(),
                 const SizedBox(width: 5),
               ],
