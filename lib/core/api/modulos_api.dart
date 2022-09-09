@@ -11,7 +11,7 @@ class ModulosApi {
 
   Future<Object> getModulos({
     int pageNumber = 1,
-    int pageSize = 20,
+    int pageSize = 999,
     int? id,
     String name = '',
   }) async {

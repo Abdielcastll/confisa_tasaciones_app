@@ -55,8 +55,11 @@ class ConsultarModificarViewModel extends BaseViewModel {
   GlobalKey<FormState> formKeyFotos = GlobalKey<FormState>();
   int _currentForm = 1;
   VinDecoderData? _vinData;
+
+  late SolicitudesData solicitudCola;
+  late SolicitudesData solicitud = SolicitudesData();
+
   SolicitudCreditoData? solicitudCreditoData;
-  late SolicitudesData solicitud;
 
   TextEditingController tcFuerzaMotriz = TextEditingController();
   TextEditingController tcKilometraje = TextEditingController();
@@ -84,6 +87,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int get currentForm => _currentForm;
   set currentForm(int i) {
     _currentForm = i;
+    getAlarmas();
     notifyListeners();
   }
 
@@ -100,14 +104,42 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> getAlarmas() async {
+    if (solicitudCola.id != null) {
+      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCola.id);
+      if (resp is Success<AlarmasResponse>) {
+        alarmasResponse = resp.response;
+        alarmas = resp.response.data;
+      } else if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+    }
+    notifyListeners();
+  }
+
   void onInit(BuildContext context, SolicitudesData? data) async {
-    solicitud = data!;
+    solicitudCola = data!;
     tcVIN.text = solicitud.chasis ?? '';
     tcKilometraje.text = solicitud.kilometraje.toString();
     tcPlaca.text = solicitud.placa ?? '';
     tcFuerzaMotriz.text = solicitud.fuerzaMotriz.toString();
     await Future.delayed(const Duration(milliseconds: 150));
     solicitudCredito(context);
+
+    if (solicitudCola.id != null) {
+      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCola.id);
+      if (resp is Success<AlarmasResponse>) {
+        alarmasResponse = resp.response;
+        alarmas = resp.response.data;
+      } else if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+    }
+    // var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
+    // if (resp is Success<List<DescripcionFotoVehiculos>>) {
+    //   descripcionFotos = resp.response;
+    // }
+    notifyListeners();
   }
 
   Future<List<DescripcionFotoVehiculos>> getDescripcionFotos(

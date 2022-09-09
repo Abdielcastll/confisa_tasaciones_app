@@ -231,7 +231,7 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                       dropdownDecoratorProps: const DropDownDecoratorProps(
                         textAlignVertical: TextAlignVertical.center,
                         dropdownSearchDecoration: InputDecoration(
-                          hintText: "Segmento",
+                          label: Text("Segmento"),
                           border: UnderlineInputBorder(),
                         ),
                       ),
@@ -604,7 +604,7 @@ class ComponentesVehiculoViewModel extends BaseViewModel {
                                       const DropDownDecoratorProps(
                                     textAlignVertical: TextAlignVertical.center,
                                     dropdownSearchDecoration: InputDecoration(
-                                      hintText: "Segmento",
+                                      label: Text("Segmento"),
                                       border: UnderlineInputBorder(),
                                     ),
                                   ),

@@ -13,13 +13,10 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
-// <<<<<<< HEAD
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import 'package:tasaciones_app/core/models/ediciones_vehiculo_response.dart';
-// =======
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
@@ -28,7 +25,6 @@ import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/widgets/escaner.dart';
 
@@ -156,6 +152,18 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   void onInit(SolicitudesData? arg) async {
+    print("hoka");
+    if (solicitud!.noSolicitud != null) {
+      var resp =
+          await _alarmasApi.getAlarmas(idSolicitud: solicitud!.noSolicitud);
+      if (resp is Success<AlarmasResponse>) {
+        alarmasResponse = resp.response;
+        alarmas = resp.response.data;
+      } else if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
+      }
+    }
+
     if (arg != null) {
       solicitudCola = arg;
       tcNoSolicitud.text = arg.noSolicitudCredito.toString();

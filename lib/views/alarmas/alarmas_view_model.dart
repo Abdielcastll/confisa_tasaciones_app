@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
-import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_datetime_picker.dart';
@@ -68,8 +66,9 @@ class AlarmasViewModel extends BaseViewModel {
     usuario = _userClient.loadProfile;
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
           break;
@@ -80,8 +79,9 @@ class AlarmasViewModel extends BaseViewModel {
         default:
       }
     } else {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _alarmasApi.getAlarmas(
               pageNumber: pageNumber, idSolicitud: idSolicitud);
@@ -131,8 +131,9 @@ class AlarmasViewModel extends BaseViewModel {
     cargando = true;
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _alarmasApi.getAlarmas(
               pageNumber: pageNumber, titulo: query);
@@ -191,8 +192,9 @@ class AlarmasViewModel extends BaseViewModel {
     cargando = true;
     Object resp = Failure;
     if (idSolicitud == 0) {
-      switch (usuario!.roles!
-          .any((element) => element.roleName == "AprobadorTasaciones")) {
+      switch (usuario!.roles!.any((element) =>
+          element.roleName == "AprobadorTasaciones" ||
+          element.roleName == "Administrador")) {
         case true:
           resp = await _alarmasApi.getAlarmas(pageNumber: pageNumber);
           break;

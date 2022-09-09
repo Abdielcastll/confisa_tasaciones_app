@@ -1,29 +1,30 @@
-library accesorios_view;
+library auditoria_view;
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/views/entidades_solicitudes/accesorios/accesorios_view_model.dart';
+import 'package:tasaciones_app/views/auditoria/auditoria_view_model.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';
 import 'package:tasaciones_app/widgets/refresh_widget.dart';
 
-part 'accesorios_mobile.dart';
+part 'auditoria_mobile.dart';
 
-class AccesoriosView extends StatelessWidget {
-  static const routeName = 'Accesorios Vehículo';
-  const AccesoriosView({Key? key}) : super(key: key);
+class AuditoriaView extends StatelessWidget {
+  static const routeName = 'Auditoria';
+  const AuditoriaView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    AccesoriosViewModel viewModel = AccesoriosViewModel();
-    return ViewModelBuilder<AccesoriosViewModel>.reactive(
+    AuditoriaViewModel viewModel = AuditoriaViewModel();
+    return ViewModelBuilder<AuditoriaViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
           viewModel.onInit();
           // Do something once your viewModel is initialized
         },
         builder: (context, viewModel, child) {
-          return _AccesoriosMobile(viewModel);
+          return _AuditoriaMobile(viewModel);
         });
   }
 }

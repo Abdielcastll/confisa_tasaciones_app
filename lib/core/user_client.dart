@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasaciones_app/core/api/usuarios_api.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
-import 'package:tasaciones_app/core/models/usuarios_response.dart';
 
 class UserClient {
   SharedPreferences _storage;

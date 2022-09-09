@@ -4,10 +4,10 @@ import 'package:tasaciones_app/core/api/acciones_solicitud_api.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/acciones_solicitud_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
-import 'package:tasaciones_app/core/models/usuarios_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
-import 'package:tasaciones_app/widgets/app_datetime_picker.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
@@ -18,6 +18,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
   final _accionesSolicitudApi = locator<AccionesSolicitudApi>();
   final _userClient = locator<UserClient>();
   final listController = ScrollController();
+  final _navigationService = locator<NavigatorService>();
 
   TextEditingController tcNewTipo = TextEditingController();
   TextEditingController tcNewComentario = TextEditingController();
@@ -315,6 +316,20 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        initialValue:
+                            accionSolicitud.listo ? "Listo" : "Pendiente",
+                        readOnly: true,
+                        decoration: const InputDecoration(
+                          label: Text("¿Listo?"),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -351,6 +366,56 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                               height: 3,
                             ), // icon
                             Text("Eliminar"), // text
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Dialogs.confirm(ctx,
+                              tittle:
+                                  "Colocar como ${accionSolicitud.listo ? "Pendiente" : "Listo"}",
+                              description:
+                                  '¿Esta colocar como ${accionSolicitud.listo ? "pendiente" : "listo"} la nota ${accionSolicitud.notas}?',
+                              confirm: () async {
+                            ProgressDialog.show(ctx);
+                            var resp = await _accionesSolicitudApi
+                                .updateAccionSolicitud(
+                                    id: accionSolicitud.id,
+                                    tipo: accionSolicitud.tipo,
+                                    notas: accionSolicitud.notas,
+                                    listo: !accionSolicitud.listo,
+                                    comentario: accionSolicitud.comentario);
+                            ProgressDialog.dissmiss(ctx);
+                            if (resp is Failure) {
+                              Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is Success) {
+                              Dialogs.success(msg: 'Modificado con éxito');
+                              await onRefresh();
+                            }
+                            if (resp is TokenFail) {
+                              Dialogs.error(msg: 'Su sesión a expirado');
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                            }
+                          });
+                        }, // button pressed
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              accionSolicitud.listo
+                                  ? AppIcons.trash
+                                  : AppIcons.checkCircle,
+                              color: AppColors.grey,
+                            ),
+                            const SizedBox(
+                              height: 3,
+                            ), // icon
+                            Text(accionSolicitud.listo
+                                ? "Pendiente"
+                                : "Listo"), // text
                           ],
                         ),
                       ),

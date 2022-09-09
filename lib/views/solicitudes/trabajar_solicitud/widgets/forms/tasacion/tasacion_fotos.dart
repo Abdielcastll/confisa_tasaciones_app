@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';

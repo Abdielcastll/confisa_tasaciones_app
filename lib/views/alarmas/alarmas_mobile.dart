@@ -15,9 +15,9 @@ class _AlarmasMobile extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           elevation: 3,
-          title: const Text(
-            'Alarmas',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          title: Text(
+            'Alarmas ${vm.idSolicitud == 0 ? "" : "de ${vm.idSolicitud}"}',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
         ),

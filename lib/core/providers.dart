@@ -1,7 +1,6 @@
 import 'package:provider/single_child_widget.dart';
 import 'package:tasaciones_app/core/providers/menu_provider.dart';
 import 'package:tasaciones_app/core/providers/permisos_provider.dart';
-import 'package:tasaciones_app/core/providers/rol_provider.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';

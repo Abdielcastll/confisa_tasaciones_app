@@ -9,7 +9,6 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
-import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/providers/menu_provider.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/utils/cuentas.dart';

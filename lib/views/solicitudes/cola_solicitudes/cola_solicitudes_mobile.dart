@@ -16,7 +16,6 @@ class _ColaSolicitudesMobile extends StatelessWidget {
           titulo: 'Cola de solicitudes',
           alarmas: vm.alarmas,
           esColaSolicitud: true,
-          currentForm: 0,
           idSolicitud: 0,
         ),
         body: _home(context),

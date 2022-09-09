@@ -6,6 +6,7 @@ import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
 import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
+import 'package:tasaciones_app/views/auditoria/auditoria_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 
 import '../core/locator.dart';
@@ -108,32 +109,6 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                             },
                           ),
                           ListTile(
-                            leading: const Icon(Icons.alarm),
-                            title: const Text(
-                              'Alarmas',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                            onTap: () {
-                              _navigationService.pop();
-                              _navigationService
-                                  .navigateToPage(AlarmasView.routeName);
-                            },
-                          ),
-                          ListTile(
-                            leading: const Icon(Icons.article_outlined),
-                            title: const Text(
-                              'Notas',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                            onTap: () {
-                              _navigationService.pop();
-                              _navigationService
-                                  .navigateToPage(NotasView.routeName);
-                            },
-                          ),
-                          ListTile(
                             leading: const Icon(Icons.person_pin),
                             title: const Text(
                               'Acciones Solicitud',
@@ -144,6 +119,19 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                               _navigationService.pop();
                               _navigationService.navigateToPage(
                                   AccionesSolicitudView.routeName);
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.account_balance_rounded),
+                            title: const Text(
+                              'Auditoria',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                            onTap: () {
+                              _navigationService.pop();
+                              _navigationService
+                                  .navigateToPage(AuditoriaView.routeName);
                             },
                           ),
                           ListTile(
