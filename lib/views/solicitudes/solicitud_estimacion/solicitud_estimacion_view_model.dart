@@ -151,18 +151,18 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onInit(SolicitudesData? arg) async {
-    if (solicitud!.noSolicitud != null) {
-      var resp =
-          await _alarmasApi.getAlarmas(idSolicitud: solicitud!.noSolicitud);
-      if (resp is Success<AlarmasResponse>) {
-        alarmasResponse = resp.response;
-        alarmas = resp.response.data;
-      } else if (resp is Failure) {
-        Dialogs.error(msg: resp.messages.first);
-      }
+  Future<void> getAlarmas() async {
+    var resp = await _alarmasApi.getAlarmas(
+        idSolicitud: solicitudCreada!.noSolicitudCredito);
+    if (resp is Success<AlarmasResponse>) {
+      alarmasResponse = resp.response;
+      alarmas = resp.response.data;
+    } else if (resp is Failure) {
+      Dialogs.error(msg: resp.messages.first);
     }
+  }
 
+  void onInit(SolicitudesData? arg) async {
     if (arg != null) {
       solicitudCola = arg;
       tcNoSolicitud.text = arg.noSolicitudCredito.toString();
@@ -471,6 +471,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
             int cantidad = int.parse(resp.response.data.descripcion ?? '0');
             fotos = List.generate(cantidad, (i) => FotoData(file: File('')));
             fotosPermitidas = cantidad;
+            await getAlarmas();
             currentForm = 3;
             ProgressDialog.dissmiss(context);
           }

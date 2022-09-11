@@ -9,13 +9,17 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 // <<<<<<< HEAD
-      appBar: Appbar(
-        titulo: "Solicitud de Estimación",
-        esColaSolicitud: false,
-        textSize: 20,
-        alarmas: vm.alarmas,
-        idSolicitud: vm.solicitud!.noSolicitud ?? 0,
-      ),
+      appBar: vm.currentForm <= 2
+          ? AppBar(
+              title: Text("Solicitud de Estimación"),
+            )
+          : Appbar(
+              titulo: "Solicitud de Estimación",
+              esColaSolicitud: false,
+              textSize: 20,
+              alarmas: vm.alarmas,
+              idSolicitud: vm.solicitudCreada!.id!,
+            ),
       body: Column(
         children: [
           const SizedBox(height: 10),
