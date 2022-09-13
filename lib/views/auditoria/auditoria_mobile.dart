@@ -57,13 +57,20 @@ class _AuditoriaMobile extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: DropdownSearch<String>(
-                                  popupProps:
-                                      const PopupProps.menu(fit: FlexFit.loose),
+                                  popupProps: const PopupProps.menu(
+                                    fit: FlexFit.loose,
+                                  ),
                                   dropdownDecoratorProps: DropDownDecoratorProps(
                                       dropdownSearchDecoration: InputDecoration(
                                           label: Text(vm.opcion1),
                                           border:
                                               const UnderlineInputBorder())),
+                                  dropdownBuilder: (context, selectedItem) =>
+                                      Text(
+                                        selectedItem!,
+                                        style: const TextStyle(fontSize: 16),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                   selectedItem:
                                       vm.auditorias.isEmpty ? "" : vm.opcion2,
                                   items: vm.auditorias.isEmpty
@@ -141,7 +148,7 @@ class _AuditoriaMobile extends StatelessWidget {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      auditoria.userId,
+                                                      auditoria.userName,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: const TextStyle(
@@ -198,7 +205,7 @@ class _AuditoriaMobile extends StatelessWidget {
                                                               fontSize: 12),
                                                         ),
                                                         Text(
-                                                          "Usuario: ${auditoria.userId}",
+                                                          "Usuario: ${auditoria.userName}",
                                                           style: const TextStyle(
                                                               color: AppColors
                                                                   .brownDark,
@@ -231,7 +238,7 @@ class _AuditoriaMobile extends StatelessWidget {
                                                               ),
                                                             ),
                                                             Text(
-                                                              "Usuario: ${auditoria.userId}",
+                                                              "Usuario: ${auditoria.userName}",
                                                               style: const TextStyle(
                                                                   color: AppColors
                                                                       .brownDark,

@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:tasaciones_app/core/models/permisos_response.dart';
 import 'package:tasaciones_app/core/models/roles_response.dart';
 
 ProfileResponse profileResponseFromJson(String str) =>
@@ -92,5 +93,66 @@ class Profile {
         "idSuplidor": idSuplidor,
         "nombreSuplidor": nombreSuplidor,
         "roles": List<dynamic>.from(roles!.map((x) => x)),
+      };
+}
+
+ProfilePermisoResponse profilePermisoResponseFromJson(String str) =>
+    ProfilePermisoResponse.fromJson(json.decode(str));
+
+String profilePermisoResponseToJson(ProfilePermisoResponse data) =>
+    json.encode(data.toJson());
+
+class ProfilePermisoResponse {
+  ProfilePermisoResponse({
+    required this.data,
+  });
+
+  List<ProfilePermiso> data;
+
+  factory ProfilePermisoResponse.fromJson(Map<String, dynamic> json) =>
+      ProfilePermisoResponse(
+        data: json["data"]
+            .map<ProfilePermiso>((e) => ProfilePermiso.fromJson(e))
+            .toList(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "data": data,
+      };
+}
+
+class ProfilePermiso {
+  ProfilePermiso(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.permisos,
+      required this.typeRol,
+      required this.typeRolDescription});
+
+  String id;
+  String name;
+  String description;
+  String typeRolDescription;
+  int typeRol;
+  List<PermisosData>? permisos;
+
+  factory ProfilePermiso.fromJson(Map<String, dynamic> json) => ProfilePermiso(
+        id: json["id"] ?? '',
+        name: json["name"] ?? '',
+        description: json["description"] ?? '',
+        typeRol: json["typeRol"] ?? 0,
+        typeRolDescription: json["typeRolDescription"] ?? '',
+        permisos: json["permisos"]
+            .map<PermisosData>((e) => PermisosData.fromJson(e))
+            .toList(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "typeRol": typeRol,
+        "permisos": List<dynamic>.from(permisos!.map((x) => x)),
       };
 }

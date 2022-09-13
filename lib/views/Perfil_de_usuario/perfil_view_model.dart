@@ -94,8 +94,7 @@ class PerfilViewModel extends BaseViewModel {
   }
 
   bool editable() {
-    return (session.role.contains('AprobradorTasaciones') ||
-        session.role.contains('Tasador'));
+    return (session.typeRol == 67);
   }
 
   void onChangedName(String value) {

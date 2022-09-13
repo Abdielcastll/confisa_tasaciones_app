@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/notas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/notas_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -30,6 +31,7 @@ class NotasViewModel extends BaseViewModel {
   bool _busqueda = false;
   bool hasNextPage = false;
   late NotasResponse notasResponse;
+  late ProfilePermisoResponse profilePermisoResponse;
   Profile? usuario;
 
   NotasViewModel({required this.showCreate, required this.idSolicitud}) {
@@ -60,9 +62,12 @@ class NotasViewModel extends BaseViewModel {
     });
   }
 
-  Future<void> onInit() async {
+  Future<void> onInit(BuildContext context) async {
     cargando = true;
     usuario = _userClient.loadProfile;
+    profilePermisoResponse =
+        Provider.of<ProfilePermisosProvider>(context, listen: false)
+            .profilePermisos;
 
     Object resp = Failure;
     if (idSolicitud == 0) {
@@ -105,6 +110,15 @@ class NotasViewModel extends BaseViewModel {
       Dialogs.error(msg: resp.messages[0]);
     }
     cargando = false;
+  }
+
+  bool tienePermiso(String permisoRequerido) {
+    for (var permisoRol in profilePermisoResponse.data) {
+      for (var permiso in permisoRol.permisos!) {
+        if (permiso.descripcion == permisoRequerido) return true;
+      }
+    }
+    return false;
   }
 
   Future<void> cargarMasNotas() async {
@@ -236,6 +250,7 @@ class NotasViewModel extends BaseViewModel {
   Future<void> modificarNota(BuildContext ctx, NotasData nota) async {
     tcNewDescription.text = nota.descripcion;
     tcNewTitulo.text = nota.titulo;
+
     int idx = nota.fechaHora.indexOf("T");
     List parts = [
       nota.fechaHora.substring(0, idx).trim(),
@@ -243,6 +258,9 @@ class NotasViewModel extends BaseViewModel {
     ];
     tcNewFechaCompromiso.text = parts[0];
     tcNewHoraCompromiso.text = parts[1];
+
+    bool readOnly = tienePermiso("Actualizar NotasSolicitud");
+    bool eliminar = tienePermiso("Eliminar NotasSolicitud");
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -276,6 +294,7 @@ class NotasViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        readOnly: !readOnly,
                         controller: tcNewTitulo,
                         validator: (value) {
                           if (value!.trim() == '') {
@@ -341,6 +360,7 @@ class NotasViewModel extends BaseViewModel {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: tcNewDescription,
+                        readOnly: !readOnly,
                         validator: (value) {
                           if (value!.trim() == '') {
                             return 'Escriba una descripción';
@@ -358,59 +378,82 @@ class NotasViewModel extends BaseViewModel {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Nota',
-                              description:
-                                  '¿Esta seguro de eliminar la nota ${nota.titulo}?',
-                              confirm: () async {
-                            ProgressDialog.show(ctx);
-                            var resp = await _notasApi.deleteNota(id: nota.id);
-                            ProgressDialog.dissmiss(ctx);
-                            if (resp is Failure) {
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is Success) {
-                              Dialogs.success(msg: 'Nota eliminada');
-                              await onRefresh();
-                            }
-                          });
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.trash,
-                              color: AppColors.grey,
+                      eliminar
+                          ? TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Dialogs.confirm(ctx,
+                                    tittle: 'Eliminar Nota',
+                                    description:
+                                        '¿Esta seguro de eliminar la nota ${nota.titulo}?',
+                                    confirm: () async {
+                                  ProgressDialog.show(ctx);
+                                  var resp =
+                                      await _notasApi.deleteNota(id: nota.id);
+                                  ProgressDialog.dissmiss(ctx);
+                                  if (resp is Failure) {
+                                    Dialogs.error(msg: resp.messages[0]);
+                                  }
+                                  if (resp is Success) {
+                                    Dialogs.success(msg: 'Nota eliminada');
+                                    await onRefresh();
+                                  }
+                                });
+                              }, // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    AppIcons.trash,
+                                    color: AppColors.grey,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Eliminar"), // text
+                                ],
+                              ),
+                            )
+                          : TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                tcNewDescription.clear();
+                              }, // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    AppIcons.closeCircle,
+                                    color: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Cancelar"), // text
+                                ],
+                              ),
                             ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Eliminar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewDescription.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
+                      eliminar
+                          ? TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                tcNewDescription.clear();
+                              }, // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    AppIcons.closeCircle,
+                                    color: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Cancelar"), // text
+                                ],
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {

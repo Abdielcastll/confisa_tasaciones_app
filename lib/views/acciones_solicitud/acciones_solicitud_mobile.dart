@@ -16,7 +16,7 @@ class _AccionesSolicitudMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'AccionesSolicitud',
+            'Acciones Solicitud',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
@@ -41,7 +41,7 @@ class _AccionesSolicitudMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar AccionesSolicitud...',
+                          hintText: 'Buscar Acciones Solicitud...',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
@@ -116,7 +116,7 @@ class _AccionesSolicitudMobile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                               child: Container(
                                 alignment: Alignment.centerLeft,
-                                height: 70,
+                                height: 85,
                                 padding: const EdgeInsets.all(10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -132,8 +132,15 @@ class _AccionesSolicitudMobile extends StatelessWidget {
                                     ),
                                     Text(
                                       "Solicitud: " +
-                                          accionSolicitud.idSolicitud
+                                          accionSolicitud.noSolicitudCredito
                                               .toString(),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Tasación: " +
+                                          accionSolicitud.noTasacion.toString(),
                                       style: const TextStyle(
                                           color: AppColors.brownDark,
                                           fontSize: 12),

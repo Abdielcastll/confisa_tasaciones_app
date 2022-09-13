@@ -6,7 +6,6 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
-import '../../../core/models/seguridad_entidades_generales/suplidores_response.dart';
 import '../../../theme/theme.dart';
 
 class SuplidoresViewModel extends BaseViewModel {

@@ -56,14 +56,18 @@ class AlarmasData {
       required this.fechaHora,
       required this.idSolicitud,
       required this.titulo,
-      required this.usuario});
+      required this.usuario,
+      required this.noSolicitudCredito,
+      required this.noTasacion});
 
   String descripcion, fechaHora, usuario, fechaCompromiso, titulo, correo;
-  int id, idSolicitud;
+  int id, idSolicitud, noTasacion, noSolicitudCredito;
 
   factory AlarmasData.fromJson(Map<String, dynamic> json) => AlarmasData(
         id: json["id"] ?? 0,
         idSolicitud: json["idSolicitud"] ?? 0,
+        noSolicitudCredito: json["noSolicitudCredito"] ?? 0,
+        noTasacion: json["noTasacion"] ?? 0,
         descripcion: json["descripcion"] ?? '',
         correo: json["correo"] ?? '',
         fechaCompromiso: json["fechaCompromiso"] ?? '',
@@ -80,7 +84,9 @@ class AlarmasData {
         "fechaCompromiso": fechaCompromiso,
         "fechaHora": fechaHora,
         "titulo": titulo,
-        "usuario": usuario
+        "usuario": usuario,
+        "noSolicitudCredito": noSolicitudCredito,
+        "noTasacion": noTasacion
       };
 }
 

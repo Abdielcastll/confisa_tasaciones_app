@@ -10,7 +10,6 @@ class AuthenticationAPI {
     required String email,
     required String password,
   }) {
-    print("hola");
     return _http.request(
       '/api/tokens',
       method: 'POST',

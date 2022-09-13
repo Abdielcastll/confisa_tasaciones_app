@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/acciones_solicitud_api.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/acciones_solicitud_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
@@ -31,6 +33,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
   bool _busqueda = false;
   bool hasNextPage = false;
   late AccionesSolicitudResponse accionesSolicitudResponse;
+  late ProfilePermisoResponse profilePermisoResponse;
   Profile? usuario;
 
   AccionesSolicitudViewModel({required this.idSolicitud}) {
@@ -62,9 +65,13 @@ class AccionesSolicitudViewModel extends BaseViewModel {
     accionesSolicitud = accionesSolicitud.reversed.toList();
   }
 
-  Future<void> onInit() async {
+  Future<void> onInit(BuildContext context) async {
     cargando = true;
     usuario = _userClient.loadProfile;
+
+    profilePermisoResponse =
+        Provider.of<ProfilePermisosProvider>(context, listen: false)
+            .profilePermisos;
     Object resp = Failure;
     if (idSolicitud == 0) {
       switch (usuario!.roles!
@@ -105,6 +112,15 @@ class AccionesSolicitudViewModel extends BaseViewModel {
       Dialogs.error(msg: resp.messages[0]);
     }
     cargando = false;
+  }
+
+  bool tienePermiso(String permisoRequerido) {
+    for (var permisoRol in profilePermisoResponse.data) {
+      for (var permiso in permisoRol.permisos!) {
+        if (permiso.descripcion == permisoRequerido) return true;
+      }
+    }
+    return false;
   }
 
   Future<void> cargarMasAccionesSolicitud() async {
@@ -229,6 +245,10 @@ class AccionesSolicitudViewModel extends BaseViewModel {
     tcNewNotas.text = accionSolicitud.notas;
     tcNewComentario.text = accionSolicitud.comentario;
     tcNewTipo.text = accionSolicitud.tipo.toString();
+
+    bool readOnly = tienePermiso("Actualizar AccionesPendientes");
+    bool eliminar = tienePermiso("Eliminar AccionesPendientes");
+
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -262,6 +282,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        readOnly: !readOnly,
                         controller: tcNewNotas,
                         validator: (value) {
                           if (value!.trim() == '') {
@@ -281,6 +302,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        readOnly: !readOnly,
                         controller: tcNewTipo,
                         keyboardType: TextInputType.number,
                         validator: (value) {
@@ -301,6 +323,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        readOnly: !readOnly,
                         controller: tcNewComentario,
                         validator: (value) {
                           if (value!.trim() == '') {
@@ -333,42 +356,45 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Acción Solicitud',
-                              description:
-                                  '¿Esta seguro de eliminar la Acción Solicitud ${accionSolicitud.notas}?',
-                              confirm: () async {
-                            ProgressDialog.show(ctx);
-                            var resp = await _accionesSolicitudApi
-                                .deleteAccionSolicitud(id: accionSolicitud.id);
-                            ProgressDialog.dissmiss(ctx);
-                            if (resp is Failure) {
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is Success) {
-                              Navigator.pop(context);
-                              Dialogs.success(
-                                  msg: 'Acción Solicitud eliminada');
-                              await onRefresh();
-                            }
-                          });
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.trash,
-                              color: AppColors.grey,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Eliminar"), // text
-                          ],
-                        ),
-                      ),
+                      eliminar
+                          ? TextButton(
+                              onPressed: () {
+                                Dialogs.confirm(ctx,
+                                    tittle: 'Eliminar Acción Solicitud',
+                                    description:
+                                        '¿Esta seguro de eliminar la Acción Solicitud ${accionSolicitud.notas}?',
+                                    confirm: () async {
+                                  ProgressDialog.show(ctx);
+                                  var resp = await _accionesSolicitudApi
+                                      .deleteAccionSolicitud(
+                                          id: accionSolicitud.id);
+                                  ProgressDialog.dissmiss(ctx);
+                                  if (resp is Failure) {
+                                    Dialogs.error(msg: resp.messages[0]);
+                                  }
+                                  if (resp is Success) {
+                                    Navigator.pop(context);
+                                    Dialogs.success(
+                                        msg: 'Acción Solicitud eliminada');
+                                    await onRefresh();
+                                  }
+                                });
+                              }, // button pressed
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Icon(
+                                    AppIcons.trash,
+                                    color: AppColors.grey,
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ), // icon
+                                  Text("Eliminar"), // text
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);

@@ -24,7 +24,7 @@ class NotasView extends StatelessWidget {
     return ViewModelBuilder<NotasViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          viewModel.onInit();
+          viewModel.onInit(context);
           // Do something once your viewModel is initialized
         },
         builder: (context, viewModel, child) {

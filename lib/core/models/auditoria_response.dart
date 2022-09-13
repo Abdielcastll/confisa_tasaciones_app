@@ -57,9 +57,11 @@ class AuditoriaData {
       required this.tipo,
       required this.userId,
       required this.valoresAnteriores,
-      required this.valoresNuevos});
+      required this.valoresNuevos,
+      required this.userName});
 
   String userId,
+      userName,
       tipo,
       nombreTabla,
       fecha,
@@ -72,6 +74,7 @@ class AuditoriaData {
   factory AuditoriaData.fromJson(Map<String, dynamic> json) => AuditoriaData(
         id: json["id"] ?? 0,
         userId: json["userId"] ?? '',
+        userName: json["userName"] ?? '',
         tipo: json["tipo"] ?? '',
         nombreTabla: json["nombreTabla"] ?? '',
         fecha: json["fecha"] ?? '',
@@ -84,6 +87,7 @@ class AuditoriaData {
   Map<String, dynamic> toJson() => {
         "id": id,
         "userId": userId,
+        "userName": userName,
         "tipo": tipo,
         "nombreTabla": nombreTabla,
         "fecha": fecha,

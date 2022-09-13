@@ -23,7 +23,7 @@ class AlarmasView extends StatelessWidget {
     return ViewModelBuilder<AlarmasViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          viewModel.onInit();
+          viewModel.onInit(context);
           // Do something once your viewModel is initialized
         },
         builder: (context, viewModel, child) {
