@@ -152,24 +152,22 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   void onInit(SolicitudesData? arg) async {
-    print("hoka");
-    if (solicitud!.noSolicitud != null) {
-      var resp =
-          await _alarmasApi.getAlarmas(idSolicitud: solicitud!.noSolicitud);
-      if (resp is Success<AlarmasResponse>) {
-        alarmasResponse = resp.response;
-        alarmas = resp.response.data;
-      } else if (resp is Failure) {
-        Dialogs.error(msg: resp.messages.first);
-      }
-    }
-
     if (arg != null) {
       solicitudCola = arg;
       tcNoSolicitud.text = arg.noSolicitudCredito.toString();
-      tcVIN.text = arg.chasis!;
+      // tcVIN.text = arg.chasis!;
       notifyListeners();
     }
+    // if (solicitud!.noSolicitud != null) {
+    // var resp =
+    //     await _alarmasApi.getAlarmas(idSolicitud: solicitud!.noSolicitud);
+    // if (resp is Success<AlarmasResponse>) {
+    //   alarmasResponse = resp.response;
+    //   alarmas = resp.response.data;
+    // } else if (resp is Failure) {
+    //   Dialogs.error(msg: resp.messages.first);
+    // }
+    // }
   }
 
   Future<void> solicitudCredito(BuildContext context) async {

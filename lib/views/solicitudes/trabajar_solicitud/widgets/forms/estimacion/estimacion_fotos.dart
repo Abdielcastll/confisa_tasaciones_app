@@ -1,12 +1,9 @@
 import 'dart:convert';
 
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import 'package:tasaciones_app/views/solicitudes/base_widgets/base_text_field_widget.dart';
 
 import '../../../../../../theme/theme.dart';
-import '../../../../../../widgets/app_dialogs.dart';
 import '../../../../base_widgets/base_form_widget.dart';
 import '../../../trabajar_view_model.dart';
 
@@ -69,14 +66,14 @@ class FotosActuales extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.brown)),
-                    child: foto.adjunto == ''
+                    child: foto.adjunto == null
                         ? Icon(
                             Icons.add_a_photo_rounded,
                             size: 50,
                             color: Colors.grey[300],
                           )
                         : Image.memory(
-                            base64Decode(foto.adjunto),
+                            base64Decode(foto.adjunto!),
                             fit: BoxFit.cover,
                           ),
                   ),

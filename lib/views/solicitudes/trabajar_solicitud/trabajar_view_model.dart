@@ -64,7 +64,7 @@ class TrabajarViewModel extends BaseViewModel {
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
   late int _fotosPermitidas;
-  late List<FotoData> fotos;
+  late List<AdjuntoFoto> fotos;
   final _picker = ImagePicker();
   List<DescripcionFotoVehiculos> descripcionFotos = [];
   SolicitudCreditoData? solicitudData;
@@ -391,18 +391,15 @@ class TrabajarViewModel extends BaseViewModel {
         await _adjuntosApi.getFotosTasacion(noTasacion: solicitud.noTasacion!);
     if (resp is Success<AdjuntosFotoResponse>) {
       fotosAdjuntos = resp.response.data;
-      // currentForm = 5;
     }
     if (resp is Failure) {
-      // Dialogs.error(msg: resp.messages[0]);
       print('NO HAY FOTOS GUARDADAS');
       var r = await _solicitudesApi.getCantidadFotos(
           idSuplidor: solicitud.suplidorTasacion!);
       if (r is Success<EntidadResponse>) {
         int cantidad = int.parse(r.response.data.descripcion ?? '0');
-        fotos = List.generate(cantidad, (i) => FotoData(file: File('')));
+        fotos = List.generate(cantidad, (i) => AdjuntoFoto());
         fotosPermitidas = cantidad;
-        // currentForm = 5;
       }
     }
     ProgressDialog.dissmiss(context);
@@ -414,34 +411,6 @@ class TrabajarViewModel extends BaseViewModel {
     } else {
       return null;
     }
-  }
-
-  Future<void> editarFotoNueva(int i) async {
-    var croppedFile = await ImageCropper().cropImage(
-      sourcePath: fotos[i].file!.path,
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Editar foto',
-          toolbarColor: AppColors.orange,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-          showCropGrid: true,
-        ),
-        IOSUiSettings(
-          title: 'Editar foto',
-        ),
-      ],
-    );
-    fotos[i] = FotoData(file: File(croppedFile!.path));
-    notifyListeners();
   }
 
   String? noVINValidator(String? value) {
@@ -519,7 +488,8 @@ class TrabajarViewModel extends BaseViewModel {
       maxWidth: 720,
     );
     if (img != null) {
-      fotos[i] = FotoData(file: File(img.path));
+      final fileTemp = await img.readAsBytes();
+      fotos[i] = fotos[i].copyWith(adjunto: base64Encode(fileTemp));
       notifyListeners();
     }
   }
@@ -532,23 +502,18 @@ class TrabajarViewModel extends BaseViewModel {
     if (img != null) {
       final foto = File(img.path);
       final fotoBase = base64Encode(foto.readAsBytesSync());
-      fotosAdjuntos[i].adjunto = fotoBase;
+      fotosAdjuntos[i] = fotosAdjuntos[i].copyWith(adjunto: fotoBase);
       notifyListeners();
     }
   }
 
   void borrarFotoNueva(int i) {
-    fotos[i] = FotoData(
-      file: File(''),
-      tipoAdjunto: null,
-      descripcion: null,
-    );
+    fotos[i] = AdjuntoFoto();
     notifyListeners();
   }
 
   void borrarFoto(int i) {
-    fotosAdjuntos[i].adjunto = '';
-    fotosAdjuntos[i].descripcion = 'Seleccione';
+    fotosAdjuntos[i] = AdjuntoFoto();
     notifyListeners();
   }
 
@@ -570,12 +535,12 @@ class TrabajarViewModel extends BaseViewModel {
       ProgressDialog.show(context);
       List<Map<String, dynamic>> dataList = [];
       for (var e in fotos) {
-        if (e.file?.path != '') {
-          var fotoBase = base64Encode(e.file!.readAsBytesSync());
+        if (e.adjunto != null) {
+          // var fotoBase = base64Encode(e.file!.readAsBytesSync());
           Map<String, dynamic> data = {
-            "adjuntoInBytes": fotoBase,
-            "tipoAdjunto": e.descripcion!.id,
-            "descripcion": e.descripcion!.descripcion,
+            "adjuntoInBytes": e.adjunto,
+            "tipoAdjunto": e.tipoAdjunto,
+            "descripcion": e.descripcion,
           };
           dataList.add(data);
         }
@@ -601,9 +566,41 @@ class TrabajarViewModel extends BaseViewModel {
     }
   }
 
+  Future<void> editarFotoNueva(int i) async {
+    var croppedFile = await ImageCropper().cropImage(
+      sourcePath: await createFileFromString(fotos[i].adjunto!),
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Editar foto',
+          toolbarColor: AppColors.orange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+          showCropGrid: true,
+        ),
+        IOSUiSettings(
+          title: 'Editar foto',
+        ),
+      ],
+    );
+    if (croppedFile != null) {
+      final fileTemp = File(croppedFile.path);
+      fotos[i] =
+          fotos[i].copyWith(adjunto: base64Encode(fileTemp.readAsBytesSync()));
+      notifyListeners();
+    }
+  }
+
   Future<void> editarFoto(int i) async {
     var croppedFile = await ImageCropper().cropImage(
-      sourcePath: await createFileFromString(fotosAdjuntos[i].adjunto),
+      sourcePath: await createFileFromString(fotosAdjuntos[i].adjunto!),
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
@@ -627,7 +624,8 @@ class TrabajarViewModel extends BaseViewModel {
     );
     if (croppedFile != null) {
       var fotoByte = File(croppedFile.path).readAsBytesSync();
-      fotosAdjuntos[i].adjunto = base64Encode(fotoByte);
+      fotosAdjuntos[i] =
+          fotosAdjuntos[i].copyWith(adjunto: base64Encode(fotoByte));
       notifyListeners();
     }
   }
@@ -687,7 +685,7 @@ class TrabajarViewModel extends BaseViewModel {
     }
     // valorUltimas3Tasaciones
     var tasacionPromedioResp = await _solicitudesApi.getTasacionCreditoAverage(
-      chasis: solicitud.chasis!,
+      chasis: solicitud.chasis ?? tcVIN.text,
       periodoMeses: 3,
     );
     if (tasacionPromedioResp is Success<Map<String, dynamic>>) {

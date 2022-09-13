@@ -27,7 +27,10 @@ class FotosForm extends StatelessWidget {
       labelBack: 'Anterior',
       onPressedBack: () => vm.currentForm = 2,
       iconNext: Icons.arrow_forward_ios,
-      labelNext: 'Siguiente',
+      labelNext:
+          vm.solicitud.estadoTasacion == 9 || vm.solicitud.estadoTasacion == 10
+              ? 'Salir'
+              : 'Siguiente',
       onPressedNext: () => vm.fotosAdjuntos.isNotEmpty
           ? vm.subirFotos(context)
           : vm.subirFotosNuevas(context),
@@ -57,7 +60,7 @@ class FotosNuevas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       ...List.generate(vm.fotosPermitidas, (i) {
-        final foto = vm.fotos[i];
+        // var foto = vm.fotos[i];
         return Column(
           children: [
             Row(
@@ -73,9 +76,9 @@ class FotosNuevas extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.brown)),
-                    child: foto.file!.path != ''
-                        ? Image.file(
-                            foto.file!,
+                    child: vm.fotos[i].adjunto != null
+                        ? Image.memory(
+                            base64Decode(vm.fotos[i].adjunto!),
                             fit: BoxFit.cover,
                           )
                         : Icon(
@@ -85,7 +88,7 @@ class FotosNuevas extends StatelessWidget {
                           ),
                   ),
                 ),
-                if (foto.file?.path != '')
+                if (vm.fotos[i].adjunto != null)
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -99,7 +102,12 @@ class FotosNuevas extends StatelessWidget {
                             ),
                           );
                         },
-                        onChanged: (v) => foto.descripcion = v,
+                        onChanged: (v) {
+                          vm.fotos[i] = vm.fotos[i].copyWith(
+                            descripcion: v!.descripcion,
+                            tipoAdjunto: v.id,
+                          );
+                        },
                         dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
                                 label: Text('Tipo:'),
@@ -126,7 +134,7 @@ class FotosNuevas extends StatelessWidget {
                       ),
                     ),
                   ),
-                foto.file!.path != ''
+                vm.fotos[i].adjunto != null
                     ? SizedBox(
                         height: 100,
                         child: Column(
@@ -148,7 +156,7 @@ class FotosNuevas extends StatelessWidget {
                             const Spacer(),
                             IconButton(
                                 onPressed: () {
-                                  vm.editarFotoNuevas(i);
+                                  vm.editarFotoNueva(i);
                                 },
                                 icon: const Icon(
                                   AppIcons.pencilAlt,
@@ -181,7 +189,7 @@ class FotosActuales extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       ...List.generate(vm.fotosAdjuntos.length, (i) {
-        final foto = vm.fotosAdjuntos[i];
+        // var foto = vm.fotosAdjuntos[i];
         return Column(
           children: [
             Row(
@@ -197,14 +205,14 @@ class FotosActuales extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.brown)),
-                    child: foto.adjunto == ''
+                    child: vm.fotosAdjuntos[i].adjunto == null
                         ? Icon(
                             Icons.add_a_photo_rounded,
                             size: 50,
                             color: Colors.grey[300],
                           )
                         : Image.memory(
-                            base64Decode(foto.adjunto),
+                            base64Decode(vm.fotosAdjuntos[i].adjunto!),
                             fit: BoxFit.cover,
                           ),
                   ),
@@ -221,7 +229,7 @@ class FotosActuales extends StatelessWidget {
                           ),
                         ),
                       )
-                    : foto.adjunto == ''
+                    : vm.fotosAdjuntos[i].adjunto == null
                         ? const Spacer()
                         : Expanded(
                             child: DropdownSearch<DescripcionFotoVehiculos>(
@@ -229,14 +237,20 @@ class FotosActuales extends StatelessWidget {
                               dropdownBuilder: (context, tipo) {
                                 return Text(
                                   tipo?.descripcion ??
-                                      vm.fotosAdjuntos[i].descripcion,
+                                      vm.fotosAdjuntos[i].descripcion ??
+                                      'Seleccione',
                                   style: const TextStyle(
                                     fontSize: 15,
                                   ),
                                 );
                               },
-                              onChanged: (v) =>
-                                  foto.descripcion = v!.descripcion!,
+                              onChanged: (v) {
+                                vm.fotosAdjuntos[i] =
+                                    vm.fotosAdjuntos[i].copyWith(
+                                  descripcion: v!.descripcion,
+                                  tipoAdjunto: v.id,
+                                );
+                              },
                               dropdownDecoratorProps:
                                   const DropDownDecoratorProps(
                                       dropdownSearchDecoration: InputDecoration(
@@ -264,7 +278,7 @@ class FotosActuales extends StatelessWidget {
                             ),
                           ),
                 if (vm.solicitud.estadoTasacion == 34)
-                  foto.adjunto == ''
+                  vm.fotosAdjuntos[i].adjunto == null
                       ? const SizedBox()
                       : SizedBox(
                           height: 100,

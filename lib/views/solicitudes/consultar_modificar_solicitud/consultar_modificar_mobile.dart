@@ -18,14 +18,46 @@ class _ConsultarModificarMobile extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 10),
-          if (vm.solicitud.tipoTasacion == 21)
+          if (showLineProgress())
             LineProgressWidget(
-                totalItem: vm.solicitud.estadoTasacion == 34 ? 4 : 3,
+                totalItem: lineProgressItemsEstimacion(),
                 currentItem: vm.currentForm),
           Expanded(child: _form(context)),
         ],
       ),
     );
+  }
+
+  bool showLineProgress() {
+    if (vm.solicitud.tipoTasacion == 22 && vm.solicitud.estadoTasacion == 9) {
+      return false;
+    }
+    if (vm.solicitud.tipoTasacion == 23 && vm.solicitud.estadoTasacion == 9) {
+      return false;
+    }
+    return true;
+  }
+
+  int lineProgressItemsEstimacion() {
+    switch (vm.solicitud.estadoTasacion) {
+      case 9:
+        return 3;
+      case 10:
+        return 3;
+      default:
+        return 4;
+    }
+  }
+
+  int lineProgressItemsTasacion() {
+    switch (vm.solicitud.estadoTasacion) {
+      case 9:
+        return 3;
+      case 10:
+        return 3;
+      default:
+        return 4;
+    }
   }
 
   Widget _form(BuildContext context) {
@@ -37,10 +69,13 @@ class _ConsultarModificarMobile extends StatelessWidget {
       case 3:
         return FotosForm(vm);
       case 4:
-        return EnviarForm(
-          atras: () => vm.currentForm = 3,
-          enviar: () => vm.enviarSolicitud(context),
-        );
+        return vm.solicitud.estadoTasacion == 34
+            ? EnviarForm(
+                atras: () => vm.currentForm = 3,
+                enviar: () => vm.enviarSolicitud(context),
+              )
+            : ValoracionForm(vm);
+
       default:
         return Container();
     }

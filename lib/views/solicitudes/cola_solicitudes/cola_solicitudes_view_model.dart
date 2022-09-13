@@ -70,11 +70,14 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     Profile perfil = _usuarioApi.loadProfile;
     roles = data.role;
     var resp = await _solicitudesApi.getColaSolicitudes(
-      estado: roles.contains('Tasador') ? 'Solicitada' : null,
-    );
+        // estado: roles.contains('Tasador') ? 'Solicitada' : null,
+        );
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudesResponse = resp.response;
       solicitudes = solicitudesResponse.data;
+      if (roles.contains("Tasador") || roles.contains("AprobadorTasaciones")) {
+        solicitudes.removeWhere((e) => e.estadoTasacion == 34);
+      }
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
@@ -167,17 +170,27 @@ class ColaSolicitudesViewModel extends BaseViewModel {
 
   goToSolicitud(SolicitudesData s) {
     if (roles.contains("OficialNegocios")) {
+      print('Consultar/Modificar No.${s.noTasacion}');
       _navigatorService.navigateToPage(
         ConsultarModificarView.routeName,
         arguments: s,
       );
     }
 
-    if (roles.contains("Tasador")) {
-      _navigatorService.navigateToPage(
-        TrabajarView.routeName,
-        arguments: s,
-      );
+    if (roles.contains("Tasador") || roles.contains("AprobadorTasaciones")) {
+      if (s.estadoTasacion == 9) {
+        print('Trabajar No.${s.noTasacion}');
+        _navigatorService.navigateToPage(
+          TrabajarView.routeName,
+          arguments: s,
+        );
+      } else {
+        print('Consultar No.${s.noTasacion}');
+        _navigatorService.navigateToPage(
+          ConsultarModificarView.routeName,
+          arguments: s,
+        );
+      }
     }
   }
 }

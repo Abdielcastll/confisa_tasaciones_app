@@ -30,14 +30,29 @@ class AdjuntosFotoResponse {
 
 class AdjuntoFoto {
   AdjuntoFoto({
-    required this.id,
-    required this.adjunto,
-    required this.descripcion,
+    this.id,
+    this.adjunto,
+    this.descripcion,
+    this.tipoAdjunto,
   });
 
-  int id;
-  String adjunto;
-  String descripcion;
+  int? id;
+  String? adjunto;
+  String? descripcion;
+  int? tipoAdjunto;
+
+  AdjuntoFoto copyWith({
+    int? id,
+    String? adjunto,
+    String? descripcion,
+    int? tipoAdjunto,
+  }) =>
+      AdjuntoFoto(
+        id: id ?? this.id,
+        adjunto: adjunto ?? this.adjunto,
+        descripcion: descripcion ?? this.descripcion,
+        tipoAdjunto: tipoAdjunto ?? this.tipoAdjunto,
+      );
 
   factory AdjuntoFoto.fromJson(Map<String, dynamic> json) => AdjuntoFoto(
         id: json["id"],

@@ -39,7 +39,7 @@ class ValoracionEstimacionForm extends StatelessWidget {
               label: 'Tasación promedio',
               initialValue: '${vm.tasacionPromedio}',
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             const Text(
               'Referencias',
               style: TextStyle(color: AppColors.brownDark, fontSize: 16),
@@ -48,26 +48,18 @@ class ValoracionEstimacionForm extends StatelessWidget {
             Table(
               border: TableBorder.all(color: AppColors.brownDark),
               columnWidths: const {
-                0: FractionColumnWidth(0.70),
-                1: FractionColumnWidth(0.30),
+                0: FractionColumnWidth(0.50),
+                1: FractionColumnWidth(0.50),
               },
               children: [
                 builRow(
                   ['Fuente', 'Valor'],
                   isHeader: true,
                 ),
-                builRow([
-                  '${vm.referencias[0].fuente}',
-                  '${vm.referencias[0].valor}'
-                ]),
-                builRow([
-                  '${vm.referencias[1].fuente}',
-                  '${vm.referencias[1].valor}'
-                ]),
-                builRow([
-                  '${vm.referencias[2].fuente}',
-                  '${vm.referencias[2].valor}'
-                ]),
+                ...vm.referencias.map((e) => builRow([
+                      '${e.fuente}',
+                      e.resultado! ? '${e.valor}' : '${e.mensaje}'
+                    ])),
               ],
             ),
             const SizedBox(height: 20),
@@ -86,7 +78,7 @@ class ValoracionEstimacionForm extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 70),
+            const SizedBox(height: 50),
             AppButton(
                 text: 'Guardar',
                 onPressed: () => vm.guardarValoracion(context),

@@ -15,15 +15,6 @@ import '../core/locator.dart';
 import '../theme/theme.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
-// <<<<<<< HEAD
-//   Appbar({
-//     Key? key,
-//     required this.titulo,
-//     required this.textSize,
-//   }) : super(key: key);
-//   final String titulo;
-//   final double textSize;
-// =======
   Appbar(
       {Key? key,
       required this.titulo,
@@ -39,7 +30,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final _alarmasApi = locator<AlarmasApi>();
   final bool esColaSolicitud;
   final int idSolicitud;
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
   @override
   Widget build(BuildContext context) {
     final pref = _authenticationAPI.loadSession;
@@ -54,7 +44,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-// <<<<<<< HEAD
         if (roles.contains('OficialNegocios'))
           /*IconButton(
             onPressed: () {

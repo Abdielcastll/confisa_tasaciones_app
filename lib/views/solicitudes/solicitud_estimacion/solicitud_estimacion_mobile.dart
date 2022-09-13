@@ -8,13 +8,8 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-// <<<<<<< HEAD
-      appBar: Appbar(
-        titulo: "Solicitud de Estimación",
-        esColaSolicitud: false,
-        textSize: 20,
-        alarmas: vm.alarmas,
-        idSolicitud: vm.solicitud!.noSolicitud ?? 0,
+      appBar: AppBar(
+        title: const Text('Solicitud de Estimación'),
       ),
       body: Column(
         children: [
@@ -23,10 +18,6 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
           Expanded(child: _form(context)),
         ],
       ),
-// =======
-//       appBar: ,
-//       body: _form(),
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
     );
   }
 
