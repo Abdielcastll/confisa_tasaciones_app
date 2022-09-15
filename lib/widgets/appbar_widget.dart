@@ -8,7 +8,6 @@ import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
-import 'package:tasaciones_app/views/entidades_generales/acciones_pendientes/acciones_pendientes_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_tasacion/solicitud_tasacion_view.dart';
