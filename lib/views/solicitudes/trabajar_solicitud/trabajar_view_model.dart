@@ -252,6 +252,8 @@ class TrabajarViewModel extends BaseViewModel {
     });
   }
 
+  List<SegmentoCondiciones> segmentoComponente = [];
+
   Future goToCondiciones(BuildContext context) async {
     if (formKey3.currentState!.validate()) {
       if (vinData == null) {
@@ -285,6 +287,24 @@ class TrabajarViewModel extends BaseViewModel {
               idSuplidor: solicitud.suplidorTasacion!);
           if (resp is Success<List<ComponenteTasacion>>) {
             componentes = resp.response;
+            for (var componente in componentes) {
+              if (!segmentoComponente.any(
+                  (e) => e.nombreSegmento == componente.descripcionSegmento)) {
+                segmentoComponente.add(
+                    SegmentoCondiciones(componente.descripcionSegmento!, []));
+              }
+              for (var c in componentes) {
+                for (var s in segmentoComponente) {
+                  if (c.descripcionSegmento == s.nombreSegmento) {
+                    if (!s.componentes.any((e) =>
+                        e.componenteDescripcion == c.componenteDescripcion)) {
+                      s.componentes.add(c);
+                    }
+                  }
+                }
+              }
+            }
+
             currentForm = 3;
           }
           if (resp is Failure) {
@@ -349,6 +369,25 @@ class TrabajarViewModel extends BaseViewModel {
         idSuplidor: solicitud.suplidorTasacion!);
     if (resp is Success<List<AccesoriosSuplidor>>) {
       accesorios = resp.response;
+
+//  for (var accesorio in accesorios) {
+//               if (!segmentoComponente.any(
+//                   (e) => e.nombreSegmento == componente.descripcionSegmento)) {
+//                 segmentoComponente.add(
+//                     SegmentoCondiciones(componente.descripcionSegmento!, []));
+//               }
+//               for (var c in componentes) {
+//                 for (var s in segmentoComponente) {
+//                   if (c.descripcionSegmento == s.nombreSegmento) {
+//                     if (!s.componentes.any((e) =>
+//                         e.componenteDescripcion == c.componenteDescripcion)) {
+//                       s.componentes.add(c);
+//                     }
+//                   }
+//                 }
+//               }
+//             }
+
       currentForm = 4;
     }
     if (resp is Failure) {
@@ -578,7 +617,7 @@ class TrabajarViewModel extends BaseViewModel {
 
   Future<void> subirFotos(BuildContext context) async {
     if (formKeyFotos.currentState!.validate()) {
-      if (fotos.any((e) => e.id != null)) {
+      if (fotos.any((e) => e.nueva)) {
         ProgressDialog.show(context);
 
         List<Map<String, dynamic>> dataList = [];
@@ -737,4 +776,11 @@ class CondicionComponenteVehiculoCreate {
       "idCondicionComponenteVehiculo": idCondicionComponenteVehiculo,
     };
   }
+}
+
+class SegmentoCondiciones {
+  String nombreSegmento;
+  List<ComponenteTasacion> componentes;
+
+  SegmentoCondiciones(this.nombreSegmento, this.componentes);
 }

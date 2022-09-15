@@ -2,6 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/componente_condicion.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
+import 'package:tasaciones_app/theme/theme.dart';
 
 import '../../../../base_widgets/base_form_widget.dart';
 import '../../../trabajar_view_model.dart';
@@ -35,8 +36,21 @@ class CondicionesTasacionForm extends StatelessWidget {
           key: vm.formKeyCondiciones,
           child: Column(
             children: [
-              ...vm.componentes.map((e) {
-                return _itemComponente(e);
+              ...vm.segmentoComponente.map((e) {
+                return ExpansionTile(
+                  title: Text(
+                    e.nombreSegmento,
+                    style: const TextStyle(
+                      color: AppColors.brownDark,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  textColor: AppColors.brownDark,
+                  children: e.componentes.map((e) {
+                    return _itemComponente(e);
+                  }).toList(),
+                  initiallyExpanded: true,
+                );
               })
             ],
           ),

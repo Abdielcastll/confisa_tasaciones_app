@@ -42,10 +42,10 @@ class ComponenteTasacion {
         idComponente: json["idComponente"],
         idSuplidor: json["idSuplidor"],
         componenteDescripcion: json["componenteDescripcion"],
-        suplidorDescripcion: json[" suplidorDescripcion"],
-        idSegmento: json[" idSegmento"],
-        descripcionSegmento: json[" descripcionSegmento"],
-        estado: json[" estado"],
+        suplidorDescripcion: json["suplidorDescripcion"],
+        idSegmento: json["idSegmento"],
+        descripcionSegmento: json["descripcionSegmento"],
+        estado: json["estado"],
       );
 
   Map<String, dynamic> toJson() => {
