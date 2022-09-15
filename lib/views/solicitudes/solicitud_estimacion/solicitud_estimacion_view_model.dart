@@ -154,8 +154,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
 // <<<<<<< HEAD
 // =======
   Future<void> getAlarmas() async {
-    var resp = await _alarmasApi.getAlarmas(
-        idSolicitud: solicitudCreada!.noSolicitudCredito);
+    var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCreada!.id);
     if (resp is Success<AlarmasResponse>) {
       alarmasResponse = resp.response;
       alarmas = resp.response.data;
@@ -520,6 +519,8 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       Dialogs.success(msg: 'Solicitud creada correctamente');
       solicitudCreada = resp.response;
       var suplidor = resp.response.suplidorTasacion;
+      getAlarmas();
+      notifyListeners();
       return suplidor;
     }
     resetData();

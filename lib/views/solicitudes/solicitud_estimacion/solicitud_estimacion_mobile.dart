@@ -10,9 +10,16 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Solicitud de Estimación'),
-        ),
+        appBar: vm.currentForm <= 2
+            ? AppBar(
+                title: const Text('Solicitud de Estimación'),
+              )
+            : Appbar(
+                titulo: 'Solicitud de Estimación',
+                textSize: 17,
+                alarmas: vm.alarmas,
+                esColaSolicitud: false,
+                idSolicitud: vm.solicitudCreada!.id!),
         body: Column(
           children: [
             const SizedBox(height: 10),
