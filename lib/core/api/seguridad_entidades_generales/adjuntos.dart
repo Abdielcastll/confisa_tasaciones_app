@@ -131,6 +131,46 @@ class AdjuntosApi {
     }
   }
 
+  Future<Object> updateFotoTasacion({
+    required int id,
+    required String adjunto,
+    required String descripcion,
+    required int tipoAdjunto,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/update/$id',
+        method: "PUT",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "adjuntoInBytes": adjunto,
+          "tipoAdjunto": tipoAdjunto,
+          "descripcion": descripcion,
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> deleteFotoTasacion({required int id}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/delete/$id',
+        method: "DELETE",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
   Future<Object> getFotosTasacion({required int noTasacion}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {

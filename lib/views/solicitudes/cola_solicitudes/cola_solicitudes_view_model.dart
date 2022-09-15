@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
@@ -7,7 +6,6 @@ import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
-import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
@@ -69,19 +67,20 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> onInit(BuildContext context) async {
+  Future<void> onInit() async {
+    pageNumber = 1;
     Session data = _authenticationAPI.loadSession;
     Profile perfil = _usuarioApi.loadProfile;
     roles = data.role;
-    var resp = await _solicitudesApi.getColaSolicitudes(
-        // estado: roles.contains('Tasador') ? 'Solicitada' : null,
-        );
+    var resp = await _solicitudesApi.getColaSolicitudes(pageNumber: pageNumber);
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudesResponse = resp.response;
       solicitudes = solicitudesResponse.data;
+      hasNextPage = resp.response.hasNextPage ?? false;
       if (roles.contains("Tasador") || roles.contains("AprobadorTasaciones")) {
         solicitudes.removeWhere((e) => e.estadoTasacion == 34);
       }
+      // ordenar();
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
@@ -114,10 +113,14 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     var resp = await _solicitudesApi.getColaSolicitudes(pageNumber: pageNumber);
     if (resp is Success) {
       var temp = resp.response as GetSolicitudesResponse;
-      solicitudesResponse.data.addAll(temp.data);
-      solicitudes.addAll(temp.data);
-      ordenar();
       hasNextPage = temp.hasNextPage ?? false;
+      solicitudesResponse.data = [...solicitudesResponse.data, ...temp.data];
+      solicitudes = [...solicitudes, ...temp.data];
+      if (roles.contains("Tasador") || roles.contains("AprobadorTasaciones")) {
+        solicitudes.removeWhere((e) => e.estadoTasacion == 34);
+      }
+      // ordenar();
+      print('HAY MAS:  ${temp.hasNextPage}');
       notifyListeners();
     }
     if (resp is Failure) {
@@ -175,25 +178,43 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   goToSolicitud(SolicitudesData s) {
     if (roles.contains("OficialNegocios")) {
       print('Consultar/Modificar No.${s.noTasacion}');
-      _navigatorService.navigateToPage(
+      _navigatorService
+          .navigateToPage(
         ConsultarModificarView.routeName,
         arguments: s,
-      );
+      )
+          .then((v) {
+        if (v != null) {
+          onInit();
+        }
+      });
     }
 
     if (roles.contains("Tasador") || roles.contains("AprobadorTasaciones")) {
       if (s.estadoTasacion == 9) {
         print('Trabajar No.${s.noTasacion}');
-        _navigatorService.navigateToPage(
+        _navigatorService
+            .navigateToPage(
           TrabajarView.routeName,
           arguments: s,
-        );
+        )
+            .then((v) {
+          if (v != null) {
+            onInit();
+          }
+        });
       } else {
         print('Consultar No.${s.noTasacion}');
-        _navigatorService.navigateToPage(
+        _navigatorService
+            .navigateToPage(
           ConsultarModificarView.routeName,
           arguments: s,
-        );
+        )
+            .then((v) {
+          if (v != null) {
+            onInit();
+          }
+        });
       }
     }
   }

@@ -21,7 +21,7 @@ class ColaSolicitudesView extends StatelessWidget {
     return ViewModelBuilder<ColaSolicitudesViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          viewModel.onInit(context);
+          viewModel.onInit();
         },
         builder: (context, viewModel, child) {
           return _ColaSolicitudesMobile(viewModel);

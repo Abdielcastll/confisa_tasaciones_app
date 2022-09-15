@@ -463,6 +463,28 @@ class SolicitudesApi {
     }
   }
 
+  Future<Object> aprobarSolicitud({
+    required int noSolicitud,
+    required int noTasacion,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/solicitudes/aprobar',
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "NoSolicitud": noSolicitud,
+          "NoTasacion": noTasacion,
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
   Future<Object> updateValoracion({
     required int noTasacion,
     required int valorizacion,
@@ -608,12 +630,14 @@ class SolicitudesApi {
     int? noSolicitud,
     int pageNumber = 1,
     int pageSize = 20,
+    int? idSuplidor,
   }) async {
     final params = {
       "EstadoTasacion": estado,
       "NoSolicitudCredito": noSolicitud,
       "PageSize": pageSize,
       "PageNumber": pageNumber,
+      "IdSuplidor": idSuplidor,
     };
     l.d(params);
     String? _token = await _authenticationClient.accessToken;

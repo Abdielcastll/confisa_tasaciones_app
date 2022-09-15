@@ -16,6 +16,7 @@ import 'package:tasaciones_app/views/solicitudes/solicitud_tasacion/solicitud_ta
 import '../core/authentication_client.dart';
 import '../core/locator.dart';
 import '../theme/theme.dart';
+import '../views/solicitudes/cola_solicitudes/cola_solicitudes_view_model.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
   Appbar(
@@ -23,6 +24,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       required this.titulo,
       required this.textSize,
       required this.alarmas,
+      this.vmColaSolicitudes,
       required this.esColaSolicitud,
       required this.idSolicitud})
       : super(key: key);
@@ -32,11 +34,9 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final _authenticationAPI = locator<AuthenticationClient>();
   final bool esColaSolicitud;
   final int idSolicitud;
-// <<<<<<< HEAD
-// =======
+  final ColaSolicitudesViewModel? vmColaSolicitudes;
   late ProfilePermisoResponse profilePermisoResponse;
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
-// >>>>>>> 5cb8bd57f25239f6190a03ba91b7d88f5dd51e52
+
   @override
   Widget build(BuildContext context) {
     final pref = _authenticationAPI.loadSession;
@@ -117,8 +117,15 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                       height: 50,
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        Navigator.pushNamed(context,
-                                            SolicitudEstimacionView.routeName);
+                                        Navigator.pushNamed(
+                                                context,
+                                                SolicitudEstimacionView
+                                                    .routeName)
+                                            .then((v) {
+                                          if (v != null) {
+                                            vmColaSolicitudes?.onInit();
+                                          }
+                                        });
                                       },
                                       child: const Text(
                                         'Estimación',
@@ -137,7 +144,12 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         Navigator.pushNamed(context,
-                                            SolicitudTasacionView.routeName);
+                                                SolicitudTasacionView.routeName)
+                                            .then((v) {
+                                          if (v != null) {
+                                            vmColaSolicitudes?.onInit();
+                                          }
+                                        });
                                       },
                                       child: const Text(
                                         'Tasación',
@@ -155,15 +167,17 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                       minWidth: double.infinity,
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (_) {
-                                              return const SolicitudTasacionView(
-                                                  incautado: true);
-                                            },
-                                          ),
-                                        );
+                                        Navigator.push(context,
+                                            CupertinoPageRoute(
+                                          builder: (_) {
+                                            return const SolicitudTasacionView(
+                                                incautado: true);
+                                          },
+                                        )).then((v) {
+                                          if (v != null) {
+                                            vmColaSolicitudes?.onInit();
+                                          }
+                                        });
                                       },
                                       child: const Text(
                                         'Tasación de Incauto',
@@ -301,10 +315,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                       : const SizedBox(),
                 ],
               ),
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
-        // IconButton(
-        //     onPressed: () {},
-        //     icon: SvgPicture.asset('assets/img/settings.svg')),
         const SizedBox(
           width: 8,
         ),

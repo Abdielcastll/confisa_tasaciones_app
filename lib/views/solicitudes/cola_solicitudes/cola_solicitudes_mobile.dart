@@ -10,15 +10,18 @@ class _ColaSolicitudesMobile extends StatelessWidget {
     return ProgressWidget(
       inAsyncCall: vm.loading,
       opacity: false,
-      child: Scaffold(
-        appBar: Appbar(
-          textSize: 18,
-          titulo: 'Cola de solicitudes',
-          alarmas: vm.alarmas,
-          esColaSolicitud: true,
-          idSolicitud: 0,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        child: Scaffold(
+          appBar: Appbar(
+            textSize: 18,
+            titulo: 'Cola de solicitudes',
+            alarmas: vm.alarmas,
+            esColaSolicitud: true,
+            idSolicitud: 0,
+          ),
+          body: _home(context),
         ),
-        body: _home(context),
       ),
     );
   }
@@ -71,7 +74,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
         Expanded(
           child: RefreshIndicator(
             triggerMode: RefreshIndicatorTriggerMode.anywhere,
-            onRefresh: () => vm.onInit(context),
+            onRefresh: () => vm.onInit(),
             child: vm.solicitudes.isEmpty
                 ? const RefreshWidget()
                 : ListView.builder(

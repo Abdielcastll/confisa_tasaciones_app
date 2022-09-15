@@ -33,7 +33,6 @@ class VehiculoForm extends StatelessWidget {
       },
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
-      // onPressedNext: () => vm.solicitudCredito(context),
       onPressedNext: () => vm.goToFotos(context),
       child: Container(
         padding: const EdgeInsets.all(10),

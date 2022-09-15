@@ -62,12 +62,11 @@ class FotosForm extends StatelessWidget {
                                 ),
                         ),
                       ),
-                      if (foto.descripcion != '')
+                      if (foto.file?.path != '')
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: DropdownSearch<DescripcionFotoVehiculos>(
-                              // asyncItems: (text) => vm.getTipoVehiculo(text),
                               asyncItems: (_) => vm.getDescripcionFotos(_),
                               dropdownBuilder: (context, tipo) {
                                 return Text(

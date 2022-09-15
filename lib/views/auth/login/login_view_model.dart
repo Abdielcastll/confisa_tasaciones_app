@@ -32,9 +32,9 @@ class LoginViewModel extends BaseViewModel {
   final GlobalKey<FormState> formKey = GlobalKey();
   bool _loading = false;
   TextEditingController tcEmail =
-      TextEditingController(text: AppCuentas().internoOficialNegocio);
+      TextEditingController(text: AppCuentas().usuarioAprobadorTasaciones);
   TextEditingController tcPassword =
-      TextEditingController(text: AppCuentas().claveInterna);
+      TextEditingController(text: AppCuentas().claveAprobadorTasaciones);
 
   bool obscurePassword = true;
 
@@ -70,9 +70,7 @@ class LoginViewModel extends BaseViewModel {
                   .navigateToPageWithReplacement(HomeView.routeName);
             } else {
               loading = false;
-              Dialogs.error(
-                msg: resp2.messages[0],
-              );
+              Dialogs.error(msg: resp2.messages[0]);
             }
           }
         } else if (resp1 is Failure) {

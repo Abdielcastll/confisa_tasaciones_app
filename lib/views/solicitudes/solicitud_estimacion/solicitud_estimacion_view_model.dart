@@ -366,16 +366,17 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-// <<<<<<< HEAD
   Future<void> subirFotos(BuildContext context) async {
-    if (fotos.any((e) => e.file!.path == '')) {
-      Dialogs.error(msg: 'Fotos incompletas');
-    } else {
-      if (formKeyFotos.currentState!.validate()) {
-        ProgressDialog.show(context);
-        List<Map<String, dynamic>> dataList = [];
-        for (var e in fotos) {
+    // if (fotos.any((e) => e.file!.path == '')) {
+    // Dialogs.error(msg: 'Fotos incompletas');
+    // } else {
+    if (formKeyFotos.currentState!.validate()) {
+      ProgressDialog.show(context);
+      List<Map<String, dynamic>> dataList = [];
+      for (var e in fotos) {
+        if (e.file?.path != '') {
           var fotoBase = base64Encode(e.file!.readAsBytesSync());
+
           Map<String, dynamic> data = {
             "adjuntoInBytes": fotoBase,
             "tipoAdjunto": e.descripcion!.id,
@@ -384,28 +385,28 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
           // log.d(jsonEncode(data['tipoAdjunto']));
           dataList.add(data);
         }
-        var resp = await _adjuntosApi.addFotosTasacion(
-            noTasacion: solicitudCreada!.noTasacion!, adjuntos: dataList);
-
-        if (resp is Success) {
-          Dialogs.success(msg: 'Fotos guardadas');
-          ProgressDialog.dissmiss(context);
-          currentForm = 4;
-        }
-        if (resp is Failure) {
-          Dialogs.error(msg: resp.messages[0]);
-          ProgressDialog.dissmiss(context);
-        }
-        if (resp is TokenFail) {
-          ProgressDialog.dissmiss(context);
-          _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-          Dialogs.error(msg: 'su sesión a expirado');
-        }
       }
+      var resp = await _adjuntosApi.addFotosTasacion(
+          noTasacion: solicitudCreada!.noTasacion!, adjuntos: dataList);
+
+      if (resp is Success) {
+        Dialogs.success(msg: 'Fotos guardadas');
+        ProgressDialog.dissmiss(context);
+        currentForm = 4;
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages[0]);
+        ProgressDialog.dissmiss(context);
+      }
+      if (resp is TokenFail) {
+        ProgressDialog.dissmiss(context);
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'su sesión a expirado');
+      }
+      // }
     }
   }
 
-  // =======
   Future<void> cargarAlarmas() async {
     Session data = _authenticationAPI.loadSession;
     Profile perfil = _usuarioApi.loadProfile;
@@ -425,21 +426,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       Dialogs.error(msg: 'Sesión expirada');
     }
   }
-
-//   Future<void> subirFotos() async {
-//     List<Map<String, dynamic>> dataList = [];
-//     for (var e in fotos) {
-//       var fotoBase = e.file!.readAsBytesSync().toList();
-//       Map<String, dynamic> data = {
-//         "adjuntoInBytes": fotoBase,
-//         "tipoAdjunto": 0,
-//         "descripcion": e.descripcion,
-//       };
-//       dataList.add(data);
-//     }
-//     var resp = await _adjuntosApi.addFotosTasacion(
-//         noTasacion: solicitud!.noSolicitud!, adjuntos: dataList);
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
 
   Future<void> editarFoto(int i) async {
     var croppedFile = await ImageCropper().cropImage(
@@ -494,7 +480,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   Future<int?> crearSolicitud(BuildContext context) async {
-    // ProgressDialog.show(context);
     var resp = await _solicitudesApi.createNewSolicitudEstimacion(
       ano: int.parse(solicitud!.ano!),
       chasis: solicitud!.chasis ?? tcVIN.text,
@@ -532,14 +517,10 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       return null;
     }
     if (resp is Success<SolicitudesData>) {
-      // await subirFotos();
-      // ProgressDialog.dissmiss(context);
       Dialogs.success(msg: 'Solicitud creada correctamente');
       solicitudCreada = resp.response;
       var suplidor = resp.response.suplidorTasacion;
       return suplidor;
-      // _navigatorService
-      //     .navigateToPageAndRemoveUntil(ColaSolicitudesView.routeName);
     }
     resetData();
     return null;
@@ -567,7 +548,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     if (resp is Success) {
       Dialogs.success(msg: 'Solicitud enviada');
       ProgressDialog.dissmiss(context);
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);

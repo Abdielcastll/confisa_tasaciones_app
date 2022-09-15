@@ -80,7 +80,7 @@ class ValoracionEstimacionForm extends StatelessWidget {
             ),
             const SizedBox(height: 50),
             AppButton(
-                text: 'Guardar',
+                text: 'Valorar',
                 onPressed: () => vm.guardarValoracion(context),
                 color: AppColors.green)
           ],

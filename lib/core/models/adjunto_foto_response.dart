@@ -34,31 +34,35 @@ class AdjuntoFoto {
     this.adjunto,
     this.descripcion,
     this.tipoAdjunto,
+    this.nueva = true,
   });
 
   int? id;
   String? adjunto;
   String? descripcion;
   int? tipoAdjunto;
+  bool nueva;
 
   AdjuntoFoto copyWith({
     int? id,
     String? adjunto,
     String? descripcion,
     int? tipoAdjunto,
+    bool? nueva,
   }) =>
       AdjuntoFoto(
         id: id ?? this.id,
         adjunto: adjunto ?? this.adjunto,
         descripcion: descripcion ?? this.descripcion,
         tipoAdjunto: tipoAdjunto ?? this.tipoAdjunto,
+        nueva: nueva ?? this.nueva,
       );
 
   factory AdjuntoFoto.fromJson(Map<String, dynamic> json) => AdjuntoFoto(
-        id: json["id"],
-        adjunto: json["adjunto"],
-        descripcion: json["infoAdjuntos"][0]["descripcion"],
-      );
+      id: json["id"],
+      adjunto: json["adjunto"],
+      descripcion: json["infoAdjuntos"][0]["descripcion"],
+      tipoAdjunto: json["infoAdjuntos"][0]["tipoAdjunto"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,

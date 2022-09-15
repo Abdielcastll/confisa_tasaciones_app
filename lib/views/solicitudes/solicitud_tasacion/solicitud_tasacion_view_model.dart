@@ -96,7 +96,7 @@ class SolicitudTasacionViewModel extends BaseViewModel {
     if (resp is Success) {
       ProgressDialog.dissmiss(context);
       Dialogs.success(msg: 'Solicitud de tasación creada');
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     }
     if (resp is Failure) {
       ProgressDialog.dissmiss(context);

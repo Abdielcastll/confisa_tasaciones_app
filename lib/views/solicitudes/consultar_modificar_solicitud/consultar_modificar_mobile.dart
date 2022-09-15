@@ -7,23 +7,26 @@ class _ConsultarModificarMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Appbar(
-          titulo: vm.solicitud.descripcionTipoTasacion ?? '',
-          textSize: 18,
-          alarmas: vm.alarmas,
-          esColaSolicitud: (vm.solicitud.id != null) ? false : true,
-          idSolicitud: vm.solicitud.id ??
-              0) /* AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')) */,
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          if (showLineProgress())
-            LineProgressWidget(
-                totalItem: lineProgressItemsEstimacion(),
-                currentItem: vm.currentForm),
-          Expanded(child: _form(context)),
-        ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Scaffold(
+        appBar: Appbar(
+            titulo: vm.solicitud.descripcionTipoTasacion ?? '',
+            textSize: 18,
+            alarmas: vm.alarmas,
+            esColaSolicitud: (vm.solicitud.id != null) ? false : true,
+            idSolicitud: vm.solicitud.id ??
+                0) /* AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')) */,
+        body: Column(
+          children: [
+            const SizedBox(height: 10),
+            if (showLineProgress())
+              LineProgressWidget(
+                  totalItem: lineProgressItemsEstimacion(),
+                  currentItem: vm.currentForm),
+            Expanded(child: _form(context)),
+          ],
+        ),
       ),
     );
   }

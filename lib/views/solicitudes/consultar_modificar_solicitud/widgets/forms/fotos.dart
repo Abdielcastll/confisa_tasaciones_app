@@ -31,149 +31,18 @@ class FotosForm extends StatelessWidget {
           vm.solicitud.estadoTasacion == 9 || vm.solicitud.estadoTasacion == 10
               ? 'Salir'
               : 'Siguiente',
-      onPressedNext: () => vm.fotosAdjuntos.isNotEmpty
-          ? vm.subirFotos(context)
-          : vm.subirFotosNuevas(context),
+      onPressedNext: () => vm.subirFotos(context),
+      // : vm.subirFotosNuevas(context),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
         child: Form(
           key: vm.formKeyFotos,
-          child: vm.fotosAdjuntos.isNotEmpty
-              ? FotosActuales(vm: vm)
-              : FotosNuevas(vm: vm),
+          child: FotosActuales(vm: vm),
+          // : FotosNuevas(vm: vm),
         ),
       ),
     );
-  }
-}
-
-class FotosNuevas extends StatelessWidget {
-  const FotosNuevas({
-    Key? key,
-    required this.vm,
-  }) : super(key: key);
-
-  final ConsultarModificarViewModel vm;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      ...List.generate(vm.fotosPermitidas, (i) {
-        // var foto = vm.fotos[i];
-        return Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InkWell(
-                  onTap: () => vm.cargarFotoNuevas(i),
-                  child: Container(
-                    clipBehavior: Clip.antiAlias,
-                    margin: const EdgeInsets.all(10),
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.brown)),
-                    child: vm.fotos[i].adjunto != null
-                        ? Image.memory(
-                            base64Decode(vm.fotos[i].adjunto!),
-                            fit: BoxFit.cover,
-                          )
-                        : Icon(
-                            Icons.add_a_photo_rounded,
-                            size: 50,
-                            color: Colors.grey[300],
-                          ),
-                  ),
-                ),
-                if (vm.fotos[i].adjunto != null)
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: DropdownSearch<DescripcionFotoVehiculos>(
-                        asyncItems: (text) => vm.getDescripcionFotos(text),
-                        dropdownBuilder: (context, tipo) {
-                          return Text(
-                            tipo?.descripcion ?? 'Seleccione',
-                            style: const TextStyle(
-                              fontSize: 15,
-                            ),
-                          );
-                        },
-                        onChanged: (v) {
-                          vm.fotos[i] = vm.fotos[i].copyWith(
-                            descripcion: v!.descripcion,
-                            tipoAdjunto: v.id,
-                          );
-                        },
-                        dropdownDecoratorProps: const DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                                label: Text('Tipo:'),
-                                labelStyle: TextStyle(fontSize: 16),
-                                border: UnderlineInputBorder())),
-                        popupProps: PopupProps.menu(
-                          itemBuilder: (context, opt, isSelected) {
-                            return ListTile(
-                              title: Text(opt.descripcion ?? ''),
-                              selected: isSelected,
-                            );
-                          },
-                          emptyBuilder: (_, __) => const Center(
-                            child: Text('No hay resultados'),
-                          ),
-                        ),
-                        validator: (v) {
-                          if (v == null) {
-                            return 'Seleccione';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                vm.fotos[i].adjunto != null
-                    ? SizedBox(
-                        height: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Dialogs.confirm(context,
-                                      tittle: 'Borrar foto',
-                                      description:
-                                          '¿Está seguro de borrar esta foto?',
-                                      confirm: () => vm.borrarFotoNuevas(i));
-                                },
-                                icon: const Icon(
-                                  AppIcons.closeCircle,
-                                  color: Colors.grey,
-                                  size: 30,
-                                )),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {
-                                  vm.editarFotoNueva(i);
-                                },
-                                icon: const Icon(
-                                  AppIcons.pencilAlt,
-                                  color: Colors.grey,
-                                  size: 28,
-                                ))
-                          ],
-                        ),
-                      )
-                    : const SizedBox(width: 45)
-              ],
-            ),
-            const Divider(),
-          ],
-        );
-      }),
-    ]);
   }
 }
 
@@ -188,8 +57,8 @@ class FotosActuales extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      ...List.generate(vm.fotosAdjuntos.length, (i) {
-        // var foto = vm.fotosAdjuntos[i];
+      ...List.generate(vm.fotos.length, (i) {
+        // var foto = vm.fotos[i];
         return Column(
           children: [
             Row(
@@ -205,39 +74,38 @@ class FotosActuales extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.brown)),
-                    child: vm.fotosAdjuntos[i].adjunto == null
+                    child: vm.fotos[i].adjunto == null
                         ? Icon(
                             Icons.add_a_photo_rounded,
                             size: 50,
                             color: Colors.grey[300],
                           )
                         : Image.memory(
-                            base64Decode(vm.fotosAdjuntos[i].adjunto!),
+                            base64Decode(vm.fotos[i].adjunto!),
                             fit: BoxFit.cover,
                           ),
                   ),
                 ),
                 vm.solicitud.estadoTasacion != 34
-                    ?
-                    // if (foto.path != '')
-                    Expanded(
+                    ? Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
-                            'Tipo:\n${vm.fotosAdjuntos[i].descripcion}',
+                            'Tipo:\n${vm.fotos[i].descripcion}',
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
                       )
-                    : vm.fotosAdjuntos[i].adjunto == null
+                    : vm.fotos[i].adjunto == null
                         ? const Spacer()
                         : Expanded(
                             child: DropdownSearch<DescripcionFotoVehiculos>(
                               asyncItems: (_) => vm.getDescripcionFotos(_),
+                              enabled: vm.fotos[i].nueva,
                               dropdownBuilder: (context, tipo) {
                                 return Text(
                                   tipo?.descripcion ??
-                                      vm.fotosAdjuntos[i].descripcion ??
+                                      vm.fotos[i].descripcion ??
                                       'Seleccione',
                                   style: const TextStyle(
                                     fontSize: 15,
@@ -245,8 +113,7 @@ class FotosActuales extends StatelessWidget {
                                 );
                               },
                               onChanged: (v) {
-                                vm.fotosAdjuntos[i] =
-                                    vm.fotosAdjuntos[i].copyWith(
+                                vm.fotos[i] = vm.fotos[i].copyWith(
                                   descripcion: v!.descripcion,
                                   tipoAdjunto: v.id,
                                 );
@@ -269,7 +136,8 @@ class FotosActuales extends StatelessWidget {
                                 ),
                               ),
                               validator: (v) {
-                                if (v == null) {
+                                if (v == null &&
+                                    vm.fotos[i].descripcion == null) {
                                   return 'Seleccione';
                                 } else {
                                   return null;
@@ -278,7 +146,7 @@ class FotosActuales extends StatelessWidget {
                             ),
                           ),
                 if (vm.solicitud.estadoTasacion == 34)
-                  vm.fotosAdjuntos[i].adjunto == null
+                  vm.fotos[i].adjunto == null
                       ? const SizedBox()
                       : SizedBox(
                           height: 100,
@@ -291,7 +159,8 @@ class FotosActuales extends StatelessWidget {
                                         tittle: 'Borrar foto',
                                         description:
                                             '¿Está seguro de borrar esta foto?',
-                                        confirm: () => vm.borrarFoto(i));
+                                        confirm: () =>
+                                            vm.borrarFoto(context, i));
                                   },
                                   icon: const Icon(
                                     AppIcons.closeCircle,
@@ -301,7 +170,7 @@ class FotosActuales extends StatelessWidget {
                               const Spacer(),
                               IconButton(
                                   onPressed: () {
-                                    vm.editarFoto(i);
+                                    vm.editarFoto(context, i);
                                   },
                                   icon: const Icon(
                                     AppIcons.pencilAlt,

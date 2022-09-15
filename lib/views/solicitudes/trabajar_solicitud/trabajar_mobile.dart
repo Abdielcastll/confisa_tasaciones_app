@@ -7,24 +7,31 @@ class _TrabajarMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text(vm.solicitud.descripcionTipoTasacion ?? '')),
-        body: vm.solicitud.tipoTasacion == 22 || vm.solicitud.tipoTasacion == 23
-            ? Column(
-                children: [
-                  const SizedBox(height: 10),
-                  LineProgressWidget(totalItem: 6, currentItem: vm.currentForm),
-                  Expanded(child: _tasacionForm()),
-                ],
-              )
-            : Column(
-                children: [
-                  const SizedBox(height: 10),
-                  LineProgressWidget(totalItem: 4, currentItem: vm.currentForm),
-                  Expanded(child: _estimacionForm()),
-                ],
-              ) //_estimacionForm(),
-        );
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Scaffold(
+          appBar:
+              AppBar(title: Text(vm.solicitud.descripcionTipoTasacion ?? '')),
+          body:
+              vm.solicitud.tipoTasacion == 22 || vm.solicitud.tipoTasacion == 23
+                  ? Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        LineProgressWidget(
+                            totalItem: 6, currentItem: vm.currentForm),
+                        Expanded(child: _tasacionForm()),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        LineProgressWidget(
+                            totalItem: 4, currentItem: vm.currentForm),
+                        Expanded(child: _estimacionForm()),
+                      ],
+                    ) //_estimacionForm(),
+          ),
+    );
   }
 
   Widget _tasacionForm() {

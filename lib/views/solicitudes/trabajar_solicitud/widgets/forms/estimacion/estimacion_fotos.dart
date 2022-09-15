@@ -50,8 +50,8 @@ class FotosActuales extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      ...List.generate(vm.fotosAdjuntos.length, (i) {
-        final foto = vm.fotosAdjuntos[i];
+      ...List.generate(vm.fotos.length, (i) {
+        final foto = vm.fotos[i];
         return Column(
           children: [
             Row(

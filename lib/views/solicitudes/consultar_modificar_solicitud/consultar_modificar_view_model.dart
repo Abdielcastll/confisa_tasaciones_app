@@ -35,7 +35,6 @@ import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/escaner.dart';
 import '../../auth/login/login_view.dart';
-import '../solicitud_estimacion/solicitud_estimacion_view_model.dart';
 
 class ConsultarModificarViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
@@ -53,7 +52,6 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int _currentForm = 1;
   VinDecoderData? _vinData;
 
-  // late SolicitudesData solicitudCola;
   late SolicitudesData solicitud;
   late bool isSalvage;
   late double tasacionPromedio;
@@ -78,7 +76,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   late List<AdjuntoFoto> fotos;
   List<ReferenciaValoracion> referencias = [];
 
-  List<AdjuntoFoto> fotosAdjuntos = [];
+  // List<AdjuntoFoto> fotosAdjuntos = [];
   List<AlarmasData> alarmas = [];
   final _picker = ImagePicker();
 
@@ -264,6 +262,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   Future goToFotos(BuildContext context) async {
     if (formKey3.currentState!.validate()) {
       ProgressDialog.show(context);
+
       if (solicitud.estadoTasacion == 34) {
         var upResp = await _solicitudesApi.updateEstimacion(
           id: solicitud.id!,
@@ -294,223 +293,74 @@ class ConsultarModificarViewModel extends BaseViewModel {
         }
       }
       // CARGAR FOTOS
-      var resp = await _adjuntosApi.getFotosTasacion(
-          noTasacion: solicitud.noTasacion!);
-      if (resp is Success<AdjuntosFotoResponse>) {
-        fotosAdjuntos = resp.response.data;
-        currentForm = 3;
-        ProgressDialog.dissmiss(context);
-      }
-      if (resp is Failure) {
-        // La solicitud no tiene fotos =>
-        await fotosNuevas();
-        ProgressDialog.dissmiss(context);
-      }
+      loadFotos(context);
+      // var resp = await _adjuntosApi.getFotosTasacion(
+      //     noTasacion: solicitud.noTasacion!);
+      // if (resp is Success<AdjuntosFotoResponse>) {
+      //   fotosAdjuntos = resp.response.data;
+      //   currentForm = 3;
+      //   ProgressDialog.dissmiss(context);
+      // }
+      // if (resp is Failure) {
+      //   // La solicitud no tiene fotos =>
+      //   await fotosNuevas();
+      //   ProgressDialog.dissmiss(context);
+      // }
     }
   }
 
-  Future<void> fotosNuevas() async {
-    var resp = await _solicitudesApi.getCantidadFotos(
-      idSuplidor: solicitud.suplidorTasacion,
-    );
-    if (resp is Success) {
-      var data = resp.response as EntidadResponse;
-      // int cantidad = 1;
-      int cantidad = int.parse(data.data.descripcion ?? '0');
-      fotos = List.generate(cantidad, (i) => AdjuntoFoto());
-      _fotosPermitidas = cantidad;
-      currentForm = 3;
+  Future<void> loadFotos(BuildContext context) async {
+    var r = await _solicitudesApi.getCantidadFotos(
+        idSuplidor: solicitud.suplidorTasacion!);
+    if (r is Success<EntidadResponse>) {
+      int cantidad = int.parse(r.response.data.descripcion ?? '0');
+      fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
+      fotosPermitidas = cantidad;
     }
-  }
+    var resp =
+        await _adjuntosApi.getFotosTasacion(noTasacion: solicitud.noTasacion!);
 
-  /* void cargarFotoNuevas(int i) async {
-    var img = await _picker.pickImage(
-      source: ImageSource.camera,
-      maxWidth: 720,
-    );
-    if (img != null) {
-      final fileTemp = await img.readAsBytes();
-      fotos[i] = fotos[i].copyWith(adjunto: base64Encode(fileTemp));
+    if (resp is Success<AdjuntosFotoResponse>) {
+      var f = resp.response.data;
+      for (var i = 0; i < f.length; i++) {
+        fotos[i] = fotos[i].copyWith(
+          adjunto: f[i].adjunto,
+          descripcion: f[i].descripcion,
+          tipoAdjunto: f[i].tipoAdjunto,
+          id: f[i].id,
+          nueva: false,
+        );
+      }
       notifyListeners();
     }
+    if (resp is Failure) {
+      print('NO HAY FOTOS GUARDADAS');
+    }
+    currentForm = 3;
+    ProgressDialog.dissmiss(context);
   }
 
-  void cargarFoto(int i) async {
-    var img = await _picker.pickImage(
-      source: ImageSource.camera,
-      maxWidth: 720,
-    );
-    if (img != null) {
-      final foto = File(img.path);
-      final fotoBase = base64Encode(foto.readAsBytesSync());
-      fotosAdjuntos[i] = fotosAdjuntos[i].copyWith(adjunto: fotoBase);
-      notifyListeners();
-    }
-  }
-*/
   int get fotosPermitidas => _fotosPermitidas;
   set fotosPermitidas(int i) {
     _fotosPermitidas = i;
     notifyListeners();
   }
 
-  // void cargarFotoNuevas(int i) async {
-  //   if (solicitud.estadoTasacion == 34) {
-  //     var img = await _picker.pickImage(
-  //       source: ImageSource.camera,
-  //       maxWidth: 720,
-  //     );
-  //     if (img != null) {
-  //       fotos[i] = FotoData(file: File(img.path));
-  //       notifyListeners();
-  //     }
-  //   }
-  // }
-  void cargarFotoNuevas(int i) async {
-    var img = await _picker.pickImage(
-      source: ImageSource.camera,
-      maxWidth: 720,
-    );
-    if (img != null) {
-      final fileTemp = await img.readAsBytes();
-      fotos[i] = fotos[i].copyWith(adjunto: base64Encode(fileTemp));
-      notifyListeners();
-    }
-  }
-
   void cargarFoto(int i) async {
-    var img = await _picker.pickImage(
-      source: ImageSource.camera,
-      maxWidth: 720,
-    );
-    if (img != null) {
-      final foto = File(img.path);
-      final fotoBase = base64Encode(foto.readAsBytesSync());
-      fotosAdjuntos[i] = fotosAdjuntos[i].copyWith(adjunto: fotoBase);
-      notifyListeners();
-    }
-  }
-
-  // void cargarFoto(int i) async {
-  //   if (solicitud.estadoTasacion == 34) {
-  //     var img = await _picker.pickImage(
-  //       source: ImageSource.camera,
-  //       maxWidth: 720,
-  //     );
-  //     if (img != null) {
-  //       final foto = File(img.path);
-  //       final fotoBase = base64Encode(foto.readAsBytesSync());
-  //       fotosAdjuntos[i].adjunto = fotoBase;
-  //       notifyListeners();
-  //     }
-  //   }
-  // }
-
-  Future<void> subirFotosNuevas(BuildContext context) async {
-    if (solicitud.estadoTasacion == 34) {
-      // if (fotos.any((e) => e.file!.path == '')) {
-      // Dialogs.error(msg: 'Fotos incompletas');
-      // } else {
-      if (formKeyFotos.currentState!.validate()) {
-        ProgressDialog.show(context);
-        List<Map<String, dynamic>> dataList = [];
-        for (var e in fotos) {
-          // var fotoBase = base64Encode(e.file!.readAsBytesSync());
-          if (e.adjunto != null) {
-            Map<String, dynamic> data = {
-              "adjuntoInBytes": e.adjunto,
-              "tipoAdjunto": e.tipoAdjunto,
-              "descripcion": e.descripcion,
-            };
-            dataList.add(data);
-          }
-        }
-        var resp = await _adjuntosApi.addFotosTasacion(
-            noTasacion: solicitud.noTasacion!, adjuntos: dataList);
-
-        if (resp is Success) {
-          ProgressDialog.dissmiss(context);
-          Dialogs.success(msg: 'Fotos Guardadas');
-          currentForm = 4;
-        }
-        if (resp is Failure) {
-          ProgressDialog.dissmiss(context);
-          Dialogs.error(msg: resp.messages[0]);
-        }
-        if (resp is TokenFail) {
-          ProgressDialog.dissmiss(context);
-          _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-          Dialogs.error(msg: 'su sesión a expirado');
-        }
-        // }
+    // Si esta en estado INICIADA puede modificar la foto
+    if (solicitud.estadoTasacion == 34 && fotos[i].adjunto == null) {
+      var img = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 720,
+      );
+      if (img != null) {
+        final foto = File(img.path);
+        final fotoBase = base64Encode(foto.readAsBytesSync());
+        fotos[i] = fotos[i].copyWith(adjunto: fotoBase);
+        notifyListeners();
       }
-    } else if (solicitud.estadoTasacion == 9 ||
-        solicitud.estadoTasacion == 10) {
-      Navigator.of(context).pop();
-    } else {
-      goToValorar(context);
     }
   }
-
-  Future<void> editarFotoNueva(int i) async {
-    var croppedFile = await ImageCropper().cropImage(
-      sourcePath: await createFileFromString(fotos[i].adjunto!),
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Editar foto',
-          toolbarColor: AppColors.orange,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-          showCropGrid: true,
-        ),
-        IOSUiSettings(
-          title: 'Editar foto',
-        ),
-      ],
-    );
-    if (croppedFile != null) {
-      final fileTemp = File(croppedFile.path);
-      fotos[i] =
-          fotos[i].copyWith(adjunto: base64Encode(fileTemp.readAsBytesSync()));
-      notifyListeners();
-    }
-  }
-
-  // Future<void> editarFotoNuevas(int i) async {
-  //   var croppedFile = await ImageCropper().cropImage(
-  //     sourcePath: fotos[i].file!.path,
-  //     aspectRatioPresets: [
-  //       CropAspectRatioPreset.square,
-  //       CropAspectRatioPreset.ratio3x2,
-  //       CropAspectRatioPreset.original,
-  //       CropAspectRatioPreset.ratio4x3,
-  //       CropAspectRatioPreset.ratio16x9
-  //     ],
-  //     uiSettings: [
-  //       AndroidUiSettings(
-  //         toolbarTitle: 'Editar foto',
-  //         toolbarColor: AppColors.orange,
-  //         toolbarWidgetColor: Colors.white,
-  //         initAspectRatio: CropAspectRatioPreset.original,
-  //         lockAspectRatio: false,
-  //         showCropGrid: true,
-  //       ),
-  //       IOSUiSettings(
-  //         title: 'Editar foto',
-  //       ),
-  //     ],
-  //   );
-  //   fotos[i] = FotoData(file: File(croppedFile!.path));
-  //   notifyListeners();
-  // }
 
   Future<List<TipoVehiculoData>> getTipoVehiculo(String text) async {
     var resp = await _solicitudesApi.getTipoVehiculo(text);
@@ -562,9 +412,9 @@ class ConsultarModificarViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> editarFoto(int i) async {
+  Future<void> editarFoto(BuildContext context, int i) async {
     var croppedFile = await ImageCropper().cropImage(
-      sourcePath: await createFileFromString(fotosAdjuntos[i].adjunto!),
+      sourcePath: await createFileFromString(fotos[i].adjunto!),
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
@@ -588,48 +438,99 @@ class ConsultarModificarViewModel extends BaseViewModel {
     );
     if (croppedFile != null) {
       var fotoByte = File(croppedFile.path).readAsBytesSync();
-      fotosAdjuntos[i] =
-          fotosAdjuntos[i].copyWith(adjunto: base64Encode(fotoByte));
+      fotos[i] = fotos[i].copyWith(adjunto: base64Encode(fotoByte));
+      if (fotos[i].id != null) {
+        ProgressDialog.show(context);
+        await _adjuntosApi.updateFotoTasacion(
+            id: fotos[i].id!,
+            adjunto: fotos[i].adjunto!,
+            descripcion: fotos[i].descripcion!,
+            tipoAdjunto: fotos[i].tipoAdjunto!);
+        ProgressDialog.dissmiss(context);
+      }
+
       notifyListeners();
     }
   }
 
   Future<void> subirFotos(BuildContext context) async {
     if (solicitud.estadoTasacion == 34) {
-      if (fotosAdjuntos.any((e) => e.adjunto == '')) {
-        Dialogs.error(msg: 'Fotos incompletas');
-      } else {
-        // if (formKeyFotos.currentState!.validate()) {
-        ProgressDialog.show(context);
-        List<Map<String, dynamic>> dataList = [];
-        for (var e in fotosAdjuntos) {
-          // var fotoBase = base64Decode(e.adjunto);
-          Map<String, dynamic> data = {
-            "adjuntoInBytes": e.adjunto,
-            "tipoAdjunto": e.id,
-            "descripcion": e.descripcion,
-          };
-          dataList.add(data);
-        }
-        var resp = await _adjuntosApi.addFotosTasacion(
-            noTasacion: solicitud.noTasacion!, adjuntos: dataList);
+      if (formKeyFotos.currentState!.validate()) {
+        print('aqui');
+        if (fotos.any((e) => e.nueva)) {
+          ProgressDialog.show(context);
 
-        if (resp is Failure) {
-          Dialogs.error(msg: resp.messages[0]);
-          ProgressDialog.dissmiss(context);
+          List<Map<String, dynamic>> dataList = [];
+
+          for (var e in fotos) {
+            if (e.id == null && e.adjunto != null) {
+              Map<String, dynamic> data = {
+                "adjuntoInBytes": e.adjunto,
+                "tipoAdjunto": e.tipoAdjunto,
+                "descripcion": e.descripcion,
+              };
+
+              dataList.add(data);
+            }
+          }
+          if (dataList.isEmpty) {
+            ProgressDialog.dissmiss(context);
+            await goToValorar(context);
+          } else {
+            var resp = await _adjuntosApi.addFotosTasacion(
+                noTasacion: solicitud.noTasacion!, adjuntos: dataList);
+
+            if (resp is Failure) {
+              Dialogs.error(msg: resp.messages[0]);
+              ProgressDialog.dissmiss(context);
+            }
+
+            if (resp is Success) {
+              Dialogs.success(msg: 'Fotos Actualizadas');
+              ProgressDialog.dissmiss(context);
+              await goToValorar(context);
+            }
+
+            if (resp is TokenFail) {
+              Dialogs.error(msg: 'su sesión a expirado');
+              ProgressDialog.dissmiss(context);
+              _navigatorService
+                  .navigateToPageAndRemoveUntil(LoginView.routeName);
+            }
+          }
+        } else {
+          await goToValorar(context);
         }
-        if (resp is Success) {
-          Dialogs.success(msg: 'Fotos Actualizadas');
-          ProgressDialog.dissmiss(context);
-          currentForm = 4;
-        }
-        if (resp is TokenFail) {
-          Dialogs.error(msg: 'su sesión a expirado');
-          ProgressDialog.dissmiss(context);
-          _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        }
-        // }
       }
+      // if (formKeyFotos.currentState!.validate()) {
+      // ProgressDialog.show(context);
+      // List<Map<String, dynamic>> dataList = [];
+      // for (var e in fotosAdjuntos) {
+      //   // var fotoBase = base64Decode(e.adjunto);
+      //   Map<String, dynamic> data = {
+      //     "adjuntoInBytes": e.adjunto,
+      //     "tipoAdjunto": e.id,
+      //     "descripcion": e.descripcion,
+      //   };
+      //   dataList.add(data);
+      // }
+      // var resp = await _adjuntosApi.addFotosTasacion(
+      //     noTasacion: solicitud.noTasacion!, adjuntos: dataList);
+
+      // if (resp is Failure) {
+      //   Dialogs.error(msg: resp.messages[0]);
+      //   ProgressDialog.dissmiss(context);
+      // }
+      // if (resp is Success) {
+      //   Dialogs.success(msg: 'Fotos Actualizadas');
+      //   ProgressDialog.dissmiss(context);
+      //   currentForm = 4;
+      // }
+      // if (resp is TokenFail) {
+      //   Dialogs.error(msg: 'su sesión a expirado');
+      //   ProgressDialog.dissmiss(context);
+      //   _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      // }
     } else if (solicitud.estadoTasacion == 9 ||
         solicitud.estadoTasacion == 10) {
       Navigator.of(context).pop();
@@ -705,15 +606,25 @@ class ConsultarModificarViewModel extends BaseViewModel {
     });
   }
 
-  void borrarFoto(int i) {
-    fotosAdjuntos[i] = AdjuntoFoto();
-    notifyListeners();
-  }
+  // void borrarFoto(int i) {
+  //   fotosAdjuntos[i] = AdjuntoFoto();
+  //   notifyListeners();
+  // }
 
-  void borrarFotoNuevas(int i) {
+  void borrarFoto(BuildContext context, int i) async {
+    if (fotos[i].id != null) {
+      ProgressDialog.show(context);
+      await _adjuntosApi.deleteFotoTasacion(id: fotos[i].id!);
+      ProgressDialog.dissmiss(context);
+    }
     fotos[i] = AdjuntoFoto();
     notifyListeners();
   }
+
+  // void borrarFotoNuevas(int i) {
+  //   fotos[i] = AdjuntoFoto();
+  //   notifyListeners();
+  // }
 
   Future<void> goToValorar(BuildContext context) async {
     if (solicitud.estadoTasacion == 11) {

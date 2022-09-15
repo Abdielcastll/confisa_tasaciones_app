@@ -22,7 +22,7 @@ class ValoracionTasacionForm extends StatelessWidget {
       titleHeader: 'Valorar',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
-      onPressedBack: () => vm.currentForm = 3,
+      onPressedBack: () => vm.currentForm = 5,
       iconNext: AppIcons.save,
       labelNext: '',
       isValoracion: true,
@@ -89,7 +89,9 @@ class ValoracionTasacionForm extends StatelessWidget {
             ),
             const SizedBox(height: 70),
             AppButton(
-                text: 'Guardar',
+                text: vm.roles.contains("AprobadorTasaciones")
+                    ? 'Aprobar'
+                    : 'Valorar',
                 onPressed: () => vm.guardarValoracion(context),
                 color: AppColors.green)
           ],
