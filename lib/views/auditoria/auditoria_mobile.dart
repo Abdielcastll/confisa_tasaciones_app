@@ -160,7 +160,7 @@ class _AuditoriaMobile extends StatelessWidget {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "Fecha: ${auditoria.fecha.split("T").first} Hora:${auditoria.fecha.split("T")[1]}",
+                                                      "Fecha: ${auditoria.fecha.split("T").first} Hora: ${auditoria.fecha.split("T")[1]}",
                                                       style: const TextStyle(
                                                           color: AppColors
                                                               .brownDark,
