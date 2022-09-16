@@ -456,7 +456,6 @@ class ConsultarModificarViewModel extends BaseViewModel {
   Future<void> subirFotos(BuildContext context) async {
     if (solicitud.estadoTasacion == 34) {
       if (formKeyFotos.currentState!.validate()) {
-        print('aqui');
         if (fotos.any((e) => e.nueva)) {
           ProgressDialog.show(context);
 

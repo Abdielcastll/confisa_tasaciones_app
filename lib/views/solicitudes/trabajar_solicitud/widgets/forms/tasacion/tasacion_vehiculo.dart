@@ -374,6 +374,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba la fuerza motriz';
+                              } else if (v!.trim().contains(' ')) {
+                                return 'Inválido';
                               } else {
                                 return null;
                               }
@@ -389,6 +391,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba el Kilometraje';
+                              } else if (v!.trim().contains(' ')) {
+                                return 'Inválido';
                               } else {
                                 return null;
                               }
