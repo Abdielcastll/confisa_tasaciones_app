@@ -168,8 +168,8 @@ class TrabajarViewModel extends BaseViewModel {
     roles = data.role;
     if (arg != null) {
       solicitud = arg;
-      await Future.delayed(const Duration(milliseconds: 150));
-      solicitudCredito(context);
+      // await Future.delayed(const Duration(milliseconds: 150));
+      // solicitudCredito(context);
     }
   }
 
@@ -183,28 +183,28 @@ class TrabajarViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> solicitudCredito(BuildContext context) async {
-    ProgressDialog.show(context);
-    var resp = await _solicitudesApi.getSolicitudCredito(
-      idSolicitud: solicitud.noSolicitudCredito!,
-    );
-    if (resp is Success<SolicitudCreditoResponse>) {
-      solicitudData = resp.response.data;
-      tcVIN.text = solicitudData?.chasis ?? '';
-      notifyListeners();
-      // currentForm = 2;
-      ProgressDialog.dissmiss(context);
-    }
-    if (resp is Failure) {
-      Dialogs.error(msg: resp.messages[0]);
-      ProgressDialog.dissmiss(context);
-    }
-    if (resp is TokenFail) {
-      Dialogs.error(msg: 'su sesión a expirado');
-      ProgressDialog.dissmiss(context);
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-    }
-  }
+  // Future<void> solicitudCredito(BuildContext context) async {
+  //   ProgressDialog.show(context);
+  //   var resp = await _solicitudesApi.getSolicitudCredito(
+  //     idSolicitud: solicitud.noSolicitudCredito!,
+  //   );
+  //   if (resp is Success<SolicitudCreditoResponse>) {
+  //     solicitudData = resp.response.data;
+  //     tcVIN.text = solicitudData?.chasis ?? '';
+  //     notifyListeners();
+  //     // currentForm = 2;
+  //     ProgressDialog.dissmiss(context);
+  //   }
+  //   if (resp is Failure) {
+  //     Dialogs.error(msg: resp.messages[0]);
+  //     ProgressDialog.dissmiss(context);
+  //   }
+  //   if (resp is TokenFail) {
+  //     Dialogs.error(msg: 'su sesión a expirado');
+  //     ProgressDialog.dissmiss(context);
+  //     _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+  //   }
+  // }
 
   Future<void> consultarVIN(BuildContext context) async {
     if (formKey2.currentState!.validate()) {
@@ -718,47 +718,47 @@ class TrabajarViewModel extends BaseViewModel {
   Future<void> guardarValoracion(BuildContext context) async {
     if (formKeyValor.currentState!.validate()) {
       ProgressDialog.show(context);
-      if (roles.contains("AprobadorTasaciones")) {
-        var aprobarResp = await _solicitudesApi.aprobarSolicitud(
-            noSolicitud: solicitud.noSolicitudCredito!,
-            noTasacion: solicitud.noTasacion!);
-        if (aprobarResp is Success) {
-          Dialogs.success(msg: 'Solicitud Aprobada');
-          ProgressDialog.dissmiss(context);
-          Navigator.of(context).pop();
-        }
-        if (aprobarResp is Failure) {
-          Dialogs.error(msg: aprobarResp.messages[0]);
-          ProgressDialog.dissmiss(context);
-        }
-        if (aprobarResp is TokenFail) {
-          Dialogs.error(msg: 'su sesión a expirado');
-          ProgressDialog.dissmiss(context);
-          _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        }
-      } else {
-        var resp = await _solicitudesApi.updateValoracion(
-            noTasacion: solicitud.noTasacion!,
-            valorizacion: int.tryParse(tcValor.text.trim())!,
-            valorConsultaSalvamento: isSalvage,
-            valorUltimas3Tasaciones: referencias[0].valor!.round(),
-            valorUltimaEstimacion: referencias[1].valor!.round(),
-            valorCarrosRD: referencias[2].valor!.round());
-        if (resp is Success) {
-          Dialogs.success(msg: 'Valor Actualizado');
-          ProgressDialog.dissmiss(context);
-          Navigator.of(context).pop();
-        }
-        if (resp is Failure) {
-          Dialogs.error(msg: resp.messages[0]);
-          ProgressDialog.dissmiss(context);
-        }
-        if (resp is TokenFail) {
-          Dialogs.error(msg: 'su sesión a expirado');
-          ProgressDialog.dissmiss(context);
-          _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        }
+      // if (roles.contains("AprobadorTasaciones")) {
+      //   var aprobarResp = await _solicitudesApi.aprobarSolicitud(
+      //       noSolicitud: solicitud.noSolicitudCredito!,
+      //       noTasacion: solicitud.noTasacion!);
+      //   if (aprobarResp is Success) {
+      //     Dialogs.success(msg: 'Solicitud Aprobada');
+      //     ProgressDialog.dissmiss(context);
+      //     Navigator.of(context).pop();
+      //   }
+      //   if (aprobarResp is Failure) {
+      //     Dialogs.error(msg: aprobarResp.messages[0]);
+      //     ProgressDialog.dissmiss(context);
+      //   }
+      //   if (aprobarResp is TokenFail) {
+      //     Dialogs.error(msg: 'su sesión a expirado');
+      //     ProgressDialog.dissmiss(context);
+      //     _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      //   }
+      // } else {
+      var resp = await _solicitudesApi.updateValoracion(
+          noTasacion: solicitud.noTasacion!,
+          valorizacion: int.tryParse(tcValor.text.trim())!,
+          valorConsultaSalvamento: isSalvage,
+          valorUltimas3Tasaciones: referencias[0].valor!.round(),
+          valorUltimaEstimacion: referencias[1].valor!.round(),
+          valorCarrosRD: referencias[2].valor!.round());
+      if (resp is Success) {
+        Dialogs.success(msg: 'Valor Actualizado');
+        ProgressDialog.dissmiss(context);
+        Navigator.of(context).pop();
       }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages[0]);
+        ProgressDialog.dissmiss(context);
+      }
+      if (resp is TokenFail) {
+        Dialogs.error(msg: 'su sesión a expirado');
+        ProgressDialog.dissmiss(context);
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      }
+      // }
     }
   }
 }

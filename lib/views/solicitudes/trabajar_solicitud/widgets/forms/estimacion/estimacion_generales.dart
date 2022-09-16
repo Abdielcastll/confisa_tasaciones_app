@@ -24,7 +24,6 @@ class GeneralesEstimacionForm extends StatelessWidget {
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
       onPressedNext: () => vm.currentForm = 2,
-      // vm.goToValorar(context).then((value) => vm.currentForm = 2),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
@@ -48,23 +47,23 @@ class GeneralesEstimacionForm extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Entidad solicitante',
-              initialValue: vm.solicitudData?.entidad ?? '',
+              initialValue: vm.solicitud.codigoEntidad ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Cédula del cliente',
-              initialValue: vm.solicitudData?.noIdentificacion ?? '',
+              initialValue: vm.solicitud.identificacion ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Nombre del cliente',
-              initialValue: vm.solicitudData?.nombreCliente ?? '',
+              initialValue: vm.solicitud.nombreCliente ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Oficial de negocios',
-              initialValue: vm.solicitudData?.nombreOficialNegocios ?? '',
+              initialValue: vm.solicitud.idOficial.toString(),
             ),
             BaseTextFieldNoEdit(
               label: 'Sucursal',
-              initialValue: vm.solicitudData?.sucursal ?? '',
+              initialValue: vm.solicitud.descripcionSucursal ?? '',
             ),
           ],
         ),

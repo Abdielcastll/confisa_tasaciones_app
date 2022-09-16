@@ -475,7 +475,7 @@ class SolicitudesApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {
+        queryParameters: {
           "NoSolicitud": noSolicitud,
           "NoTasacion": noTasacion,
         },
