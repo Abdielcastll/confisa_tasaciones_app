@@ -23,7 +23,10 @@ class GeneralesA extends StatelessWidget {
       onPressedBack: () => Navigator.of(context).pop(),
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
-      isValoracion: vm.solicitud.tipoTasacion == 21 ? false : true,
+      isValoracion:
+          vm.solicitud.tipoTasacion != 21 && vm.solicitud.estadoTasacion == 9
+              ? true
+              : false,
       onPressedNext: () => vm.currentForm = 2,
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -48,24 +51,23 @@ class GeneralesA extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Entidad solicitante',
-              initialValue: vm.solicitudCreditoData?.entidad ?? '',
+              initialValue: vm.solicitud.codigoEntidad ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Cédula del cliente',
-              initialValue: vm.solicitudCreditoData?.noIdentificacion ?? '',
+              initialValue: vm.solicitud.identificacion ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Nombre del cliente',
-              initialValue: vm.solicitudCreditoData?.nombreCliente ?? '',
+              initialValue: vm.solicitud.nombreCliente ?? '',
             ),
             BaseTextFieldNoEdit(
               label: 'Oficial de negocios',
-              initialValue:
-                  vm.solicitudCreditoData?.nombreOficialNegocios ?? '',
+              initialValue: vm.solicitud.idOficial.toString(),
             ),
             BaseTextFieldNoEdit(
               label: 'Sucursal',
-              initialValue: vm.solicitudCreditoData?.sucursal ?? '',
+              initialValue: vm.solicitud.descripcionSucursal ?? '',
             ),
           ],
         ),

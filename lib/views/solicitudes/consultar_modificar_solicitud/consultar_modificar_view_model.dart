@@ -53,8 +53,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
   VinDecoderData? _vinData;
 
   late SolicitudesData solicitud;
-  late bool isSalvage;
-  late double tasacionPromedio;
+  bool isSalvage = false;
+  double tasacionPromedio = 0;
 
   SolicitudCreditoData? solicitudCreditoData;
 
@@ -73,8 +73,9 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
   late int _fotosPermitidas;
-  late List<AdjuntoFoto> fotos;
+  List<AdjuntoFoto> fotos = [];
   List<ReferenciaValoracion> referencias = [];
+  bool isAprobador = false;
 
   // List<AdjuntoFoto> fotosAdjuntos = [];
   List<AlarmasData> alarmas = [];
@@ -121,8 +122,10 @@ class ConsultarModificarViewModel extends BaseViewModel {
     tcKilometraje.text = solicitud.kilometraje.toString();
     tcPlaca.text = solicitud.placa ?? '';
     tcFuerzaMotriz.text = solicitud.fuerzaMotriz.toString();
-    await Future.delayed(const Duration(milliseconds: 150));
-    solicitudCredito(context);
+    Session session = _authenticationAPI.loadSession;
+    isAprobador = session.role.contains("AprobadorTasaciones");
+    // await Future.delayed(const Duration(milliseconds: 150));
+    // solicitudCredito(context);
 
     if (solicitud.id != null) {
       var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
@@ -160,25 +163,25 @@ class ConsultarModificarViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> solicitudCredito(BuildContext context) async {
-    ProgressDialog.show(context);
-    var resp = await _solicitudesApi.getSolicitudCredito(
-        idSolicitud: solicitud.noSolicitudCredito!);
-    if (resp is Success<SolicitudCreditoResponse>) {
-      solicitudCreditoData = resp.response.data;
-      notifyListeners();
-      ProgressDialog.dissmiss(context);
-    }
-    if (resp is Failure) {
-      Dialogs.error(msg: resp.messages[0]);
-      ProgressDialog.dissmiss(context);
-    }
-    if (resp is TokenFail) {
-      Dialogs.error(msg: 'su sesión a expirado');
-      ProgressDialog.dissmiss(context);
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-    }
-  }
+  // Future<void> solicitudCredito(BuildContext context) async {
+  //   ProgressDialog.show(context);
+  //   var resp = await _solicitudesApi.getSolicitudCredito(
+  //       idSolicitud: solicitud.noSolicitudCredito!);
+  //   if (resp is Success<SolicitudCreditoResponse>) {
+  //     solicitudCreditoData = resp.response.data;
+  //     notifyListeners();
+  //     ProgressDialog.dissmiss(context);
+  //   }
+  //   if (resp is Failure) {
+  //     Dialogs.error(msg: resp.messages[0]);
+  //     ProgressDialog.dissmiss(context);
+  //   }
+  //   if (resp is TokenFail) {
+  //     Dialogs.error(msg: 'su sesión a expirado');
+  //     ProgressDialog.dissmiss(context);
+  //     _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+  //   }
+  // }
 
   Future<void> cargarAlarmas(int idSolicitud) async {
     Session data = _authenticationAPI.loadSession;
@@ -530,12 +533,66 @@ class ConsultarModificarViewModel extends BaseViewModel {
       //   ProgressDialog.dissmiss(context);
       //   _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       // }
-    } else if (solicitud.estadoTasacion == 9 ||
-        solicitud.estadoTasacion == 10) {
+    } else if (solicitud.estadoTasacion == 9) {
       Navigator.of(context).pop();
+    } else if (solicitud.estadoTasacion == 10) {
+      if (isAprobador) {
+        goToAprobar(context);
+      } else {
+        Navigator.of(context).pop();
+      }
     } else {
       goToValorar(context);
     }
+  }
+
+  Future<void> goToAprobar(BuildContext context) async {
+    ProgressDialog.show(context);
+
+    var salvamentoResp =
+        // valorConsultaSalvamento
+        await _solicitudesApi.getSalvamento(vin: solicitud.chasis ?? '');
+    if (salvamentoResp is Success<Map<String, dynamic>>) {
+      isSalvage = salvamentoResp.response['data']['is_salvage'];
+    }
+    if (salvamentoResp is Failure) {
+      // Dialogs.error(msg: salvamentoResp.messages[0]);
+      isSalvage = false;
+    }
+    if (salvamentoResp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
+    // ProgressDialog.dissmiss(context);
+    // }
+    var tasacionPromedioResp = await _solicitudesApi.getTasacionCreditoAverage(
+      chasis: solicitud.chasis ?? tcVIN.text,
+      periodoMeses: 3,
+    );
+    if (tasacionPromedioResp is Success<Map<String, dynamic>>) {
+      tasacionPromedio = tasacionPromedioResp.response['data'];
+      // notifyListeners();
+    }
+    if (tasacionPromedioResp is Failure) {
+      // Dialogs.error(msg: tasacionPromedioResp.messages[0]);
+      tasacionPromedio = 0;
+      // notifyListeners();
+    }
+    // valorUltimaEstimacion
+    // var resp =
+    //     await _solicitudesApi.getTasacionCreditoLast(chasis: solicitud.chasis!);
+    // valorCarrosRD
+    var referenceResp = await _solicitudesApi.getReference(
+        chasis: solicitud.chasis ?? tcVIN.text,
+        noTasacion: solicitud.noTasacion!);
+    if (referenceResp is Success<List<ReferenciaValoracion>>) {
+      referencias = referenceResp.response;
+      // notifyListeners();
+    }
+    notifyListeners();
+    ProgressDialog.dissmiss(context);
+    currentForm = 4;
   }
 
   Future<void> consultarVIN(BuildContext context) async {
@@ -666,6 +723,29 @@ class ConsultarModificarViewModel extends BaseViewModel {
       ProgressDialog.dissmiss(context);
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'su sesión a expirado');
+    }
+  }
+
+  Future<void> aprobar(BuildContext context) async {
+    ProgressDialog.show(context);
+    print(solicitud.noSolicitudCredito ?? '');
+    print(solicitud.noTasacion ?? '');
+    var aprobarResp = await _solicitudesApi.aprobarSolicitud(
+        noSolicitud: solicitud.noSolicitudCredito!,
+        noTasacion: solicitud.noTasacion!);
+    if (aprobarResp is Success) {
+      Dialogs.success(msg: 'Solicitud Aprobada');
+      ProgressDialog.dissmiss(context);
+      Navigator.of(context).pop();
+    }
+    if (aprobarResp is Failure) {
+      Dialogs.error(msg: aprobarResp.messages[0]);
+      ProgressDialog.dissmiss(context);
+    }
+    if (aprobarResp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 }

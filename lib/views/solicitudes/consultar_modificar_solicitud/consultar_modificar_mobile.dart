@@ -46,22 +46,22 @@ class _ConsultarModificarMobile extends StatelessWidget {
       case 9:
         return 3;
       case 10:
-        return 3;
+        return vm.isAprobador ? 4 : 3;
       default:
         return 4;
     }
   }
 
-  int lineProgressItemsTasacion() {
-    switch (vm.solicitud.estadoTasacion) {
-      case 9:
-        return 3;
-      case 10:
-        return 3;
-      default:
-        return 4;
-    }
-  }
+  // int lineProgressItemsTasacion() {
+  //   switch (vm.solicitud.estadoTasacion) {
+  //     case 9:
+  //       return 3;
+  //     case 10:
+  //       return 3;
+  //     default:
+  //       return 4;
+  //   }
+  // }
 
   Widget _form(BuildContext context) {
     switch (vm.currentForm) {
@@ -77,7 +77,9 @@ class _ConsultarModificarMobile extends StatelessWidget {
                 atras: () => vm.currentForm = 3,
                 enviar: () => vm.enviarSolicitud(context),
               )
-            : ValoracionForm(vm);
+            : vm.isAprobador && vm.solicitud.estadoTasacion == 10
+                ? AprobarForm(vm)
+                : ValoracionForm(vm);
 
       default:
         return Container();

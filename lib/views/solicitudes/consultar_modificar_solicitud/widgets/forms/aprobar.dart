@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../theme/theme.dart';
-import '../../../../../../widgets/app_buttons.dart';
-import '../../../../base_widgets/base_form_widget.dart';
-import '../../../../base_widgets/base_text_field_widget.dart';
-import '../../../trabajar_view_model.dart';
-import '../estimacion/estimacion_valoracion.dart';
+import '../../../../../theme/theme.dart';
+import '../../../../../widgets/app_buttons.dart';
+import '../../../base_widgets/base_form_widget.dart';
+import '../../../base_widgets/base_text_field_widget.dart';
+import '../../../trabajar_solicitud/widgets/forms/estimacion/estimacion_valoracion.dart';
+import '../../consultar_modificar_view_model.dart';
 
-class ValoracionTasacionForm extends StatelessWidget {
-  const ValoracionTasacionForm(
+class AprobarForm extends StatelessWidget {
+  const AprobarForm(
     this.vm, {
     Key? key,
   }) : super(key: key);
 
-  final TrabajarViewModel vm;
+  final ConsultarModificarViewModel vm;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class ValoracionTasacionForm extends StatelessWidget {
       titleHeader: 'Valorar',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
-      onPressedBack: () => vm.currentForm = 5,
+      onPressedBack: () => vm.currentForm = 3,
       iconNext: AppIcons.save,
       labelNext: '',
       isValoracion: true,
@@ -65,24 +65,15 @@ class ValoracionTasacionForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Form(
-              key: vm.formKeyValor,
-              child: BaseTextField(
-                label: 'Valor Tasación',
-                controller: vm.tcValor,
-                keyboardType: TextInputType.number,
-                validator: (v) {
-                  if (v == '') {
-                    return 'Ingrese el Valor';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-            ),
-            const SizedBox(height: 70),
+                // key: vm.formKeyValor,
+                child: BaseTextFieldNoEdit(
+              label: 'Valor Tasación',
+              initialValue: vm.solicitud.valorTasacionFinal?.toString() ?? '',
+            )),
+            const SizedBox(height: 50),
             AppButton(
-                text: 'Valorar',
-                onPressed: () => vm.guardarValoracion(context),
+                text: 'Aprobar',
+                onPressed: () => vm.aprobar(context),
                 color: AppColors.green)
           ],
         ),

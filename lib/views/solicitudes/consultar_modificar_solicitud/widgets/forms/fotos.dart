@@ -27,9 +27,12 @@ class FotosForm extends StatelessWidget {
       labelBack: 'Anterior',
       onPressedBack: () => vm.currentForm = 2,
       iconNext: Icons.arrow_forward_ios,
-      labelNext:
-          vm.solicitud.estadoTasacion == 9 || vm.solicitud.estadoTasacion == 10
-              ? 'Salir'
+      labelNext: vm.solicitud.estadoTasacion == 9
+          ? 'Salir'
+          : vm.solicitud.estadoTasacion == 10
+              ? vm.isAprobador
+                  ? 'Siguiente'
+                  : 'Salir'
               : 'Siguiente',
       onPressedNext: () => vm.subirFotos(context),
       // : vm.subirFotosNuevas(context),
@@ -87,12 +90,15 @@ class FotosActuales extends StatelessWidget {
                   ),
                 ),
                 vm.solicitud.estadoTasacion != 34
-                    ? Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            'Tipo:\n${vm.fotos[i].descripcion}',
-                            style: const TextStyle(fontSize: 16),
+                    ? Visibility(
+                        visible: vm.fotos[i].descripcion != null,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              'Tipo:\n${vm.fotos[i].descripcion}',
+                              style: const TextStyle(fontSize: 16),
+                            ),
                           ),
                         ),
                       )

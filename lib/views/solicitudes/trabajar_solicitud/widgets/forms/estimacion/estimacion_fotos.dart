@@ -78,9 +78,11 @@ class FotosActuales extends StatelessWidget {
                           ),
                   ),
                 ),
-                Expanded(
-                    child: BaseTextFieldNoEdit(
-                        label: 'Tipo:', initialValue: foto.descripcion)),
+                foto.adjunto == null
+                    ? const Spacer()
+                    : Expanded(
+                        child: BaseTextFieldNoEdit(
+                            label: 'Tipo:', initialValue: foto.descripcion)),
               ],
             ),
             const Divider(),

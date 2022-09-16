@@ -120,7 +120,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         solicitudes.removeWhere((e) => e.estadoTasacion == 34);
       }
       // ordenar();
-      print('HAY MAS:  ${temp.hasNextPage}');
+      // print('HAY MAS:  ${temp.hasNextPage}');
       notifyListeners();
     }
     if (resp is Failure) {

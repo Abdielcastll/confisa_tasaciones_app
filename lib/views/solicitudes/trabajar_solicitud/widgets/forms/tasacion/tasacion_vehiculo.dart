@@ -83,15 +83,21 @@ class VehiculoTasacionForm extends StatelessWidget {
                 children: [
                   BaseTextFieldNoEdit(
                     label: 'Marca',
-                    initialValue: vm.solicitudData?.marca ?? '',
+                    initialValue: vm.solicitud.descripcionMarca ??
+                        vm.vinData?.marca ??
+                        '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Modelo',
-                    initialValue: vm.solicitudData?.modelo ?? '',
+                    initialValue: vm.solicitud.descripcionModelo ??
+                        vm.vinData?.modelo ??
+                        '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Año',
-                    initialValue: vm.solicitudData?.ano.toString(),
+                    initialValue: vm.solicitud.ano?.toString() ??
+                        vm.vinData?.ano.toString() ??
+                        '',
                   ),
                   if (vm.vinData?.serie != null)
                     BaseTextFieldNoEdit(
