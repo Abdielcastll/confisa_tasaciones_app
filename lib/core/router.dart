@@ -27,6 +27,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_componentes
 import 'package:tasaciones_app/views/entidades_solicitudes/tipos_fotos/tipos_fotos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/vencimiento_estados/vencimiento_estados_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
+import 'package:tasaciones_app/views/seguridad_facturacion/tarifario_tasacion/tarifario_tasacion_view.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
 import 'package:tasaciones_app/widgets/escaner.dart';
@@ -195,6 +196,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case AuditoriaView.routeName:
       return CupertinoPageRoute(builder: (context) => const AuditoriaView());
+
+    case TarifarioTasacionView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const TarifarioTasacionView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());
