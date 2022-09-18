@@ -11,10 +11,12 @@ class NavigatorService extends BaseService {
         .pushNamed(routeName, arguments: arguments);
   }
 
-  Future<dynamic> navigateToPageWithReplacement(String routeName) async {
+  Future<dynamic> navigateToPageWithReplacement(String routeName,
+      {dynamic arguments}) async {
     log.i('navigateToPageWithReplacement: '
         'routeName: $routeName');
-    return navigatorKey.currentState?.pushReplacementNamed(routeName);
+    return navigatorKey.currentState
+        ?.pushReplacementNamed(routeName, arguments: arguments);
   }
 
   Future<dynamic> navigateToPageAndRemoveUntil(String routeName) async {

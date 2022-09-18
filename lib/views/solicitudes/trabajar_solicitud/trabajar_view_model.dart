@@ -175,7 +175,8 @@ class TrabajarViewModel extends BaseViewModel {
 
   Future<List<EdicionVehiculo>> getEdiciones(String text) async {
     var resp = await _solicitudesApi.getEdicionesVehiculos(
-        modeloid: solicitudData?.idModeloTasaciones ?? 0);
+        // modeloid: vinData?.codigoModelo ?? 0);
+        modeloid: 2016);
     if (resp is Success<List<EdicionVehiculo>>) {
       return resp.response;
     } else {
@@ -262,14 +263,15 @@ class TrabajarViewModel extends BaseViewModel {
         ProgressDialog.show(context);
         var upResp = await _solicitudesApi.updateTasacion(
           id: solicitud.id!,
-          ano: int.tryParse(solicitudData?.ano ?? '') ?? 0,
+          ano: vinData?.ano ?? 0,
           chasis: tcVIN.text,
           color: colorVehiculo.id,
           edicion: edicionVehiculo.id!,
           fuerzaMotriz: double.tryParse(tcFuerzaMotriz.text.trim())!.round(),
           kilometraje: double.tryParse(tcKilometraje.text.trim())!.round(),
-          marca: solicitudData?.idMarcaTasaciones ?? 0,
-          modelo: solicitudData?.idModeloTasaciones ?? 0,
+          marca: solicitudData?.idMarcaTasaciones ?? vinData?.codigoMarca ?? 0,
+          modelo:
+              solicitudData?.idModeloTasaciones ?? vinData?.codigoModelo ?? 0,
           noCilindros: nCilindros!,
           noPuertas: nPuertas!,
           nuevoUsado: _estadoID!,

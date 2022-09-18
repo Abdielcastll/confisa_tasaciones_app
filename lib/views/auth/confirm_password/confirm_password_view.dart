@@ -14,7 +14,13 @@ part 'confirm_password_mobile.dart';
 
 class ConfirmPasswordView extends StatelessWidget {
   static const routeName = 'confirmPassword';
-  const ConfirmPasswordView({Key? key}) : super(key: key);
+  final String? email;
+  final String? token;
+  final bool activateUser;
+
+  const ConfirmPasswordView(
+      {this.activateUser = false, this.email, this.token, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,7 @@ class ConfirmPasswordView extends StatelessWidget {
     return ViewModelBuilder<ConfirmPasswordViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          // Do something once your viewModel is initialized
+          viewModel.onInit(activateUser, email, token);
         },
         builder: (context, viewModel, child) {
           return _ConfirmPasswordMobile(viewModel);

@@ -50,4 +50,22 @@ class AuthenticationAPI {
       },
     );
   }
+
+  Future<Object> resetPassword({
+    required String email,
+    required String token,
+    required String password,
+    required String confirmPassword,
+  }) {
+    return _http.request(
+      '/api/users/reset-password',
+      method: 'POST',
+      data: {
+        "email": email,
+        "password": password,
+        "confirmPassword": confirmPassword,
+        "token": token,
+      },
+    );
+  }
 }

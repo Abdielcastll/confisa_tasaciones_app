@@ -32,9 +32,9 @@ class LoginViewModel extends BaseViewModel {
   final GlobalKey<FormState> formKey = GlobalKey();
   bool _loading = false;
   TextEditingController tcEmail =
-      TextEditingController(text: AppCuentas().tasador);
+      TextEditingController(text: AppCuentas().usuarioAdmin);
   TextEditingController tcPassword =
-      TextEditingController(text: AppCuentas().claveTasador);
+      TextEditingController(text: AppCuentas().claveAdmin);
   bool obscurePassword = true;
   bool get loading => _loading;
   set loading(bool value) {
@@ -121,6 +121,14 @@ class LoginViewModel extends BaseViewModel {
   }
 
   goToConfigPassword() {
-    _navigationService.navigateToPage(ConfirmPasswordView.routeName);
+    // _navigationService.navigateToPage(ConfirmPasswordView.routeName);
+    _navigationService.navigatorKey.currentState
+        ?.pushReplacement(MaterialPageRoute(builder: (context) {
+      return const ConfirmPasswordView(
+        activateUser: false,
+        token: 'token',
+        email: 'abdielcastll@gmail.com',
+      );
+    }));
   }
 }
