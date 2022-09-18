@@ -79,7 +79,7 @@ class ValoracionTasacionForm extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 70),
+            const SizedBox(height: 60),
             AppButton(
                 text: 'Valorar',
                 onPressed: () => vm.guardarValoracion(context),

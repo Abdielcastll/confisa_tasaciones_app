@@ -120,7 +120,15 @@ class LoginViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  goToConfigPassword() {
-    _navigationService.navigateToPage(ConfirmPasswordView.routeName);
-  }
+  // goToConfigPassword() {
+  //   // _navigationService.navigateToPage(ConfirmPasswordView.routeName);
+  //   _navigationService.navigatorKey.currentState
+  //       ?.pushReplacement(MaterialPageRoute(builder: (context) {
+  //     return const ConfirmPasswordView(
+  //       activateUser: false,
+  //       token: 'token',
+  //       email: 'abdielcastll@gmail.com',
+  //     );
+  //   }));
+  // }
 }

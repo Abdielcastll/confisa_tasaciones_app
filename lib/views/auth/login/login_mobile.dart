@@ -51,12 +51,13 @@ class _LoginMobile extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              InkWell(
-                onTap: () => vm.goToConfigPassword(),
-                child: const Text(
-                  '¿Olvidaste tu contraseña?',
-                  style: TextStyle(color: Colors.black, fontSize: 16),
-                ),
+              // InkWell(
+              // onTap: () => vm.goToConfigPassword(),
+              // child:
+              const Text(
+                '¿Olvidaste tu contraseña?',
+                style: TextStyle(color: Colors.black, fontSize: 16),
+                // ),
               ),
 
               const SizedBox(height: 10),
