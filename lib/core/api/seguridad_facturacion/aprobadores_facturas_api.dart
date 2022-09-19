@@ -1,6 +1,7 @@
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
+import 'package:tasaciones_app/core/models/seguridad_facturacion/aprobadores_facturas_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/tarifario_tasacion_response.dart';
 
 class AprobadoresFacturasApi {
@@ -11,53 +12,49 @@ class AprobadoresFacturasApi {
   Future<Object> getTarifariosTasacion({
     int pageNumber = 1,
     int pageSize = 999,
-    int? tipoTasacion,
-    int? idSuplidor,
-    String valor = "",
+    String email = "",
+    String nombreCompleto = "",
+    bool? activo,
+    bool? estadoAprobadorFactura,
   }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
-        '/api/tarifarios-servicios-tasacion/get',
+        '/api/aprobadores-facturas-tasacion/get',
         headers: {
           'Authorization': 'Bearer $_token',
         },
         queryParameters: {
-          "TipoTasacion": tipoTasacion,
-          "IdSuplidor": idSuplidor,
-          "Valor": valor,
+          "Email": email,
+          "NombreCompleto": nombreCompleto,
+          "Activo": activo,
+          "EstadoAprobadorFactura": estadoAprobadorFactura,
           "PageSize": pageSize,
           "PageNumber": pageNumber,
         },
-        /* parser: (data) {
+        parser: (data) {
           return AprobadoresFacturasResponse.fromJson(data);
-        }, */
+        },
       );
     } else {
       return TokenFail();
     }
   }
 
-  Future<Object> updateAprobadoresFacturas(
-      {required String valor,
-      required int idSuplidor,
-      required int idTipoTasacion}) async {
+  Future<Object> updateEstadoAprobadoresFacturas(
+      {required String userId, required bool activateUser}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
-        '/api/tarifarios-servicios-tasacion/update',
-        method: "PUT",
+        '/api/aprobadores-facturas-tasacion/change-status',
+        method: "POST",
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {
-          "valor": valor,
-          "idSuplidor": idSuplidor,
-          "idTipoTasacion": idTipoTasacion
-        },
-        /* parser: (data) {
+        data: {"activateUser": activateUser, "userId": userId},
+        parser: (data) {
           return AprobadoresFacturasPOSTResponse.fromJson(data);
-        }, */
+        },
       );
     } else {
       return TokenFail();

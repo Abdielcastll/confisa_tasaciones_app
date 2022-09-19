@@ -471,7 +471,7 @@ class NotasViewModel extends BaseViewModel {
                                   id: nota.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(msg: 'Tipo nota Actualizado');
+                                Dialogs.success(msg: 'Nota Actualizada');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -482,7 +482,7 @@ class NotasViewModel extends BaseViewModel {
                               }
                               tcNewDescription.clear();
                             } else {
-                              Dialogs.success(msg: 'Tipo nota Actualizado');
+                              Dialogs.success(msg: 'Nota Actualizada');
                               Navigator.of(context).pop();
                             }
                           }
@@ -616,7 +616,7 @@ class NotasViewModel extends BaseViewModel {
                                 descripcion: tcNewDescription.text.trim());
                             ProgressDialog.dissmiss(context);
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Tipo nota Creado');
+                              Dialogs.success(msg: 'Nota Creada');
                               Navigator.of(context).pop();
                               await onRefresh();
                             }

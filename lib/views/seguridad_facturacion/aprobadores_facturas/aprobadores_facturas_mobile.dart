@@ -1,9 +1,9 @@
-part of tarifario_tasacion_view;
+part of aprobadores_facturas_view;
 
-class _TarifarioTasacionMobile extends StatelessWidget {
-  final TarifarioTasacionViewModel vm;
+class _AprobadoresFacturasMobile extends StatelessWidget {
+  final AprobadoresFacturasViewModel vm;
 
-  const _TarifarioTasacionMobile(this.vm);
+  const _AprobadoresFacturasMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Tarifario Servicios Tasación',
+            'Aprobadores Facturas',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
@@ -30,7 +30,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscartarifarioTasacion,
+                        onSubmitted: vm.buscarAprobadoresFacturas,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -39,13 +39,13 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Tarifario Tasación...',
+                          hintText: 'Buscar Aprobador Factura...',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
-                                  onPressed: () => vm.buscartarifarioTasacion(
+                                  onPressed: () => vm.buscarAprobadoresFacturas(
                                       vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
@@ -66,20 +66,29 @@ class _TarifarioTasacionMobile extends StatelessWidget {
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.tarifarioTasacion.isEmpty
+                child: vm.aprobadoresFacturas.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.tarifarioTasacion.length,
+                        itemCount: vm.aprobadoresFacturas.length + 1,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          var tarifarioTasacion = vm.tarifarioTasacion[i];
+                          if (i >= vm.aprobadoresFacturas.length) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: !vm.hasNextPage
+                                  ? const SizedBox()
+                                  : const Center(
+                                      child: CircularProgressIndicator()),
+                            );
+                          }
+                          var aprobadorFactura = vm.aprobadoresFacturas[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
-                              onPressed: () => vm.modificarTarifarioTasacion(
-                                  context, tarifarioTasacion),
+                              onPressed: () => vm.modificarAprobadoresFacturas(
+                                  context, aprobadorFactura),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
@@ -88,30 +97,44 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: 70,
                                 padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
                                   children: [
-                                    Text(
-                                      tarifarioTasacion.valor,
-                                      style: const TextStyle(
-                                        color: AppColors.brownDark,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w800,
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            aprobadorFactura.nombreCompleto,
+                                            style: const TextStyle(
+                                              color: AppColors.brownDark,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Suplidor: ${aprobadorFactura.nombreSuplidor}",
+                                            style: const TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          ),
+                                          Text(
+                                            "Email: ${aprobadorFactura.email}",
+                                            style: const TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Text(
-                                      "Tipo de Tasación: ${tarifarioTasacion.descripcionTipoTasacion}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
-                                    Text(
-                                      "Suplidor: ${tarifarioTasacion.suplidor}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
+                                    Icon(
+                                      aprobadorFactura.estadoAprobadorFactura
+                                          ? AppIcons.checkCircle
+                                          : AppIcons.nonCheckCircle,
+                                      color: AppColors.gold,
+                                    )
                                   ],
                                 ),
                               ),

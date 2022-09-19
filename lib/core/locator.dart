@@ -25,6 +25,8 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/vencimiento_estados_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_facturacion/aprobadores_facturas_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_facturacion/documentos_facturacion_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/tarifario_tasacion_api.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
@@ -109,6 +111,10 @@ abstract class DependencyInjection {
     final auditoriaApi = AuditoriaApi(http, authenticationClient);
     final tarifarioTasacionApi =
         TarifarioTasacionApi(http, authenticationClient);
+    final aprobadoresFacturasApi =
+        AprobadoresFacturasApi(http, authenticationClient);
+    final documentosFacturacionApi =
+        DocumentosFacturacionApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
@@ -150,5 +156,8 @@ abstract class DependencyInjection {
     locator.registerSingleton<AccionesSolicitudApi>(accionesSolicitudApi);
     locator.registerSingleton<AuditoriaApi>(auditoriaApi);
     locator.registerSingleton<TarifarioTasacionApi>(tarifarioTasacionApi);
+    locator.registerSingleton<AprobadoresFacturasApi>(aprobadoresFacturasApi);
+    locator
+        .registerSingleton<DocumentosFacturacionApi>(documentosFacturacionApi);
   }
 }
