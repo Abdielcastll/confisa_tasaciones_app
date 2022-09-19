@@ -22,7 +22,7 @@ class CardProfileWidget extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(25, 50, 25, 0),
       child: Column(
         children: [
-          _noImage(context),
+          vm.tieneFoto ? Text(vm.fotoPerfil!.descripcion) : _noImage(context),
           const SizedBox(height: 20),
           Row(
             children: [
@@ -256,9 +256,12 @@ class CardProfileWidget extends StatelessWidget {
                 height: 35,
                 width: 35,
                 color: AppColors.brown,
-                child: const Icon(
-                  Icons.add_a_photo_rounded,
-                  size: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.add_a_photo_rounded,
+                    size: 20,
+                  ),
+                  onPressed: () {},
                   color: Colors.white,
                 ),
               ),

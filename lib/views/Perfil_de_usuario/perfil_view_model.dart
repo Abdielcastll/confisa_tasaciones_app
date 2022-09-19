@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/adjuntos.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -13,14 +15,17 @@ import '../auth/login/login_view.dart';
 
 class PerfilViewModel extends BaseViewModel {
   final _personalApi = locator<PersonalApi>();
+  final _adjuntoApi = locator<AdjuntosApi>();
   final _authenticationClient = locator<AuthenticationClient>();
   final _navigatorService = locator<NavigatorService>();
   bool _loading = false;
   Profile? profile;
+  AdjuntosData? fotoPerfil;
   int _currentPage = 0;
   bool _editName = false;
   bool _editEmail = false;
   bool _editPhone = false;
+  bool _tieneFoto = false;
   TextEditingController tcCurrentPass = TextEditingController();
   TextEditingController tcNewPass = TextEditingController();
   TextEditingController tcConfirmNewPass = TextEditingController();
@@ -45,9 +50,31 @@ class PerfilViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void changeFotoPerfil(String foto) async {
+    var resp = await _adjuntoApi.updateFotoPerfil(adjuntoInBytes: foto);
+    if (resp is Success) {
+      Dialogs.success(msg: "Foto de Perfil Actualizada con éxito");
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages.first);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
+    loading = false;
+    notifyListeners();
+  }
+
   bool get loading => _loading;
   set loading(bool value) {
     _loading = value;
+    notifyListeners();
+  }
+
+  bool get tieneFoto => _tieneFoto;
+  set tieneFoto(bool value) {
+    _tieneFoto = value;
     notifyListeners();
   }
 
@@ -77,6 +104,7 @@ class PerfilViewModel extends BaseViewModel {
 
   Future<void> onInit(BuildContext context) async {
     loading = true;
+    _tieneFoto = false;
     session = _authenticationClient.loadSession;
     var resp = await _personalApi.getProfile();
     if (resp is Success) {
@@ -87,6 +115,19 @@ class PerfilViewModel extends BaseViewModel {
       Dialogs.error(msg: resp.messages[0]);
     }
     if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
+    var resp2 = await _adjuntoApi.getFotoPerfil();
+    if (resp2 is Success) {
+      _tieneFoto = true;
+      var d = resp2.response as AdjuntosResponse;
+      fotoPerfil = d.data.first;
+    }
+    if (resp2 is Failure) {
+      Dialogs.error(msg: resp2.messages[0]);
+    }
+    if (resp2 is TokenFail) {
       Dialogs.error(msg: 'su sesión a expirado');
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
