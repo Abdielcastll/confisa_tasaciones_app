@@ -212,7 +212,7 @@ class AdjuntosApi {
     if (_token != null) {
       return _http.request(
         '/api/adjuntos/add-foto-perfil',
-        method: "GET",
+        method: "POST",
         headers: {
           'Authorization': 'Bearer $_token',
         },
