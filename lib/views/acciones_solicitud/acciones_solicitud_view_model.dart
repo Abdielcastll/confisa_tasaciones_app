@@ -402,7 +402,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                               tittle:
                                   "Colocar como ${accionSolicitud.listo ? "Pendiente" : "Listo"}",
                               description:
-                                  '¿Esta colocar como ${accionSolicitud.listo ? "pendiente" : "listo"} la nota ${accionSolicitud.notas}?',
+                                  '¿Esta seguro de colocar como ${accionSolicitud.listo ? "pendiente" : "listo"} la acción pendiente ${accionSolicitud.notas}?',
                               confirm: () async {
                             ProgressDialog.show(ctx);
                             var resp = await _accionesSolicitudApi
@@ -486,7 +486,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
                                 Dialogs.success(
-                                    msg: 'Tipo Acción Solicitud Actualizada');
+                                    msg: 'Acción Solicitud Actualizada');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -500,7 +500,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                               tcNewTipo.clear();
                             } else {
                               Dialogs.success(
-                                  msg: 'Tipo Acción Solicitud Actualizada');
+                                  msg: 'Acción Solicitud Actualizada');
                               Navigator.of(context).pop();
                             }
                           }
@@ -658,8 +658,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
 
                             if (resp is Success) {
                               ProgressDialog.dissmiss(context);
-                              Dialogs.success(
-                                  msg: 'Tipo Acción Solicitud Creado');
+                              Dialogs.success(msg: 'Acción Solicitud Creada');
                               Navigator.of(context).pop();
                               await onRefresh();
                               tcNewComentario.clear();

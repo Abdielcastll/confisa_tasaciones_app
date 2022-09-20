@@ -409,7 +409,7 @@ class AlarmasViewModel extends BaseViewModel {
                                     Dialogs.error(msg: resp.messages[0]);
                                   }
                                   if (resp is Success) {
-                                    Dialogs.success(msg: 'Nota eliminada');
+                                    Dialogs.success(msg: 'Alarma eliminada');
                                     await onRefresh();
                                   }
                                 });
@@ -490,7 +490,7 @@ class AlarmasViewModel extends BaseViewModel {
                                   id: alarma.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(msg: 'Tipo alarma Actualizado');
+                                Dialogs.success(msg: 'Alarma Actualizada');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -501,7 +501,7 @@ class AlarmasViewModel extends BaseViewModel {
                               }
                               tcNewDescription.clear();
                             } else {
-                              Dialogs.success(msg: 'Tipo alarma Actualizado');
+                              Dialogs.success(msg: 'Alarma Actualizada');
                               Navigator.of(context).pop();
                             }
                           }
@@ -697,7 +697,7 @@ class AlarmasViewModel extends BaseViewModel {
 
                             if (resp is Success) {
                               ProgressDialog.dissmiss(context);
-                              Dialogs.success(msg: 'Tipo alarma Creado');
+                              Dialogs.success(msg: 'Alarma Creada');
                               Navigator.of(context).pop();
                               await onRefresh();
                               tcNewDescription.clear();

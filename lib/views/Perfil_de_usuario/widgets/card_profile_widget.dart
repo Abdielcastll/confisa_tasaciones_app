@@ -1,13 +1,25 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/adjuntos.dart';
+import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view_model.dart';
+import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../theme/theme.dart';
 import '../../../widgets/app_buttons.dart';
 
 class CardProfileWidget extends StatelessWidget {
-  const CardProfileWidget(this.vm, {Key? key}) : super(key: key);
+  CardProfileWidget(this.vm, {Key? key}) : super(key: key);
 
   final PerfilViewModel vm;
+  final _picker = ImagePicker();
+  final _adjuntoApi = locator<AdjuntosApi>();
+  late File foto;
   final TextStyle styleContent =
       const TextStyle(color: Colors.white, fontSize: 16);
 
@@ -22,7 +34,7 @@ class CardProfileWidget extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(25, 50, 25, 0),
       child: Column(
         children: [
-          _noImage(context),
+          vm.tieneFoto ? Text(vm.fotoPerfil!.descripcion) : _noImage(context),
           const SizedBox(height: 20),
           Row(
             children: [
@@ -252,18 +264,70 @@ class CardProfileWidget extends StatelessWidget {
             right: 0,
             child: ClipOval(
               child: Container(
-                padding: const EdgeInsets.all(5),
                 height: 35,
                 width: 35,
                 color: AppColors.brown,
-                child: const Icon(
-                  Icons.add_a_photo_rounded,
-                  size: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.add_a_photo_rounded,
+                    size: 20,
+                  ),
+                  onPressed: () => cargarFoto(context),
                   color: Colors.white,
                 ),
               ),
             ))
       ],
     );
+  }
+
+  Future<void> editarFoto() async {
+    var croppedFile = await ImageCropper().cropImage(
+      sourcePath: foto.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Editar foto',
+          toolbarColor: AppColors.orange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+          showCropGrid: true,
+        ),
+        IOSUiSettings(
+          title: 'Editar foto',
+        ),
+      ],
+    );
+    foto = File(croppedFile!.path);
+    vm.loading = true;
+    var resp = await _adjuntoApi.updateFotoPerfil(
+        adjuntoInBytes: base64Encode(foto.readAsBytesSync()));
+    if (resp is Success) {
+      Dialogs.success(msg: "Foto ingresada correctamente");
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages.first);
+    }
+    vm.loading = false;
+    vm.notifyListeners();
+  }
+
+  void cargarFoto(BuildContext context) async {
+    var img = await _picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 720,
+    );
+    if (img != null) {
+      foto = File(img.path);
+      print(base64Encode(foto.readAsBytesSync()));
+      editarFoto();
+    }
   }
 }

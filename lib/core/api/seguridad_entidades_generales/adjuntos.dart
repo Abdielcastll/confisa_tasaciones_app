@@ -188,4 +188,38 @@ class AdjuntosApi {
       return TokenFail();
     }
   }
+
+  Future<Object> getFotoPerfil() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/get-foto-perfil',
+        method: "GET",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return AdjuntosFotoResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateFotoPerfil({required String adjuntoInBytes}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/add-foto-perfil',
+        method: "POST",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"adjuntoInBytes": adjuntoInBytes},
+      );
+    } else {
+      return TokenFail();
+    }
+  }
 }

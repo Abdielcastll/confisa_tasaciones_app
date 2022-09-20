@@ -1,9 +1,9 @@
-part of tarifario_tasacion_view;
+part of documentos_facturacion_view;
 
-class _TarifarioTasacionMobile extends StatelessWidget {
-  final TarifarioTasacionViewModel vm;
+class _DocumentosFacturacionMobile extends StatelessWidget {
+  final DocumentosFacturacionViewModel vm;
 
-  const _TarifarioTasacionMobile(this.vm);
+  const _DocumentosFacturacionMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Tarifario Servicios Tasación',
+            'Documentos Facturación',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
@@ -30,7 +30,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscartarifarioTasacion,
+                        onSubmitted: vm.buscarDocumentosFacturacion,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -39,14 +39,15 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Tarifario Tasación...',
+                          hintText: 'Buscar Documentos Facturación...',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
-                                  onPressed: () => vm.buscartarifarioTasacion(
-                                      vm.tcBuscar.text),
+                                  onPressed: () =>
+                                      vm.buscarDocumentosFacturacion(
+                                          vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(
@@ -60,26 +61,53 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                     ),
                   ),
                 ),
+                MaterialButton(
+                  onPressed: () => vm.crearDocumentoFacturacion(context),
+                  color: Colors.white,
+                  minWidth: 30,
+                  height: 48,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  elevation: 4,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      AppIcons.iconPlus,
+                      color: AppColors.green,
+                    ),
+                  ),
+                )
               ],
             ),
             Expanded(
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.tarifarioTasacion.isEmpty
+                child: vm.documentosFacturacion.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.tarifarioTasacion.length,
+                        itemCount: vm.documentosFacturacion.length + 1,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          var tarifarioTasacion = vm.tarifarioTasacion[i];
+                          if (i >= vm.documentosFacturacion.length) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: !vm.hasNextPage
+                                  ? const SizedBox()
+                                  : const Center(
+                                      child: CircularProgressIndicator()),
+                            );
+                          }
+                          var documentosFacturacion =
+                              vm.documentosFacturacion[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
-                              onPressed: () => vm.modificarTarifarioTasacion(
-                                  context, tarifarioTasacion),
+                              onPressed: () =>
+                                  vm.modificarDocumentosFacturacion(
+                                      context, documentosFacturacion),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
@@ -93,7 +121,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      tarifarioTasacion.valor,
+                                      documentosFacturacion.descripcion,
                                       style: const TextStyle(
                                         color: AppColors.brownDark,
                                         fontSize: 18,
@@ -101,13 +129,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Tipo de Tasación: ${tarifarioTasacion.descripcionTipoTasacion}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
-                                    Text(
-                                      "Suplidor: ${tarifarioTasacion.suplidor}",
+                                      "Estado Tasación: ${documentosFacturacion.descripcionEstadoTasacion}",
                                       style: const TextStyle(
                                           color: AppColors.brownDark,
                                           fontSize: 12),
