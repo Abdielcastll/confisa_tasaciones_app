@@ -3,9 +3,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <application
-        android:label="tasaciones_app"
+        android:label="Tasaciones App"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
