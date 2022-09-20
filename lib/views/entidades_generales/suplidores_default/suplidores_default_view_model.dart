@@ -50,7 +50,9 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
 
   void ordenar() {
     suplidoresDefault.sort((a, b) {
-      return a.valor.toLowerCase().compareTo(b.valor.toLowerCase());
+      return a.descripcionEntidad
+          .toLowerCase()
+          .compareTo(b.descripcionEntidad.toLowerCase());
     });
   }
 

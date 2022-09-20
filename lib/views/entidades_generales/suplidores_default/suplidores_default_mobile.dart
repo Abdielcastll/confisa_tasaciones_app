@@ -78,12 +78,16 @@ class _SuplidoresDefaultMobile extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: DropdownSearch<String>(
-                                              selectedItem: vm.suplidores
-                                                  .firstWhere((element) =>
-                                                      element.codigoRelacionado
-                                                          .toString() ==
-                                                      suplidor.valor)
-                                                  .nombre,
+                                              selectedItem: vm
+                                                      .suplidores.isEmpty
+                                                  ? ""
+                                                  : vm.suplidores
+                                                      .firstWhere((element) =>
+                                                          element
+                                                              .codigoRelacionado
+                                                              .toString() ==
+                                                          suplidor.valor)
+                                                      .nombre,
                                               validator: (value) => value ==
                                                       null
                                                   ? 'Debe escojer un suplidor'
