@@ -29,6 +29,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/vencimiento_estados/v
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/aprobadores_facturas/aprobadores_facturas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/documentos_facturacion/documentos_facturacion_view.dart';
+import 'package:tasaciones_app/views/seguridad_facturacion/porcentajes_honorarios_entidad/porcentajes_honorarios_entidad_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/tarifario_tasacion/tarifario_tasacion_view.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
@@ -210,6 +211,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case DocumentosFacturacionView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const DocumentosFacturacionView());
+
+    case PorcentajesHonorariosEntidadView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const PorcentajesHonorariosEntidadView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

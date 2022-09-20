@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
-import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_default.dart';
-import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_default_response.dart';
+import 'package:tasaciones_app/core/api/seguridad_facturacion/porcentajes_honorarios_entidad_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
+import 'package:tasaciones_app/core/models/seguridad_facturacion/porcentajes_honorarios_entidad_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 import '../../../theme/theme.dart';
 
-class SuplidoresDefaultViewModel extends BaseViewModel {
-  final _suplidoresDefaultApi = locator<SuplidoresDefaultApi>();
-  final _suplidoresApi = locator<SuplidoresApi>();
+class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
+  final _porcentajesHonorariosEntidadApi =
+      locator<PorcentajesHonorariosEntidadApi>();
   final listController = ScrollController();
   TextEditingController tcNewValor = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
-  List<SuplidoresDefaultData> suplidoresDefault = [];
-  List<SuplidorData> suplidores = [];
+  List<PorcentajesHonorariosEntidadData> porcentajesHonorariosEntidad = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
-  late SuplidoresDefaultResponse suplidoresDefaultResponse;
-  SuplidorData? suplidor;
+  late PorcentajesHonorariosEntidadResponse
+      porcentajesHonorariosEntidadResponse;
 
-  SuplidoresDefaultViewModel() {
+  PorcentajesHonorariosEntidadViewModel() {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
-          cargarMasSuplidoresDefault();
+          cargarMasPorcentajesHonorariosEntidad();
         }
       }
     });
@@ -49,7 +48,7 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
   }
 
   void ordenar() {
-    suplidoresDefault.sort((a, b) {
+    porcentajesHonorariosEntidad.sort((a, b) {
       return a.descripcionEntidad
           .toLowerCase()
           .compareTo(b.descripcionEntidad.toLowerCase());
@@ -58,37 +57,30 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
 
   Future<void> onInit() async {
     cargando = true;
-    var resp = await _suplidoresDefaultApi.getSuplidoresDefault(
-        pageNumber: pageNumber);
+    var resp = await _porcentajesHonorariosEntidadApi
+        .getPorcentajesHonorariosEntidad(pageNumber: pageNumber);
     if (resp is Success) {
-      suplidoresDefaultResponse = resp.response as SuplidoresDefaultResponse;
-      suplidoresDefault = suplidoresDefaultResponse.data;
+      porcentajesHonorariosEntidadResponse =
+          resp.response as PorcentajesHonorariosEntidadResponse;
+      porcentajesHonorariosEntidad = porcentajesHonorariosEntidadResponse.data;
       ordenar();
-      hasNextPage = suplidoresDefaultResponse.hasNextPage;
+      hasNextPage = porcentajesHonorariosEntidadResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
-    var respsupli = await _suplidoresApi.getSuplidores();
-    if (respsupli is Success) {
-      var data = respsupli.response as SuplidoresResponse;
-      suplidores = data.data;
-    }
-    if (respsupli is Failure) {
-      Dialogs.error(msg: respsupli.messages.first);
-    }
     cargando = false;
   }
 
-  Future<void> cargarMasSuplidoresDefault() async {
+  Future<void> cargarMasPorcentajesHonorariosEntidad() async {
     pageNumber += 1;
-    var resp = await _suplidoresDefaultApi.getSuplidoresDefault(
-        pageNumber: pageNumber);
+    var resp = await _porcentajesHonorariosEntidadApi
+        .getPorcentajesHonorariosEntidad(pageNumber: pageNumber);
     if (resp is Success) {
-      var temp = resp.response as SuplidoresDefaultResponse;
-      suplidoresDefaultResponse.data.addAll(temp.data);
-      suplidoresDefault.addAll(temp.data);
+      var temp = resp.response as PorcentajesHonorariosEntidadResponse;
+      porcentajesHonorariosEntidadResponse.data.addAll(temp.data);
+      porcentajesHonorariosEntidad.addAll(temp.data);
       ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
@@ -99,15 +91,16 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> buscarSuplidorDefault(String query) async {
+  Future<void> buscarPorcentajeHonorarioEntidad(String query) async {
     cargando = true;
-    var resp = await _suplidoresDefaultApi.getSuplidoresDefault(
+    var resp =
+        await _porcentajesHonorariosEntidadApi.getPorcentajesHonorariosEntidad(
       valor: query,
       pageSize: 0,
     );
     if (resp is Success) {
-      var temp = resp.response as SuplidoresDefaultResponse;
-      suplidoresDefault = temp.data;
+      var temp = resp.response as PorcentajesHonorariosEntidadResponse;
+      porcentajesHonorariosEntidad = temp.data;
       ordenar();
       hasNextPage = temp.hasNextPage;
       _busqueda = true;
@@ -121,8 +114,8 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
 
   void limpiarBusqueda() {
     _busqueda = false;
-    suplidoresDefault = suplidoresDefaultResponse.data;
-    if (suplidoresDefault.length >= 20) {
+    porcentajesHonorariosEntidad = porcentajesHonorariosEntidadResponse.data;
+    if (porcentajesHonorariosEntidad.length >= 20) {
       hasNextPage = true;
     }
     notifyListeners();
@@ -130,13 +123,14 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
   }
 
   Future<void> onRefresh() async {
-    suplidoresDefault = [];
+    porcentajesHonorariosEntidad = [];
     cargando = true;
-    var resp = await _suplidoresDefaultApi.getSuplidoresDefault();
+    var resp = await _porcentajesHonorariosEntidadApi
+        .getPorcentajesHonorariosEntidad();
     if (resp is Success) {
-      var temp = resp.response as SuplidoresDefaultResponse;
-      suplidoresDefaultResponse = temp;
-      suplidoresDefault = temp.data;
+      var temp = resp.response as PorcentajesHonorariosEntidadResponse;
+      porcentajesHonorariosEntidadResponse = temp;
+      porcentajesHonorariosEntidad = temp.data;
       ordenar();
       hasNextPage = temp.hasNextPage;
       notifyListeners();
@@ -144,29 +138,24 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
-    var respsupli = await _suplidoresApi.getSuplidores();
-    if (respsupli is Success) {
-      var data = respsupli.response as SuplidoresResponse;
-      suplidores = data.data;
-    }
-    if (respsupli is Failure) {
-      Dialogs.error(msg: respsupli.messages.first);
-    }
     cargando = false;
   }
 
-  Future<void> modificarSuplidorDefault(
-      BuildContext ctx, SuplidoresDefaultData suplidorDefault) async {
-    tcNewValor.text = suplidorDefault.valor;
+  Future<void> modificarPorcentajeHonorarioEntidad(
+      BuildContext ctx,
+      PorcentajesHonorariosEntidadData porcentajeHonorarioEntidad,
+      String valor) async {
+    tcNewValor.text = porcentajeHonorarioEntidad.valor;
 
-    if (suplidor!.codigoRelacionado.toString() != suplidorDefault.valor) {
+    if (valor != porcentajeHonorarioEntidad.valor) {
       ProgressDialog.show(ctx);
-      var resp = await _suplidoresDefaultApi.createOrUpdateSuplidoresDefault(
-          valor: suplidor!.codigoRelacionado.toString(),
-          codigoEntidad: suplidorDefault.codigoEntidad);
+      var resp = await _porcentajesHonorariosEntidadApi
+          .createOrUpdatePorcentajesHonorariosEntidad(
+              valor: valor,
+              codigoEntidad: porcentajeHonorarioEntidad.codigoEntidad);
       ProgressDialog.dissmiss(ctx);
       if (resp is Success) {
-        Dialogs.success(msg: 'Suplidor default Actualizado');
+        Dialogs.success(msg: 'Porcentaje Honorario Entidad Actualizado');
         await onRefresh();
       }
 
@@ -176,11 +165,11 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
       }
       tcNewValor.clear();
     } else {
-      Dialogs.success(msg: 'Suplidor default Actualizado');
+      Dialogs.success(msg: 'Porcentaje Honorario Entidad Actualizado');
     }
   }
 
-  Future<void> crearsuplidorDefault(BuildContext ctx) async {
+  Future<void> crearPorcentajeHonorarioEntidad(BuildContext ctx) async {
     tcNewValor.clear();
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
@@ -203,7 +192,7 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
                     alignment: Alignment.center,
                     color: AppColors.brownLight,
                     child: const Text(
-                      'Crear Suplidor Default',
+                      'Crear Porcentaje Honorario Entidad',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -256,13 +245,14 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             ProgressDialog.show(context);
-                            var resp = await _suplidoresDefaultApi
-                                .createOrUpdateSuplidoresDefault(
+                            var resp = await _porcentajesHonorariosEntidadApi
+                                .createOrUpdatePorcentajesHonorariosEntidad(
                                     codigoEntidad: "",
                                     valor: tcNewValor.text.trim());
                             ProgressDialog.dissmiss(context);
                             if (resp is Success) {
-                              Dialogs.success(msg: 'Suplidor default Creado');
+                              Dialogs.success(
+                                  msg: 'Porcentaje Honorario Entidad Creado');
                               Navigator.of(context).pop();
                               await onRefresh();
                             }
