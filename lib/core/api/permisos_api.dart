@@ -97,7 +97,7 @@ class PermisosAPI {
     if (_token != null) {
       return _http.request(
         '/api/permisos/delete/$id',
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Authorization': 'Bearer $_token',
         },

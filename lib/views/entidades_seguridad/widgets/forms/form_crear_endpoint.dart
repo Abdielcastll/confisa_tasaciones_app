@@ -144,7 +144,9 @@ class CrearEndpointForm extends StatelessWidget {
                             },
                             selectedItem: selectedItem,
                             items: _listaOpciones,
-                            onChanged: ((value) => selectedItem = value!),
+                            onChanged: (value) {
+                              selectedItem = value!;
+                            },
                             dropdownDecoratorProps:
                                 const DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
