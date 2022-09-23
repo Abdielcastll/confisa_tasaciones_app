@@ -175,8 +175,8 @@ class TrabajarViewModel extends BaseViewModel {
 
   Future<List<EdicionVehiculo>> getEdiciones(String text) async {
     var resp = await _solicitudesApi.getEdicionesVehiculos(
-        // modeloid: vinData?.codigoModelo ?? 0);
-        modeloid: 2016);
+        modeloid: vinData?.codigoModelo ?? 0);
+    // modeloid: 2016);
     if (resp is Success<List<EdicionVehiculo>>) {
       return resp.response;
     } else {

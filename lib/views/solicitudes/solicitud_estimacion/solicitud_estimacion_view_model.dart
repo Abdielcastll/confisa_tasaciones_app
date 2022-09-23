@@ -48,8 +48,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyFotos = GlobalKey<FormState>();
   TextEditingController tcNoSolicitud = TextEditingController();
-  TextEditingController tcVIN =
-      TextEditingController(text: "1GNFK13047R140555");
+  TextEditingController tcVIN = TextEditingController();
   TextEditingController tcFuerzaMotriz = TextEditingController();
   TextEditingController tcKilometraje = TextEditingController();
   TextEditingController tcPlaca = TextEditingController();

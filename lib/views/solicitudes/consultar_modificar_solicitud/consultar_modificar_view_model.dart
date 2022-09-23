@@ -444,11 +444,28 @@ class ConsultarModificarViewModel extends BaseViewModel {
       fotos[i] = fotos[i].copyWith(adjunto: base64Encode(fotoByte));
       if (fotos[i].id != null) {
         ProgressDialog.show(context);
-        await _adjuntosApi.updateFotoTasacion(
-            id: fotos[i].id!,
-            adjunto: fotos[i].adjunto!,
-            descripcion: fotos[i].descripcion!,
-            tipoAdjunto: fotos[i].tipoAdjunto!);
+        var r = await _adjuntosApi.deleteFotoTasacion(id: fotos[i].id!);
+        if (r is Success) {
+          var d = await _adjuntosApi
+              .addFotosTasacion(noTasacion: solicitud.noTasacion!, adjuntos: [
+            {
+              "adjuntoInBytes": fotos[i].adjunto,
+              "tipoAdjunto": fotos[i].tipoAdjunto,
+              "descripcion": fotos[i].descripcion,
+            }
+          ]);
+          if (d is Failure) {
+            Dialogs.error(msg: d.messages[0]);
+          }
+        } else if (r is Failure) {
+          Dialogs.error(msg: r.messages[0]);
+        }
+
+        // await _adjuntosApi.updateFotoTasacion(
+        //     id: fotos[i].id!,
+        //     adjunto: fotos[i].adjunto!,
+        //     descripcion: fotos[i].descripcion!,
+        //     tipoAdjunto: fotos[i].tipoAdjunto!);
         ProgressDialog.dissmiss(context);
       }
 
