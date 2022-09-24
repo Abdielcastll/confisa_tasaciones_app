@@ -199,7 +199,7 @@ class AdjuntosApi {
           'Authorization': 'Bearer $_token',
         },
         parser: (data) {
-          return AdjuntosFotoResponse.fromJson(data);
+          return AdjuntoFoto.fromJson(data["data"]);
         },
       );
     } else {
@@ -217,6 +217,9 @@ class AdjuntosApi {
           'Authorization': 'Bearer $_token',
         },
         data: {"adjuntoInBytes": adjuntoInBytes},
+        parser: (data) {
+          return AdjuntosPOSTResponse.fromJson(data);
+        },
       );
     } else {
       return TokenFail();

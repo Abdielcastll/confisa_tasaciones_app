@@ -18,6 +18,7 @@ import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.
 import 'package:tasaciones_app/core/utils/create_file_from_string.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
+import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import '../../../core/api/personal_api.dart';
 import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
 import '../../../core/base/base_view_model.dart';

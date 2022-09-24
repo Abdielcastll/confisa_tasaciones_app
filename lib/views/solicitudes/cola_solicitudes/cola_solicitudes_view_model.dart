@@ -67,6 +67,27 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> getAlarma() async {
+    Object respalarm;
+    Profile perfil = _usuarioApi.loadProfile;
+    Session data = _authenticationAPI.loadSession;
+    data.role.any((element) =>
+            element == "AprobadorTasaciones" || element == "Administrador")
+        ? respalarm = await _alarmasApi.getAlarmas()
+        : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
+    if (respalarm is Success) {
+      alarmasResponse = respalarm.response as AlarmasResponse;
+      alarmas = alarmasResponse!.data;
+    }
+    if (respalarm is Failure) {
+      Dialogs.error(msg: respalarm.messages[0]);
+    }
+    if (respalarm is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+  }
+
   Future<void> onInit() async {
     pageNumber = 1;
     Session data = _authenticationAPI.loadSession;
@@ -89,22 +110,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
-    Object respalarm;
-    data.role.any((element) =>
-            element == "AprobadorTasaciones" || element == "Administrador")
-        ? respalarm = await _alarmasApi.getAlarmas()
-        : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
-    if (respalarm is Success) {
-      alarmasResponse = respalarm.response as AlarmasResponse;
-      alarmas = alarmasResponse!.data;
-    }
-    if (respalarm is Failure) {
-      Dialogs.error(msg: respalarm.messages[0]);
-    }
-    if (respalarm is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'Sesión expirada');
-    }
+    getAlarma();
     loading = false;
   }
 

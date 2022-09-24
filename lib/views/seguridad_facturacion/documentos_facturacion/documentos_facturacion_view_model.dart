@@ -177,7 +177,6 @@ class DocumentosFacturacionViewModel extends BaseViewModel {
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
                                 controller: tcNewDescripcion,
-                                initialValue: documentosFacturacion.descripcion,
                                 decoration: const InputDecoration(
                                   label: Text("Descripción"),
                                   border: UnderlineInputBorder(),

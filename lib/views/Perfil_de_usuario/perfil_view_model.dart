@@ -3,6 +3,7 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/adjuntos.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
+import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -20,7 +21,7 @@ class PerfilViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   bool _loading = false;
   Profile? profile;
-  AdjuntosData? fotoPerfil;
+  AdjuntoFoto? fotoPerfil;
   int _currentPage = 0;
   bool _editName = false;
   bool _editEmail = false;
@@ -121,8 +122,8 @@ class PerfilViewModel extends BaseViewModel {
     var resp2 = await _adjuntoApi.getFotoPerfil();
     if (resp2 is Success) {
       _tieneFoto = true;
-      var d = resp2.response as AdjuntosResponse;
-      fotoPerfil = d.data.first;
+      var d = resp2.response as AdjuntoFoto;
+      fotoPerfil = d;
     }
     if (resp2 is Failure) {
       Dialogs.error(msg: resp2.messages[0]);
@@ -131,6 +132,7 @@ class PerfilViewModel extends BaseViewModel {
       Dialogs.error(msg: 'su sesión a expirado');
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
+    notifyListeners();
     loading = false;
   }
 

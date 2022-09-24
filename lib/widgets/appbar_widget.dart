@@ -25,8 +25,10 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       required this.alarmas,
       this.vmColaSolicitudes,
       required this.esColaSolicitud,
-      required this.idSolicitud})
+      required this.idSolicitud,
+      required this.getAlarmas})
       : super(key: key);
+  final Future<void> getAlarmas;
   final String titulo;
   final double textSize;
   final List<AlarmasData>? alarmas;
@@ -43,7 +45,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
     profilePermisoResponse =
         Provider.of<ProfilePermisosProvider>(context, listen: false)
             .profilePermisos;
-
     return AppBar(
       title: Text(
         titulo,
@@ -212,6 +213,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                       builder: (context) => AlarmasView(
                                             showCreate: false,
                                             idSolicitud: idSolicitud,
+                                            appbar: this,
                                           )),
                                 );
                               },
@@ -270,6 +272,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                         builder: (context) => AlarmasView(
                                               showCreate: true,
                                               idSolicitud: idSolicitud,
+                                              appbar: this,
                                             )),
                                   );
                                 },

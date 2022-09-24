@@ -128,12 +128,16 @@ class _DocumentosFacturacionMobile extends StatelessWidget {
                                         fontWeight: FontWeight.w800,
                                       ),
                                     ),
-                                    Text(
-                                      "Estado Tasación: ${documentosFacturacion.descripcionEstadoTasacion}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
+                                    documentosFacturacion
+                                            .descripcionEstadoTasacion
+                                            .isNotEmpty
+                                        ? Text(
+                                            "Estado Tasación: ${documentosFacturacion.descripcionEstadoTasacion}",
+                                            style: const TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          )
+                                        : const SizedBox.shrink(),
                                   ],
                                 ),
                               ),

@@ -9,12 +9,14 @@ import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_datetime_picker.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
+import 'package:tasaciones_app/widgets/appbar_widget.dart';
 
 import '../../../core/base/base_view_model.dart';
 import '../../../core/locator.dart';
 
 class AlarmasViewModel extends BaseViewModel {
   final int idSolicitud;
+  final Appbar appbar;
   final _alarmasApi = locator<AlarmasApi>();
   final _userClient = locator<UserClient>();
   final listController = ScrollController();
@@ -33,7 +35,7 @@ class AlarmasViewModel extends BaseViewModel {
   late ProfilePermisoResponse profilePermisoResponse;
   Profile? usuario;
 
-  AlarmasViewModel({required this.idSolicitud}) {
+  AlarmasViewModel({required this.idSolicitud, required this.appbar}) {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
@@ -737,7 +739,8 @@ class AlarmasViewModel extends BaseViewModel {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
+    await appbar.getAlarmas;
     listController.dispose();
     tcNewDescription.dispose();
     tcNewFechaCompromiso.dispose();

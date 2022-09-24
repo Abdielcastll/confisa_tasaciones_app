@@ -17,6 +17,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
             textSize: 18,
             titulo: 'Cola de solicitudes',
             alarmas: vm.alarmas,
+            getAlarmas: vm.getAlarma(),
             esColaSolicitud: true,
             idSolicitud: 0,
           ),

@@ -34,7 +34,9 @@ class CardProfileWidget extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(25, 50, 25, 0),
       child: Column(
         children: [
-          vm.tieneFoto ? Text(vm.fotoPerfil!.descripcion) : _noImage(context),
+          vm.tieneFoto
+              ? _haveImage(context, vm.fotoPerfil!.adjunto!)
+              : _noImage(context),
           const SizedBox(height: 20),
           Row(
             children: [
@@ -96,7 +98,7 @@ class CardProfileWidget extends StatelessWidget {
                                   vm.profile?.email ?? '',
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     // fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -244,6 +246,58 @@ class CardProfileWidget extends StatelessWidget {
     );
   }
 
+  Widget _haveImage(BuildContext context, String image) {
+    return Stack(
+      children: [
+        ClipOval(
+          child: Container(
+            height: MediaQuery.of(context).size.width * .25,
+            width: MediaQuery.of(context).size.width * .25,
+            color: Colors.white,
+            child: IconButton(
+                padding: EdgeInsets.zero,
+                color: Colors.red,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: Image.memory(
+                        base64Decode(image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+                icon: Image.memory(
+                  base64Decode(image),
+                  fit: BoxFit.fill,
+                  height: MediaQuery.of(context).size.width * .25,
+                  width: MediaQuery.of(context).size.width * .25,
+                )),
+          ),
+        ),
+        Positioned(
+            bottom: 0,
+            right: 0,
+            child: ClipOval(
+              child: Container(
+                height: 35,
+                width: 35,
+                color: AppColors.brown,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.add_a_photo_rounded,
+                    size: 20,
+                  ),
+                  onPressed: () => cargarFoto(context),
+                  color: Colors.white,
+                ),
+              ),
+            ))
+      ],
+    );
+  }
+
   Widget _noImage(BuildContext context) {
     return Stack(
       children: [
@@ -281,9 +335,10 @@ class CardProfileWidget extends StatelessWidget {
     );
   }
 
-  Future<void> editarFoto() async {
+  Future<void> editarFoto(BuildContext context) async {
     var croppedFile = await ImageCropper().cropImage(
       sourcePath: foto.path,
+      cropStyle: CropStyle.circle,
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
@@ -297,8 +352,9 @@ class CardProfileWidget extends StatelessWidget {
           toolbarColor: AppColors.orange,
           toolbarWidgetColor: Colors.white,
           initAspectRatio: CropAspectRatioPreset.original,
+
           lockAspectRatio: false,
-          showCropGrid: true,
+          // showCropGrid: true,
         ),
         IOSUiSettings(
           title: 'Editar foto',
@@ -311,6 +367,7 @@ class CardProfileWidget extends StatelessWidget {
         adjuntoInBytes: base64Encode(foto.readAsBytesSync()));
     if (resp is Success) {
       Dialogs.success(msg: "Foto ingresada correctamente");
+      vm.onInit(context);
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages.first);
@@ -326,8 +383,7 @@ class CardProfileWidget extends StatelessWidget {
     );
     if (img != null) {
       foto = File(img.path);
-      print(base64Encode(foto.readAsBytesSync()));
-      editarFoto();
+      editarFoto(context);
     }
   }
 }

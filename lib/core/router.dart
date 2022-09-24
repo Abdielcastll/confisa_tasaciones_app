@@ -153,12 +153,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case EscanerPage.routeName:
       return CupertinoPageRoute(builder: (context) => const EscanerPage());
 
-    case AlarmasView.routeName:
+    /* case AlarmasView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const AlarmasView(
                 showCreate: true,
                 idSolicitud: 0,
-              ));
+              )); */
 
     case NotasView.routeName:
       return CupertinoPageRoute(

@@ -221,8 +221,7 @@ class ModulosViewModel extends BaseViewModel {
                               selectedItem: tieneModuloPadre
                                   ? modulos
                                       .firstWhere((element) =>
-                                          element.moduloPadre ==
-                                          modulo.moduloPadre)
+                                          element.id == modulo.moduloPadre)
                                       .nombre
                                   : "",
                               dropdownDecoratorProps:
