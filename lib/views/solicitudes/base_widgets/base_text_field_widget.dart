@@ -8,6 +8,7 @@ class BaseTextField extends StatelessWidget {
     this.hint,
     this.initialValue,
     this.enabled = true,
+    this.maxLength = 20,
     this.onChanged,
     this.keyboardType,
     this.validator,
@@ -17,6 +18,7 @@ class BaseTextField extends StatelessWidget {
   final String? initialValue;
   final String label;
   final String? hint;
+  final int maxLength;
   final bool enabled;
   final void Function(String)? onChanged;
   final TextInputType? keyboardType;
@@ -31,6 +33,7 @@ class BaseTextField extends StatelessWidget {
       keyboardType: keyboardType,
       controller: controller,
       enabled: enabled,
+      maxLength: maxLength,
       decoration: InputDecoration(
         labelStyle: const TextStyle(color: AppColors.brownDark),
         labelText: label,

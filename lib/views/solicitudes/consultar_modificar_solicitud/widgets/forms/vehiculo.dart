@@ -32,15 +32,12 @@ class VehiculoForm extends StatelessWidget {
       },
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
-// <<<<<<< HEAD
-//       // onPressedNext: () => vm.solicitudCredito(context),
-//       onPressedNext: () => vm.goToFotos(context),
-// =======
       onPressedNext: () {
         vm.cargarAlarmas(vm.solicitud.id!);
-        vm.goToFotos(context);
+        vm.isTasador && vm.mostrarAccComp
+            ? vm.currentForm = 3
+            : vm.goToFotos(context);
       },
-// >>>>>>> 54fea58bf1ebd9fae1f7632f65f5438839711932
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
@@ -49,7 +46,7 @@ class VehiculoForm extends StatelessWidget {
             vm.solicitud.estadoTasacion != 34
                 ? BaseTextFieldNoEdit(
                     label: 'No. VIN',
-                    initialValue: vm.solicitud.chasis,
+                    initialValue: vm.solicitud.chasis ?? 'No disponible',
                   )
                 : Row(
                     children: [
@@ -95,25 +92,28 @@ class VehiculoForm extends StatelessWidget {
                 children: [
                   BaseTextFieldNoEdit(
                     label: 'Marca',
-                    initialValue: vm.solicitud.descripcionMarca ?? '',
+                    initialValue:
+                        vm.solicitud.descripcionMarca ?? 'No disponible',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Modelo',
-                    initialValue: vm.solicitud.descripcionModelo ?? '',
+                    initialValue:
+                        vm.solicitud.descripcionModelo ?? 'No disponible',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Año',
-                    initialValue: vm.solicitud.ano.toString(),
+                    initialValue:
+                        vm.solicitud.ano?.toString() ?? 'No disponible',
                   ),
                   if (vm.vinData?.serie != null)
                     BaseTextFieldNoEdit(
                       label: 'Serie',
-                      initialValue: vm.vinData?.serie ?? '',
+                      initialValue: vm.vinData?.serie ?? 'No disponible',
                     ),
                   if (vm.vinData?.trim != null)
                     BaseTextFieldNoEdit(
                       label: 'Trim',
-                      initialValue: vm.vinData?.trim ?? '',
+                      initialValue: vm.vinData?.trim ?? 'No disponible',
                     ),
                   // if (vm.vinData != null)
                   Column(
@@ -196,7 +196,9 @@ class VehiculoForm extends StatelessWidget {
 
                       BaseTextFieldNoEdit(
                         label: 'Tipo',
-                        initialValue: vm.solicitud.descripcionTipoVehiculoLocal,
+                        initialValue:
+                            vm.solicitud.descripcionTipoVehiculoLocal ??
+                                'No disponible',
                       ),
                       // const SizedBox(height: 10),
 
@@ -381,7 +383,8 @@ class VehiculoForm extends StatelessWidget {
                       //  ESTADO
                       BaseTextFieldNoEdit(
                         label: 'Estado del vehículo',
-                        initialValue: vm.solicitud.descripcionNuevoUsado,
+                        initialValue: vm.solicitud.descripcionNuevoUsado ??
+                            'No disponible',
                       ),
 
                       //  KILOMETRAJE

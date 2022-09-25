@@ -33,6 +33,7 @@ class AdjuntoFoto {
     this.id,
     this.adjunto,
     this.descripcion,
+    this.tipo,
     this.tipoAdjunto,
     this.nueva = true,
   });
@@ -40,6 +41,7 @@ class AdjuntoFoto {
   int? id;
   String? adjunto;
   String? descripcion;
+  String? tipo;
   int? tipoAdjunto;
   bool nueva;
 
@@ -47,6 +49,7 @@ class AdjuntoFoto {
     int? id,
     String? adjunto,
     String? descripcion,
+    String? tipo,
     int? tipoAdjunto,
     bool? nueva,
   }) =>
@@ -54,6 +57,7 @@ class AdjuntoFoto {
         id: id ?? this.id,
         adjunto: adjunto ?? this.adjunto,
         descripcion: descripcion ?? this.descripcion,
+        tipo: tipo ?? this.tipo,
         tipoAdjunto: tipoAdjunto ?? this.tipoAdjunto,
         nueva: nueva ?? this.nueva,
       );

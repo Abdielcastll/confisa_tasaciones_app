@@ -6,6 +6,7 @@ import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/core/providers/componentes_vehiculo_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
@@ -13,6 +14,8 @@ import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/c
 import '../../../core/api/api_status.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
+import '../../../core/providers/accesorios_provider.dart';
+import '../../../core/providers/condiciones_provider.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../widgets/app_dialogs.dart';
 import '../trabajar_solicitud/trabajar_view.dart';
@@ -112,6 +115,11 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     }
     getAlarma();
     loading = false;
+    final componentesProv = ComponentesVehiculosProvider.instance;
+    final accesoriosProv = AccesoriosProvider.instance;
+    await componentesProv.getComponentes();
+    await componentesProv.getComponentesSeg();
+    await accesoriosProv.getAccesorios();
   }
 
   Future<void> cargarMas() async {
@@ -206,6 +214,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         )
             .then((v) {
           if (v != null) {
+            print('ONINIT');
             onInit();
           }
         });

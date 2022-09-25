@@ -55,41 +55,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         if (roles.contains('OficialNegocios'))
-          /*IconButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              '¿Qué tipo de solicitud\ndesea realizar?',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            MaterialButton(
-                              minWidth: double.infinity,
-                              height: 50,
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pushNamed(
-                                    context, SolicitudEstimacionView.routeName);
-                              },
-                              child: const Text(
-                                'Estimación',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-=======*/
           if (roles.contains('OficialNegocios'))
             esColaSolicitud
                 ? IconButton(

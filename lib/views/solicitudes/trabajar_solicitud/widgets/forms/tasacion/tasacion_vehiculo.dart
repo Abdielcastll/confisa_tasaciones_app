@@ -409,8 +409,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                             dropdownBuilder: (context, tipo) {
                               return Text(
                                   tipo == null
-                                      ? vm.solicitud.descripcionColor ??
-                                          'Seleccione'
+                                      ? 'Seleccione'
                                       : tipo.descripcion,
                                   style: const TextStyle(fontSize: 15));
                             },

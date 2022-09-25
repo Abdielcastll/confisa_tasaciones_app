@@ -1,6 +1,9 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/core/models/solicitudes/solicitudes_disponibles_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
+import '../../../../../core/models/ediciones_vehiculo_response.dart';
 import '../../../base_widgets/base_form_widget.dart';
 import '../../../base_widgets/base_text_field_widget.dart';
 import '../../solicitud_estimacion_view_model.dart';
@@ -48,12 +51,43 @@ class GeneralesForm extends StatelessWidget {
                       Form(
                         key: vm.formKey,
                         child: Expanded(
-                          child: BaseTextField(
-                            label: 'No. de solicitud de crédito',
-                            hint: 'Ingrese el número de solicitud',
-                            keyboardType: TextInputType.number,
-                            validator: vm.noSolicitudValidator,
-                            controller: vm.tcNoSolicitud,
+                          child: DropdownSearch<SolicitudesDisponibles>(
+                            asyncItems: (text) => vm.getSolicitudes(),
+                            dropdownBuilder: (context, tipo) {
+                              return Text(
+                                tipo == null
+                                    ? 'Seleccione'
+                                    : tipo.noSolicitud.toString(),
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              );
+                            },
+                            onChanged: (v) => vm.solicitudDisponible = v!,
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                                    dropdownSearchDecoration: InputDecoration(
+                                        label: Text('No. Solicitud de crédito'),
+                                        border: UnderlineInputBorder())),
+                            popupProps: PopupProps.menu(
+                              itemBuilder: (context, value, isSelected) {
+                                return ListTile(
+                                  title: Text(value.noSolicitud.toString()),
+                                  subtitle: Text(value.nombreCliente ?? ''),
+                                  selected: isSelected,
+                                );
+                              },
+                              emptyBuilder: (_, __) => const Center(
+                                child: Text('No hay resultados'),
+                              ),
+                            ),
+                            validator: (v) {
+                              if (v == null) {
+                                return 'Seleccione una solicitud';
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
                         ),
                       ),

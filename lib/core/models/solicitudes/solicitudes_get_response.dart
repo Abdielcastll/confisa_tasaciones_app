@@ -169,11 +169,12 @@ class SolicitudesData {
     this.color,
     this.descripcionColor,
     this.tasador,
-    this.descripcionTasador,
+    this.nombreTasador,
     this.idPromotor,
     this.condicionComponenteTasacion,
     this.accesoriosTasacion,
     this.nota,
+    this.descripcionEntidad,
   });
 
   int? id;
@@ -183,6 +184,7 @@ class SolicitudesData {
   String? descripcionSuplidorTasacion;
   int? idOficial;
   int? estadoTasacion;
+  String? descripcionEntidad;
   String? descripcionEstadoTasacion;
   int? tipoTasacion;
   String? descripcionTipoTasacion;
@@ -290,7 +292,7 @@ class SolicitudesData {
   int? color;
   String? descripcionColor;
   String? tasador;
-  String? descripcionTasador;
+  String? nombreTasador;
   int? idPromotor;
   List<CondicionComponenteTasacion>? condicionComponenteTasacion;
   List<AccesoriosTasacion>? accesoriosTasacion;
@@ -433,9 +435,10 @@ class SolicitudesData {
         trenDelantero: json["trenDelantero"] ?? null,
         descripcionTrenDelantero: json["descripcionTrenDelantero"] ?? null,
         color: json["color"] ?? null,
+        descripcionEntidad: json["descripcionEntidad"] ?? null,
         descripcionColor: json["descripcionColor"] ?? null,
         tasador: json["tasador"] ?? null,
-        descripcionTasador: json["descripcionTasador"] ?? null,
+        nombreTasador: json["nombreTasador"] ?? null,
         idPromotor: json["idPromotor"] ?? null,
         condicionComponenteTasacion: json["condicionComponenteTasacion"] == null
             ? null
@@ -454,6 +457,7 @@ class SolicitudesData {
         "noTasacion": noTasacion ?? null,
         "noSolicitudCredito": noSolicitudCredito ?? null,
         "suplidorTasacion": suplidorTasacion ?? null,
+        "descripcionEntidad": descripcionEntidad ?? null,
         "descripcionSuplidorTasacion": descripcionSuplidorTasacion ?? null,
         "idOficial": idOficial ?? null,
         "estadoTasacion": estadoTasacion ?? null,
@@ -574,7 +578,7 @@ class SolicitudesData {
         "color": color ?? null,
         "descripcionColor": descripcionColor ?? null,
         "tasador": tasador ?? null,
-        "descripcionTasador": descripcionTasador ?? null,
+        "nombreTasador": nombreTasador ?? null,
         "idPromotor": idPromotor ?? null,
         "condicionComponenteTasacion": condicionComponenteTasacion == null
             ? null

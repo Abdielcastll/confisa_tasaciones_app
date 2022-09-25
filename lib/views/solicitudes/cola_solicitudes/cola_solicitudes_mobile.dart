@@ -19,6 +19,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
             alarmas: vm.alarmas,
             getAlarmas: vm.getAlarma(),
             esColaSolicitud: true,
+            vmColaSolicitudes: vm,
             idSolicitud: 0,
           ),
           body: _home(context),

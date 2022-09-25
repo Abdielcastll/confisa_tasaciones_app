@@ -29,26 +29,27 @@ class GeneralesTasacionForm extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            BaseTextField(
+            BaseTextFieldNoEdit(
               label: 'Tipo de tasación',
               initialValue: vm.solicitud.descripcionTipoTasacion ?? '',
-              enabled: false,
             ),
-            BaseTextField(
-              label: 'Fecha de solicitud',
+            BaseTextFieldNoEdit(
+              label: 'Fecha de Solicitud',
               initialValue: DateFormat.yMMMMd('es')
                   .format(vm.solicitud.fechaCreada!)
                   .toUpperCase(),
-              enabled: false,
             ),
             BaseTextFieldNoEdit(
-              label: 'No. de solicitud de crédito',
+              label: 'No. de Solicitud de crédito',
               initialValue: vm.solicitud.noSolicitudCredito.toString(),
             ),
             BaseTextFieldNoEdit(
-              label: 'Entidad solicitante',
-              initialValue: vm.solicitud.codigoEntidad ?? '',
+              label: 'No. de Tasación',
+              initialValue: vm.solicitud.noTasacion.toString(),
             ),
+            BaseTextFieldNoEdit(
+                label: 'Entidad Solicitante',
+                initialValue: vm.solicitud.descripcionEntidad ?? ''),
             BaseTextFieldNoEdit(
               label: 'Cédula del cliente',
               initialValue: vm.solicitud.identificacion ?? '',

@@ -7,6 +7,7 @@ import 'package:tasaciones_app/core/models/componente_condicion.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/ediciones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/referencia_valoracion_response.dart';
+import 'package:tasaciones_app/core/models/solicitudes/solicitudes_disponibles_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
@@ -38,6 +39,24 @@ class SolicitudesApi {
         },
         parser: (data) {
           return SolicitudCreditoResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getSolicitudesDisponibles() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/solicitudcredito/get-list',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return solicitudesDisponiblesFromJson(jsonEncode(data['data']));
         },
       );
     } else {
@@ -199,7 +218,7 @@ class SolicitudesApi {
     }
   }
 
-  Future<Object> getDescripcionFotosVehiculos() async {
+  Future<Object> getTipoFotosVehiculos() async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
