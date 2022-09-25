@@ -9,6 +9,7 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import '../../../core/api/personal_api.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/models/solicitudes/solicitud_credito_response.dart';
+import '../../../core/models/solicitudes/solicitudes_disponibles_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../auth/login/login_view.dart';
 
@@ -47,12 +48,28 @@ class SolicitudTasacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  late SolicitudesDisponibles _solicitudDisponible;
+  SolicitudesDisponibles get solicitudDisponible => _solicitudDisponible;
+  set solicitudDisponible(SolicitudesDisponibles v) {
+    _solicitudDisponible = v;
+    notifyListeners();
+  }
+
+  Future<List<SolicitudesDisponibles>> getSolicitudes() async {
+    var resp = await _solicitudesApi.getSolicitudesDisponibles();
+    if (resp is Success<List<SolicitudesDisponibles>>) {
+      return resp.response;
+    } else {
+      return [];
+    }
+  }
+
   Future<void> solicitudCredito(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       ProgressDialog.show(context);
 
       var resp = await _solicitudesApi.getSolicitudCredito(
-          idSolicitud: int.parse(_numeroSolicitud!));
+          idSolicitud: _solicitudDisponible.noSolicitud!);
       if (resp is Success) {
         var data = resp.response as SolicitudCreditoResponse;
         solicitud = data.data;

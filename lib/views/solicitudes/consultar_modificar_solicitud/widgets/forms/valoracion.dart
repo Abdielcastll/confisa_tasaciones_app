@@ -25,7 +25,9 @@ class ValoracionForm extends StatelessWidget {
           : 'Resumen de Tasación',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
-      onPressedBack: () => vm.currentForm = 3,
+      onPressedBack: () => vm.isTasador && vm.mostrarAccComp
+          ? vm.currentForm = 5
+          : vm.currentForm = 3,
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Salir',
       // isValoracion: true,
@@ -42,15 +44,16 @@ class ValoracionForm extends StatelessWidget {
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Valor Tasación',
-                    initialValue: vm.solicitud.valorFacturacion?.toString(),
+                    initialValue:
+                        vm.solicitud.valorFacturacion?.toString() ?? '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Estado',
-                    initialValue: vm.solicitud.descripcionEstadoTasacion,
+                    initialValue: vm.solicitud.descripcionEstadoTasacion ?? '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Tasador',
-                    initialValue: vm.solicitud.descripcionTasador,
+                    initialValue: vm.solicitud.nombreTasador ?? '',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Fecha de estimación',
@@ -68,9 +71,11 @@ class ValoracionForm extends StatelessWidget {
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Fecha de Anulación o Vencimiento',
-                    initialValue: DateFormat.yMMMMd('es')
-                        .format(vm.solicitud.fechaCreada!)
-                        .toUpperCase(),
+                    initialValue: vm.solicitud.fechaVencimiento != null
+                        ? DateFormat.yMMMMd('es')
+                            .format(vm.solicitud.fechaVencimiento!)
+                            .toUpperCase()
+                        : 'No disponible',
                   ),
                 ],
               ),

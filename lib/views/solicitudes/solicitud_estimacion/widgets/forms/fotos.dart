@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
@@ -5,6 +7,7 @@ import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import '../../../../../theme/theme.dart';
 import '../../../../../widgets/app_dialogs.dart';
 import '../../../base_widgets/base_form_widget.dart';
+import '../../../base_widgets/base_text_field_widget.dart';
 import '../../solicitud_estimacion_view_model.dart';
 
 class FotosForm extends StatelessWidget {
@@ -45,71 +48,98 @@ class FotosForm extends StatelessWidget {
                         child: Container(
                           clipBehavior: Clip.antiAlias,
                           margin: const EdgeInsets.all(10),
-                          height: 100,
-                          width: 100,
+                          height: 120,
+                          width: 120,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(color: AppColors.brown)),
-                          child: foto.file!.path != ''
-                              ? Image.file(
-                                  foto.file!,
-                                  fit: BoxFit.cover,
-                                )
-                              : Icon(
+                          child: vm.fotos[i].adjunto == null
+                              ? Icon(
                                   Icons.add_a_photo_rounded,
                                   size: 50,
                                   color: Colors.grey[300],
+                                )
+                              : Image.memory(
+                                  base64Decode(vm.fotos[i].adjunto!),
+                                  fit: BoxFit.cover,
                                 ),
                         ),
                       ),
-                      if (foto.file?.path != '')
+                      if (vm.fotos[i].adjunto != null)
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
-                            child: DropdownSearch<DescripcionFotoVehiculos>(
-                              asyncItems: (_) => vm.getDescripcionFotos(_),
-                              dropdownBuilder: (context, tipo) {
-                                return Text(
-                                  tipo?.descripcion ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 15,
+                            child: Column(
+                              children: [
+                                DropdownSearch<TipoFotoVehiculos>(
+                                  asyncItems: (_) => vm.getDescripcionFotos(_),
+                                  dropdownBuilder: (context, tipo) {
+                                    return Text(
+                                      tipo?.descripcion ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    );
+                                  },
+                                  onChanged: (v) {
+                                    vm.fotos[i] = vm.fotos[i].copyWith(
+                                      tipo: v!.descripcion,
+                                      tipoAdjunto: v.id,
+                                    );
+                                  },
+                                  dropdownDecoratorProps:
+                                      const DropDownDecoratorProps(
+                                          dropdownSearchDecoration:
+                                              InputDecoration(
+                                                  label: Text('Tipo:'),
+                                                  labelStyle:
+                                                      TextStyle(fontSize: 16),
+                                                  border:
+                                                      UnderlineInputBorder())),
+                                  popupProps: PopupProps.menu(
+                                    itemBuilder: (context, opt, isSelected) {
+                                      return ListTile(
+                                        title: Text(opt.descripcion ?? ''),
+                                        selected: isSelected,
+                                      );
+                                    },
+                                    emptyBuilder: (_, __) => const Center(
+                                      child: Text('No hay resultados'),
+                                    ),
                                   ),
-                                );
-                              },
-                              onChanged: (v) => foto.descripcion = v,
-                              dropdownDecoratorProps:
-                                  const DropDownDecoratorProps(
-                                      dropdownSearchDecoration: InputDecoration(
-                                          label: Text('Tipo:'),
-                                          labelStyle: TextStyle(fontSize: 16),
-                                          border: UnderlineInputBorder())),
-                              popupProps: PopupProps.menu(
-                                itemBuilder: (context, opt, isSelected) {
-                                  return ListTile(
-                                    title: Text(opt.descripcion ?? ''),
-                                    selected: isSelected,
-                                  );
-                                },
-                                emptyBuilder: (_, __) => const Center(
-                                  child: Text('No hay resultados'),
+                                  validator: (v) {
+                                    if (v == null) {
+                                      return 'Seleccione';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                 ),
-                              ),
-                              validator: (v) {
-                                if (v == null) {
-                                  return 'Seleccione';
-                                } else {
-                                  return null;
-                                }
-                              },
+                                BaseTextField(
+                                  label: 'Descripción:',
+                                  onChanged: (v) {
+                                    vm.fotos[i] =
+                                        vm.fotos[i].copyWith(descripcion: v);
+                                  },
+                                  validator: (v) {
+                                    if (v?.trim() == '' &&
+                                        vm.fotos[i].descripcion == null) {
+                                      return 'Seleccione';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      foto.file!.path != ''
+                      foto.adjunto != null
                           ? SizedBox(
-                              height: 100,
+                              height: 130,
                               child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   IconButton(
                                       onPressed: () {
@@ -124,7 +154,7 @@ class FotosForm extends StatelessWidget {
                                         color: Colors.grey,
                                         size: 30,
                                       )),
-                                  const Spacer(),
+                                  // const Spacer(),
                                   IconButton(
                                       onPressed: () {
                                         vm.editarFoto(i);
@@ -140,7 +170,7 @@ class FotosForm extends StatelessWidget {
                           : const SizedBox(width: 45)
                     ],
                   ),
-                  const Divider(),
+                  const Divider(thickness: 2),
                 ],
               );
             }),

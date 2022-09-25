@@ -11,6 +11,7 @@ import 'package:tasaciones_app/core/models/accesorios_suplidor_response.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import 'package:tasaciones_app/core/models/referencia_valoracion_response.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -29,11 +30,13 @@ import '../../../core/models/tracciones_response.dart';
 import '../../../core/models/transmisiones_response.dart';
 import '../../../core/models/versiones_vehiculo_response.dart';
 import '../../../core/models/vin_decoder_response.dart';
+import '../../../core/providers/accesorios_provider.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../core/utils/create_file_from_string.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/escaner.dart';
 import '../../auth/login/login_view.dart';
+import '../consultar_modificar_solicitud/consultar_modificar_view_model.dart';
 import '../solicitud_estimacion/solicitud_estimacion_view_model.dart';
 
 class TrabajarViewModel extends BaseViewModel {
@@ -69,7 +72,7 @@ class TrabajarViewModel extends BaseViewModel {
   late int _fotosPermitidas;
   late List<AdjuntoFoto> fotos;
   final _picker = ImagePicker();
-  List<DescripcionFotoVehiculos> descripcionFotos = [];
+  List<TipoFotoVehiculos> descripcionFotos = [];
   SolicitudCreditoData? solicitudData;
   List<ComponenteTasacion> componentes = [];
   List<AccesoriosSuplidor> accesorios = [];
@@ -184,29 +187,6 @@ class TrabajarViewModel extends BaseViewModel {
     }
   }
 
-  // Future<void> solicitudCredito(BuildContext context) async {
-  //   ProgressDialog.show(context);
-  //   var resp = await _solicitudesApi.getSolicitudCredito(
-  //     idSolicitud: solicitud.noSolicitudCredito!,
-  //   );
-  //   if (resp is Success<SolicitudCreditoResponse>) {
-  //     solicitudData = resp.response.data;
-  //     tcVIN.text = solicitudData?.chasis ?? '';
-  //     notifyListeners();
-  //     // currentForm = 2;
-  //     ProgressDialog.dissmiss(context);
-  //   }
-  //   if (resp is Failure) {
-  //     Dialogs.error(msg: resp.messages[0]);
-  //     ProgressDialog.dissmiss(context);
-  //   }
-  //   if (resp is TokenFail) {
-  //     Dialogs.error(msg: 'su sesión a expirado');
-  //     ProgressDialog.dissmiss(context);
-  //     _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-  //   }
-  // }
-
   Future<void> consultarVIN(BuildContext context) async {
     if (formKey2.currentState!.validate()) {
       ProgressDialog.show(context);
@@ -254,6 +234,7 @@ class TrabajarViewModel extends BaseViewModel {
   }
 
   List<SegmentoCondiciones> segmentoComponente = [];
+  List<SegmentoCond> segmentoAccesorio = [];
 
   Future goToCondiciones(BuildContext context) async {
     if (formKey3.currentState!.validate()) {
@@ -372,14 +353,46 @@ class TrabajarViewModel extends BaseViewModel {
     if (resp is Success<List<AccesoriosSuplidor>>) {
       accesorios = resp.response;
 
+      List<ComponentePorSegmento> accPorSeg = [];
+      final accesoriosProv = AccesoriosProvider.instance;
+
+      for (var e in accesorios) {
+        var compTemp = ComponentePorSegmento(
+          id: e.idAccesorio,
+          componente: accesoriosProv.accesorios
+              .firstWhere((d) => d.id == e.idAccesorio)
+              .descripcion,
+          condicion: '',
+          segmento: accesoriosProv.accesorios
+              .firstWhere((d) => d.id == e.idAccesorio)
+              .segmentoDescripcion,
+        );
+        accPorSeg.add(compTemp);
+      }
+
+      for (var acc in accPorSeg) {
+        if (!segmentoAccesorio.any((e) => e.nombreSegmento == acc.segmento)) {
+          segmentoAccesorio.add(SegmentoCond(acc.segmento!, []));
+        }
+        for (var c in accPorSeg) {
+          for (var s in segmentoAccesorio) {
+            if (c.segmento == s.nombreSegmento) {
+              if (!s.componentes.any((e) => e.componente == c.componente)) {
+                s.componentes.add(c);
+              }
+            }
+          }
+        }
+      }
+
 //  for (var accesorio in accesorios) {
-//               if (!segmentoComponente.any(
-//                   (e) => e.nombreSegmento == componente.descripcionSegmento)) {
-//                 segmentoComponente.add(
+//               if (!segmentoAccesorio.any(
+//                   (e) => e.nombreSegmento == accesorio.)) {
+//                 segmentoAccesorio.add(
 //                     SegmentoCondiciones(componente.descripcionSegmento!, []));
 //               }
 //               for (var c in componentes) {
-//                 for (var s in segmentoComponente) {
+//                 for (var s in segmentoAccesorio) {
 //                   if (c.descripcionSegmento == s.nombreSegmento) {
 //                     if (!s.componentes.any((e) =>
 //                         e.componenteDescripcion == c.componenteDescripcion)) {
@@ -446,17 +459,25 @@ class TrabajarViewModel extends BaseViewModel {
         await _adjuntosApi.getFotosTasacion(noTasacion: solicitud.noTasacion!);
 
     if (resp is Success<AdjuntosFotoResponse>) {
-      var f = resp.response.data;
-      for (var i = 0; i < f.length; i++) {
-        fotos[i] = fotos[i].copyWith(
-          adjunto: f[i].adjunto,
-          descripcion: f[i].descripcion,
-          tipoAdjunto: f[i].tipoAdjunto,
-          id: f[i].id,
-          nueva: false,
-        );
+      var d = await _adjuntosApi.getAdjuntos(esFotoVehiculo: 1);
+      if (d is Success<AdjuntosResponse>) {
+        List<AdjuntosData> adjuntos = d.response.data;
+
+        var f = resp.response.data;
+        for (var i = 0; i < f.length; i++) {
+          fotos[i] = fotos[i].copyWith(
+            adjunto: f[i].adjunto,
+            descripcion: f[i].descripcion,
+            tipoAdjunto: f[i].tipoAdjunto,
+            tipo: adjuntos
+                .firstWhere((e) => e.id == f[i].tipoAdjunto)
+                .descripcion,
+            id: f[i].id,
+            nueva: false,
+          );
+        }
+        notifyListeners();
       }
-      notifyListeners();
     }
     if (resp is Failure) {
       print('NO HAY FOTOS GUARDADAS');
@@ -566,10 +587,9 @@ class TrabajarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<List<DescripcionFotoVehiculos>> getDescripcionFotos(
-      String text) async {
-    var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
-    if (resp is Success<List<DescripcionFotoVehiculos>>) {
+  Future<List<TipoFotoVehiculos>> getDescripcionFotos(String text) async {
+    var resp = await _solicitudesApi.getTipoFotosVehiculos();
+    if (resp is Success<List<TipoFotoVehiculos>>) {
       return resp.response;
     } else {
       return [];
@@ -701,10 +721,7 @@ class TrabajarViewModel extends BaseViewModel {
       tasacionPromedio = 0.0;
       // notifyListeners();
     }
-    // valorUltimaEstimacion
-    // var resp =
-    //     await _solicitudesApi.getTasacionCreditoLast(chasis: solicitud.chasis!);
-    // valorCarrosRD
+
     var referenceResp = await _solicitudesApi.getReference(
         chasis: solicitud.chasis ?? tcVIN.text,
         noTasacion: solicitud.noTasacion!);
@@ -720,25 +737,7 @@ class TrabajarViewModel extends BaseViewModel {
   Future<void> guardarValoracion(BuildContext context) async {
     if (formKeyValor.currentState!.validate()) {
       ProgressDialog.show(context);
-      // if (roles.contains("AprobadorTasaciones")) {
-      //   var aprobarResp = await _solicitudesApi.aprobarSolicitud(
-      //       noSolicitud: solicitud.noSolicitudCredito!,
-      //       noTasacion: solicitud.noTasacion!);
-      //   if (aprobarResp is Success) {
-      //     Dialogs.success(msg: 'Solicitud Aprobada');
-      //     ProgressDialog.dissmiss(context);
-      //     Navigator.of(context).pop();
-      //   }
-      //   if (aprobarResp is Failure) {
-      //     Dialogs.error(msg: aprobarResp.messages[0]);
-      //     ProgressDialog.dissmiss(context);
-      //   }
-      //   if (aprobarResp is TokenFail) {
-      //     Dialogs.error(msg: 'su sesión a expirado');
-      //     ProgressDialog.dissmiss(context);
-      //     _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      //   }
-      // } else {
+
       var resp = await _solicitudesApi.updateValoracion(
           noTasacion: solicitud.noTasacion!,
           valorizacion: int.tryParse(tcValor.text.trim())!,
@@ -749,7 +748,7 @@ class TrabajarViewModel extends BaseViewModel {
       if (resp is Success) {
         Dialogs.success(msg: 'Valor Actualizado');
         ProgressDialog.dissmiss(context);
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       }
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages[0]);

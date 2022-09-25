@@ -36,7 +36,7 @@ class AdjuntosApi {
           "Descripcion": descripcion,
           "Prefijo": prefijo,
           "EsFotoVehiculo": esFotoVehiculo,
-          "Ordon": orden,
+          "Orden": orden,
           "PageSize": pageSize,
           "PageNumber": pageNumber,
         },

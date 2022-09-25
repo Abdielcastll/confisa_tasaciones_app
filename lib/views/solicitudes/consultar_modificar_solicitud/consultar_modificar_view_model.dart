@@ -23,18 +23,25 @@ import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/models/cantidad_fotos_response.dart';
 import '../../../core/models/colores_vehiculos_response.dart';
+import '../../../core/models/componente_tasacion_response.dart';
 import '../../../core/models/descripcion_foto_vehiculo.dart';
 import '../../../core/models/ediciones_vehiculo_response.dart';
 import '../../../core/models/referencia_valoracion_response.dart';
+import '../../../core/models/seguridad_entidades_generales/adjuntos_response.dart';
+import '../../../core/models/seguridad_entidades_solicitudes/condiciones_componentes_vehiculo_response.dart';
 import '../../../core/models/tipo_vehiculo_response.dart';
 import '../../../core/models/tracciones_response.dart';
 import '../../../core/models/transmisiones_response.dart';
 import '../../../core/models/versiones_vehiculo_response.dart';
 import '../../../core/models/vin_decoder_response.dart';
+import '../../../core/providers/accesorios_provider.dart';
+import '../../../core/providers/componentes_vehiculo_provider.dart';
+import '../../../core/providers/condiciones_provider.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/escaner.dart';
 import '../../auth/login/login_view.dart';
+import '../trabajar_solicitud/trabajar_view_model.dart';
 
 class ConsultarModificarViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
@@ -76,6 +83,12 @@ class ConsultarModificarViewModel extends BaseViewModel {
   List<AdjuntoFoto> fotos = [];
   List<ReferenciaValoracion> referencias = [];
   bool isAprobador = false;
+  bool isTasador = false;
+  bool mostrarAccComp = false;
+  List<ComponentePorSegmento> componentes = [];
+  List<ComponentePorSegmento> accesorios = [];
+  List<SegmentoCond> segmentoComponente = [];
+  List<SegmentoCond> segmentoAccesorio = [];
 
   // List<AdjuntoFoto> fotosAdjuntos = [];
   List<AlarmasData> alarmas = [];
@@ -116,16 +129,19 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  List<ComponenteTasacion> listaComponentes = [];
+
   void onInit(BuildContext context, SolicitudesData? data) async {
     solicitud = data!;
-    tcVIN.text = solicitud.chasis ?? '';
-    tcKilometraje.text = solicitud.kilometraje.toString();
-    tcPlaca.text = solicitud.placa ?? '';
-    tcFuerzaMotriz.text = solicitud.fuerzaMotriz.toString();
+    tcVIN.text = solicitud.chasis ?? 'No disponible';
+    tcKilometraje.text = solicitud.kilometraje?.toString() ?? 'No disponible';
+    tcPlaca.text = solicitud.placa ?? 'No disponible';
+    tcFuerzaMotriz.text = solicitud.fuerzaMotriz?.toString() ?? 'No disponible';
     Session session = _authenticationAPI.loadSession;
     isAprobador = session.role.contains("AprobadorTasaciones");
-    // await Future.delayed(const Duration(milliseconds: 150));
-    // solicitudCredito(context);
+    isTasador = session.role.contains("Tasador") && session.role.length == 1;
+    mostrarAccComp =
+        solicitud.estadoTasacion! >= 10 && solicitud.estadoTasacion! <= 13;
 
     if (solicitud.id != null) {
       var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
@@ -136,17 +152,84 @@ class ConsultarModificarViewModel extends BaseViewModel {
         Dialogs.error(msg: resp.messages.first);
       }
     }
-    // var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
-    // if (resp is Success<List<DescripcionFotoVehiculos>>) {
-    //   descripcionFotos = resp.response;
-    // }
+    loadCondiconesComponentes();
+    loadAccesorios();
     notifyListeners();
   }
 
-  Future<List<DescripcionFotoVehiculos>> getDescripcionFotos(
-      String text) async {
-    var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
-    if (resp is Success<List<DescripcionFotoVehiculos>>) {
+  void loadCondiconesComponentes() {
+    final componentesProv = ComponentesVehiculosProvider.instance;
+
+    if (solicitud.condicionComponenteTasacion!.isNotEmpty) {
+      for (var e in solicitud.condicionComponenteTasacion!) {
+        var compTemp = ComponentePorSegmento(
+          componente: componentesProv.componentes
+              .firstWhere((d) => d.idComponente == e.idComponenteVehiculo)
+              .componenteDescripcion,
+          condicion: componentesProv.componentes
+              .firstWhere(
+                (d) => d.id == e.idCondicionComponenteVehiculo,
+              )
+              .condicionDescripcion,
+          segmento: componentesProv.componentesSeg
+              .firstWhere((d) => d.id == e.idComponenteVehiculo)
+              .segmentoDescripcion,
+        );
+        componentes.add(compTemp);
+      }
+    }
+    for (var componente in componentes) {
+      if (!segmentoComponente
+          .any((e) => e.nombreSegmento == componente.segmento)) {
+        segmentoComponente.add(SegmentoCond(componente.segmento!, []));
+      }
+      for (var c in componentes) {
+        for (var s in segmentoComponente) {
+          if (c.segmento == s.nombreSegmento) {
+            if (!s.componentes.any((e) => e.componente == c.componente)) {
+              s.componentes.add(c);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void loadAccesorios() {
+    final accesoriosProv = AccesoriosProvider.instance;
+    if (solicitud.accesoriosTasacion!.isNotEmpty) {
+      for (var e in solicitud.accesoriosTasacion!) {
+        var compTemp = ComponentePorSegmento(
+          componente: accesoriosProv.accesorios
+              .firstWhere((d) => d.id == e.idAccesorio)
+              .descripcion,
+          condicion: '',
+          segmento: accesoriosProv.accesorios
+              .firstWhere((d) => d.id == e.idAccesorio)
+              .segmentoDescripcion,
+        );
+        accesorios.add(compTemp);
+      }
+    }
+    for (var acc in accesorios) {
+      if (!segmentoAccesorio.any((e) => e.nombreSegmento == acc.segmento)) {
+        segmentoAccesorio.add(SegmentoCond(acc.segmento!, []));
+      }
+      for (var c in accesorios) {
+        for (var s in segmentoAccesorio) {
+          if (c.segmento == s.nombreSegmento) {
+            if (!s.componentes.any((e) => e.componente == c.componente)) {
+              s.componentes.add(c);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  Future<List<TipoFotoVehiculos>> getTipoFotos(String text) async {
+    var resp = await _solicitudesApi.getTipoFotosVehiculos();
+    if (resp is Success<List<TipoFotoVehiculos>>) {
       return resp.response;
     } else {
       return [];
@@ -162,26 +245,6 @@ class ConsultarModificarViewModel extends BaseViewModel {
       return [];
     }
   }
-
-  // Future<void> solicitudCredito(BuildContext context) async {
-  //   ProgressDialog.show(context);
-  //   var resp = await _solicitudesApi.getSolicitudCredito(
-  //       idSolicitud: solicitud.noSolicitudCredito!);
-  //   if (resp is Success<SolicitudCreditoResponse>) {
-  //     solicitudCreditoData = resp.response.data;
-  //     notifyListeners();
-  //     ProgressDialog.dissmiss(context);
-  //   }
-  //   if (resp is Failure) {
-  //     Dialogs.error(msg: resp.messages[0]);
-  //     ProgressDialog.dissmiss(context);
-  //   }
-  //   if (resp is TokenFail) {
-  //     Dialogs.error(msg: 'su sesión a expirado');
-  //     ProgressDialog.dissmiss(context);
-  //     _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-  //   }
-  // }
 
   Future<void> cargarAlarmas(int idSolicitud) async {
     Session data = _authenticationAPI.loadSession;
@@ -263,7 +326,10 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   Future goToFotos(BuildContext context) async {
-    if (formKey3.currentState!.validate()) {
+    if (isTasador && mostrarAccComp) {
+      ProgressDialog.show(context);
+      loadFotos(context);
+    } else if (formKey3.currentState!.validate()) {
       ProgressDialog.show(context);
 
       if (solicitud.estadoTasacion == 34) {
@@ -297,24 +363,16 @@ class ConsultarModificarViewModel extends BaseViewModel {
       }
       // CARGAR FOTOS
       loadFotos(context);
-      // var resp = await _adjuntosApi.getFotosTasacion(
-      //     noTasacion: solicitud.noTasacion!);
-      // if (resp is Success<AdjuntosFotoResponse>) {
-      //   fotosAdjuntos = resp.response.data;
-      //   currentForm = 3;
-      //   ProgressDialog.dissmiss(context);
-      // }
-      // if (resp is Failure) {
-      //   // La solicitud no tiene fotos =>
-      //   await fotosNuevas();
-      //   ProgressDialog.dissmiss(context);
-      // }
     }
   }
 
   Future<void> loadFotos(BuildContext context) async {
     var r = await _solicitudesApi.getCantidadFotos(
         idSuplidor: solicitud.suplidorTasacion!);
+    if (r is Failure) {
+      ProgressDialog.dissmiss(context);
+      Dialogs.error(msg: r.messages[0]);
+    }
     if (r is Success<EntidadResponse>) {
       int cantidad = int.parse(r.response.data.descripcion ?? '0');
       fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
@@ -324,22 +382,30 @@ class ConsultarModificarViewModel extends BaseViewModel {
         await _adjuntosApi.getFotosTasacion(noTasacion: solicitud.noTasacion!);
 
     if (resp is Success<AdjuntosFotoResponse>) {
-      var f = resp.response.data;
-      for (var i = 0; i < f.length; i++) {
-        fotos[i] = fotos[i].copyWith(
-          adjunto: f[i].adjunto,
-          descripcion: f[i].descripcion,
-          tipoAdjunto: f[i].tipoAdjunto,
-          id: f[i].id,
-          nueva: false,
-        );
+      var d = await _adjuntosApi.getAdjuntos(esFotoVehiculo: 1);
+      if (d is Success<AdjuntosResponse>) {
+        List<AdjuntosData> adjuntos = d.response.data;
+
+        var f = resp.response.data;
+        for (var i = 0; i < f.length; i++) {
+          fotos[i] = fotos[i].copyWith(
+            adjunto: f[i].adjunto,
+            descripcion: f[i].descripcion,
+            tipoAdjunto: f[i].tipoAdjunto,
+            tipo: adjuntos
+                .firstWhere((e) => e.id == f[i].tipoAdjunto)
+                .descripcion,
+            id: f[i].id,
+            nueva: false,
+          );
+        }
+        notifyListeners();
       }
-      notifyListeners();
     }
     if (resp is Failure) {
       print('NO HAY FOTOS GUARDADAS');
     }
-    currentForm = 3;
+    isTasador && mostrarAccComp ? currentForm = 5 : currentForm = 3;
     ProgressDialog.dissmiss(context);
   }
 
@@ -434,9 +500,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
           lockAspectRatio: false,
           showCropGrid: true,
         ),
-        IOSUiSettings(
-          title: 'Editar foto',
-        ),
+        IOSUiSettings(title: 'Editar foto'),
       ],
     );
     if (croppedFile != null) {
@@ -460,15 +524,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
         } else if (r is Failure) {
           Dialogs.error(msg: r.messages[0]);
         }
-
-        // await _adjuntosApi.updateFotoTasacion(
-        //     id: fotos[i].id!,
-        //     adjunto: fotos[i].adjunto!,
-        //     descripcion: fotos[i].descripcion!,
-        //     tipoAdjunto: fotos[i].tipoAdjunto!);
         ProgressDialog.dissmiss(context);
       }
-
       notifyListeners();
     }
   }
@@ -521,40 +578,13 @@ class ConsultarModificarViewModel extends BaseViewModel {
           await goToValorar(context);
         }
       }
-      // if (formKeyFotos.currentState!.validate()) {
-      // ProgressDialog.show(context);
-      // List<Map<String, dynamic>> dataList = [];
-      // for (var e in fotosAdjuntos) {
-      //   // var fotoBase = base64Decode(e.adjunto);
-      //   Map<String, dynamic> data = {
-      //     "adjuntoInBytes": e.adjunto,
-      //     "tipoAdjunto": e.id,
-      //     "descripcion": e.descripcion,
-      //   };
-      //   dataList.add(data);
-      // }
-      // var resp = await _adjuntosApi.addFotosTasacion(
-      //     noTasacion: solicitud.noTasacion!, adjuntos: dataList);
-
-      // if (resp is Failure) {
-      //   Dialogs.error(msg: resp.messages[0]);
-      //   ProgressDialog.dissmiss(context);
-      // }
-      // if (resp is Success) {
-      //   Dialogs.success(msg: 'Fotos Actualizadas');
-      //   ProgressDialog.dissmiss(context);
-      //   currentForm = 4;
-      // }
-      // if (resp is TokenFail) {
-      //   Dialogs.error(msg: 'su sesión a expirado');
-      //   ProgressDialog.dissmiss(context);
-      //   _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      // }
     } else if (solicitud.estadoTasacion == 9) {
       Navigator.of(context).pop();
-    } else if (solicitud.estadoTasacion == 10) {
+    } else if (mostrarAccComp) {
       if (isAprobador) {
         goToAprobar(context);
+      } else if (isTasador) {
+        currentForm = 6;
       } else {
         Navigator.of(context).pop();
       }
@@ -679,11 +709,6 @@ class ConsultarModificarViewModel extends BaseViewModel {
     });
   }
 
-  // void borrarFoto(int i) {
-  //   fotosAdjuntos[i] = AdjuntoFoto();
-  //   notifyListeners();
-  // }
-
   void borrarFoto(BuildContext context, int i) async {
     if (fotos[i].id != null) {
       ProgressDialog.show(context);
@@ -694,32 +719,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // void borrarFotoNuevas(int i) {
-  //   fotos[i] = AdjuntoFoto();
-  //   notifyListeners();
-  // }
-
   Future<void> goToValorar(BuildContext context) async {
-    if (solicitud.estadoTasacion == 11) {
-      ProgressDialog.show(context);
-
-      var salvamentoResp =
-          // valorConsultaSalvamento
-          await _solicitudesApi.getSalvamento(vin: solicitud.chasis ?? '');
-      if (salvamentoResp is Success<Map<String, dynamic>>) {
-        isSalvage = salvamentoResp.response['data']['is_salvage'];
-      }
-      if (salvamentoResp is Failure) {
-        Dialogs.error(msg: salvamentoResp.messages[0]);
-        isSalvage = false;
-      }
-      if (salvamentoResp is TokenFail) {
-        Dialogs.error(msg: 'su sesión a expirado');
-        ProgressDialog.dissmiss(context);
-        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      }
-      ProgressDialog.dissmiss(context);
-    }
     currentForm = 4;
   }
 
@@ -730,7 +730,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     if (resp is Success) {
       Dialogs.success(msg: 'Solicitud enviada');
       ProgressDialog.dissmiss(context);
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
@@ -753,7 +753,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     if (aprobarResp is Success) {
       Dialogs.success(msg: 'Solicitud Aprobada');
       ProgressDialog.dissmiss(context);
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     }
     if (aprobarResp is Failure) {
       Dialogs.error(msg: aprobarResp.messages[0]);
@@ -765,4 +765,27 @@ class ConsultarModificarViewModel extends BaseViewModel {
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
+}
+
+class ComponentePorSegmento {
+  String? segmento;
+  String? componente;
+  String? condicion;
+  bool isSelected;
+  int? id;
+
+  ComponentePorSegmento({
+    this.isSelected = false,
+    this.segmento,
+    this.componente,
+    this.condicion,
+    this.id,
+  });
+}
+
+class SegmentoCond {
+  String nombreSegmento;
+  List<ComponentePorSegmento> componentes;
+
+  SegmentoCond(this.nombreSegmento, this.componentes);
 }

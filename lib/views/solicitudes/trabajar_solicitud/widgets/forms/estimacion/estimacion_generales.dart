@@ -30,35 +30,39 @@ class GeneralesEstimacionForm extends StatelessWidget {
         child: Column(
           children: [
             BaseTextField(
-              label: 'Tipo de tasación',
+              label: 'Tipo de Tasación',
               initialValue: vm.solicitud.descripcionTipoTasacion ?? '',
               enabled: false,
             ),
             BaseTextField(
-              label: 'Fecha de solicitud',
+              label: 'Fecha de Solicitud',
               initialValue: DateFormat.yMMMMd('es')
                   .format(vm.solicitud.fechaCreada!)
                   .toUpperCase(),
               enabled: false,
             ),
             BaseTextFieldNoEdit(
-              label: 'No. de solicitud de crédito',
+              label: 'No. de Solicitud de Crédito',
               initialValue: vm.solicitud.noSolicitudCredito.toString(),
             ),
             BaseTextFieldNoEdit(
-              label: 'Entidad solicitante',
-              initialValue: vm.solicitud.codigoEntidad ?? '',
+              label: 'No. de Tasación',
+              initialValue: vm.solicitud.noTasacion.toString(),
             ),
             BaseTextFieldNoEdit(
-              label: 'Cédula del cliente',
+              label: 'Entidad Solicitante',
+              initialValue: vm.solicitud.descripcionEntidad ?? '',
+            ),
+            BaseTextFieldNoEdit(
+              label: 'Cédula del Cliente',
               initialValue: vm.solicitud.identificacion ?? '',
             ),
             BaseTextFieldNoEdit(
-              label: 'Nombre del cliente',
+              label: 'Nombre del Cliente',
               initialValue: vm.solicitud.nombreCliente ?? '',
             ),
             BaseTextFieldNoEdit(
-              label: 'Oficial de negocios',
+              label: 'Oficial de Negocios',
               initialValue: vm.solicitud.idOficial.toString(),
             ),
             BaseTextFieldNoEdit(

@@ -4,15 +4,15 @@
 
 import 'dart:convert';
 
-List<DescripcionFotoVehiculos> descripcionFotoVehiculosFromJson(String str) =>
-    List<DescripcionFotoVehiculos>.from(
-        json.decode(str).map((x) => DescripcionFotoVehiculos.fromJson(x)));
+List<TipoFotoVehiculos> descripcionFotoVehiculosFromJson(String str) =>
+    List<TipoFotoVehiculos>.from(
+        json.decode(str).map((x) => TipoFotoVehiculos.fromJson(x)));
 
-String descripcionFotoVehiculosToJson(List<DescripcionFotoVehiculos> data) =>
+String descripcionFotoVehiculosToJson(List<TipoFotoVehiculos> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class DescripcionFotoVehiculos {
-  DescripcionFotoVehiculos({
+class TipoFotoVehiculos {
+  TipoFotoVehiculos({
     this.id,
     this.esFotoVehiculo,
     this.descripcion,
@@ -26,8 +26,8 @@ class DescripcionFotoVehiculos {
   int? orden;
   String? prefijo;
 
-  factory DescripcionFotoVehiculos.fromJson(Map<String, dynamic> json) =>
-      DescripcionFotoVehiculos(
+  factory TipoFotoVehiculos.fromJson(Map<String, dynamic> json) =>
+      TipoFotoVehiculos(
         id: json["id"],
         esFotoVehiculo: json["esFotoVehiculo"],
         descripcion: json["descripcion"],

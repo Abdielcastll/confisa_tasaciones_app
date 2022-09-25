@@ -6,6 +6,7 @@ import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import '../../../../../../theme/theme.dart';
 import '../../../../../../widgets/app_dialogs.dart';
 import '../../../../base_widgets/base_form_widget.dart';
+import '../../../../base_widgets/base_text_field_widget.dart';
 import '../../../trabajar_view_model.dart';
 
 class FotosTasacionForm extends StatelessWidget {
@@ -61,8 +62,8 @@ class FotosTrabajar extends StatelessWidget {
                   child: Container(
                     clipBehavior: Clip.antiAlias,
                     margin: const EdgeInsets.all(10),
-                    height: 100,
-                    width: 100,
+                    height: 120,
+                    width: 120,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.brown)),
@@ -82,58 +83,79 @@ class FotosTrabajar extends StatelessWidget {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10),
-                      child: DropdownSearch<DescripcionFotoVehiculos>(
-                        asyncItems: (_) => vm.getDescripcionFotos(_),
-                        enabled: vm.fotos[i].nueva,
-                        dropdownBuilder: (context, tipo) {
-                          return Text(
-                            tipo?.descripcion ??
-                                vm.fotos[i].descripcion ??
-                                'Seleccione',
-                            style: const TextStyle(
-                              fontSize: 15,
+                      child: Column(
+                        children: [
+                          DropdownSearch<TipoFotoVehiculos>(
+                            asyncItems: (_) => vm.getDescripcionFotos(_),
+                            enabled: vm.fotos[i].nueva,
+                            dropdownBuilder: (context, tipo) {
+                              return Text(
+                                tipo?.descripcion ??
+                                    vm.fotos[i].descripcion ??
+                                    'Seleccione',
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              );
+                            },
+                            onChanged: (v) {
+                              vm.fotos[i] = vm.fotos[i].copyWith(
+                                tipo: v!.descripcion,
+                                tipoAdjunto: v.id,
+                              );
+                            },
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                                    dropdownSearchDecoration: InputDecoration(
+                                        label: Text('Tipo:'),
+                                        labelStyle: TextStyle(fontSize: 16),
+                                        border: UnderlineInputBorder())),
+                            popupProps: PopupProps.menu(
+                              itemBuilder: (context, opt, isSelected) {
+                                return ListTile(
+                                  title: Text(opt.descripcion ??
+                                      vm.fotos[i].descripcion ??
+                                      'Seleccione'),
+                                  selected: isSelected,
+                                );
+                              },
+                              emptyBuilder: (_, __) => const Center(
+                                child: Text('No hay resultados'),
+                              ),
                             ),
-                          );
-                        },
-                        onChanged: (v) {
-                          vm.fotos[i] = vm.fotos[i].copyWith(
-                            tipoAdjunto: v!.id,
-                            descripcion: v.descripcion,
-                          );
-                        },
-                        dropdownDecoratorProps: const DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                                label: Text('Tipo:'),
-                                labelStyle: TextStyle(fontSize: 16),
-                                border: UnderlineInputBorder())),
-                        popupProps: PopupProps.menu(
-                          itemBuilder: (context, opt, isSelected) {
-                            return ListTile(
-                              title: Text(opt.descripcion ??
-                                  vm.fotos[i].descripcion ??
-                                  'Seleccione'),
-                              selected: isSelected,
-                            );
-                          },
-                          emptyBuilder: (_, __) => const Center(
-                            child: Text('No hay resultados'),
+                            validator: (v) {
+                              if (v == null &&
+                                  vm.fotos[i].descripcion == null) {
+                                return 'Seleccione';
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
-                        ),
-                        validator: (v) {
-                          if (v == null && vm.fotos[i].descripcion == null) {
-                            return 'Seleccione';
-                          } else {
-                            return null;
-                          }
-                        },
+                          BaseTextField(
+                            label: 'Descripción:',
+                            onChanged: (v) {
+                              vm.fotos[i] =
+                                  vm.fotos[i].copyWith(descripcion: v);
+                            },
+                            validator: (v) {
+                              if (v?.trim() == '' &&
+                                  vm.fotos[i].descripcion == null) {
+                                return 'Seleccione';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 vm.fotos[i].adjunto != null
                     ? SizedBox(
-                        height: 100,
+                        height: 130,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             IconButton(
                                 onPressed: () {
@@ -148,7 +170,7 @@ class FotosTrabajar extends StatelessWidget {
                                   color: Colors.grey,
                                   size: 30,
                                 )),
-                            const Spacer(),
+                            // const Spacer(),
                             IconButton(
                                 onPressed: () {
                                   vm.editarFoto(context, i);

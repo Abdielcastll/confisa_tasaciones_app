@@ -10,6 +10,7 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/locator.dart';
+import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/core/models/colores_vehiculos_response.dart';
@@ -17,6 +18,7 @@ import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import 'package:tasaciones_app/core/models/ediciones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
+import 'package:tasaciones_app/core/models/solicitudes/solicitudes_disponibles_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/tracciones_response.dart';
@@ -32,6 +34,7 @@ import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/models/solicitudes/solicitud_credito_response.dart';
 import '../../../core/services/navigator_service.dart';
+import '../../../core/utils/create_file_from_string.dart';
 import '../../auth/login/login_view.dart';
 
 class SolicitudEstimacionViewModel extends BaseViewModel {
@@ -67,7 +70,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
   late int _fotosPermitidas;
-  late List<FotoData> fotos;
+  late List<AdjuntoFoto> fotos;
   final _picker = ImagePicker();
   SolicitudesData? solicitudCola;
   SolicitudesData? solicitudCreada;
@@ -150,8 +153,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-// <<<<<<< HEAD
-// =======
   Future<void> getAlarmas() async {
     var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCreada!.id);
     if (resp is Success<AlarmasResponse>) {
@@ -162,24 +163,20 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
-// >>>>>>> 5cb8bd57f25239f6190a03ba91b7d88f5dd51e52
   void onInit(SolicitudesData? arg) async {
     if (arg != null) {
       solicitudCola = arg;
       tcNoSolicitud.text = arg.noSolicitudCredito.toString();
-      // tcVIN.text = arg.chasis!;
+
       notifyListeners();
     }
-    // if (solicitud!.noSolicitud != null) {
-    // var resp =
-    //     await _alarmasApi.getAlarmas(idSolicitud: solicitud!.noSolicitud);
-    // if (resp is Success<AlarmasResponse>) {
-    //   alarmasResponse = resp.response;
-    //   alarmas = resp.response.data;
-    // } else if (resp is Failure) {
-    //   Dialogs.error(msg: resp.messages.first);
-    // }
-    // }
+  }
+
+  late SolicitudesDisponibles _solicitudDisponible;
+  SolicitudesDisponibles get solicitudDisponible => _solicitudDisponible;
+  set solicitudDisponible(SolicitudesDisponibles v) {
+    _solicitudDisponible = v;
+    notifyListeners();
   }
 
   Future<void> solicitudCredito(BuildContext context) async {
@@ -187,7 +184,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     if (formKey.currentState!.validate()) {
       ProgressDialog.show(context);
       var resp = await _solicitudesApi.getSolicitudCredito(
-          idSolicitud: int.parse(tcNoSolicitud.text));
+          idSolicitud: _solicitudDisponible.noSolicitud!);
       if (resp is Success) {
         var data = resp.response as SolicitudCreditoResponse;
         solicitud = data.data;
@@ -313,10 +310,9 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
-  Future<List<DescripcionFotoVehiculos>> getDescripcionFotos(
-      String text) async {
-    var resp = await _solicitudesApi.getDescripcionFotosVehiculos();
-    if (resp is Success<List<DescripcionFotoVehiculos>>) {
+  Future<List<TipoFotoVehiculos>> getDescripcionFotos(String text) async {
+    var resp = await _solicitudesApi.getTipoFotosVehiculos();
+    if (resp is Success<List<TipoFotoVehiculos>>) {
       return resp.response;
     } else {
       return [];
@@ -343,47 +339,51 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
+  Future<List<SolicitudesDisponibles>> getSolicitudes() async {
+    var resp = await _solicitudesApi.getSolicitudesDisponibles();
+    if (resp is Success<List<SolicitudesDisponibles>>) {
+      return resp.response;
+    } else {
+      return [];
+    }
+  }
+
   void cargarFoto(int i) async {
     var img = await _picker.pickImage(
       source: ImageSource.camera,
       maxWidth: 720,
     );
     if (img != null) {
-      fotos[i] = FotoData(file: File(img.path));
-
+      final foto = File(img.path);
+      final fotoBase = base64Encode(foto.readAsBytesSync());
+      fotos[i] = fotos[i].copyWith(adjunto: fotoBase);
       notifyListeners();
     }
   }
 
-  void borrarFoto(int i) {
-    fotos[i] = FotoData(
-      file: File(''),
-      tipoAdjunto: null,
-      descripcion: null,
-    );
+  void borrarFoto(int i) async {
+    fotos[i] = AdjuntoFoto();
     notifyListeners();
   }
 
   Future<void> subirFotos(BuildContext context) async {
-    // if (fotos.any((e) => e.file!.path == '')) {
-    // Dialogs.error(msg: 'Fotos incompletas');
-    // } else {
     if (formKeyFotos.currentState!.validate()) {
       ProgressDialog.show(context);
-      List<Map<String, dynamic>> dataList = [];
-      for (var e in fotos) {
-        if (e.file?.path != '') {
-          var fotoBase = base64Encode(e.file!.readAsBytesSync());
 
+      List<Map<String, dynamic>> dataList = [];
+
+      for (var e in fotos) {
+        if (e.id == null && e.adjunto != null) {
           Map<String, dynamic> data = {
-            "adjuntoInBytes": fotoBase,
-            "tipoAdjunto": e.descripcion!.id,
-            "descripcion": e.descripcion!.descripcion,
+            "adjuntoInBytes": e.adjunto,
+            "tipoAdjunto": e.tipoAdjunto,
+            "descripcion": e.descripcion,
           };
-          // log.d(jsonEncode(data['tipoAdjunto']));
+
           dataList.add(data);
         }
       }
+
       var resp = await _adjuntosApi.addFotosTasacion(
           noTasacion: solicitudCreada!.noTasacion!, adjuntos: dataList);
 
@@ -427,7 +427,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
 
   Future<void> editarFoto(int i) async {
     var croppedFile = await ImageCropper().cropImage(
-      sourcePath: fotos[i].file!.path,
+      sourcePath: await createFileFromString(fotos[i].adjunto!),
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
@@ -449,8 +449,12 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
         ),
       ],
     );
-    fotos[i] = FotoData(file: File(croppedFile!.path));
-    notifyListeners();
+    if (croppedFile != null) {
+      var fotoByte = File(croppedFile.path).readAsBytesSync();
+      fotos[i] = fotos[i].copyWith(adjunto: base64Encode(fotoByte));
+
+      notifyListeners();
+    }
   }
 
   Future goToFotos(BuildContext context) async {
@@ -466,7 +470,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
               await _solicitudesApi.getCantidadFotos(idSuplidor: idSuplidor);
           if (resp is Success<EntidadResponse>) {
             int cantidad = int.parse(resp.response.data.descripcion ?? '0');
-            fotos = List.generate(cantidad, (i) => FotoData(file: File('')));
+            fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
             fotosPermitidas = cantidad;
             await getAlarmas();
             currentForm = 3;
@@ -581,13 +585,13 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 }
 
-class FotoData {
-  File? file;
-  int? tipoAdjunto;
-  DescripcionFotoVehiculos? descripcion;
-  FotoData({
-    this.file,
-    this.tipoAdjunto,
-    this.descripcion,
-  });
-}
+// class FotoData {
+//   File? file;
+//   int? tipoAdjunto;
+//   TipoFotoVehiculos? descripcion;
+//   FotoData({
+//     this.file,
+//     this.tipoAdjunto,
+//     this.descripcion,
+//   });
+// }

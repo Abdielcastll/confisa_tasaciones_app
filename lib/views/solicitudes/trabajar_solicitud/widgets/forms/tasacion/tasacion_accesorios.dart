@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../theme/theme.dart';
 import '../../../../base_widgets/base_form_widget.dart';
 import '../../../trabajar_view_model.dart';
 
@@ -30,16 +31,43 @@ class AccesoriosTasacionForm extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         color: Colors.white,
         child: Column(children: [
-          ...vm.accesorios.map((e) {
-            return CheckboxListTile(
-              value: e.isSelected,
-              onChanged: (s) {
-                e.isSelected = s ?? false;
-                vm.notifyListeners();
-              },
-              title: Text(e.accesorioDescripcion ?? ''),
+          ...vm.segmentoAccesorio.map((e) {
+            return ExpansionTile(
+              title: Text(
+                e.nombreSegmento == '' ? 'Accesorios' : e.nombreSegmento,
+                style: const TextStyle(
+                  color: AppColors.brownDark,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              textColor: AppColors.brownDark,
+              children: e.componentes.map((e) {
+                return CheckboxListTile(
+                  value: e.isSelected,
+                  onChanged: (s) {
+                    e.isSelected = s ?? false;
+                    print(e.id);
+                    vm.accesorios
+                        .firstWhere((d) => d.idAccesorio == e.id)
+                        .isSelected = s ?? false;
+                    vm.notifyListeners();
+                  },
+                  title: Text(e.componente ?? ''),
+                );
+              }).toList(),
+              initiallyExpanded: true,
             );
-          })
+          }),
+          // ...vm.accesorios.map((e) {
+          //   return CheckboxListTile(
+          //     value: e.isSelected,
+          //     onChanged: (s) {
+          //       e.isSelected = s ?? false;
+          //       vm.notifyListeners();
+          //     },
+          //     title: Text(e.accesorioDescripcion ?? ''),
+          //   );
+          // })
         ]),
       ),
     );
