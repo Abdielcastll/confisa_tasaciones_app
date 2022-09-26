@@ -27,6 +27,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/tipos_fotos/tipos_fot
 import 'package:tasaciones_app/views/entidades_solicitudes/vencimiento_estados/vencimiento_estados_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/aprobadores_facturas/aprobadores_facturas_view.dart';
+import 'package:tasaciones_app/views/seguridad_facturacion/corte_facturacion/corte_facturacion_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/documentos_facturacion/documentos_facturacion_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/periodo_facturacion_automatica/periodo_facturacion_automatica_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/porcentajes_honorarios_entidad/porcentajes_honorarios_entidad_view.dart';
@@ -219,6 +220,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case PeriodoFacturacionAutomaticaView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const PeriodoFacturacionAutomaticaView());
+
+    case CorteFacturacionView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const CorteFacturacionView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

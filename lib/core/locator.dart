@@ -26,6 +26,7 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmento
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_componentes_vehiculos_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/vencimiento_estados_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/aprobadores_facturas_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_facturacion/corte_facturacion_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/documentos_facturacion_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/periodo_facturacion_automatica_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/porcentajes_honorarios_entidad_api.dart';
@@ -121,6 +122,7 @@ abstract class DependencyInjection {
         PorcentajesHonorariosEntidadApi(http, authenticationClient);
     final periodoFacturacionAutomaticaApi =
         PeriodoFacturacionAutomaticaApi(http, authenticationClient);
+    final corteFacturacionApi = CorteFacturacionApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
@@ -169,5 +171,6 @@ abstract class DependencyInjection {
         porcentajesHonorariosEntidadApi);
     locator.registerSingleton<PeriodoFacturacionAutomaticaApi>(
         periodoFacturacionAutomaticaApi);
+    locator.registerSingleton<CorteFacturacionApi>(corteFacturacionApi);
   }
 }
