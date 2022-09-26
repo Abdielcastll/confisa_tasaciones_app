@@ -200,7 +200,9 @@ Form dialogActualizarInformacion(
                 ],
               ),
             ),
-            session.role.any((element) => element == "Administrador")
+            session.role.any((element) =>
+                    element == "Administrador" ||
+                    element == "AprobadorTasaciones")
                 ? TextButton(
                     onPressed: () => changeRol(),
                     // button pressed

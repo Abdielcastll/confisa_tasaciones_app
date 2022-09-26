@@ -27,6 +27,7 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmento
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/vencimiento_estados_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/aprobadores_facturas_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/documentos_facturacion_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_facturacion/periodo_facturacion_automatica_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/porcentajes_honorarios_entidad_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/tarifario_tasacion_api.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
@@ -116,9 +117,10 @@ abstract class DependencyInjection {
         AprobadoresFacturasApi(http, authenticationClient);
     final documentosFacturacionApi =
         DocumentosFacturacionApi(http, authenticationClient);
-
     final porcentajesHonorariosEntidadApi =
         PorcentajesHonorariosEntidadApi(http, authenticationClient);
+    final periodoFacturacionAutomaticaApi =
+        PeriodoFacturacionAutomaticaApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
@@ -165,5 +167,7 @@ abstract class DependencyInjection {
         .registerSingleton<DocumentosFacturacionApi>(documentosFacturacionApi);
     locator.registerSingleton<PorcentajesHonorariosEntidadApi>(
         porcentajesHonorariosEntidadApi);
+    locator.registerSingleton<PeriodoFacturacionAutomaticaApi>(
+        periodoFacturacionAutomaticaApi);
   }
 }

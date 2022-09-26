@@ -1,9 +1,9 @@
-part of tarifario_tasacion_view;
+part of periodo_facturacion_automatica_view;
 
-class _TarifarioTasacionMobile extends StatelessWidget {
-  final TarifarioTasacionViewModel vm;
+class _PeriodoFacturacionAutomaticaMobile extends StatelessWidget {
+  final PeriodoFacturacionAutomaticaViewModel vm;
 
-  const _TarifarioTasacionMobile(this.vm);
+  const _PeriodoFacturacionAutomaticaMobile(this.vm);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
         appBar: AppBar(
           elevation: 3,
           title: const Text(
-            'Tarifario Servicios Tasación',
+            'Periodo de Facturación Automática',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           backgroundColor: AppColors.brownLight,
@@ -30,7 +30,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscartarifarioTasacion,
+                        onSubmitted: vm.buscarPeriodoFacturacionAutomatica,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -39,16 +39,15 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Tarifario por Valor...',
+                          hintText: 'Buscar por id Suplidor...',
                           hintStyle: const TextStyle(
-                              overflow: TextOverflow.ellipsis,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w700),
+                              color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
-                                  onPressed: () => vm.buscartarifarioTasacion(
-                                      vm.tcBuscar.text),
+                                  onPressed: () =>
+                                      vm.buscarPeriodoFacturacionAutomatica(
+                                          vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(
@@ -68,34 +67,36 @@ class _TarifarioTasacionMobile extends StatelessWidget {
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.tarifarioTasacion.isEmpty
+                child: vm.periodosFacturacionAutomatica.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.tarifarioTasacion.length,
+                        itemCount: vm.periodosFacturacionAutomatica.length,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          var tarifarioTasacion = vm.tarifarioTasacion[i];
+                          var periodoFacturacionAutomatica =
+                              vm.periodosFacturacionAutomatica[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
-                              onPressed: () => vm.modificarTarifarioTasacion(
-                                  context, tarifarioTasacion),
+                              onPressed: () =>
+                                  vm.modificarPeriodoFacturacionAutomatica(
+                                      context, periodoFacturacionAutomatica),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5)),
                               child: Container(
                                 alignment: Alignment.centerLeft,
-                                height: 70,
+                                height: 85,
                                 padding: const EdgeInsets.all(10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      tarifarioTasacion.valor,
+                                      periodoFacturacionAutomatica.suplidor,
                                       style: const TextStyle(
                                         color: AppColors.brownDark,
                                         fontSize: 18,
@@ -103,13 +104,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      "Tipo de Tasación: ${tarifarioTasacion.descripcionTipoTasacion}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
-                                    Text(
-                                      "Suplidor: ${tarifarioTasacion.suplidor}",
+                                      "Periodo: ${periodoFacturacionAutomatica.descripcion}",
                                       style: const TextStyle(
                                           color: AppColors.brownDark,
                                           fontSize: 12),

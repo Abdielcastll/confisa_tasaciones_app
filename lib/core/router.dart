@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
-import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/views/auditoria/auditoria_view.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
@@ -29,6 +28,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/vencimiento_estados/v
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/aprobadores_facturas/aprobadores_facturas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/documentos_facturacion/documentos_facturacion_view.dart';
+import 'package:tasaciones_app/views/seguridad_facturacion/periodo_facturacion_automatica/periodo_facturacion_automatica_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/porcentajes_honorarios_entidad/porcentajes_honorarios_entidad_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/tarifario_tasacion/tarifario_tasacion_view.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
@@ -215,6 +215,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case PorcentajesHonorariosEntidadView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const PorcentajesHonorariosEntidadView());
+
+    case PeriodoFacturacionAutomaticaView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const PeriodoFacturacionAutomaticaView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());
