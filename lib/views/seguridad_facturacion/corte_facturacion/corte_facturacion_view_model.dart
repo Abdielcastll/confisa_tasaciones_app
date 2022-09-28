@@ -239,16 +239,18 @@ class CorteFacturacionViewModel extends BaseViewModel {
                                 keyboardType: TextInputType.number,
                                 validator: (value) {
                                   if (periodo == "Quincenal") {
-                                    if (int.parse(value!) > 15) {
+                                    if (int.parse(value!) > 15 ||
+                                        int.parse(value) < 1) {
                                       tcNewValor.clear();
-                                      return "Día de corte mayor a 15";
+                                      return "Día de corte mayor a 15 o menor a 1";
                                     } else {
                                       return null;
                                     }
                                   } else {
-                                    if (int.parse(value!) > 31) {
+                                    if (int.parse(value!) > 31 ||
+                                        int.parse(value) < 1) {
                                       tcNewValor.clear();
-                                      return "Día de corte mayor a 31";
+                                      return "Día de corte mayor a 31 o menor a 1";
                                     } else {
                                       return null;
                                     }
