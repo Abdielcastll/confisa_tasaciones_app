@@ -94,7 +94,7 @@ class _ColaFacturacionMobile extends StatelessWidget {
                               Container(
                                 alignment: Alignment.centerLeft,
                                 padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    const EdgeInsets.fromLTRB(30, 10, 10, 10),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -117,12 +117,15 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
-                                        Text(
-                                          '${s.descripcionEntidad}',
-                                          style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
+                                        Expanded(
+                                          child: Text(
+                                            '${s.descripcionEntidad}',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: AppColors.brownDark,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -138,12 +141,15 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
-                                        Text(
-                                          '${s.descripcionSuplidor}',
-                                          style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
+                                        Expanded(
+                                          child: Text(
+                                            '${s.descripcionSuplidor}',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: AppColors.brownDark,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -159,12 +165,15 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
-                                        Text(
-                                          '${DateFormat.yMd('es').format(s.periodoFacturacionInicial!)} - ${DateFormat.yMd('es').format(s.periodoFacturacionFinal!)}',
-                                          style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
+                                        Expanded(
+                                          child: Text(
+                                            '${DateFormat.yMd('es').format(s.periodoFacturacionInicial!)} - ${DateFormat.yMd('es').format(s.periodoFacturacionFinal!)}',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: AppColors.brownDark,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -214,16 +223,15 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              // Positioned(
-                              //   left: 0,
-                              //   top: 0,
-                              //   bottom: 0,
-                              //   child: Container(
-                              //     color:
-                              //         colorSolicitudByStatus(s.estadoTasacion!),
-                              //     width: 20,
-                              //   ),
-                              // ),
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                bottom: 0,
+                                child: Container(
+                                  color: colorFacturaByStatus(s.idEstado!),
+                                  width: 20,
+                                ),
+                              ),
                             ],
                           ),
                         ),
