@@ -47,6 +47,26 @@ Color colorSolicitudByStatus(int statusId) {
   }
 }
 
+Color colorFacturaByStatus(int statusId) {
+  switch (statusId) {
+    case 4:
+      return AppColors.solicitada;
+    case 5:
+      return AppColors.pendienteAutorizarar;
+    case 6:
+      return AppColors.valorada;
+    case 7:
+      return AppColors.anulada;
+    case 8:
+      return AppColors.vencida;
+    case 117:
+      return AppColors.iniciada;
+
+    default:
+      return AppColors.darkOrange;
+  }
+}
+
 class AppIcons {
   static const paperPlane = FontAwesomeIcons.paperPlane;
   static const pencilAlt = FontAwesomeIcons.penToSquare;
