@@ -13,7 +13,7 @@ part 'cola_facturacion_mobile.dart';
 // ColaFacturacionViewModel? facturacionProvider;
 
 class ColaFacturacionView extends StatelessWidget {
-  static const routeName = 'Cola Facturación';
+  static const routeName = 'facturaciones/cola-facturaciones';
   const ColaFacturacionView({Key? key}) : super(key: key);
 
   @override
