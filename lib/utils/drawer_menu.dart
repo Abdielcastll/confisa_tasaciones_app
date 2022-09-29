@@ -31,7 +31,6 @@ List<Widget> menu(MenuResponse menu) {
                                 fontSize: 14, fontWeight: FontWeight.w500),
                           ),
                           onTap: () {
-                            _navigationService.pop();
                             _navigationService.navigateToPage(e2.url);
                           },
                         ))
@@ -45,7 +44,6 @@ List<Widget> menu(MenuResponse menu) {
                       fontSize: 14, fontWeight: FontWeight.w500),
                 ),
                 onTap: () {
-                  _navigationService.pop();
                   _navigationService.navigateToPage(e.url);
                 },
               );
