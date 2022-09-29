@@ -4,6 +4,7 @@ import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
+import 'package:tasaciones_app/views/facturacion/cola_facturacion/cola_facturacion_view.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';
@@ -91,6 +92,19 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                           //         SolicitudTasacionView.routeName);
                           //   },
                           // ),
+                          ListTile(
+                            title: const Text(
+                              'Cola de Facturas',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                            leading: const Icon(Icons.fact_check_outlined),
+                            onTap: () {
+                              _navigationService.pop();
+                              _navigationService.navigateToPage(
+                                  ColaFacturacionView.routeName);
+                            },
+                          ),
                           ListTile(
                             leading: const Icon(Icons.person),
                             title: const Text(

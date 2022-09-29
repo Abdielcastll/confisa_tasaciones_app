@@ -6,6 +6,7 @@ import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/autentication_api.dart';
 import 'package:tasaciones_app/core/api/constants.dart';
 import 'package:tasaciones_app/core/api/endpoints_api.dart';
+import 'package:tasaciones_app/core/api/facturaciones_api/facturacion_api.dart';
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/api/notas.dart';
 import 'package:tasaciones_app/core/api/permisos_api.dart';
@@ -120,6 +121,8 @@ abstract class DependencyInjection {
     final porcentajesHonorariosEntidadApi =
         PorcentajesHonorariosEntidadApi(http, authenticationClient);
 
+    final facturacionApi = FacturacionApi(http, authenticationClient);
+
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
     locator.registerSingleton<PermisosAPI>(permisosAPI);
@@ -165,5 +168,6 @@ abstract class DependencyInjection {
         .registerSingleton<DocumentosFacturacionApi>(documentosFacturacionApi);
     locator.registerSingleton<PorcentajesHonorariosEntidadApi>(
         porcentajesHonorariosEntidadApi);
+    locator.registerSingleton<FacturacionApi>(facturacionApi);
   }
 }

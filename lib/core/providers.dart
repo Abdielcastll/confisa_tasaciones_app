@@ -5,6 +5,7 @@ import 'package:tasaciones_app/core/providers/condiciones_provider.dart';
 import 'package:tasaciones_app/core/providers/menu_provider.dart';
 import 'package:tasaciones_app/core/providers/permisos_provider.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
+import 'package:tasaciones_app/views/facturacion/cola_facturacion/cola_facturacion_view_model.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';

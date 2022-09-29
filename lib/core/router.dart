@@ -26,6 +26,7 @@ import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_accesorios_
 import 'package:tasaciones_app/views/entidades_solicitudes/segmentos_componentes_vehiculos/segmentos_componentes_vehiculos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/tipos_fotos/tipos_fotos_view.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/vencimiento_estados/vencimiento_estados_view.dart';
+import 'package:tasaciones_app/views/facturacion/cola_facturacion/cola_facturacion_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/aprobadores_facturas/aprobadores_facturas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/documentos_facturacion/documentos_facturacion_view.dart';
@@ -131,6 +132,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ColaSolicitudesView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const ColaSolicitudesView());
+
+    case ColaFacturacionView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const ColaFacturacionView());
 
     case ConsultarModificarView.routeName:
       final args = settings.arguments as SolicitudesData?;
