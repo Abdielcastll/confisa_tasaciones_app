@@ -10,7 +10,7 @@ import '../../../widgets/refresh_widget.dart';
 part 'suplidores_mobile.dart';
 
 class SuplidoresView extends StatelessWidget {
-  static const routeName = 'Suplidores';
+  static const routeName = 'mantenimientos/general/suplidores';
   const SuplidoresView({Key? key}) : super(key: key);
 
   @override

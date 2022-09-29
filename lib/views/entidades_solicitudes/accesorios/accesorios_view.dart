@@ -10,7 +10,7 @@ import 'package:tasaciones_app/widgets/refresh_widget.dart';
 part 'accesorios_mobile.dart';
 
 class AccesoriosView extends StatelessWidget {
-  static const routeName = 'Accesorios Vehículo';
+  static const routeName = 'mantenimientos/solicitudes/accesorios-vehiculo';
   const AccesoriosView({Key? key}) : super(key: key);
 
   @override

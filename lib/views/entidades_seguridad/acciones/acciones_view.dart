@@ -10,7 +10,7 @@ import 'acciones_view_model.dart';
 part 'acciones_mobile.dart';
 
 class AccionesView extends StatelessWidget {
-  static const routeName = 'Acciones';
+  static const routeName = 'mantenimientos/seguridad/acciones';
   const AccionesView({Key? key}) : super(key: key);
 
   @override

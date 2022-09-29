@@ -42,9 +42,10 @@ class MenuRecursoData {
     required this.nombre,
     this.recursos,
     this.moduloPadre,
+    required this.url,
   });
 
-  String nombre;
+  String nombre, url;
   int id;
   int? moduloPadre;
   List<MenuRecursoData>? recursos;
@@ -54,6 +55,7 @@ class MenuRecursoData {
           id: json["id"],
           nombre: json["nombre"],
           moduloPadre: json["moduloPadre"] ?? 0,
+          url: json["url"] ?? "",
           recursos: json["recursos"] != null
               ? json["recursos"]
                   .map<MenuRecursoData>((e) => MenuRecursoData.fromJson(e))

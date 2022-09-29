@@ -10,7 +10,7 @@ import '../../../widgets/refresh_widget.dart';
 part 'aprobadores_facturas_mobile.dart';
 
 class AprobadoresFacturasView extends StatelessWidget {
-  static const routeName = 'Aprobadores Facturas';
+  static const routeName = 'mantenimientos/facturacion/aprobadores-facturas';
   const AprobadoresFacturasView({Key? key}) : super(key: key);
 
   @override

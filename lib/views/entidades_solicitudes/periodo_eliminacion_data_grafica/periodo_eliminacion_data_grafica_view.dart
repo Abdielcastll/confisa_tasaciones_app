@@ -10,7 +10,8 @@ import 'package:tasaciones_app/widgets/refresh_widget.dart';
 part 'periodo_eliminacion_data_grafica_mobile.dart';
 
 class PeriodoEliminacionDataGraficaView extends StatelessWidget {
-  static const routeName = 'Períodos Eliminación Data Gráfica';
+  static const routeName =
+      'mantenimientos/solicitudes/periodos-eliminacion-data-grafica';
   const PeriodoEliminacionDataGraficaView({Key? key}) : super(key: key);
 
   @override

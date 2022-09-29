@@ -10,7 +10,8 @@ import '../../../widgets/refresh_widget.dart';
 part 'periodo_facturacion_automatica_mobile.dart';
 
 class PeriodoFacturacionAutomaticaView extends StatelessWidget {
-  static const routeName = 'Periodo de Facturación Automatica';
+  static const routeName =
+      'mantenimientos/facturacion/periodo-facturacion-automatica';
   const PeriodoFacturacionAutomaticaView({Key? key}) : super(key: key);
 
   @override

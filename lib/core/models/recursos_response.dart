@@ -55,7 +55,8 @@ class RecursosData {
       required this.idModulo,
       required this.esMenuConfiguracion,
       required this.descripcionMenuConfiguracion,
-      required this.nombreModulo});
+      required this.nombreModulo,
+      required this.url});
 
   String nombre;
   String nombreModulo;
@@ -64,17 +65,17 @@ class RecursosData {
   int idModulo;
   int esMenuConfiguracion;
   String descripcionMenuConfiguracion;
+  String url;
 
   factory RecursosData.fromJson(Map<String, dynamic> json) => RecursosData(
-        id: json["id"] ?? 0,
-        estado: json["estado"] ?? 0,
-        idModulo: json["idModulo"] ?? 0,
-        nombreModulo: json["nombreModulo"] ?? '',
-        nombre: json["nombre"] ?? '',
-        esMenuConfiguracion: json["esMenuConfiguracion"] ?? 0,
-        descripcionMenuConfiguracion:
-            json["descripcionMenuConfiguracion"] ?? '',
-      );
+      id: json["id"] ?? 0,
+      estado: json["estado"] ?? 0,
+      idModulo: json["idModulo"] ?? 0,
+      nombreModulo: json["nombreModulo"] ?? '',
+      nombre: json["nombre"] ?? '',
+      esMenuConfiguracion: json["esMenuConfiguracion"] ?? 0,
+      descripcionMenuConfiguracion: json["descripcionMenuConfiguracion"] ?? '',
+      url: json["url"] ?? '');
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -84,5 +85,6 @@ class RecursosData {
         "nombreModulo": nombreModulo,
         "esMenuConfiguracion": esMenuConfiguracion,
         "descripcionMenuConfiguracion": descripcionMenuConfiguracion,
+        "url": url
       };
 }

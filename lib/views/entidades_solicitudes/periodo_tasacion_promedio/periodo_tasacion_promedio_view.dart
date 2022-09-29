@@ -11,7 +11,8 @@ import 'package:tasaciones_app/widgets/refresh_widget.dart';
 part 'periodo_tasacion_promedio_mobile.dart';
 
 class PeriodoTasacionPromedioView extends StatelessWidget {
-  static const routeName = 'Períodos Tasación Promedio';
+  static const routeName =
+      'mantenimientos/solicitudes/periodo-tasacion-promedio';
   const PeriodoTasacionPromedioView({Key? key}) : super(key: key);
 
   @override

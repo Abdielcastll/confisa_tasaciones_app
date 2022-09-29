@@ -52,16 +52,18 @@ class ModulosData {
       {required this.id,
       required this.estado,
       required this.nombre,
-      required this.moduloPadre});
+      required this.moduloPadre,
+      required this.cssIcon});
 
-  String nombre;
+  String nombre, cssIcon;
   int id, estado, moduloPadre;
 
   factory ModulosData.fromJson(Map<String, dynamic> json) => ModulosData(
       id: json["id"] ?? 0,
       moduloPadre: json["moduloPadre"] ?? 0,
       estado: json["estado"] ?? 0,
-      nombre: json["nombre"] ?? '');
+      nombre: json["nombre"] ?? '',
+      cssIcon: json["cssicon"] ?? '');
 
   Map<String, dynamic> toJson() =>
       {"id": id, "estado": estado, "nombre": nombre};

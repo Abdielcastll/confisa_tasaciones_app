@@ -10,7 +10,7 @@ import 'package:tasaciones_app/widgets/refresh_widget.dart';
 part 'cantidad_fotos_mobile.dart';
 
 class CantidadFotosView extends StatelessWidget {
-  static const routeName = 'Cantidad Fotos';
+  static const routeName = 'mantenimientos/solicitudes/cantidad-fotos';
   const CantidadFotosView({Key? key}) : super(key: key);
 
   @override

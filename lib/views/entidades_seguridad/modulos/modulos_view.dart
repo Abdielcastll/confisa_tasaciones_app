@@ -10,7 +10,7 @@ import 'modulos_view_model.dart';
 part 'modulos_mobile.dart';
 
 class ModulosView extends StatelessWidget {
-  static const routeName = 'Módulos';
+  static const routeName = 'mantenimientos/seguridad/modulos';
   const ModulosView({Key? key}) : super(key: key);
 
   @override

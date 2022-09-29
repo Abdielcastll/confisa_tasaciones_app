@@ -10,7 +10,7 @@ import 'acciones_pendientes_view_model.dart';
 part 'acciones_pendientes_mobile.dart';
 
 class AccionesPendientesView extends StatelessWidget {
-  static const routeName = 'Tipos Acción Pendiente';
+  static const routeName = 'mantenimientos/solicitudes/tipos-accion-pendiente';
   const AccionesPendientesView({Key? key}) : super(key: key);
 
   @override

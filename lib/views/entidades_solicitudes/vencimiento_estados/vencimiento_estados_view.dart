@@ -10,7 +10,8 @@ import 'package:tasaciones_app/widgets/refresh_widget.dart';
 part 'vencimiento_estados_mobile.dart';
 
 class VencimientoEstadosView extends StatelessWidget {
-  static const routeName = 'Vencimientos Estados Solicitudes';
+  static const routeName =
+      'mantenimientos/solicitudes/vencimientos-estados-solicitudes';
   const VencimientoEstadosView({Key? key}) : super(key: key);
 
   @override

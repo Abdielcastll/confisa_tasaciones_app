@@ -56,12 +56,12 @@ class RecursosAPI {
     }
   }
 
-  Future<Object> createRecursos({
-    required String name,
-    required int idModulo,
-    required int esMenuConfiguracion,
-    required String descripcionMenuConfiguracion,
-  }) async {
+  Future<Object> createRecursos(
+      {required String name,
+      required int idModulo,
+      required int esMenuConfiguracion,
+      required String descripcionMenuConfiguracion,
+      required String url}) async {
     String? _token = await _authenticationClient.accessToken;
 
     if (_token != null) {
@@ -76,6 +76,7 @@ class RecursosAPI {
           "idModulo": idModulo,
           "esMenuConfiguracion": esMenuConfiguracion,
           "descripcionMenuConfiguracion": descripcionMenuConfiguracion,
+          "url": url
         },
       );
     } else {
@@ -88,7 +89,8 @@ class RecursosAPI {
       required String nombre,
       required int idModulo,
       required String descripcionMenuConfiguracion,
-      required int esMenuConfiguracion}) async {
+      required int esMenuConfiguracion,
+      required String url}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -102,7 +104,8 @@ class RecursosAPI {
           "nombre": nombre,
           "idModulo": idModulo,
           "esMenuConfiguracion": esMenuConfiguracion,
-          "descripcionMenuConfiguracion": descripcionMenuConfiguracion
+          "descripcionMenuConfiguracion": descripcionMenuConfiguracion,
+          "url": url
         },
       );
     } else {

@@ -11,7 +11,8 @@ import '../../../widgets/refresh_widget.dart';
 part 'porcentajes_honorarios_entidad_mobile.dart';
 
 class PorcentajesHonorariosEntidadView extends StatelessWidget {
-  static const routeName = 'Porcentajes Honorarios Entidad';
+  static const routeName =
+      'mantenimientos/facturacion/porcentajes-honorarios-entidad';
   const PorcentajesHonorariosEntidadView({Key? key}) : super(key: key);
 
   @override

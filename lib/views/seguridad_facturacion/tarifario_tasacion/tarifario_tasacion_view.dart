@@ -10,7 +10,8 @@ import '../../../widgets/refresh_widget.dart';
 part 'tarifario_tasacion_mobile.dart';
 
 class TarifarioTasacionView extends StatelessWidget {
-  static const routeName = 'Tarifario Servicios Tasación';
+  static const routeName =
+      'mantenimientos/facturacion/tarifario-servicios-tasacion';
   const TarifarioTasacionView({Key? key}) : super(key: key);
 
   @override

@@ -12,7 +12,7 @@ import 'cola_solicitudes_view_model.dart';
 part 'cola_solicitudes_mobile.dart';
 
 class ColaSolicitudesView extends StatelessWidget {
-  static const routeName = 'Cola Solicitudes';
+  static const routeName = 'solicitudes/cola-solicitudes';
   const ColaSolicitudesView({Key? key}) : super(key: key);
 
   @override

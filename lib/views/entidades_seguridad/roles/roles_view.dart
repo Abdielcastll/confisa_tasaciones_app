@@ -10,7 +10,7 @@ import 'roles_view_model.dart';
 part 'roles_mobile.dart';
 
 class RolesView extends StatelessWidget {
-  static const routeName = 'Roles';
+  static const routeName = 'mantenimientos/seguridad/roles';
   const RolesView({Key? key}) : super(key: key);
 
   @override

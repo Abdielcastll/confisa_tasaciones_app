@@ -10,7 +10,7 @@ import '../../../widgets/refresh_widget.dart';
 part 'corte_facturacion_mobile.dart';
 
 class CorteFacturacionView extends StatelessWidget {
-  static const routeName = 'Días Corte de Facturación';
+  static const routeName = 'mantenimientos/facturacion/dia-corte-facturacion';
   const CorteFacturacionView({Key? key}) : super(key: key);
 
   @override

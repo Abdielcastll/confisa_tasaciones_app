@@ -10,7 +10,7 @@ import 'usuarios_view_model.dart';
 part 'usuarios_mobile.dart';
 
 class UsuariosView extends StatelessWidget {
-  static const routeName = 'Usuarios';
+  static const routeName = 'mantenimientos/seguridad/usuarios';
   const UsuariosView({Key? key}) : super(key: key);
 
   @override

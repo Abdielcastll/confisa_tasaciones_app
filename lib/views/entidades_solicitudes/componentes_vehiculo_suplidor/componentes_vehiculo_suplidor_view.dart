@@ -11,7 +11,8 @@ import 'componentes_vehiculo_suplidor_view_model.dart';
 part 'componentes_vehiculo_suplidor_mobile.dart';
 
 class ComponentesVehiculoSuplidorView extends StatelessWidget {
-  static const routeName = 'Vehículo Componentes Suplidor';
+  static const routeName =
+      'mantenimientos/solicitudes/componentes-vehiculo-suplidor';
   const ComponentesVehiculoSuplidorView({Key? key}) : super(key: key);
 
   @override

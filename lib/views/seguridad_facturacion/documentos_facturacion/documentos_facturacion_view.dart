@@ -10,7 +10,8 @@ import '../../../widgets/refresh_widget.dart';
 part 'documentos_facturacion_mobile.dart';
 
 class DocumentosFacturacionView extends StatelessWidget {
-  static const routeName = 'Documentos Facturación';
+  static const routeName =
+      'mantenimientos/facturacion/documentos-requeridos-facturacion';
   const DocumentosFacturacionView({Key? key}) : super(key: key);
 
   @override

@@ -18,7 +18,8 @@ class RecursosViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewName = TextEditingController();
-  TextEditingController tcDecripcionMenu = TextEditingController();
+  TextEditingController tcDescripcionMenu = TextEditingController();
+  TextEditingController tcNewUrl = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
   List<RecursosData> recursos = [];
@@ -162,7 +163,8 @@ class RecursosViewModel extends BaseViewModel {
 
   Future<void> modificarRecurso(BuildContext ctx, RecursosData recurso) async {
     tcNewName.text = recurso.nombre;
-    tcDecripcionMenu.text = recurso.descripcionMenuConfiguracion;
+    tcNewUrl.text = recurso.url;
+    tcDescripcionMenu.text = recurso.descripcionMenuConfiguracion;
     bool mostrarEnMenu = recurso.esMenuConfiguracion == 0 ? false : true;
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
@@ -211,6 +213,7 @@ class RecursosViewModel extends BaseViewModel {
                                     }
                                   },
                                   decoration: const InputDecoration(
+                                      label: Text("Nombre"),
                                       border: UnderlineInputBorder()),
                                 ),
                               ),
@@ -219,6 +222,7 @@ class RecursosViewModel extends BaseViewModel {
                               padding: const EdgeInsets.all(8.0),
                               child: DropdownButtonFormField<ModulosData>(
                                 decoration: const InputDecoration(
+                                    label: Text("Módulo"),
                                     border: UnderlineInputBorder()),
                                 items: modulos
                                     .map((e) => DropdownMenuItem<ModulosData>(
@@ -245,7 +249,7 @@ class RecursosViewModel extends BaseViewModel {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextFormField(
-                                  controller: tcDecripcionMenu,
+                                  controller: tcDescripcionMenu,
                                   validator: (value) {
                                     if (value!.trim() == '' && mostrarEnMenu) {
                                       return 'Escriba una descrpción para el menú';
@@ -257,6 +261,17 @@ class RecursosViewModel extends BaseViewModel {
                                     label: Text('Descripción para menú'),
                                     border: UnderlineInputBorder(),
                                   ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  controller: tcNewUrl,
+                                  decoration: const InputDecoration(
+                                      label: Text("Url"),
+                                      border: UnderlineInputBorder()),
                                 ),
                               ),
                             ),
@@ -311,6 +326,8 @@ class RecursosViewModel extends BaseViewModel {
                             onPressed: () {
                               Navigator.of(context).pop();
                               tcNewName.clear();
+                              tcDescripcionMenu.clear();
+                              tcNewUrl.clear();
                             }, // button pressed
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -330,11 +347,15 @@ class RecursosViewModel extends BaseViewModel {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 if (tcNewName.text.trim() != recurso.nombre ||
-                                    modulo?.id != recurso.idModulo) {
+                                    modulo?.id != recurso.idModulo ||
+                                    tcNewUrl.text.trim() != recurso.url) {
                                   ProgressDialog.show(context);
                                   var resp = await _recursosApi.updateRecursos(
+                                    url: tcNewUrl.text.trim().isEmpty
+                                        ? ""
+                                        : tcNewUrl.text.trim(),
                                     descripcionMenuConfiguracion:
-                                        tcDecripcionMenu.text.trim(),
+                                        tcDescripcionMenu.text.trim(),
                                     esMenuConfiguracion: mostrarEnMenu ? 1 : 0,
                                     idModulo: modulo == null
                                         ? recurso.idModulo
@@ -360,6 +381,8 @@ class RecursosViewModel extends BaseViewModel {
                                             LoginView.routeName);
                                   }
                                   tcNewName.clear();
+                                  tcDescripcionMenu.clear();
+                                  tcNewUrl.clear();
                                 } else {
                                   Dialogs.success(msg: 'Recurso actualizado');
                                   Navigator.of(context).pop();
@@ -394,6 +417,8 @@ class RecursosViewModel extends BaseViewModel {
 
   Future<void> crearRecurso(BuildContext ctx) async {
     tcNewName.clear();
+    tcDescripcionMenu.clear();
+    tcNewUrl.clear();
     modulo = null;
     bool mostrarEnMenu = false;
     final GlobalKey<FormState> _formKey = GlobalKey();
@@ -444,7 +469,7 @@ class RecursosViewModel extends BaseViewModel {
                                       }
                                     },
                                     decoration: const InputDecoration(
-                                      hintText: 'Nombre del recurso',
+                                      label: Text("Nombre"),
                                       border: UnderlineInputBorder(),
                                     ),
                                   ),
@@ -461,6 +486,7 @@ class RecursosViewModel extends BaseViewModel {
                                     }
                                   },
                                   decoration: const InputDecoration(
+                                      label: Text("Módulo"),
                                       border: UnderlineInputBorder()),
                                   items: modulos
                                       .map((e) => DropdownMenuItem<ModulosData>(
@@ -486,7 +512,7 @@ class RecursosViewModel extends BaseViewModel {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: TextFormField(
-                                    controller: tcDecripcionMenu,
+                                    controller: tcDescripcionMenu,
                                     validator: (value) {
                                       if (value!.trim() == '' &&
                                           mostrarEnMenu) {
@@ -503,6 +529,17 @@ class RecursosViewModel extends BaseViewModel {
                                   ),
                                 ),
                               ),
+                              SizedBox(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextFormField(
+                                    controller: tcNewUrl,
+                                    decoration: const InputDecoration(
+                                        label: Text("Url"),
+                                        border: UnderlineInputBorder()),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -514,6 +551,8 @@ class RecursosViewModel extends BaseViewModel {
                             onPressed: () {
                               Navigator.of(context).pop();
                               tcNewName.clear();
+                              tcDescripcionMenu.clear();
+                              tcNewUrl.clear();
                             }, // button pressed
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -535,9 +574,12 @@ class RecursosViewModel extends BaseViewModel {
                                 ProgressDialog.show(context);
                                 var resp = await _recursosApi.createRecursos(
                                   name: tcNewName.text.trim(),
+                                  url: tcNewUrl.text.trim().isEmpty
+                                      ? ""
+                                      : tcNewUrl.text.trim(),
                                   idModulo: modulo!.id,
                                   descripcionMenuConfiguracion:
-                                      tcDecripcionMenu.text.trim(),
+                                      tcDescripcionMenu.text.trim(),
                                   esMenuConfiguracion: mostrarEnMenu ? 1 : 0,
                                 );
                                 ProgressDialog.dissmiss(context);
@@ -558,6 +600,8 @@ class RecursosViewModel extends BaseViewModel {
                                           LoginView.routeName);
                                 }
                                 tcNewName.clear();
+                                tcDescripcionMenu.clear();
+                                tcNewUrl.clear();
                               }
                             }, // button pressed
                             child: Column(
@@ -590,6 +634,8 @@ class RecursosViewModel extends BaseViewModel {
   void dispose() {
     listController.dispose();
     tcNewName.dispose();
+    tcDescripcionMenu.dispose();
+    tcNewUrl.dispose();
     tcBuscar.dispose();
     super.dispose();
   }

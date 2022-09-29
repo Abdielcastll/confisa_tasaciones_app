@@ -11,7 +11,7 @@ import 'package:tasaciones_app/widgets/refresh_widget.dart';
 part 'auditoria_mobile.dart';
 
 class AuditoriaView extends StatelessWidget {
-  static const routeName = 'Auditorías';
+  static const routeName = 'general/auditorias';
   const AuditoriaView({Key? key}) : super(key: key);
 
   @override

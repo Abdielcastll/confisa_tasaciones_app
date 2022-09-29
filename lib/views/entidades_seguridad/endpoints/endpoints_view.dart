@@ -10,7 +10,7 @@ import 'endpoints_view_model.dart';
 part 'endpoints_mobile.dart';
 
 class EndpointsView extends StatelessWidget {
-  static const routeName = 'Endpoints';
+  static const routeName = 'mantenimientos/seguridad/endpoints';
   const EndpointsView({Key? key}) : super(key: key);
 
   @override

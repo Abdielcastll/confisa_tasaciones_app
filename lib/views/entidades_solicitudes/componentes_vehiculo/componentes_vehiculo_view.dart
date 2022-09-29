@@ -10,7 +10,7 @@ import 'package:tasaciones_app/widgets/refresh_widget.dart';
 part 'componentes_vehiculo_mobile.dart';
 
 class ComponentesVehiculoView extends StatelessWidget {
-  static const routeName = 'Vehículo Componentes';
+  static const routeName = 'mantenimientos/solicitudes/componentes-vehiculo';
   const ComponentesVehiculoView({Key? key}) : super(key: key);
 
   @override

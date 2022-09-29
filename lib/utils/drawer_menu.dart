@@ -30,7 +30,7 @@ List<Widget> menu(MenuResponse menu) {
                           ),
                           onTap: () {
                             _navigationService.pop();
-                            _navigationService.navigateToPage(e2.nombre);
+                            _navigationService.navigateToPage(e2.url);
                           },
                         ))
                     .toList(),
@@ -44,7 +44,7 @@ List<Widget> menu(MenuResponse menu) {
                 ),
                 onTap: () {
                   _navigationService.pop();
-                  _navigationService.navigateToPage(e.nombre);
+                  _navigationService.navigateToPage(e.url);
                 },
               );
             }

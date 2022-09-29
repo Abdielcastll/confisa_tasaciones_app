@@ -10,7 +10,7 @@ import 'permisos_view_model.dart';
 part 'permisos_mobile.dart';
 
 class PermisosView extends StatelessWidget {
-  static const routeName = 'Permisos';
+  static const routeName = 'mantenimientos/seguridad/permisos';
   const PermisosView({Key? key}) : super(key: key);
 
   @override

@@ -10,7 +10,7 @@ import 'recursos_view_model.dart';
 part 'recursos_mobile.dart';
 
 class RecursosView extends StatelessWidget {
-  static const routeName = 'Recursos';
+  static const routeName = 'mantenimientos/seguridad/recursos';
   const RecursosView({Key? key}) : super(key: key);
 
   @override

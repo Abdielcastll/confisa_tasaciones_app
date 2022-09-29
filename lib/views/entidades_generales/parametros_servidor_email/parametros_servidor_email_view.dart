@@ -10,7 +10,7 @@ import '../../../widgets/refresh_widget.dart';
 part 'parametros_servidor_email_mobile.dart';
 
 class ParametrosServidorEmailView extends StatelessWidget {
-  static const routeName = 'Servidores Email';
+  static const routeName = 'mantenimientos/general/servidores-email';
   const ParametrosServidorEmailView({Key? key}) : super(key: key);
 
   @override

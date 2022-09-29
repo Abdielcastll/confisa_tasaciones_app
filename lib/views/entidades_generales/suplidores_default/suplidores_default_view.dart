@@ -11,7 +11,7 @@ import '../../../widgets/refresh_widget.dart';
 part 'suplidores_default_mobile.dart';
 
 class SuplidoresDefaultView extends StatelessWidget {
-  static const routeName = 'Suplidores Default Entidad';
+  static const routeName = 'mantenimientos/general/supliores-defailt-entidad';
   const SuplidoresDefaultView({Key? key}) : super(key: key);
 
   @override

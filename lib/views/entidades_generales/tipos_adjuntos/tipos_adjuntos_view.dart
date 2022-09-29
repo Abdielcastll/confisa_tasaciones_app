@@ -10,7 +10,7 @@ import 'tipos_adjuntos_view_model.dart';
 part 'tipos_adjuntos_mobile.dart';
 
 class TiposAdjuntosView extends StatelessWidget {
-  static const routeName = 'Tipos Adjuntos';
+  static const routeName = 'mantenimientos/general/tipos-adjuntos';
   const TiposAdjuntosView({Key? key}) : super(key: key);
 
   @override

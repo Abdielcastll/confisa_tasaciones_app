@@ -18,6 +18,7 @@ class ModulosViewModel extends BaseViewModel {
   final listController = ScrollController();
   final _navigatorService = locator<NavigatorService>();
   TextEditingController tcNewName = TextEditingController();
+  TextEditingController tcNewCssIcon = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
   List<ModulosData> modulos = [];
@@ -155,6 +156,7 @@ class ModulosViewModel extends BaseViewModel {
 
   Future<void> modificarModulo(BuildContext ctx, ModulosData modulo) async {
     tcNewName.text = modulo.nombre;
+    tcNewCssIcon.text = modulo.cssIcon;
     tieneModuloPadre = modulo.moduloPadre == 0 ? false : true;
     idModuloPadre = modulo.moduloPadre == 0 ? 0 : modulo.moduloPadre;
     final GlobalKey<FormState> _formKey = GlobalKey();
@@ -201,6 +203,18 @@ class ModulosViewModel extends BaseViewModel {
                           },
                           decoration: const InputDecoration(
                             label: Text("Nombre"),
+                            border: UnderlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewCssIcon,
+                          decoration: const InputDecoration(
+                            label: Text("Css Icon"),
                             border: UnderlineInputBorder(),
                           ),
                         ),
@@ -301,6 +315,7 @@ class ModulosViewModel extends BaseViewModel {
                           onPressed: () {
                             Navigator.of(context).pop();
                             tcNewName.clear();
+                            tcNewCssIcon.clear();
                             idModuloPadre = 0;
                             tieneModuloPadre = false;
                           }, // button pressed
@@ -323,9 +338,13 @@ class ModulosViewModel extends BaseViewModel {
                             if (_formKey.currentState!.validate()) {
                               if (tcNewName.text.trim() != modulo.nombre ||
                                   idModuloPadre != modulo.moduloPadre ||
-                                  tieneModuloPadre == false) {
+                                  tieneModuloPadre == false ||
+                                  modulo.cssIcon != tcNewCssIcon.text.trim()) {
                                 ProgressDialog.show(context);
                                 var resp = await _modulosApi.updateModulos(
+                                    cssIcon: tcNewCssIcon.text.isEmpty
+                                        ? ""
+                                        : tcNewCssIcon.text.trim(),
                                     estado: modulo.estado,
                                     moduloPadre:
                                         tieneModuloPadre ? idModuloPadre : 0,
@@ -334,6 +353,7 @@ class ModulosViewModel extends BaseViewModel {
                                 ProgressDialog.dissmiss(context);
                                 if (resp is Success) {
                                   tcNewName.clear();
+                                  tcNewCssIcon.clear();
                                   idModuloPadre = 0;
                                   tieneModuloPadre = false;
                                   Dialogs.success(msg: 'Módulo Actualizado');
@@ -353,6 +373,7 @@ class ModulosViewModel extends BaseViewModel {
                                 }
                               } else {
                                 tcNewName.clear();
+                                tcNewCssIcon.clear();
                                 idModuloPadre = 0;
                                 tieneModuloPadre = false;
                                 Dialogs.success(msg: 'Módulo Actualizado');
@@ -387,6 +408,7 @@ class ModulosViewModel extends BaseViewModel {
 
   Future<void> crearModulo(BuildContext ctx) async {
     tcNewName.clear();
+    tcNewCssIcon.clear();
     idModuloPadre = 0;
     tieneModuloPadre = false;
     final GlobalKey<FormState> _formKey = GlobalKey();
@@ -438,6 +460,18 @@ class ModulosViewModel extends BaseViewModel {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: tcNewCssIcon,
+                          decoration: const InputDecoration(
+                            label: Text("Css Icon"),
+                            border: UnderlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
                     CheckboxListTile(
                         title: const Text('¿Módulo Padre?'),
                         value: tieneModuloPadre,
@@ -481,6 +515,7 @@ class ModulosViewModel extends BaseViewModel {
                           onPressed: () {
                             Navigator.of(context).pop();
                             tcNewName.clear();
+                            tcNewCssIcon.clear();
                             idModuloPadre = 0;
                             tieneModuloPadre = false;
                           }, // button pressed
@@ -503,6 +538,9 @@ class ModulosViewModel extends BaseViewModel {
                             if (_formKey.currentState!.validate()) {
                               ProgressDialog.show(context);
                               var resp = await _modulosApi.createModulos(
+                                  cssIcon: tcNewCssIcon.text.isEmpty
+                                      ? ""
+                                      : tcNewCssIcon.text.trim(),
                                   idModuloPadre:
                                       tieneModuloPadre ? idModuloPadre : 0,
                                   name: tcNewName.text.trim());
@@ -511,6 +549,7 @@ class ModulosViewModel extends BaseViewModel {
                                 Dialogs.success(msg: 'Módulo Creado');
                                 Navigator.of(context).pop();
                                 tcNewName.clear();
+                                tcNewCssIcon.clear();
                                 idModuloPadre = 0;
                                 tieneModuloPadre = false;
                                 await onRefresh();
