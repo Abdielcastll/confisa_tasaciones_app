@@ -51,11 +51,12 @@ class _MainApplicationState extends State<MainApplication> {
     if (!_initialURILinkHandled) {
       _initialURILinkHandled = true;
       try {
-        final uri = await getInitialUri();
-        l.d('_initUniLinks====> $uri');
-        if (uri != null) {
+        final uriCod = await getInitialUri();
+
+        if (uriCod != null) {
+          var path = Uri.decodeComponent(uriCod.path);
+          Uri uri = Uri(path: path);
           var paths = uri.pathSegments;
-          l.d('PATHS LENTGH ${paths.length}');
           bool activate = paths[0] == 'reset-password' ? false : true;
           String? token = paths[1];
           String? username = paths[2];
@@ -76,11 +77,11 @@ class _MainApplicationState extends State<MainApplication> {
   }
 
   void _incomingLinkHandler() {
-    _sub = uriLinkStream.listen((Uri? uri) {
-      l.d('_incomingLinkHandler ===>>> $uri');
-      if (uri != null) {
+    _sub = uriLinkStream.listen((Uri? uriCod) {
+      if (uriCod != null) {
+        var path = Uri.decodeComponent(uriCod.path);
+        Uri uri = Uri(path: path);
         var paths = uri.pathSegments;
-        l.d('PATHS LENTGH ${paths.length}');
         bool activate = paths[0] == 'reset-password' ? false : true;
         String? token = paths[1];
         String? username = paths[2];
