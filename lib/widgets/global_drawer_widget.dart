@@ -93,19 +93,6 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                           //   },
                           // ),
                           ListTile(
-                            title: const Text(
-                              'Cola de Facturas',
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                            leading: const Icon(Icons.fact_check_outlined),
-                            onTap: () {
-                              _navigationService.pop();
-                              _navigationService.navigateToPage(
-                                  ColaFacturacionView.routeName);
-                            },
-                          ),
-                          ListTile(
                             leading: const Icon(Icons.person),
                             title: const Text(
                               'Perfil',
