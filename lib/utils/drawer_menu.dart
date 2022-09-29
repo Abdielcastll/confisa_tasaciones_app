@@ -12,6 +12,7 @@ List<Widget> menu(MenuResponse menu) {
     for (var element in menu.data) {
       drawerMenu.add(
         ExpansionTile(
+          maintainState: true,
           leading: getIcon(element.nombre),
           title: Text(
             element.nombre,
@@ -20,6 +21,7 @@ List<Widget> menu(MenuResponse menu) {
           children: element.recursos!.map((e) {
             if (e.recursos != null) {
               return ExpansionTile(
+                maintainState: true,
                 title: Text(e.nombre),
                 children: e.recursos!
                     .map((e2) => ListTile(

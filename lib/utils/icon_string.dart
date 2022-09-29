@@ -7,7 +7,8 @@ final icons = <String, IconData>{
   'Mant. Solicitudes': Icons.article_rounded,
   'Solicitudes': Icons.article_rounded,
   'Mantenimientos': Icons.settings,
-  'General': Icons.manage_search_rounded
+  'General': Icons.manage_search_rounded,
+  'Facturacion': Icons.chrome_reader_mode_rounded
 };
 
 Icon getIcon(String nombreIcono) {
