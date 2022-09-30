@@ -77,7 +77,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
         Expanded(
           child: RefreshIndicator(
             triggerMode: RefreshIndicatorTriggerMode.anywhere,
-            onRefresh: () => vm.onInit(context),
+            onRefresh: () => vm.onRefresh(),
             child: vm.solicitudes.isEmpty
                 ? const RefreshWidget()
                 : ListView.builder(

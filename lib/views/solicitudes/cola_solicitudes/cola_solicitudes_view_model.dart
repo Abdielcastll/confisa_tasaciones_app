@@ -138,12 +138,24 @@ class ColaSolicitudesViewModel extends BaseViewModel {
           .profilePermisos = resp1.response;
     } else if (resp1 is Failure) {
       Dialogs.error(msg: resp1.messages.first);
-      loading = false;
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      // loading = false;
+      // _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     } else if (resp1 is TokenFail) {
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
+    await onRefresh();
+
+    getAlarma();
+    loading = false;
+    final componentesProv = ComponentesVehiculosProvider.instance;
+    final accesoriosProv = AccesoriosProvider.instance;
+    await componentesProv.getComponentes();
+    await componentesProv.getComponentesSeg();
+    await accesoriosProv.getAccesorios();
+  }
+
+  Future<void> onRefresh() async {
     var resp = await _solicitudesApi.getColaSolicitudes(pageNumber: pageNumber);
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudesResponse = resp.response;
@@ -161,13 +173,6 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
-    getAlarma();
-    loading = false;
-    final componentesProv = ComponentesVehiculosProvider.instance;
-    final accesoriosProv = AccesoriosProvider.instance;
-    await componentesProv.getComponentes();
-    await componentesProv.getComponentesSeg();
-    await accesoriosProv.getAccesorios();
   }
 
   Future<void> cargarMas() async {
