@@ -236,6 +236,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => const MontosFacturaMinimaView());
 
     default:
-      return MaterialPageRoute(builder: (context) => const HomeView());
+      return MaterialPageRoute(
+          builder: (context) => const ColaSolicitudesView());
   }
 }

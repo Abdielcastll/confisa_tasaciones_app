@@ -13,6 +13,7 @@ import 'package:tasaciones_app/core/providers/menu_provider.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/utils/cuentas.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
+import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/views/home/home_view.dart';
 
@@ -57,12 +58,12 @@ class LoginViewModel extends BaseViewModel {
             loading = false;
             _userClient.saveProfile(resp2.response.data);
             _navigationService
-                .navigateToPageWithReplacement(HomeView.routeName);
+                .navigateToPageWithReplacement(ColaSolicitudesView.routeName);
           } else if (resp2 is Failure) {
             if (resp2.messages.first != "No Internet") {
               loading = false;
               _navigationService
-                  .navigateToPageWithReplacement(HomeView.routeName);
+                  .navigateToPageWithReplacement(ColaSolicitudesView.routeName);
             } else {
               loading = false;
               Dialogs.error(msg: resp2.messages[0]);
@@ -72,7 +73,7 @@ class LoginViewModel extends BaseViewModel {
           if (resp1.messages.first != "No Internet") {
             loading = false;
             _navigationService
-                .navigateToPageWithReplacement(HomeView.routeName);
+                .navigateToPageWithReplacement(ColaSolicitudesView.routeName);
           } else {
             loading = false;
             Dialogs.error(

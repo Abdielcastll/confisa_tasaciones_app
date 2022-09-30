@@ -13,6 +13,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Scaffold(
+          drawer: GlobalDrawerDartDesktop(menuApp: vm.menu),
           appBar: Appbar(
             textSize: 18,
             titulo: 'Cola de solicitudes',
@@ -76,7 +77,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
         Expanded(
           child: RefreshIndicator(
             triggerMode: RefreshIndicatorTriggerMode.anywhere,
-            onRefresh: () => vm.onInit(),
+            onRefresh: () => vm.onInit(context),
             child: vm.solicitudes.isEmpty
                 ? const RefreshWidget()
                 : ListView.builder(
@@ -98,7 +99,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             vertical: 3, horizontal: 5),
                         child: MaterialButton(
-                          onPressed: () => vm.goToSolicitud(s),
+                          onPressed: () => vm.goToSolicitud(s, context),
                           color: Colors.white,
                           clipBehavior: Clip.antiAlias,
                           padding: EdgeInsets.zero,

@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
+import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
+import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/providers/componentes_vehiculo_provider.dart';
+import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
 
 import '../../../core/api/api_status.dart';
+import '../../../core/api/roles_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/providers/accesorios_provider.dart';
@@ -42,7 +49,17 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   bool hasNextPage = false;
   bool _busqueda = false;
 
-  ColaSolicitudesViewModel() {
+  final _authenticationClient = locator<AuthenticationClient>();
+  final _userClient = locator<UserClient>();
+  final _personalApi = locator<PersonalApi>();
+  final _rolesAPI = locator<RolesAPI>();
+  late Session _user;
+  late Profile _userData;
+  final logger = Logger();
+  final List<RolClaimsData> _permisos;
+  final MenuResponse _menu;
+
+  ColaSolicitudesViewModel(this._permisos, this._menu) {
     listController.addListener(() {
       if (listController.position.maxScrollExtent == listController.offset) {
         if (hasNextPage) {
@@ -50,6 +67,21 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         }
       }
     });
+  }
+
+  List<RolClaimsData> get permisos => _permisos;
+  MenuResponse get menu => _menu;
+
+  Session get user => _user;
+  Profile get userData => _userData;
+  set user(Session value) {
+    _user = value;
+    notifyListeners();
+  }
+
+  set userData(Profile value) {
+    _userData = value;
+    notifyListeners();
   }
 
   int get currentForm => _currentForm;
@@ -91,11 +123,27 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> onInit() async {
+  Future<void> onInit(BuildContext context) async {
     pageNumber = 1;
     Session data = _authenticationAPI.loadSession;
     Profile perfil = _usuarioApi.loadProfile;
     roles = data.role;
+    loading = true;
+    user = _authenticationClient.loadSession;
+    userData = _userClient.loadProfile;
+
+    var resp1 = await _personalApi.getPermisos();
+    if (resp1 is Success<ProfilePermisoResponse>) {
+      Provider.of<ProfilePermisosProvider>(context, listen: false)
+          .profilePermisos = resp1.response;
+    } else if (resp1 is Failure) {
+      Dialogs.error(msg: resp1.messages.first);
+      loading = false;
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    } else if (resp1 is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var resp = await _solicitudesApi.getColaSolicitudes(pageNumber: pageNumber);
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudesResponse = resp.response;
@@ -189,7 +237,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     tcBuscar.clear();
   }
 
-  goToSolicitud(SolicitudesData s) {
+  goToSolicitud(SolicitudesData s, BuildContext context) {
     if (roles.contains("OficialNegocios")) {
       print('Consultar/Modificar No.${s.noTasacion}');
       _navigatorService
@@ -199,7 +247,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       )
           .then((v) {
         if (v != null) {
-          onInit();
+          onInit(context);
         }
       });
     }
@@ -215,7 +263,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
             .then((v) {
           if (v != null) {
             print('ONINIT');
-            onInit();
+            onInit(context);
           }
         });
       } else {
@@ -227,7 +275,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         )
             .then((v) {
           if (v != null) {
-            onInit();
+            onInit(context);
           }
         });
       }

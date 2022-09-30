@@ -2,8 +2,12 @@ library cola_solicitudes_view;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
+import 'package:tasaciones_app/core/providers/menu_provider.dart';
+import 'package:tasaciones_app/core/providers/permisos_provider.dart';
 import 'package:tasaciones_app/widgets/appbar_widget.dart';
+import 'package:tasaciones_app/widgets/global_drawer_widget.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/refresh_widget.dart';
@@ -17,11 +21,15 @@ class ColaSolicitudesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColaSolicitudesViewModel viewModel = ColaSolicitudesViewModel();
+    var permisos =
+        Provider.of<PermisosUserProvider>(context, listen: false).permisosUser;
+    var menu = Provider.of<MenuProvider>(context, listen: false).menu;
+    ColaSolicitudesViewModel viewModel =
+        ColaSolicitudesViewModel(permisos, menu);
     return ViewModelBuilder<ColaSolicitudesViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {
-          viewModel.onInit();
+          viewModel.onInit(context);
         },
         builder: (context, viewModel, child) {
           return _ColaSolicitudesMobile(viewModel);
