@@ -211,7 +211,10 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          '${NumberFormat('#,###.0#', 'es').format(s.totalApagar)} RD\$',
+                                          vm.fmf
+                                              .copyWith(amount: s.totalApagar)
+                                              .output
+                                              .symbolOnLeft,
                                           style: const TextStyle(
                                             color: AppColors.brownDark,
                                             fontSize: 14,

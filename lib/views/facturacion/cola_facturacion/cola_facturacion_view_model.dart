@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/facturacion/detalle_aprobacion_factura.dart';
 import 'package:tasaciones_app/core/models/facturacion/detalle_factura.dart';
@@ -38,6 +39,16 @@ class ColaFacturacionViewModel extends BaseViewModel {
     _busqueda = value;
     notifyListeners();
   }
+
+  MoneyFormatter fmf = MoneyFormatter(
+      amount: 12345678.9012345,
+      settings: MoneyFormatterSettings(
+          symbol: 'RD\$',
+          thousandSeparator: ',',
+          decimalSeparator: '.',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 2,
+          compactFormatType: CompactFormatType.short));
 
   Future<void> onInit() async {
     var resp = await _facturacionApi.getFacturas();

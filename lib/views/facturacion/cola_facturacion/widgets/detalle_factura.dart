@@ -78,7 +78,11 @@ class DetalleFacturaPage extends StatelessWidget {
                         child: BaseTextFieldNoEdit(
                           label: 'Itbis:',
                           initialValue:
-                              '${NumberFormat('#,###.0#', 'es').format(detalleFactura.itbis)} RD\$',
+                              // '${NumberFormat('#,###.0#', 'es').format(detalleFactura.itbis)} RD\$',
+                              vm.fmf
+                                  .copyWith(amount: detalleFactura.itbis)
+                                  .output
+                                  .symbolOnLeft,
                           border: false,
                         ),
                       ),
@@ -86,7 +90,11 @@ class DetalleFacturaPage extends StatelessWidget {
                         child: BaseTextFieldNoEdit(
                           label: 'Honorarios:',
                           initialValue:
-                              '${NumberFormat('#,###.0#', 'es').format(detalleFactura.honorarios)} RD\$',
+                              // '${NumberFormat('#,###.0#', 'es').format(detalleFactura.honorarios)} RD\$',
+                              vm.fmf
+                                  .copyWith(amount: detalleFactura.honorarios)
+                                  .output
+                                  .symbolOnLeft,
                           border: false,
                         ),
                       ),
@@ -98,7 +106,11 @@ class DetalleFacturaPage extends StatelessWidget {
                         child: BaseTextFieldNoEdit(
                           label: 'SubTotal:',
                           initialValue:
-                              '${NumberFormat('#,###.0#', 'es').format(detalleFactura.subTotal)} RD\$',
+                              // '${NumberFormat('#,###.0#', 'es').format(detalleFactura.subTotal)} RD\$',
+                              vm.fmf
+                                  .copyWith(amount: detalleFactura.subTotal)
+                                  .output
+                                  .symbolOnLeft,
                           border: false,
                         ),
                       ),
@@ -106,7 +118,11 @@ class DetalleFacturaPage extends StatelessWidget {
                         child: BaseTextFieldNoEdit(
                           label: 'Total General:',
                           initialValue:
-                              '${NumberFormat('#,###.0#', 'es').format(detalleFactura.totalGeneral)} RD\$',
+                              // '${NumberFormat('#,###.0#', 'es').format(detalleFactura.totalGeneral)} RD\$',
+                              vm.fmf
+                                  .copyWith(amount: detalleFactura.totalGeneral)
+                                  .output
+                                  .symbolOnLeft,
                           border: false,
                         ),
                       ),
@@ -267,8 +283,10 @@ class DetalleFacturaPage extends StatelessWidget {
                           DateFormat.yMd('es').format(t.fechaTransaccion!)),
                       _itemTasacion('Cliente', t.nombreCliente ?? ''),
                       _itemTasacion('Cédula', t.cedulaCliente ?? ''),
-                      _itemTasacion('Costo',
-                          '${NumberFormat('#,###.0#', 'es').format(t.costo)} RD\$'),
+                      _itemTasacion(
+                        'Costo',
+                        vm.fmf.copyWith(amount: t.costo).output.symbolOnLeft,
+                      ),
                       _divider(),
                     ],
                   );
@@ -294,7 +312,7 @@ class DetalleFacturaPage extends StatelessWidget {
                       _itemTasacion('Cliente', t.nombreCliente ?? ''),
                       _itemTasacion('Cédula', t.cedulaCliente ?? ''),
                       _itemTasacion('Costo',
-                          '${NumberFormat('#,###.0#', 'es').format(t.costo)} RD\$'),
+                          vm.fmf.copyWith(amount: t.costo).output.symbolOnLeft),
                       _divider(),
                     ],
                   );
@@ -304,8 +322,10 @@ class DetalleFacturaPage extends StatelessWidget {
                     Expanded(
                       child: BaseTextFieldNoEdit(
                         label: 'Honorarios',
-                        initialValue:
-                            '${NumberFormat('#,###.0#', 'es').format(e.honorarios)} RD\$',
+                        initialValue: vm.fmf
+                            .copyWith(amount: e.honorarios)
+                            .output
+                            .symbolOnLeft,
                         border: false,
                       ),
                     ),
@@ -313,7 +333,11 @@ class DetalleFacturaPage extends StatelessWidget {
                       child: BaseTextFieldNoEdit(
                         label: 'Total Reservas',
                         initialValue:
-                            '${NumberFormat('#,###.0#', 'es').format(e.totalReservas)} RD\$',
+                            // '${NumberFormat('#,###.0#', 'es').format(e.totalReservas)} RD\$',
+                            vm.fmf
+                                .copyWith(amount: e.totalReservas)
+                                .output
+                                .symbolOnLeft,
                         border: false,
                       ),
                     ),
@@ -321,7 +345,11 @@ class DetalleFacturaPage extends StatelessWidget {
                       child: BaseTextFieldNoEdit(
                         label: 'Total Gastos',
                         initialValue:
-                            '${NumberFormat('#,###.0#', 'es').format(e.totalGastos)} RD\$',
+                            // '${NumberFormat('#,###.0#', 'es').format(e.totalGastos)} RD\$',
+                            vm.fmf
+                                .copyWith(amount: e.totalGastos)
+                                .output
+                                .symbolOnLeft,
                         border: false,
                       ),
                     ),
