@@ -30,6 +30,7 @@ import 'package:tasaciones_app/views/notas/notas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/aprobadores_facturas/aprobadores_facturas_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/corte_facturacion/corte_facturacion_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/documentos_facturacion/documentos_facturacion_view.dart';
+import 'package:tasaciones_app/views/seguridad_facturacion/montos_factura_minima/montos_factura_minima_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/periodo_facturacion_automatica/periodo_facturacion_automatica_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/porcentajes_honorarios_entidad/porcentajes_honorarios_entidad_view.dart';
 import 'package:tasaciones_app/views/seguridad_facturacion/tarifario_tasacion/tarifario_tasacion_view.dart';
@@ -229,6 +230,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case CorteFacturacionView.routeName:
       return CupertinoPageRoute(
           builder: (context) => const CorteFacturacionView());
+
+    case MontosFacturaMinimaView.routeName:
+      return CupertinoPageRoute(
+          builder: (context) => const MontosFacturaMinimaView());
 
     default:
       return MaterialPageRoute(builder: (context) => const HomeView());

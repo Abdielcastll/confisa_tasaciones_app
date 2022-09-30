@@ -29,10 +29,12 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/vencimie
 import 'package:tasaciones_app/core/api/seguridad_facturacion/aprobadores_facturas_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/corte_facturacion_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/documentos_facturacion_api.dart';
+import 'package:tasaciones_app/core/api/seguridad_facturacion/montos_factura_minima_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/periodo_facturacion_automatica_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/porcentajes_honorarios_entidad_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/tarifario_tasacion_api.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
+import 'package:tasaciones_app/core/api/sucursales_api.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 
@@ -124,8 +126,10 @@ abstract class DependencyInjection {
     final periodoFacturacionAutomaticaApi =
         PeriodoFacturacionAutomaticaApi(http, authenticationClient);
     final corteFacturacionApi = CorteFacturacionApi(http, authenticationClient);
-
+    final montosFacturaMinimaApi =
+        MontosFacturaMinimaApi(http, authenticationClient);
     final facturacionApi = FacturacionApi(http, authenticationClient);
+    final sucursalesApi = SucursalesApi(http, authenticationClient);
 
     locator.registerSingleton<AuthenticationAPI>(authenticationAPI);
     locator.registerSingleton<RolesAPI>(rolesAPI);
@@ -176,5 +180,7 @@ abstract class DependencyInjection {
         periodoFacturacionAutomaticaApi);
     locator.registerSingleton<CorteFacturacionApi>(corteFacturacionApi);
     locator.registerSingleton<FacturacionApi>(facturacionApi);
+    locator.registerSingleton<MontosFacturaMinimaApi>(montosFacturaMinimaApi);
+    locator.registerSingleton<SucursalesApi>(sucursalesApi);
   }
 }
