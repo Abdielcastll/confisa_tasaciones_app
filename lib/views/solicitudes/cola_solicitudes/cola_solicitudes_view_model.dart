@@ -14,7 +14,9 @@ import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.
 import 'package:tasaciones_app/core/providers/componentes_vehiculo_provider.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
+import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
+import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_permisos.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
 
 import '../../../core/api/api_status.dart';
@@ -42,6 +44,17 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   List<AlarmasData> alarmas = [];
   TextEditingController tcBuscar = TextEditingController();
   List<String> roles = [];
+  List<String> opcionesFiltro = [
+    "Todos",
+    "No. Tasación",
+    "No. Solicitud Crédito",
+    "Estado",
+    "Chasis",
+    "Identificación Cliente",
+    "Nombre Cliente",
+    "Tipo de Tasación"
+  ];
+  List<String> seleccionFiltro = [];
 
   bool _loading = true;
   int pageNumber = 1;
@@ -102,6 +115,80 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void filtro(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                width: MediaQuery.of(context).size.width * .75,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColors.gold, width: 3)),
+                child: dialogMostrarInformacionPermisos(
+                    const SizedBox.shrink(),
+                    const SizedBox.shrink(),
+                    [
+                      DataTable(
+                          onSelectAll: (value) {},
+                          columns: [
+                            DataColumn(
+                              label: Container(),
+                            ),
+                          ],
+                          rows: opcionesFiltro
+                              .map((e) => DataRow(
+                                      selected: seleccionFiltro
+                                          .any((element) => element == e),
+                                      onSelectChanged: (isSelected) =>
+                                          setState(() {
+                                            if (e == "Todos") {
+                                              if (isSelected!) {
+                                                seleccionFiltro.add(e);
+                                                seleccionFiltro.removeWhere(
+                                                    (element) =>
+                                                        element != "Todos");
+                                              } else {
+                                                seleccionFiltro.removeWhere(
+                                                    (element) => element == e);
+                                              }
+                                            } else {
+                                              if (isSelected!) {
+                                                if (!seleccionFiltro.any(
+                                                    (element) =>
+                                                        element == "Todos")) {
+                                                  isSelected
+                                                      ? seleccionFiltro.add(e)
+                                                      : seleccionFiltro
+                                                          .removeWhere(
+                                                              (element) =>
+                                                                  element == e);
+                                                }
+                                              }
+                                            }
+                                          }),
+                                      cells: [
+                                        DataCell(
+                                          Text(
+                                            e,
+                                          ),
+                                        ),
+                                      ]))
+                              .toList()),
+                    ],
+                    size,
+                    const SizedBox.shrink()),
+              ),
+            );
+          }));
+        });
+  }
+
   Future<void> getAlarma() async {
     Object respalarm;
     Profile perfil = _usuarioApi.loadProfile;
@@ -125,6 +212,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
 
   Future<void> onInit(BuildContext context) async {
     pageNumber = 1;
+    seleccionFiltro = [];
     Session data = _authenticationAPI.loadSession;
     Profile perfil = _usuarioApi.loadProfile;
     roles = data.role;
@@ -206,6 +294,10 @@ class ColaSolicitudesViewModel extends BaseViewModel {
 
   Future<void> buscar(String query) async {
     loading = true;
+    if (query.isEmpty) {
+      loading = false;
+      return;
+    }
     var resp = await _solicitudesApi.getColaSolicitudes(
       noSolicitud: int.parse(query),
       pageSize: 0,
