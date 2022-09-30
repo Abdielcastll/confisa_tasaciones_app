@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:tasaciones_app/core/models/roles_response.dart';
-
 MontosFacturaMinimaResponse montosFacturaMinimaResponseFromJson(String str) =>
     MontosFacturaMinimaResponse.fromJson(json.decode(str));
 

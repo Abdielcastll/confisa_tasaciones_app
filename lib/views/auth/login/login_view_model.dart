@@ -12,20 +12,17 @@ import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/providers/menu_provider.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/utils/cuentas.dart';
-import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/views/home/home_view.dart';
 
 import '../../../core/api/recursos_api.dart';
-import '../../../core/api/usuarios_api.dart';
 import '../../../core/user_client.dart';
 
 class LoginViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();
   final _authenticationAPI = locator<AuthenticationAPI>();
   final _recursosAPI = locator<RecursosAPI>();
-  final _usuariosAPI = locator<UsuariosAPI>();
   final _personalApi = locator<PersonalApi>();
   final _autenticationClient = locator<AuthenticationClient>();
   final _userClient = locator<UserClient>();

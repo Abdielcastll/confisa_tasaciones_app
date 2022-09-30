@@ -2,7 +2,6 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/http.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/aprobadores_facturas_response.dart';
-import 'package:tasaciones_app/core/models/seguridad_facturacion/tarifario_tasacion_response.dart';
 
 class AprobadoresFacturasApi {
   final Http _http;

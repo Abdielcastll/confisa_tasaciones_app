@@ -218,7 +218,6 @@ class CantidadFotosViewModel extends BaseViewModel {
 
   Future<void> modificarFotosSuplidor(
       BuildContext ctx, SuplidorData suplidor) async {
-    Size size = MediaQuery.of(ctx).size;
     ProgressDialog.show(ctx);
     var resp = await _cantidadfotosApi.getCantidadFotos(
         idSuplidor: suplidor.codigoRelacionado);

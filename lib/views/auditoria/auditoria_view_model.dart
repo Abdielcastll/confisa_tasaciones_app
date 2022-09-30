@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/auditoria_api.dart';
-import 'package:tasaciones_app/core/api/usuarios_api.dart';
 import 'package:tasaciones_app/core/models/auditoria_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
@@ -15,7 +14,6 @@ import '../../../core/locator.dart';
 
 class AuditoriaViewModel extends BaseViewModel {
   final _auditoriaApi = locator<AuditoriaApi>();
-  final _usuariosApi = locator<UsuariosAPI>();
   final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();

@@ -4,7 +4,6 @@ import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/adjuntos.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
-import 'package:tasaciones_app/core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 

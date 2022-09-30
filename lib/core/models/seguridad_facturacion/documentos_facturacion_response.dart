@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:tasaciones_app/core/models/roles_response.dart';
-
 DocumentosFacturacionResponse documentosFacturacionResponseFromJson(
         String str) =>
     DocumentosFacturacionResponse.fromJson(json.decode(str));

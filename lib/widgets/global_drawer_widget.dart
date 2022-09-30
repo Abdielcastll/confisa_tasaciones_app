@@ -4,7 +4,6 @@ import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
-import 'package:tasaciones_app/views/facturacion/cola_facturacion/cola_facturacion_view.dart';
 
 import '../core/locator.dart';
 import '../core/services/navigator_service.dart';
