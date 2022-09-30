@@ -644,19 +644,26 @@ class SolicitudesApi {
     }
   }
 
-  Future<Object> getColaSolicitudes({
-    String? estado,
-    int? noSolicitud,
-    int pageNumber = 1,
-    int pageSize = 20,
-    int? idSuplidor,
-  }) async {
+  Future<Object> getColaSolicitudes(
+      {String? estado,
+      int? noSolicitud,
+      int pageNumber = 1,
+      int pageSize = 20,
+      int? idSuplidor,
+      String tipoTasacion = "",
+      String nombreCliente = "",
+      String identificacion = "",
+      String chasis = ""}) async {
     final params = {
       "EstadoTasacion": estado,
       "NoSolicitudCredito": noSolicitud,
       "PageSize": pageSize,
       "PageNumber": pageNumber,
       "IdSuplidor": idSuplidor,
+      "TipoTasacion": tipoTasacion,
+      "NombreCliente": nombreCliente,
+      "Identificacion": identificacion,
+      "Chasis": chasis,
     };
     l.d(params);
     String? _token = await _authenticationClient.accessToken;

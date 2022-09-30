@@ -145,33 +145,26 @@ class ColaSolicitudesViewModel extends BaseViewModel {
                               .map((e) => DataRow(
                                       selected: seleccionFiltro
                                           .any((element) => element == e),
-                                      onSelectChanged: (isSelected) =>
-                                          setState(() {
-                                            if (e == "Todos") {
-                                              if (isSelected!) {
-                                                seleccionFiltro.add(e);
-                                                seleccionFiltro.removeWhere(
-                                                    (element) =>
-                                                        element != "Todos");
-                                              } else {
-                                                seleccionFiltro.removeWhere(
-                                                    (element) => element == e);
-                                              }
-                                            } else {
-                                              if (isSelected!) {
-                                                if (!seleccionFiltro.any(
-                                                    (element) =>
-                                                        element == "Todos")) {
-                                                  isSelected
-                                                      ? seleccionFiltro.add(e)
-                                                      : seleccionFiltro
-                                                          .removeWhere(
-                                                              (element) =>
-                                                                  element == e);
-                                                }
-                                              }
-                                            }
-                                          }),
+                                      onSelectChanged: (isSelected) {
+                                        if (e == "Todos") {
+                                          if (isSelected!) {
+                                            seleccionFiltro.add(e);
+                                            seleccionFiltro.removeWhere(
+                                                (element) =>
+                                                    element != "Todos");
+                                          } else {
+                                            seleccionFiltro.removeWhere(
+                                                (element) => element == e);
+                                          }
+                                        } else if (!seleccionFiltro.any(
+                                            (element) => element == "Todos")) {
+                                          isSelected!
+                                              ? seleccionFiltro.add(e)
+                                              : seleccionFiltro.removeWhere(
+                                                  (element) => element == e);
+                                        }
+                                        setState((() {}));
+                                      },
                                       cells: [
                                         DataCell(
                                           Text(
@@ -298,10 +291,48 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       loading = false;
       return;
     }
-    var resp = await _solicitudesApi.getColaSolicitudes(
-      noSolicitud: int.parse(query),
-      pageSize: 0,
-    );
+    var resp;
+    if (seleccionFiltro.any((element) => element == "Todos")) {
+      resp = await _solicitudesApi.getColaSolicitudes(
+          noSolicitud: int.tryParse(query),
+          chasis: query,
+          estado: query,
+          identificacion: query,
+          nombreCliente: query,
+          tipoTasacion: query);
+    } else {
+      if (seleccionFiltro.isNotEmpty) {
+        resp = await _solicitudesApi.getColaSolicitudes(
+            noSolicitud: seleccionFiltro
+                    .any((element) => element == "No. Solicitud Crédito")
+                ? int.tryParse(query)
+                : null,
+            chasis: seleccionFiltro.any((element) => element == "Chasis")
+                ? query
+                : "",
+            estado: seleccionFiltro.any((element) => element == "Estado")
+                ? query
+                : "",
+            identificacion: seleccionFiltro
+                    .any((element) => element == "Identificación Cliente")
+                ? query
+                : "",
+            nombreCliente:
+                seleccionFiltro.any((element) => element == "Nombre Cliente")
+                    ? query
+                    : "",
+            tipoTasacion:
+                seleccionFiltro.any((element) => element == "Tipo de Tasación")
+                    ? query
+                    : "");
+      }
+    }
+
+    if (seleccionFiltro.isEmpty) {
+      resp = await _solicitudesApi.getColaSolicitudes(
+        noSolicitud: int.parse(query),
+      );
+    }
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudes = resp.response.data;
       ordenar();

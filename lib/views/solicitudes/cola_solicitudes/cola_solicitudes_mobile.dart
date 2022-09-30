@@ -48,10 +48,9 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                     ),
                     textInputAction: TextInputAction.search,
-                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Buscar solicitud',
+                        hintText: 'Buscar',
                         hintStyle: const TextStyle(
                             color: Colors.grey, fontWeight: FontWeight.w700),
                         suffixIcon: Row(
