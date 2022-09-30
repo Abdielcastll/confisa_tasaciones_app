@@ -15,7 +15,7 @@ class SuplidoresApi {
     int? estado,
     String direccion = "",
     String email = "",
-    int pageSize = 900,
+    int pageSize = 999,
     int pageNumber = 1,
     int? codigoRelacionado,
   }) async {

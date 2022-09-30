@@ -30,7 +30,7 @@ class _CorteFacturacionMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscarCorteFacturacion,
+                        onSubmitted: vm.buscarSuplidor,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -39,14 +39,14 @@ class _CorteFacturacionMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar por Día de Corte...',
+                          hintText: 'Buscar Suplidor...',
                           hintStyle: const TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.w700),
                           suffixIcon: !vm.busqueda
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
-                                  onPressed: () => vm
-                                      .buscarCorteFacturacion(vm.tcBuscar.text),
+                                  onPressed: () =>
+                                      vm.buscarSuplidor(vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(
@@ -66,52 +66,55 @@ class _CorteFacturacionMobile extends StatelessWidget {
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.cortesFacturacion.isEmpty
+                child: vm.suplidores.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.cortesFacturacion.length,
+                        itemCount: vm.suplidores.length,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          var corteFacturacion = vm.cortesFacturacion[i];
+                          var suplidor = vm.suplidores[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
                               onPressed: () => vm.modificarCorteFacturacion(
-                                  context, corteFacturacion),
+                                  context, suplidor),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5)),
                               child: Container(
                                 alignment: Alignment.centerLeft,
-                                height: 85,
+                                height: 75,
                                 padding: const EdgeInsets.all(10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      corteFacturacion.suplidor,
+                                      suplidor.nombre,
                                       style: const TextStyle(
                                         color: AppColors.brownDark,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w800,
                                       ),
                                     ),
-                                    Text(
-                                      "Tipo de Tasación: ${corteFacturacion.descripcionTipoTasacion}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
-                                    Text(
-                                      "Dia de Corte: ${corteFacturacion.valor}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
+                                    vm.cortesFacturacion.any((element) =>
+                                            element.idSuplidor ==
+                                            suplidor.codigoRelacionado)
+                                        ? Text(
+                                            "Dia de Corte: ${vm.cortesFacturacion.firstWhere((element) => element.idSuplidor == suplidor.codigoRelacionado).valor}",
+                                            style: const TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          )
+                                        : const Text(
+                                            "Día de corte a definir",
+                                            style: TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          )
                                   ],
                                 ),
                               ),

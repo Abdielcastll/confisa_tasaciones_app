@@ -427,7 +427,7 @@ Future<dynamic> dialogCrearUsuario(
                                                       validator: (value) {
                                                         if (value == null ||
                                                             value.isEmpty ||
-                                                            value.length < 9) {
+                                                            value.length < 10) {
                                                           return 'Debe ingresar un teléfono válido';
                                                         }
 

@@ -111,6 +111,10 @@ class AccionesSolicitudViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -138,6 +142,10 @@ class AccionesSolicitudViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -181,6 +189,10 @@ class AccionesSolicitudViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -236,6 +248,10 @@ class AccionesSolicitudViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -372,6 +388,12 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                                   if (resp is Failure) {
                                     Dialogs.error(msg: resp.messages[0]);
                                   }
+                                  if (resp is TokenFail) {
+                                    _navigationService
+                                        .navigateToPageAndRemoveUntil(
+                                            LoginView.routeName);
+                                    Dialogs.error(msg: 'Sesión expirada');
+                                  }
                                   if (resp is Success) {
                                     Navigator.pop(context);
                                     Dialogs.success(
@@ -494,6 +516,11 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewComentario.clear();
                               tcNewNotas.clear();
@@ -669,6 +696,11 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is TokenFail) {
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                              Dialogs.error(msg: 'Sesión expirada');
                             }
                           }
                         }, // button pressed

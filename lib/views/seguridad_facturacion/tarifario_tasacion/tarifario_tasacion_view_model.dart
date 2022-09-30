@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/tarifario_tasacion_api.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/tarifario_tasacion_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
@@ -10,16 +14,20 @@ import '../../../theme/theme.dart';
 
 class TarifarioTasacionViewModel extends BaseViewModel {
   final _tarifarioTasacionApi = locator<TarifarioTasacionApi>();
+  final _suplidoresApi = locator<SuplidoresApi>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewValor = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
   List<TarifarioTasacionData> tarifarioTasacion = [];
+  List<SuplidorData> suplidores = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   // bool hasNextPage = false;
   late TarifarioTasacionResponse tarifarioTasacionResponse;
+  late SuplidoresResponse suplidoresResponse;
 
   /* TarifarioTasacionViewModel() {
     listController.addListener(() {
@@ -44,8 +52,8 @@ class TarifarioTasacionViewModel extends BaseViewModel {
   }
 
   void ordenar() {
-    tarifarioTasacion.sort((a, b) {
-      return a.valor.toLowerCase().compareTo(b.valor.toLowerCase());
+    suplidores.sort((a, b) {
+      return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
     });
   }
 
@@ -56,12 +64,31 @@ class TarifarioTasacionViewModel extends BaseViewModel {
     if (resp is Success) {
       tarifarioTasacionResponse = resp.response as TarifarioTasacionResponse;
       tarifarioTasacion = tarifarioTasacionResponse.data;
-      ordenar();
       // hasNextPage = tarifarioTasacionResponse.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    var resp2 = await _suplidoresApi.getSuplidores(pageNumber: pageNumber);
+    if (resp2 is Success) {
+      suplidoresResponse = resp2.response as SuplidoresResponse;
+      suplidores = suplidoresResponse.data;
+      ordenar();
+      // hasNextPage = tarifarioTasacionResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp2 is Failure) {
+      Dialogs.error(msg: resp2.messages[0]);
+      return onInit();
+    }
+    if (resp2 is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -82,17 +109,37 @@ class TarifarioTasacionViewModel extends BaseViewModel {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    var resp2 = await _suplidoresApi.getSuplidores(pageNumber: pageNumber);
+    if (resp2 is Success) {
+      var temp = resp2.response as SuplidoresResponse;
+      suplidores.addAll(temp.data);
+      ordenar();
+      // hasNextPage = tarifarioTasacionResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp2 is Failure) {
+      pageNumber -= 1;
+      Dialogs.error(msg: resp2.messages[0]);
+    }
+    if (resp2 is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
   }
 
-  Future<void> buscartarifarioTasacion(String query) async {
+  Future<void> buscarSuplidor(String query) async {
     cargando = true;
-    var resp = await _tarifarioTasacionApi.getTarifariosTasacion(
-      valor: query,
+    var resp = await _suplidoresApi.getSuplidores(
+      nombre: query,
       pageSize: 0,
     );
     if (resp is Success) {
-      var temp = resp.response as TarifarioTasacionResponse;
-      tarifarioTasacion = temp.data;
+      var temp = resp.response as SuplidoresResponse;
+      suplidores = temp.data;
       ordenar();
       // hasNextPage = temp.hasNextPage;
       _busqueda = true;
@@ -100,6 +147,10 @@ class TarifarioTasacionViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -129,13 +180,44 @@ class TarifarioTasacionViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    var resp2 = await _suplidoresApi.getSuplidores(pageNumber: pageNumber);
+    if (resp2 is Success) {
+      suplidoresResponse = resp2.response as SuplidoresResponse;
+      suplidores = suplidoresResponse.data;
+      ordenar();
+      // hasNextPage = tarifarioTasacionResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp2 is Failure) {
+      Dialogs.error(msg: resp2.messages[0]);
+      return onRefresh();
+    }
+    if (resp2 is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
   Future<void> modificarTarifarioTasacion(
-      BuildContext ctx, TarifarioTasacionData tarifarioTasacion) async {
-    tcNewValor.text = tarifarioTasacion.valor;
+      BuildContext ctx, SuplidorData suplidor) async {
+    bool tieneTarifario = false;
+    String tarifa = "";
+    tieneTarifario = tarifarioTasacion
+        .any((element) => element.idSuplidor == suplidor.codigoRelacionado);
+    tieneTarifario
+        ? tarifa = tarifarioTasacion
+            .firstWhere(
+                (element) => element.idSuplidor == suplidor.codigoRelacionado)
+            .valor
+        : tarifa = "";
+    tcNewValor.text = tarifa;
     final GlobalKey<FormState> _formKey = GlobalKey();
+
     showDialog(
         context: ctx,
         builder: (BuildContext context) {
@@ -177,24 +259,9 @@ class TarifarioTasacionViewModel extends BaseViewModel {
                               child: TextFormField(
                                 keyboardType: TextInputType.number,
                                 readOnly: true,
-                                initialValue: tarifarioTasacion.suplidor,
+                                initialValue: suplidor.nombre,
                                 decoration: const InputDecoration(
                                   label: Text("Suplidor"),
-                                  border: UnderlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                readOnly: true,
-                                initialValue:
-                                    tarifarioTasacion.descripcionTipoTasacion,
-                                decoration: const InputDecoration(
-                                  label: Text("Tipo de Tasación"),
                                   border: UnderlineInputBorder(),
                                 ),
                               ),
@@ -249,15 +316,13 @@ class TarifarioTasacionViewModel extends BaseViewModel {
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            if (tcNewValor.text.trim() !=
-                                tarifarioTasacion.valor) {
+                            if (tcNewValor.text.trim() != tarifa) {
                               ProgressDialog.show(context);
                               var resp = await _tarifarioTasacionApi
                                   .updateTarifarioTasacion(
                                       valor: tcNewValor.text.trim(),
-                                      idSuplidor: tarifarioTasacion.idSuplidor,
-                                      idTipoTasacion:
-                                          tarifarioTasacion.tipoTasacion);
+                                      idSuplidor: suplidor.codigoRelacionado,
+                                      idTipoTasacion: 0);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
                                 Dialogs.success(
@@ -269,6 +334,11 @@ class TarifarioTasacionViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewValor.clear();
                             } else {

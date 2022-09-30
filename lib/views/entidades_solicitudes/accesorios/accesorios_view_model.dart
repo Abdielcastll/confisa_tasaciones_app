@@ -5,7 +5,9 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/accesori
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/accesorios_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -17,6 +19,7 @@ class AccesoriosViewModel extends BaseViewModel {
   final _segmentosAccesoriosVehiculosApi =
       locator<SegmentosAccesoriosVehiculosApi>();
   final listController = ScrollController();
+  final _navigationService = locator<NavigatorService>();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewDescripcion = TextEditingController();
 
@@ -79,6 +82,10 @@ class AccesoriosViewModel extends BaseViewModel {
     if (respseg is Failure) {
       Dialogs.error(msg: respseg.messages.first);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -96,6 +103,10 @@ class AccesoriosViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -115,6 +126,10 @@ class AccesoriosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -144,6 +159,10 @@ class AccesoriosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var respseg = await _segmentosAccesoriosVehiculosApi
         .getSegmentosAccesoriosVehiculos();
     if (respseg is Success) {
@@ -152,6 +171,10 @@ class AccesoriosViewModel extends BaseViewModel {
     }
     if (respseg is Failure) {
       Dialogs.error(msg: respseg.messages.first);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -266,6 +289,11 @@ class AccesoriosViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               Dialogs.error(msg: resp.messages[0]);
                             }
+                            if (resp is TokenFail) {
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                              Dialogs.error(msg: 'Sesión expirada');
+                            }
                             if (resp is Success) {
                               Dialogs.success(
                                   msg: 'Accesorio Vehículo eliminado');
@@ -327,6 +355,11 @@ class AccesoriosViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewDescripcion.clear();
                             } else {
@@ -494,6 +527,12 @@ class AccesoriosViewModel extends BaseViewModel {
                                 if (resp is Failure) {
                                   ProgressDialog.dissmiss(context);
                                   Dialogs.error(msg: resp.messages[0]);
+                                }
+                                if (resp is TokenFail) {
+                                  _navigationService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
+                                  Dialogs.error(msg: 'Sesión expirada');
                                 }
                               }
                             }, // button pressed

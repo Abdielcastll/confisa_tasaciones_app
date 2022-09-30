@@ -5,8 +5,10 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/fotos_ap
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -17,6 +19,7 @@ class CantidadFotosViewModel extends BaseViewModel {
   final _cantidadfotosApi = locator<FotosApi>();
   final _suplidorApi = locator<SuplidoresApi>();
   final _userClient = locator<UserClient>();
+  final _navigationService = locator<NavigatorService>();
   /* final _segmentosCantidadFotosVehiculosApi =
       locator<SegmentosCantidadFotosVehiculosApi>(); */
   final listController = ScrollController();
@@ -95,6 +98,10 @@ class CantidadFotosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -117,6 +124,10 @@ class CantidadFotosViewModel extends BaseViewModel {
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages[0]);
       }
+      if (resp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
       var respop = await _cantidadfotosApi.getOpcionesTipos();
       if (respop is Success) {
         var data = respop.response as EntidadResponse;
@@ -124,6 +135,10 @@ class CantidadFotosViewModel extends BaseViewModel {
       }
       if (respop is Failure) {
         Dialogs.error(msg: respop.messages.first);
+      }
+      if (resp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
       }
     } else {
       var respsupli = await _suplidorApi.getSuplidores();
@@ -135,6 +150,10 @@ class CantidadFotosViewModel extends BaseViewModel {
       }
       if (respsupli is Failure) {
         Dialogs.error(msg: respsupli.messages.first);
+      }
+      if (respsupli is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
       }
     }
 
@@ -161,6 +180,10 @@ class CantidadFotosViewModel extends BaseViewModel {
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages[0]);
       }
+      if (resp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
       var respop = await _cantidadfotosApi.getOpcionesTipos();
       if (respop is Success) {
         var data = respop.response as EntidadResponse;
@@ -168,6 +191,10 @@ class CantidadFotosViewModel extends BaseViewModel {
       }
       if (respop is Failure) {
         Dialogs.error(msg: respop.messages.first);
+      }
+      if (resp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
       }
     } else {
       var respsupli = await _suplidorApi.getSuplidores();
@@ -179,6 +206,10 @@ class CantidadFotosViewModel extends BaseViewModel {
       }
       if (respsupli is Failure) {
         Dialogs.error(msg: respsupli.messages.first);
+      }
+      if (respsupli is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
       }
     }
 
@@ -293,6 +324,12 @@ class CantidadFotosViewModel extends BaseViewModel {
                                 if (resp is Failure) {
                                   ProgressDialog.dissmiss(context);
                                   Dialogs.error(msg: resp.messages[0]);
+                                }
+                                if (resp is TokenFail) {
+                                  _navigationService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
+                                  Dialogs.error(msg: 'Sesión expirada');
                                 }
                                 tcNewDescripcion.clear();
                               } else {
@@ -431,6 +468,11 @@ class CantidadFotosViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewDescripcion.clear();
                             } else {

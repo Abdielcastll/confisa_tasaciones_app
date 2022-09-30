@@ -4,6 +4,8 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_default.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_default_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
@@ -13,6 +15,7 @@ import '../../../theme/theme.dart';
 class SuplidoresDefaultViewModel extends BaseViewModel {
   final _suplidoresDefaultApi = locator<SuplidoresDefaultApi>();
   final _suplidoresApi = locator<SuplidoresApi>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewValor = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
@@ -70,6 +73,10 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var respsupli = await _suplidoresApi.getSuplidores();
     if (respsupli is Success) {
       var data = respsupli.response as SuplidoresResponse;
@@ -77,6 +84,10 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
     }
     if (respsupli is Failure) {
       Dialogs.error(msg: respsupli.messages.first);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -97,6 +108,10 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
   }
 
   Future<void> buscarSuplidorDefault(String query) async {
@@ -115,6 +130,10 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -144,6 +163,10 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var respsupli = await _suplidoresApi.getSuplidores();
     if (respsupli is Success) {
       var data = respsupli.response as SuplidoresResponse;
@@ -151,6 +174,10 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
     }
     if (respsupli is Failure) {
       Dialogs.error(msg: respsupli.messages.first);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -173,6 +200,10 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
       if (resp is Failure) {
         ProgressDialog.dissmiss(ctx);
         Dialogs.error(msg: resp.messages[0]);
+      }
+      if (resp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
       }
       tcNewValor.clear();
     } else {
@@ -270,6 +301,11 @@ class SuplidoresDefaultViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is TokenFail) {
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                              Dialogs.error(msg: 'Sesión expirada');
                             }
                             tcNewValor.clear();
                           }

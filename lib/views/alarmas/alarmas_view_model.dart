@@ -5,8 +5,10 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_datetime_picker.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/widgets/appbar_widget.dart';
@@ -19,6 +21,7 @@ class AlarmasViewModel extends BaseViewModel {
   final Appbar appbar;
   final _alarmasApi = locator<AlarmasApi>();
   final _userClient = locator<UserClient>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewDescription = TextEditingController();
   TextEditingController tcNewFechaCompromiso = TextEditingController();
@@ -114,6 +117,10 @@ class AlarmasViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -141,6 +148,10 @@ class AlarmasViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -190,6 +201,10 @@ class AlarmasViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -247,6 +262,10 @@ class AlarmasViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -410,6 +429,12 @@ class AlarmasViewModel extends BaseViewModel {
                                   if (resp is Failure) {
                                     Dialogs.error(msg: resp.messages[0]);
                                   }
+                                  if (resp is TokenFail) {
+                                    _navigationService
+                                        .navigateToPageAndRemoveUntil(
+                                            LoginView.routeName);
+                                    Dialogs.error(msg: 'Sesión expirada');
+                                  }
                                   if (resp is Success) {
                                     Dialogs.success(msg: 'Alarma eliminada');
                                     await onRefresh();
@@ -500,6 +525,11 @@ class AlarmasViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewDescription.clear();
                             } else {
@@ -711,6 +741,11 @@ class AlarmasViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is TokenFail) {
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                              Dialogs.error(msg: 'Sesión expirada');
                             }
                           }
                         }, // button pressed

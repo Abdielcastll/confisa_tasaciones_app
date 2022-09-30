@@ -4,7 +4,9 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/auditori
 import 'package:tasaciones_app/core/api/usuarios_api.dart';
 import 'package:tasaciones_app/core/models/auditoria_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -14,6 +16,7 @@ import '../../../core/locator.dart';
 class AuditoriaViewModel extends BaseViewModel {
   final _auditoriaApi = locator<AuditoriaApi>();
   final _usuariosApi = locator<UsuariosAPI>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewDescripcion = TextEditingController();
@@ -168,6 +171,10 @@ class AuditoriaViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     for (var opcion in auditorias) {
       if (!opciones2.any((element) => element == opcion.nombreTabla)) {
         opciones2.add(opcion.nombreTabla);
@@ -193,6 +200,10 @@ class AuditoriaViewModel extends BaseViewModel {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
   }
 
   Future<void> onRefresh() async {
@@ -210,6 +221,10 @@ class AuditoriaViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }

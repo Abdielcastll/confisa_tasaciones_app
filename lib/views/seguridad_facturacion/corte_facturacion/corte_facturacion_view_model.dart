@@ -1,10 +1,14 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/corte_facturacion_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/periodo_facturacion_automatica_api.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/corte_facturacion_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/periodo_facturacion_automatica_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
@@ -13,6 +17,8 @@ import '../../../theme/theme.dart';
 
 class CorteFacturacionViewModel extends BaseViewModel {
   final _corteFacturacionApi = locator<CorteFacturacionApi>();
+  final _suplidoresApi = locator<SuplidoresApi>();
+  final _navigationService = locator<NavigatorService>();
   final _periodoFacturacionAutomaticaApi =
       locator<PeriodoFacturacionAutomaticaApi>();
   final listController = ScrollController();
@@ -21,11 +27,13 @@ class CorteFacturacionViewModel extends BaseViewModel {
 
   List<CorteFacturacionData> cortesFacturacion = [];
   List<PeriodoFacturacionAutomaticaData> periodosFacturacion = [];
+  List<SuplidorData> suplidores = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   // bool hasNextPage = false;
   late CorteFacturacionResponse corteFacturacionResponse;
+  late SuplidoresResponse suplidoresResponse;
 
   /* CorteFacturacionViewModel() {
     listController.addListener(() {
@@ -50,8 +58,8 @@ class CorteFacturacionViewModel extends BaseViewModel {
   }
 
   void ordenar() {
-    cortesFacturacion.sort((a, b) {
-      return a.suplidor.toLowerCase().compareTo(b.suplidor.toLowerCase());
+    suplidores.sort((a, b) {
+      return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
     });
   }
 
@@ -68,6 +76,10 @@ class CorteFacturacionViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var resp2 = await _periodoFacturacionAutomaticaApi
         .getPeriodoFacturacionAutomatica();
     if (resp2 is Success<PeriodoFacturacionAutomaticaResponse>) {
@@ -78,7 +90,27 @@ class CorteFacturacionViewModel extends BaseViewModel {
     }
     if (resp2 is Failure) {
       Dialogs.error(msg: resp2.messages[0]);
-      onInit();
+      return onInit();
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    var resp3 = await _suplidoresApi.getSuplidores(pageNumber: pageNumber);
+    if (resp3 is Success) {
+      suplidoresResponse = resp3.response as SuplidoresResponse;
+      suplidores = suplidoresResponse.data;
+      ordenar();
+      // hasNextPage = diaCorteResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp3 is Failure) {
+      Dialogs.error(msg: resp3.messages[0]);
+      return onInit();
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -101,14 +133,14 @@ class CorteFacturacionViewModel extends BaseViewModel {
     }
   } */
 
-  Future<void> buscarCorteFacturacion(String query) async {
+  Future<void> buscarSuplidor(String query) async {
     cargando = true;
-    var resp = await _corteFacturacionApi.getCorteFacturacion(
-      valor: query,
+    var resp = await _suplidoresApi.getSuplidores(
+      nombre: query,
     );
     if (resp is Success) {
-      var temp = resp.response as CorteFacturacionResponse;
-      cortesFacturacion = temp.data;
+      var temp = resp.response as SuplidoresResponse;
+      suplidores = temp.data;
       ordenar();
       // hasNextPage = temp.hasNextPage;
       _busqueda = true;
@@ -116,6 +148,10 @@ class CorteFacturacionViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -145,16 +181,66 @@ class CorteFacturacionViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    var resp2 = await _suplidoresApi.getSuplidores(pageNumber: pageNumber);
+    if (resp2 is Success) {
+      suplidoresResponse = resp2.response as SuplidoresResponse;
+      suplidores = suplidoresResponse.data;
+      ordenar();
+      // hasNextPage = diaCorteResponse.hasNextPage;
+      notifyListeners();
+    }
+    if (resp2 is Failure) {
+      Dialogs.error(msg: resp2.messages[0]);
+      return onRefresh();
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
   Future<void> modificarCorteFacturacion(
-      BuildContext ctx, CorteFacturacionData corteFacturacion) async {
-    tcNewValor.text = corteFacturacion.valor;
-    String periodo = periodosFacturacion
-        .firstWhere((element) =>
-            corteFacturacion.idSuplidor.toString() == element.idSuplidor)
-        .descripcion;
+      BuildContext ctx, SuplidorData suplidor) async {
+    bool tieneDiaCorte = false;
+    late CorteFacturacionData corte;
+
+    tieneDiaCorte = cortesFacturacion
+        .any((element) => element.idSuplidor == suplidor.codigoRelacionado);
+    tieneDiaCorte
+        ? corte = cortesFacturacion.firstWhere(
+            (element) => element.idSuplidor == suplidor.codigoRelacionado)
+        : corte = CorteFacturacionData(
+            descripcion: "",
+            idSuplidor: 0,
+            suplidor: "",
+            valor: "",
+            tipoTasacion: 0,
+            descripcionTipoTasacion: "");
+
+    tcNewValor.text = corte.valor;
+
+    bool tienePeriodo = false;
+    String periodo = "";
+
+    tienePeriodo = periodosFacturacion.any((element) =>
+        element.idSuplidor == suplidor.codigoRelacionado.toString());
+    tienePeriodo
+        ? periodo = periodosFacturacion
+            .firstWhere((element) =>
+                element.idSuplidor == suplidor.codigoRelacionado.toString())
+            .descripcion
+        : Dialogs.alert(ctx,
+            tittle: "Día Corte de Facturación",
+            description: ["“Debe definir el Períodode Facturación Automática"]);
+    if (tienePeriodo == false) {
+      return;
+    }
+
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -195,24 +281,10 @@ class CorteFacturacionViewModel extends BaseViewModel {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
-                                initialValue: corteFacturacion.suplidor,
+                                initialValue: suplidor.nombre,
                                 readOnly: true,
                                 decoration: const InputDecoration(
                                   label: Text("Suplidor"),
-                                  border: UnderlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                initialValue:
-                                    corteFacturacion.descripcionTipoTasacion,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                  label: Text("Tipo de Tasación"),
                                   border: UnderlineInputBorder(),
                                 ),
                               ),
@@ -236,12 +308,15 @@ class CorteFacturacionViewModel extends BaseViewModel {
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
                                 controller: tcNewValor,
+                                readOnly: !tienePeriodo,
                                 keyboardType: TextInputType.number,
                                 validator: (value) {
                                   if (periodo == "Quincenal") {
                                     if (int.parse(value!) > 15 ||
                                         int.parse(value) < 1) {
-                                      tcNewValor.clear();
+                                      tieneDiaCorte
+                                          ? tcNewValor.text = corte.valor
+                                          : tcNewValor.clear();
                                       return "Día de corte mayor a 15 o menor a 1";
                                     } else {
                                       return null;
@@ -249,7 +324,9 @@ class CorteFacturacionViewModel extends BaseViewModel {
                                   } else {
                                     if (int.parse(value!) > 31 ||
                                         int.parse(value) < 1) {
-                                      tcNewValor.clear();
+                                      tieneDiaCorte
+                                          ? tcNewValor.text = corte.valor
+                                          : tcNewValor.clear();
                                       return "Día de corte mayor a 31 o menor a 1";
                                     } else {
                                       return null;
@@ -294,15 +371,13 @@ class CorteFacturacionViewModel extends BaseViewModel {
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            if (tcNewValor.text.trim() !=
-                                corteFacturacion.valor) {
+                            if (tcNewValor.text.trim() != corte.valor) {
                               ProgressDialog.show(context);
                               var resp = await _corteFacturacionApi
                                   .updateCorteFacturacion(
                                       valor: tcNewValor.text.trim(),
-                                      idSuplidor: corteFacturacion.idSuplidor,
-                                      idTipoTasacion:
-                                          corteFacturacion.tipoTasacion);
+                                      idSuplidor: suplidor.codigoRelacionado,
+                                      idTipoTasacion: 0);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
                                 Dialogs.success(
@@ -315,6 +390,11 @@ class CorteFacturacionViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewValor.clear();
                             } else {

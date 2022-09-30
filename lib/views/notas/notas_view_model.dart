@@ -5,8 +5,10 @@ import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/notas_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
@@ -18,6 +20,7 @@ class NotasViewModel extends BaseViewModel {
 
   final _notasApi = locator<NotasApi>();
   final _userClient = locator<UserClient>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewDescription = TextEditingController();
   TextEditingController tcNewTitulo = TextEditingController();
@@ -109,6 +112,10 @@ class NotasViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -135,6 +142,10 @@ class NotasViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -186,6 +197,10 @@ class NotasViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -243,6 +258,10 @@ class NotasViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -394,6 +413,12 @@ class NotasViewModel extends BaseViewModel {
                                   if (resp is Failure) {
                                     Dialogs.error(msg: resp.messages[0]);
                                   }
+                                  if (resp is TokenFail) {
+                                    _navigationService
+                                        .navigateToPageAndRemoveUntil(
+                                            LoginView.routeName);
+                                    Dialogs.error(msg: 'Sesión expirada');
+                                  }
                                   if (resp is Success) {
                                     Dialogs.success(msg: 'Nota eliminada');
                                     await onRefresh();
@@ -479,6 +504,11 @@ class NotasViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewDescription.clear();
                             } else {
@@ -624,6 +654,11 @@ class NotasViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is TokenFail) {
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                              Dialogs.error(msg: 'Sesión expirada');
                             }
                             tcNewDescription.clear();
                             tcNewFechaCompromiso.clear();

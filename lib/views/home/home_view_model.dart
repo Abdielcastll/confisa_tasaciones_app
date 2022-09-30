@@ -68,6 +68,9 @@ class HomeViewModel extends BaseViewModel {
       Dialogs.error(msg: resp1.messages.first);
       loading = false;
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    } else if (resp1 is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -84,6 +87,10 @@ class HomeViewModel extends BaseViewModel {
     } else if (resp is Failure) {
       Dialogs.error(msg: resp.messages.first);
       loading = false;
+    }
+    if (resp is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 

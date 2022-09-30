@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_tasacion_promedio_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/periodo_tasacion_promedio_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/buscador.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_roles.dart';
 
@@ -13,6 +15,7 @@ import '../../../core/locator.dart';
 
 class PeriodoTasacionPromedioViewModel extends BaseViewModel {
   final _periodoTasacionPromedioApi = locator<PeriodoTasacionPromedioApi>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewDescripcion = TextEditingController();
@@ -70,6 +73,10 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var respopc =
         await _periodoTasacionPromedioApi.getOpcionesPeriodoTasacionPromedio();
     if (respopc is Success) {
@@ -79,6 +86,10 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
     }
     if (respopc is Failure) {
       Dialogs.error(msg: respopc.messages.first);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -98,6 +109,10 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -147,6 +162,10 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var respopc =
         await _periodoTasacionPromedioApi.getOpcionesPeriodoTasacionPromedio();
     if (respopc is Success) {
@@ -156,6 +175,10 @@ class PeriodoTasacionPromedioViewModel extends BaseViewModel {
     }
     if (respopc is Failure) {
       Dialogs.error(msg: respopc.messages.first);
+    }
+    if (respopc is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }

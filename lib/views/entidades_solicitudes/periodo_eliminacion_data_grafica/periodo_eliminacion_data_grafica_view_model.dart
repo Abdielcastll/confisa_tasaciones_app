@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/periodo_eliminacion_data_grafica_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/periodo_eliminacion_data_grafica_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -12,6 +14,7 @@ import '../../../core/locator.dart';
 class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
   final _periodoEliminacionDataGraficaApi =
       locator<PeriodoEliminacionDataGraficaApi>();
+  final _navigationService = locator<NavigatorService>();
   /* final _segmentosPeriodoEliminacionDataGraficaVehiculosApi =
       locator<SegmentosPeriodoEliminacionDataGraficaVehiculosApi>(); */
   final listController = ScrollController();
@@ -106,6 +109,10 @@ class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -140,6 +147,10 @@ class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -186,6 +197,10 @@ class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -230,6 +245,10 @@ class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -355,6 +374,11 @@ class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewDescripcion.clear();
                             } else {

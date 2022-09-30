@@ -30,7 +30,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: vm.tcBuscar,
-                        onSubmitted: vm.buscartarifarioTasacion,
+                        onSubmitted: vm.buscarSuplidor,
                         style: const TextStyle(
                           color: AppColors.brownDark,
                           fontSize: 18,
@@ -39,7 +39,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                         textInputAction: TextInputAction.search,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Buscar Tarifario por Valor...',
+                          hintText: 'Buscar Suplidor...',
                           hintStyle: const TextStyle(
                               overflow: TextOverflow.ellipsis,
                               color: Colors.grey,
@@ -47,8 +47,8 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                           suffixIcon: !vm.busqueda
                               ? IconButton(
                                   icon: const Icon(AppIcons.search),
-                                  onPressed: () => vm.buscartarifarioTasacion(
-                                      vm.tcBuscar.text),
+                                  onPressed: () =>
+                                      vm.buscarSuplidor(vm.tcBuscar.text),
                                   color: AppColors.brownDark,
                                 )
                               : IconButton(
@@ -68,52 +68,55 @@ class _TarifarioTasacionMobile extends StatelessWidget {
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.tarifarioTasacion.isEmpty
+                child: vm.suplidores.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.tarifarioTasacion.length,
+                        itemCount: vm.suplidores.length,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          var tarifarioTasacion = vm.tarifarioTasacion[i];
+                          var suplidor = vm.suplidores[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
                               onPressed: () => vm.modificarTarifarioTasacion(
-                                  context, tarifarioTasacion),
+                                  context, suplidor),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5)),
                               child: Container(
                                 alignment: Alignment.centerLeft,
-                                height: 70,
+                                height: 75,
                                 padding: const EdgeInsets.all(10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      tarifarioTasacion.valor,
+                                      suplidor.nombre,
                                       style: const TextStyle(
                                         color: AppColors.brownDark,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w800,
                                       ),
                                     ),
-                                    Text(
-                                      "Tipo de Tasación: ${tarifarioTasacion.descripcionTipoTasacion}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
-                                    Text(
-                                      "Suplidor: ${tarifarioTasacion.suplidor}",
-                                      style: const TextStyle(
-                                          color: AppColors.brownDark,
-                                          fontSize: 12),
-                                    ),
+                                    vm.tarifarioTasacion.any((element) =>
+                                            element.idSuplidor ==
+                                            suplidor.codigoRelacionado)
+                                        ? Text(
+                                            "Tarifa: ${vm.tarifarioTasacion.firstWhere((element) => element.idSuplidor == suplidor.codigoRelacionado).valor}",
+                                            style: const TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          )
+                                        : const Text(
+                                            "Tarifa a definir",
+                                            style: TextStyle(
+                                                color: AppColors.brownDark,
+                                                fontSize: 12),
+                                          ),
                                   ],
                                 ),
                               ),

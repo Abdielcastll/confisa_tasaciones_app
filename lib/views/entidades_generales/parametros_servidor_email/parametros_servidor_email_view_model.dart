@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/parametros_servidor_email_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/parametors_servidor_email_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
@@ -10,6 +12,7 @@ import '../../../theme/theme.dart';
 
 class ParametrosServidorEmailViewModel extends BaseViewModel {
   final _parametrosServidorEmailApi = locator<ParametrosServidorEmailApi>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewRemitente = TextEditingController();
   TextEditingController tcNewHost = TextEditingController();
@@ -68,6 +71,10 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -87,6 +94,10 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
   }
 
   Future<void> buscarParametroServidorEmail(String query) async {
@@ -105,6 +116,10 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -133,6 +148,10 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -300,6 +319,11 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               Dialogs.error(msg: resp.messages[0]);
                             }
+                            if (resp is TokenFail) {
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                              Dialogs.error(msg: 'Sesión expirada');
+                            }
                             if (resp is Success) {
                               Dialogs.success(msg: 'Servidor Email eliminado');
                               await onRefresh();
@@ -376,6 +400,11 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewRemitente.clear();
                               tcNewHost.clear();
@@ -601,6 +630,11 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is TokenFail) {
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                              Dialogs.error(msg: 'Sesión expirada');
                             }
                             tcNewRemitente.clear();
                             tcNewHost.clear();

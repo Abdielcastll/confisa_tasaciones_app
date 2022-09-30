@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/vencimiento_estados_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/vencimiento_estados_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -11,6 +13,7 @@ import '../../../core/locator.dart';
 
 class VencimientoEstadosViewModel extends BaseViewModel {
   final _vencimientoEstadosApi = locator<VencimientoEstadosApi>();
+  final _navigationService = locator<NavigatorService>();
   /* final _segmentosVencimientoEstadosVehiculosApi =
       locator<SegmentosVencimientoEstadosVehiculosApi>(); */
   final listController = ScrollController();
@@ -68,6 +71,10 @@ class VencimientoEstadosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -87,6 +94,10 @@ class VencimientoEstadosViewModel extends BaseViewModel {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
   }
 
   Future<void> buscarVencimientoEstados(String query) async {
@@ -105,6 +116,10 @@ class VencimientoEstadosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -133,6 +148,10 @@ class VencimientoEstadosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -235,6 +254,11 @@ class VencimientoEstadosViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewPeriodo.clear();
                             } else {

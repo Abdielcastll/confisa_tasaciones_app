@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
@@ -10,6 +12,7 @@ import '../../../theme/theme.dart';
 
 class TiposAdjuntosViewModel extends BaseViewModel {
   final _adjuntosApi = locator<AdjuntosApi>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewDescription = TextEditingController();
   TextEditingController tcNewPrefijo = TextEditingController();
@@ -65,6 +68,10 @@ class TiposAdjuntosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -82,6 +89,10 @@ class TiposAdjuntosViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -101,6 +112,10 @@ class TiposAdjuntosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -129,6 +144,10 @@ class TiposAdjuntosViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -290,6 +309,12 @@ class TiposAdjuntosViewModel extends BaseViewModel {
                                 if (resp is Failure) {
                                   ProgressDialog.dissmiss(context);
                                   Dialogs.error(msg: resp.messages[0]);
+                                }
+                                if (resp is TokenFail) {
+                                  _navigationService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
+                                  Dialogs.error(msg: 'Sesión expirada');
                                 }
                               } else {
                                 Dialogs.success(
@@ -475,6 +500,11 @@ class TiposAdjuntosViewModel extends BaseViewModel {
                               if (resp is Failure) {
                                 ProgressDialog.dissmiss(context);
                                 Dialogs.error(msg: resp.messages[0]);
+                              }
+                              if (resp is TokenFail) {
+                                _navigationService.navigateToPageAndRemoveUntil(
+                                    LoginView.routeName);
+                                Dialogs.error(msg: 'Sesión expirada');
                               }
                             }
                           }, // button pressed

@@ -5,7 +5,9 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/componen
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/componentes_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/core/user_client.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/buscador.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_roles.dart';
 
@@ -24,6 +26,7 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
   final _componentesVehiculoApi = locator<ComponentesVehiculoApi>();
   final _suplidorApi = locator<SuplidoresApi>();
   final _userClient = locator<UserClient>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
 
@@ -94,6 +97,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
       if (respcomp is Failure) {
         Dialogs.error(msg: respcomp.messages.first);
       }
+      if (respcomp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
       var resp = await _componentesVehiculoSuplidorApi
           .getComponentesVehiculoSuplidor(idSuplidor: usuario!.idSuplidor);
       if (resp is Success) {
@@ -110,6 +117,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages.first);
       }
+      if (resp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
       cargando = false;
       ordenar();
       return;
@@ -124,6 +135,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
     if (respsupli is Failure) {
       Dialogs.error(msg: respsupli.messages.first);
     }
+    if (respsupli is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var respcomp = await _componentesVehiculoApi.getComponentesVehiculo();
     if (respcomp is Success) {
       var data = respcomp.response as ComponentesVehiculoResponse;
@@ -131,6 +146,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
     }
     if (respcomp is Failure) {
       Dialogs.error(msg: respcomp.messages.first);
+    }
+    if (respcomp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -218,6 +237,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -246,6 +269,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
       if (respcomp is Failure) {
         Dialogs.error(msg: respcomp.messages.first);
       }
+      if (respcomp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
       var resp = await _componentesVehiculoSuplidorApi
           .getComponentesVehiculoSuplidor(idSuplidor: usuario!.idSuplidor);
       if (resp is Success) {
@@ -262,6 +289,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages.first);
       }
+      if (resp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
       cargando = false;
       return;
     }
@@ -276,6 +307,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var respcomp = await _componentesVehiculoApi.getComponentesVehiculo();
     if (respcomp is Success) {
       var data = respcomp.response as ComponentesVehiculoResponse;
@@ -283,6 +318,10 @@ class ComponentesVehiculoSuplidorViewModel extends BaseViewModel {
     }
     if (respcomp is Failure) {
       Dialogs.error(msg: respcomp.messages.first);
+    }
+    if (respcomp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }

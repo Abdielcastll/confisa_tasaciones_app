@@ -4,6 +4,8 @@ import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores
 import 'package:tasaciones_app/core/api/seguridad_facturacion/porcentajes_honorarios_entidad_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/porcentajes_honorarios_entidad_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
@@ -13,6 +15,7 @@ import '../../../theme/theme.dart';
 class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
   final _porcentajesHonorariosEntidadApi =
       locator<PorcentajesHonorariosEntidadApi>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewValor = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
@@ -70,6 +73,10 @@ class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -88,6 +95,10 @@ class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
     if (resp is Failure) {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
   }
 
@@ -108,6 +119,10 @@ class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -138,6 +153,10 @@ class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -162,6 +181,10 @@ class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
       if (resp is Failure) {
         ProgressDialog.dissmiss(ctx);
         Dialogs.error(msg: resp.messages[0]);
+      }
+      if (resp is TokenFail) {
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
       }
       tcNewValor.clear();
     } else {
@@ -260,6 +283,11 @@ class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
                             if (resp is Failure) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.error(msg: resp.messages[0]);
+                            }
+                            if (resp is TokenFail) {
+                              _navigationService.navigateToPageAndRemoveUntil(
+                                  LoginView.routeName);
+                              Dialogs.error(msg: 'Sesión expirada');
                             }
                             tcNewValor.clear();
                           }

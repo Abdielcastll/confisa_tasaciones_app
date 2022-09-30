@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_solicitudes/fotos_api.dart';
 import 'package:tasaciones_app/core/models/cantidad_fotos_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/theme/theme.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/buscador.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_roles.dart';
 
@@ -13,6 +15,7 @@ import '../../../core/locator.dart';
 
 class TiposFotosViewModel extends BaseViewModel {
   final _tiposfotosApi = locator<FotosApi>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewDescripcion = TextEditingController();
@@ -50,6 +53,10 @@ class TiposFotosViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     var respop = await _tiposfotosApi.getOpcionesTipos();
     if (respop is Success) {
       var data = respop.response as EntidadResponse;
@@ -57,6 +64,10 @@ class TiposFotosViewModel extends BaseViewModel {
     }
     if (respop is Failure) {
       Dialogs.error(msg: respop.messages.first);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }

@@ -4,6 +4,8 @@ import 'package:tasaciones_app/core/api/seguridad_facturacion/aprobadores_factur
 import 'package:tasaciones_app/core/api/seguridad_facturacion/tarifario_tasacion_api.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/aprobadores_facturas_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/tarifario_tasacion_response.dart';
+import 'package:tasaciones_app/core/services/navigator_service.dart';
+import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/base/base_view_model.dart';
@@ -12,6 +14,7 @@ import '../../../theme/theme.dart';
 
 class AprobadoresFacturasViewModel extends BaseViewModel {
   final _aprobadoresFacturasApi = locator<AprobadoresFacturasApi>();
+  final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
 
@@ -67,6 +70,10 @@ class AprobadoresFacturasViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
     cargando = false;
   }
 
@@ -86,6 +93,10 @@ class AprobadoresFacturasViewModel extends BaseViewModel {
       pageNumber -= 1;
       Dialogs.error(msg: resp.messages[0]);
     }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
   }
 
   Future<void> buscarAprobadoresFacturas(String query) async {
@@ -104,6 +115,10 @@ class AprobadoresFacturasViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -132,6 +147,10 @@ class AprobadoresFacturasViewModel extends BaseViewModel {
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+    }
+    if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
     }
     cargando = false;
   }
@@ -273,6 +292,11 @@ class AprobadoresFacturasViewModel extends BaseViewModel {
                           if (resp is Failure) {
                             ProgressDialog.dissmiss(context);
                             Dialogs.error(msg: resp.messages[0]);
+                          }
+                          if (resp is TokenFail) {
+                            _navigationService.navigateToPageAndRemoveUntil(
+                                LoginView.routeName);
+                            Dialogs.error(msg: 'Sesión expirada');
                           }
                         }, // button pressed
                         child: Column(
