@@ -48,25 +48,33 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                     ),
                     textInputAction: TextInputAction.search,
-                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Buscar solicitud',
-                      hintStyle: const TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w700),
-                      suffixIcon: !vm.busqueda
-                          ? IconButton(
-                              icon: const Icon(AppIcons.search),
-                              onPressed: () => vm.buscar(vm.tcBuscar.text),
-                              color: AppColors.brownDark,
-                            )
-                          : IconButton(
-                              onPressed: vm.limpiarBusqueda,
-                              icon: const Icon(
-                                AppIcons.closeCircle,
-                                color: AppColors.brownDark,
-                              )),
-                    ),
+                        border: InputBorder.none,
+                        hintText: 'Buscar',
+                        hintStyle: const TextStyle(
+                            color: Colors.grey, fontWeight: FontWeight.w700),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.filter_alt_rounded),
+                              onPressed: () => vm.filtro(context),
+                            ),
+                            !vm.busqueda
+                                ? IconButton(
+                                    icon: const Icon(AppIcons.search),
+                                    onPressed: () =>
+                                        vm.buscar(vm.tcBuscar.text),
+                                    color: AppColors.brownDark,
+                                  )
+                                : IconButton(
+                                    onPressed: vm.limpiarBusqueda,
+                                    icon: const Icon(
+                                      AppIcons.closeCircle,
+                                      color: AppColors.brownDark,
+                                    )),
+                          ],
+                        )),
                   ),
                 ),
               ),
