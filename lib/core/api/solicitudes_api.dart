@@ -7,6 +7,7 @@ import 'package:tasaciones_app/core/models/componente_condicion.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/ediciones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/referencia_valoracion_response.dart';
+import 'package:tasaciones_app/core/models/solicitudes/solicitud_tipo_estado_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_disponibles_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
 import 'package:tasaciones_app/core/models/tipo_vehiculo_response.dart';
@@ -645,22 +646,22 @@ class SolicitudesApi {
   }
 
   Future<Object> getColaSolicitudes(
-      {String? estado,
+      {List<int> estado = const [],
       int? noSolicitud,
       int pageNumber = 1,
       int pageSize = 20,
       int? idSuplidor,
-      String tipoTasacion = "",
+      List<int> tipoTasacion = const [],
       String nombreCliente = "",
       String identificacion = "",
       String chasis = ""}) async {
     final params = {
-      "EstadoTasacion": estado,
+      "EstadosTasacionList": estado,
       "NoSolicitudCredito": noSolicitud,
       "PageSize": pageSize,
       "PageNumber": pageNumber,
       "IdSuplidor": idSuplidor,
-      "TipoTasacion": tipoTasacion,
+      "TiposTasacionList": tipoTasacion,
       "NombreCliente": nombreCliente,
       "Identificacion": identificacion,
       "Chasis": chasis,
@@ -735,6 +736,42 @@ class SolicitudesApi {
         },
         parser: (data) {
           return GetSolicitudesResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getEstadosSolicitud() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/estadostasacion/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return EstadoSolicitudResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getTiposTasacion() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/tipostasacion/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return TipoTasacionResponse.fromJson(data);
         },
       );
     } else {
