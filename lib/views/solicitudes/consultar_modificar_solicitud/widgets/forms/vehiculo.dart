@@ -33,7 +33,6 @@ class VehiculoForm extends StatelessWidget {
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
       onPressedNext: () {
-        vm.cargarAlarmas(vm.solicitud.id!);
         vm.isTasador && vm.mostrarAccComp
             ? vm.currentForm = 3
             : vm.goToFotos(context);

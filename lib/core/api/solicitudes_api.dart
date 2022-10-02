@@ -652,6 +652,7 @@ class SolicitudesApi {
       int pageSize = 20,
       int? idSuplidor,
       List<int> tipoTasacion = const [],
+      int? noTasacion,
       String nombreCliente = "",
       String identificacion = "",
       String chasis = ""}) async {
@@ -664,6 +665,7 @@ class SolicitudesApi {
       "TiposTasacionList": tipoTasacion,
       "NombreCliente": nombreCliente,
       "Identificacion": identificacion,
+      "NoTasacion": noTasacion,
       "Chasis": chasis,
     };
     l.d(params);

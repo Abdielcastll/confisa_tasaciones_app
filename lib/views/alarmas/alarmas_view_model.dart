@@ -4,6 +4,7 @@ import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/core/user_client.dart';
@@ -72,9 +73,7 @@ class AlarmasViewModel extends BaseViewModel {
   Future<void> onInit(BuildContext context) async {
     cargando = true;
     usuario = _userClient.loadProfile;
-    profilePermisoResponse =
-        Provider.of<ProfilePermisosProvider>(context, listen: false)
-            .profilePermisos;
+
     Object resp = Failure;
     if (idSolicitud == 0) {
       switch (usuario!.roles!.any((element) =>
@@ -99,9 +98,7 @@ class AlarmasViewModel extends BaseViewModel {
           break;
         case false:
           resp = await _alarmasApi.getAlarmas(
-              pageNumber: pageNumber,
-              usuario: usuario!.id ?? "",
-              idSolicitud: idSolicitud);
+              pageNumber: pageNumber, idSolicitud: idSolicitud);
           break;
         default:
       }
@@ -111,6 +108,7 @@ class AlarmasViewModel extends BaseViewModel {
       alarmasResponse = resp.response as AlarmasResponse;
       alarmas = alarmasResponse.data;
       ordenar();
+      await changeProvider(alarmas, context);
       hasNextPage = alarmasResponse.hasNextPage;
       notifyListeners();
     }
@@ -121,7 +119,14 @@ class AlarmasViewModel extends BaseViewModel {
       _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
+    changeProvider(alarmas, context);
     cargando = false;
+  }
+
+  Future<void> changeProvider(
+      List<AlarmasData> nuevas, BuildContext context) async {
+    Provider.of<AlarmasProvider>(context, listen: false).alarmas = nuevas;
+    notifyListeners();
   }
 
   bool tienePermiso(String permisoRequerido) {
@@ -257,7 +262,6 @@ class AlarmasViewModel extends BaseViewModel {
       alarmasResponse = temp;
       alarmas = temp.data;
       ordenar();
-      hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -415,7 +419,7 @@ class AlarmasViewModel extends BaseViewModel {
                     children: [
                       eliminar
                           ? TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.pop(context);
                                 Dialogs.confirm(ctx,
                                     tittle: 'Eliminar Alarma',
@@ -425,7 +429,12 @@ class AlarmasViewModel extends BaseViewModel {
                                   ProgressDialog.show(ctx);
                                   var resp = await _alarmasApi.deleteAlarma(
                                       id: alarma.id);
+
                                   ProgressDialog.dissmiss(ctx);
+                                  if (resp is Success) {
+                                    await onInit(ctx);
+                                    Dialogs.success(msg: 'Alarma eliminada');
+                                  }
                                   if (resp is Failure) {
                                     Dialogs.error(msg: resp.messages[0]);
                                   }
@@ -434,10 +443,6 @@ class AlarmasViewModel extends BaseViewModel {
                                         .navigateToPageAndRemoveUntil(
                                             LoginView.routeName);
                                     Dialogs.error(msg: 'Sesión expirada');
-                                  }
-                                  if (resp is Success) {
-                                    Dialogs.success(msg: 'Alarma eliminada');
-                                    await onRefresh();
                                   }
                                 });
                               }, // button pressed
@@ -730,8 +735,8 @@ class AlarmasViewModel extends BaseViewModel {
                             if (resp is Success) {
                               ProgressDialog.dissmiss(context);
                               Dialogs.success(msg: 'Alarma Creada');
+                              await onInit(context);
                               Navigator.of(context).pop();
-                              await onRefresh();
                               tcNewDescription.clear();
                               tcNewFechaCompromiso.clear();
                               tcNewHoraCompromiso.clear();
@@ -775,7 +780,6 @@ class AlarmasViewModel extends BaseViewModel {
 
   @override
   Future<void> dispose() async {
-    await appbar.getAlarmas;
     listController.dispose();
     tcNewDescription.dispose();
     tcNewFechaCompromiso.dispose();

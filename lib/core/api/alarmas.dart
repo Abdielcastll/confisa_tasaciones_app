@@ -17,7 +17,7 @@ class AlarmasApi {
       String usuario = "",
       String fechaHora = "",
       int? idSolicitud,
-      int pageSize = 900,
+      int pageSize = 999,
       int pageNumber = 1,
       int? id}) async {
     String? _token = await _authenticationClient.accessToken;

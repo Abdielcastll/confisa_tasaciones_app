@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
@@ -25,6 +26,7 @@ import 'package:tasaciones_app/core/models/tracciones_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -153,11 +155,12 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getAlarmas() async {
+  Future<void> getAlarmas(BuildContext context) async {
     var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCreada!.id);
     if (resp is Success<AlarmasResponse>) {
       alarmasResponse = resp.response;
       alarmas = resp.response.data;
+      Provider.of<AlarmasProvider>(context, listen: false).alarmas = alarmas;
     } else if (resp is Failure) {
       Dialogs.error(msg: resp.messages.first);
     }
@@ -405,26 +408,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> cargarAlarmas() async {
-    Session data = _authenticationAPI.loadSession;
-    Profile perfil = _usuarioApi.loadProfile;
-    Object respalarm;
-    data.role.any((element) => element == "AprobadorTasaciones")
-        ? respalarm = await _alarmasApi.getAlarmas()
-        : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
-    if (respalarm is Success) {
-      alarmasResponse = respalarm.response as AlarmasResponse;
-      alarmas = alarmasResponse!.data;
-    }
-    if (respalarm is Failure) {
-      Dialogs.error(msg: respalarm.messages[0]);
-    }
-    if (respalarm is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'Sesión expirada');
-    }
-  }
-
   Future<void> editarFoto(int i) async {
     var croppedFile = await ImageCropper().cropImage(
       sourcePath: await createFileFromString(fotos[i].adjunto!),
@@ -472,8 +455,8 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
             int cantidad = int.parse(resp.response.data.descripcion ?? '0');
             fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
             fotosPermitidas = cantidad;
-            await getAlarmas();
             currentForm = 3;
+            getAlarmas(context);
             ProgressDialog.dissmiss(context);
           }
         }
@@ -522,7 +505,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       Dialogs.success(msg: 'Solicitud creada correctamente');
       solicitudCreada = resp.response;
       var suplidor = resp.response.suplidorTasacion;
-      getAlarmas();
       notifyListeners();
       return suplidor;
     }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
@@ -15,6 +16,7 @@ import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitud_credito_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/utils/create_file_from_string.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -100,7 +102,6 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int get currentForm => _currentForm;
   set currentForm(int i) {
     _currentForm = i;
-    // getAlarmas();
     notifyListeners();
   }
 
@@ -117,12 +118,13 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getAlarmas() async {
+  Future<void> getAlarmas(BuildContext context) async {
     if (solicitud.id != null) {
       var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
       if (resp is Success<AlarmasResponse>) {
         alarmasResponse = resp.response;
         alarmas = resp.response.data;
+        Provider.of<AlarmasProvider>(context, listen: false).alarmas = alarmas;
       } else if (resp is Failure) {
         Dialogs.error(msg: resp.messages.first);
       }
@@ -146,15 +148,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
         solicitud.estadoTasacion! <= 13 &&
         solicitud.tipoTasacion != 21;
 
-    if (solicitud.id != null) {
-      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
-      if (resp is Success<AlarmasResponse>) {
-        alarmasResponse = resp.response;
-        alarmas = resp.response.data;
-      } else if (resp is Failure) {
-        Dialogs.error(msg: resp.messages.first);
-      }
-    }
+    getAlarmas(context);
     loadCondiconesComponentes();
     loadAccesorios();
     notifyListeners();
@@ -247,28 +241,6 @@ class ConsultarModificarViewModel extends BaseViewModel {
     } else {
       return [];
     }
-  }
-
-  Future<void> cargarAlarmas(int idSolicitud) async {
-    Session data = _authenticationAPI.loadSession;
-    Profile perfil = _usuarioApi.loadProfile;
-    Object respalarm;
-    data.role.any((element) => element == "AprobadorTasaciones")
-        ? respalarm = await _alarmasApi.getAlarmas(idSolicitud: idSolicitud)
-        : respalarm = await _alarmasApi.getAlarmas(
-            usuario: perfil.id!, idSolicitud: idSolicitud);
-    if (respalarm is Success) {
-      alarmasResponse = respalarm.response as AlarmasResponse;
-      alarmas = alarmasResponse!.data;
-    }
-    if (respalarm is Failure) {
-      Dialogs.error(msg: respalarm.messages[0]);
-    }
-    if (respalarm is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'Sesión expirada');
-    }
-    notifyListeners();
   }
 
   String? noSolicitudValidator(String? value) {

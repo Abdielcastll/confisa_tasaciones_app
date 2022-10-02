@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
@@ -22,16 +23,12 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       {Key? key,
       required this.titulo,
       required this.textSize,
-      required this.alarmas,
       this.vmColaSolicitudes,
       required this.esColaSolicitud,
-      required this.idSolicitud,
-      this.getAlarmas})
+      required this.idSolicitud})
       : super(key: key);
-  final Future<void>? getAlarmas;
   final String titulo;
   final double textSize;
-  final List<AlarmasData>? alarmas;
   final _authenticationAPI = locator<AuthenticationClient>();
   final bool esColaSolicitud;
   final int idSolicitud;
@@ -190,7 +187,12 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                             top: 15,
                             left: 6,
                             child: Container(
-                              child: Text(alarmas!.length.toString(),
+                              child: Text(
+                                  Provider.of<AlarmasProvider>(context,
+                                          listen: false)
+                                      .alarmas
+                                      .length
+                                      .toString(),
                                   style: const TextStyle(fontSize: 12)),
                               alignment: AlignmentDirectional.center,
                               height: 16,
@@ -249,7 +251,12 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                               top: 15,
                               left: 6,
                               child: Container(
-                                child: Text(alarmas!.length.toString(),
+                                child: Text(
+                                    Provider.of<AlarmasProvider>(context,
+                                            listen: false)
+                                        .alarmas
+                                        .length
+                                        .toString(),
                                     style: const TextStyle(fontSize: 12)),
                                 alignment: AlignmentDirectional.center,
                                 height: 16,

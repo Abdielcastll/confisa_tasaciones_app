@@ -12,6 +12,7 @@ import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitud_tipo_estado_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/providers/componentes_vehiculo_provider.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
@@ -121,6 +122,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
 
   void filtro(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    busqueda = false;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -339,24 +341,29 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         });
   }
 
-  Future<void> getAlarma() async {
+  Future<void> getAlarma(BuildContext context) async {
     Object respalarm;
     Profile perfil = _usuarioApi.loadProfile;
     Session data = _authenticationAPI.loadSession;
-    data.role.any((element) =>
-            element == "AprobadorTasaciones" || element == "Administrador")
-        ? respalarm = await _alarmasApi.getAlarmas()
-        : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
-    if (respalarm is Success) {
-      alarmasResponse = respalarm.response as AlarmasResponse;
-      alarmas = alarmasResponse!.data;
-    }
-    if (respalarm is Failure) {
-      Dialogs.error(msg: respalarm.messages[0]);
-    }
-    if (respalarm is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'Sesión expirada');
+    if (Provider.of<AlarmasProvider>(context, listen: false).alarmas !=
+        alarmas) {
+      data.role.any((element) =>
+              element == "AprobadorTasaciones" || element == "Administrador")
+          ? respalarm = await _alarmasApi.getAlarmas()
+          : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
+      if (respalarm is Success) {
+        alarmasResponse = respalarm.response as AlarmasResponse;
+        alarmas = alarmasResponse!.data;
+        Provider.of<AlarmasProvider>(context, listen: false).alarmas = alarmas;
+      }
+      if (respalarm is Failure) {
+        Dialogs.error(msg: respalarm.messages[0]);
+      }
+      if (respalarm is TokenFail) {
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
+      notifyListeners();
     }
   }
 
@@ -393,9 +400,8 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
+    getAlarma(context);
     await onRefresh();
-
-    getAlarma();
     loading = false;
     final componentesProv = ComponentesVehiculosProvider.instance;
     final accesoriosProv = AccesoriosProvider.instance;
@@ -473,6 +479,10 @@ class ColaSolicitudesViewModel extends BaseViewModel {
                   .any((element) => element == "No. Solicitud Crédito")
               ? int.tryParse(query)
               : null,
+          noTasacion:
+              seleccionFiltro.any((element) => element == "No. Tasación")
+                  ? int.tryParse(query)
+                  : null,
           chasis: seleccionFiltro.any((element) => element == "Chasis")
               ? query
               : "",
