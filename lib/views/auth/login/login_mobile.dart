@@ -25,13 +25,13 @@ class _LoginMobile extends StatelessWidget {
               const SizedBox(height: 25),
               AppTextField(
                 text: 'Contraseña',
-                validator: (pass) {
-                  if (pass!.trim().length < 8) {
-                    return 'Contraseña inválida';
-                  } else {
-                    return null;
-                  }
-                },
+                // validator: (pass) {
+                //   if (pass!.trim().length < 8) {
+                //     return 'Contraseña inválida';
+                //   } else {
+                //     return null;
+                //   }
+                // },
                 controller: vm.tcPassword,
                 obscureText: vm.obscurePassword,
                 keyboardType: TextInputType.visiblePassword,

@@ -26,9 +26,9 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       this.vmColaSolicitudes,
       required this.esColaSolicitud,
       required this.idSolicitud,
-      required this.getAlarmas})
+      this.getAlarmas})
       : super(key: key);
-  final Future<void> getAlarmas;
+  final Future<void>? getAlarmas;
   final String titulo;
   final double textSize;
   final List<AlarmasData>? alarmas;
@@ -145,7 +145,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                         });
                                       },
                                       child: const Text(
-                                        'Tasación de Incauto',
+                                        'Tasación Incautado',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,

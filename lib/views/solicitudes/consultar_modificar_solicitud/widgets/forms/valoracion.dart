@@ -35,7 +35,8 @@ class ValoracionForm extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
-        child: vm.solicitud.estadoTasacion == 11
+        child: vm.solicitud.estadoTasacion == 11 ||
+                vm.solicitud.estadoTasacion == 10
             ? Column(
                 children: [
                   BaseTextFieldNoEdit(

@@ -13,7 +13,7 @@ class _ConsultarModificarMobile extends StatelessWidget {
         appBar: Appbar(
             titulo: vm.solicitud.descripcionTipoTasacion ?? '',
             textSize: 18,
-            getAlarmas: vm.getAlarmas(),
+            // getAlarmas: vm.getAlarmas(),
             alarmas: vm.alarmas,
             esColaSolicitud: (vm.solicitud.id != null) ? false : true,
             idSolicitud: vm.solicitud.id ??
@@ -52,7 +52,8 @@ class _ConsultarModificarMobile extends StatelessWidget {
       case 9:
         return 3;
       case 10:
-        return vm.isAprobador ? 4 : 3;
+        // return vm.isAprobador ? 4 : 3;
+        return 4;
       default:
         return 4;
     }

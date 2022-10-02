@@ -45,9 +45,9 @@ class AuthenticationAPI {
       '/api/users/forgot-password',
       method: 'POST',
       queryParameters: {'Email': email},
-      parser: (data) {
-        return ForgotPasswordResponse.fromJson(data);
-      },
+      // parser: (data) {
+      //   return ForgotPasswordResponse.fromJson(data);
+      // },
     );
   }
 

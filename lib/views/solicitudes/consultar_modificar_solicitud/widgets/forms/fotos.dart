@@ -20,7 +20,8 @@ class FotosForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    vm.solicitud.id;
+    print('Es Aprobador==> ${vm.isAprobador}');
+    print('Es Tasador==> ${vm.isTasador}');
     return BaseFormWidget(
       iconHeader: Icons.add_chart_sharp,
       titleHeader: 'Fotos',
@@ -33,11 +34,13 @@ class FotosForm extends StatelessWidget {
       labelNext: vm.solicitud.estadoTasacion == 9
           ? 'Salir'
           // : vm.solicitud.estadoTasacion == 10
-          : vm.mostrarAccComp
-              ? vm.isAprobador || vm.isTasador
-                  ? 'Siguiente'
-                  : 'Salir'
-              : 'Siguiente',
+          : vm.mostrarAccComp || vm.solicitud.tipoTasacion == 21
+              ?
+              // ? vm.isAprobador || vm.isTasador
+              //     ? 'Siguiente'
+              //     :
+              'Siguente'
+              : 'Salir',
       onPressedNext: () => vm.subirFotos(context),
       // : vm.subirFotosNuevas(context),
       child: Container(

@@ -12,6 +12,7 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../theme/theme.dart';
 import '../../../widgets/app_buttons.dart';
+import '../../auth/recover_password/recovery_password_view.dart';
 
 class CardProfileWidget extends StatelessWidget {
   CardProfileWidget(this.vm, {Key? key}) : super(key: key);
@@ -46,47 +47,42 @@ class CardProfileWidget extends StatelessWidget {
                   // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: vm.editable()
-                          ? MainAxisAlignment.spaceBetween
-                          : MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        vm.editName
-                            ? _textFieldEdit(
-                                fontSize: 20,
-                                onChanged: vm.onChangedName,
-                                keyboardType: TextInputType.name,
-                              )
-                            : Expanded(
-                                child: Text(
-                                  vm.profile?.nombreCompleto ?? '',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                        Visibility(
-                          visible: vm.editable(),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.edit_note_sharp,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => vm.editName = !vm.editName,
+                        // vm.editName
+                        //     ? _textFieldEdit(
+                        //         fontSize: 20,
+                        //         onChanged: vm.onChangedName,
+                        //         keyboardType: TextInputType.name,
+                        //       )
+                        // :
+                        Text(
+                          vm.profile?.nombreCompleto ?? '',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w700,
                           ),
+                          textAlign: TextAlign.center,
                         ),
+                        // Visibility(
+                        //   visible: false,
+                        //   child: IconButton(
+                        //     icon: const Icon(
+                        //       Icons.edit_note_sharp,
+                        //       color: Colors.white,
+                        //     ),
+                        //     onPressed: () => vm.editName = !vm.editName,
+                        //   ),
+                        // ),
                       ],
                     ),
                     SizedBox(
                       height: 35,
                       child: Row(
-                        mainAxisAlignment: vm.editable()
-                            ? MainAxisAlignment.spaceBetween
-                            : MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           vm.editEmail
                               ? _textFieldEdit(
@@ -102,16 +98,16 @@ class CardProfileWidget extends StatelessWidget {
                                     // fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                          Visibility(
-                            visible: vm.editable(),
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.edit_note_sharp,
-                                color: Colors.white,
-                              ),
-                              onPressed: () => vm.editEmail = !vm.editEmail,
-                            ),
-                          ),
+                          // Visibility(
+                          //   visible: false,
+                          //   child: IconButton(
+                          //     icon: const Icon(
+                          //       Icons.edit_note_sharp,
+                          //       color: Colors.white,
+                          //     ),
+                          //     onPressed: () => vm.editEmail = !vm.editEmail,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -199,10 +195,7 @@ class CardProfileWidget extends StatelessWidget {
             child: AppButtonLogin(
                 text: 'Cambiar Contraseña',
                 onPressed: () {
-                  vm.editEmail = false;
-                  vm.editName = false;
-                  vm.editPhone = false;
-                  vm.currentPage = 1;
+                  Navigator.pushNamed(context, RecoveryPasswordView.routeName);
                 },
                 color: AppColors.brownDark),
           ),

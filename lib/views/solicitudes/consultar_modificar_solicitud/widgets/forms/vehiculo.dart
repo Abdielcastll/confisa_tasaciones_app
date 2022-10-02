@@ -146,13 +146,15 @@ class VehiculoForm extends StatelessWidget {
                               child: Text('No hay resultados'),
                             ),
                           ),
-                          validator: (v) {
-                            if (v == null) {
-                              return 'Seleccione una versión';
-                            } else {
-                              return null;
-                            }
-                          },
+                          validator: vm.solicitud.estadoTasacion != 34
+                              ? null
+                              : (v) {
+                                  if (v == null) {
+                                    return 'Seleccione una versión';
+                                  } else {
+                                    return null;
+                                  }
+                                },
                         ),
                       // const SizedBox(height: 10),
                       DropdownSearch<EdicionVehiculo>(
@@ -233,16 +235,19 @@ class VehiculoForm extends StatelessWidget {
                             child: Text('No hay resultados'),
                           ),
                         ),
-                        validator: (v) {
-                          if (v == null &&
-                              vm.vinData?.sistemaCambio == null &&
-                              vm.solicitud.descripcionSistemaTransmision ==
-                                  null) {
-                            return 'Seleccione un sistema de cambios';
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: vm.solicitud.estadoTasacion != 34
+                            ? null
+                            : (v) {
+                                if (v == null &&
+                                    vm.vinData?.sistemaCambio == null &&
+                                    vm.solicitud
+                                            .descripcionSistemaTransmision ==
+                                        null) {
+                                  return 'Seleccione un sistema de cambios';
+                                } else {
+                                  return null;
+                                }
+                              },
                       ),
 
                       // const SizedBox(height: 10),
@@ -276,16 +281,19 @@ class VehiculoForm extends StatelessWidget {
                             child: Text('No hay resultados'),
                           ),
                         ),
-                        validator: (v) {
-                          if (v == null &&
-                              vm.vinData?.traccion == null &&
-                              vm.solicitud.descripcionSistemaTransmision ==
-                                  null) {
-                            return 'Seleccione una tracción';
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: vm.solicitud.estadoTasacion != 34
+                            ? null
+                            : (v) {
+                                if (v == null &&
+                                    vm.vinData?.traccion == null &&
+                                    vm.solicitud
+                                            .descripcionSistemaTransmision ==
+                                        null) {
+                                  return 'Seleccione una tracción';
+                                } else {
+                                  return null;
+                                }
+                              },
                       ),
 
                       // const SizedBox(height: 10),
@@ -316,15 +324,17 @@ class VehiculoForm extends StatelessWidget {
                             child: Text('No hay resultados'),
                           ),
                         ),
-                        validator: (v) {
-                          if (v == null &&
-                              vm.vinData?.numeroPuertas == null &&
-                              vm.solicitud.noPuertas == null) {
-                            return 'Seleccione número de puertas';
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: vm.solicitud.estadoTasacion != 34
+                            ? null
+                            : (v) {
+                                if (v == null &&
+                                    vm.vinData?.numeroPuertas == null &&
+                                    vm.solicitud.noPuertas == null) {
+                                  return 'Seleccione número de puertas';
+                                } else {
+                                  return null;
+                                }
+                              },
                       ),
 
                       // const SizedBox(height: 10),
@@ -355,15 +365,17 @@ class VehiculoForm extends StatelessWidget {
                             child: Text('No hay resultados'),
                           ),
                         ),
-                        validator: (v) {
-                          if (v == null &&
-                              vm.vinData?.numeroCilindros == null &&
-                              vm.solicitud.noCilindros == null) {
-                            return 'Seleccione número de cilindros';
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: vm.solicitud.estadoTasacion != 34
+                            ? null
+                            : (v) {
+                                if (v == null &&
+                                    vm.vinData?.numeroCilindros == null &&
+                                    vm.solicitud.noCilindros == null) {
+                                  return 'Seleccione número de cilindros';
+                                } else {
+                                  return null;
+                                }
+                              },
                       ),
 
                       // Fuerza Motriz
@@ -372,13 +384,15 @@ class VehiculoForm extends StatelessWidget {
                           label: 'Fuerza motriz',
                           controller: vm.tcFuerzaMotriz,
                           keyboardType: TextInputType.number,
-                          validator: (v) {
-                            if (v?.trim() == '') {
-                              return 'Escriba la fuerza motriz';
-                            } else {
-                              return null;
-                            }
-                          }),
+                          validator: vm.solicitud.estadoTasacion != 34
+                              ? null
+                              : (v) {
+                                  if (v?.trim() == '') {
+                                    return 'Escriba la fuerza motriz';
+                                  } else {
+                                    return null;
+                                  }
+                                }),
 
                       //  ESTADO
                       BaseTextFieldNoEdit(
@@ -393,66 +407,71 @@ class VehiculoForm extends StatelessWidget {
                           label: 'Kilometraje',
                           keyboardType: TextInputType.number,
                           controller: vm.tcKilometraje,
-                          validator: (v) {
-                            if (v?.trim() == '') {
-                              return 'Escriba el Kilometraje';
-                            } else {
-                              return null;
-                            }
-                          }),
+                          validator: vm.solicitud.estadoTasacion != 34
+                              ? null
+                              : (v) {
+                                  if (v?.trim() == '') {
+                                    return 'Escriba el Kilometraje';
+                                  } else {
+                                    return null;
+                                  }
+                                }),
 
                       // const SizedBox(height: 10),
 
                       //  COLOR
                       DropdownSearch<ColorVehiculo>(
-                        asyncItems: (text) => vm.getColores(text),
-                        enabled: vm.solicitud.estadoTasacion == 34,
-                        dropdownBuilder: (context, tipo) {
-                          return Text(
-                              tipo == null
-                                  ? vm.solicitud.descripcionColor ??
-                                      'Seleccione'
-                                  : tipo.descripcion,
-                              style: const TextStyle(fontSize: 15));
-                        },
-                        onChanged: (v) => vm.colorVehiculo = v,
-                        dropdownDecoratorProps: const DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                                label: Text('Color'),
-                                border: UnderlineInputBorder())),
-                        popupProps: PopupProps.menu(
-                          itemBuilder: (context, otp, isSelected) {
-                            return ListTile(
-                              title: Text(otp.descripcion),
-                              selected: isSelected,
-                            );
+                          asyncItems: (text) => vm.getColores(text),
+                          enabled: vm.solicitud.estadoTasacion == 34,
+                          dropdownBuilder: (context, tipo) {
+                            return Text(
+                                tipo == null
+                                    ? vm.solicitud.descripcionColor ??
+                                        'Seleccione'
+                                    : tipo.descripcion,
+                                style: const TextStyle(fontSize: 15));
                           },
-                          emptyBuilder: (_, __) => const Center(
-                            child: Text('No hay resultados'),
+                          onChanged: (v) => vm.colorVehiculo = v,
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                  label: Text('Color'),
+                                  border: UnderlineInputBorder())),
+                          popupProps: PopupProps.menu(
+                            itemBuilder: (context, otp, isSelected) {
+                              return ListTile(
+                                title: Text(otp.descripcion),
+                                selected: isSelected,
+                              );
+                            },
+                            emptyBuilder: (_, __) => const Center(
+                              child: Text('No hay resultados'),
+                            ),
                           ),
-                        ),
-                        // validator: (v) {
-                        //   if (v == null &&
-                        //       vm.solicitud.descripcionColor == null) {
-                        //     return 'Seleccione un color';
-                        //   } else {
-                        //     return null;
-                        //   }
-                        // }
-                      ),
+                          validator: vm.solicitud.estadoTasacion != 34
+                              ? null
+                              : (v) {
+                                  if (v == null &&
+                                      vm.solicitud.descripcionColor == null) {
+                                    return 'Seleccione un color';
+                                  } else {
+                                    return null;
+                                  }
+                                }),
 
                       // PLACA
                       BaseTextField(
                           enabled: vm.solicitud.estadoTasacion == 34,
                           label: 'Placa',
                           controller: vm.tcPlaca,
-                          validator: (v) {
-                            if (v?.trim() == '') {
-                              return 'Escriba el número de placa';
-                            } else {
-                              return null;
-                            }
-                          }),
+                          validator: vm.solicitud.estadoTasacion != 34
+                              ? null
+                              : (v) {
+                                  if (v?.trim() == '') {
+                                    return 'Escriba el número de placa';
+                                  } else {
+                                    return null;
+                                  }
+                                }),
                     ],
                   )
                 ],

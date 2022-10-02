@@ -100,7 +100,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   int get currentForm => _currentForm;
   set currentForm(int i) {
     _currentForm = i;
-    getAlarmas();
+    // getAlarmas();
     notifyListeners();
   }
 
@@ -139,10 +139,12 @@ class ConsultarModificarViewModel extends BaseViewModel {
     tcPlaca.text = solicitud.placa ?? 'No disponible';
     tcFuerzaMotriz.text = solicitud.fuerzaMotriz?.toString() ?? 'No disponible';
     Session session = _authenticationAPI.loadSession;
+    session.role.forEach((e) => print(e));
     isAprobador = session.role.contains("AprobadorTasaciones");
     isTasador = session.role.contains("Tasador") && session.role.length == 1;
-    mostrarAccComp =
-        solicitud.estadoTasacion! >= 10 && solicitud.estadoTasacion! <= 13;
+    mostrarAccComp = solicitud.estadoTasacion! >= 10 &&
+        solicitud.estadoTasacion! <= 13 &&
+        solicitud.tipoTasacion != 21;
 
     if (solicitud.id != null) {
       var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
@@ -587,7 +589,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
       } else if (isTasador) {
         currentForm = 6;
       } else {
-        Navigator.of(context).pop();
+        goToValorar(context);
+        // Navigator.of(context).pop();
       }
     } else {
       goToValorar(context);
