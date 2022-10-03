@@ -225,4 +225,52 @@ class AdjuntosApi {
       return TokenFail();
     }
   }
+
+  Future<Object> getLogoSuplidor({required int idSuplidor}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/get-logo-suplidor/$idSuplidor',
+        method: "GET",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        parser: (data) {
+          return AdjuntoFoto.fromJson(data["data"]);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateLogoSuplidor(
+      {required String adjuntoInBytes,
+      required String idUser,
+      required int idSuplidor}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/add-logo-suplidor',
+        method: "POST",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "idSuplidor": idSuplidor,
+          "adjuntos": {
+            "adjuntoInBytes": adjuntoInBytes,
+            "idUser": idUser,
+            "descripcion": "LOGO SUPLIDOR",
+            "tipoAdjunto": 5
+          }
+        },
+        parser: (data) {
+          return AdjuntosPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
 }
