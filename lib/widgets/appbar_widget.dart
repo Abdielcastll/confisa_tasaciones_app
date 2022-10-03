@@ -78,6 +78,9 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                       minWidth: double.infinity,
                                       height: 50,
                                       onPressed: () {
+                                        Provider.of<AlarmasProvider>(context,
+                                                listen: false)
+                                            .alarmas = [];
                                         Navigator.pop(context);
                                         Navigator.pushNamed(
                                                 context,

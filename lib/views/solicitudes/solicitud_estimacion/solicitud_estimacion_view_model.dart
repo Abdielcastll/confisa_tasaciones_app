@@ -155,17 +155,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getAlarmas(BuildContext context) async {
-    var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCreada!.id);
-    if (resp is Success<AlarmasResponse>) {
-      alarmasResponse = resp.response;
-      alarmas = resp.response.data;
-      Provider.of<AlarmasProvider>(context, listen: false).alarmas = alarmas;
-    } else if (resp is Failure) {
-      Dialogs.error(msg: resp.messages.first);
-    }
-  }
-
   void onInit(SolicitudesData? arg) async {
     if (arg != null) {
       solicitudCola = arg;
@@ -456,7 +445,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
             fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
             fotosPermitidas = cantidad;
             currentForm = 3;
-            getAlarmas(context);
             ProgressDialog.dissmiss(context);
           }
         }
