@@ -273,4 +273,48 @@ class AdjuntosApi {
       return TokenFail();
     }
   }
+
+  Future<Object> getFotoFirma({required String idUser}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/get-foto-firma',
+        method: "GET",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {"IdUser": idUser},
+        parser: (data) {
+          return AdjuntoFoto.fromJson(data["data"]);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateFotoFirma({
+    required String adjuntoInBytes,
+    required String idUser,
+  }) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/add-foto-firma',
+        method: "POST",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {
+          "adjuntoInBytes": adjuntoInBytes,
+          "idUser": idUser,
+        },
+        parser: (data) {
+          return AdjuntosPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
 }
