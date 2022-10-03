@@ -26,7 +26,6 @@ import '../../../core/api/roles_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/providers/accesorios_provider.dart';
-import '../../../core/providers/condiciones_provider.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../widgets/app_dialogs.dart';
 import '../trabajar_solicitud/trabajar_view.dart';
@@ -70,7 +69,6 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   final _authenticationClient = locator<AuthenticationClient>();
   final _userClient = locator<UserClient>();
   final _personalApi = locator<PersonalApi>();
-  final _rolesAPI = locator<RolesAPI>();
   late Session _user;
   late Profile _userData;
   final logger = Logger();

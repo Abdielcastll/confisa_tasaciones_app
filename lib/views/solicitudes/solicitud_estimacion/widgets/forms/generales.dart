@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_disponibles_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
-import '../../../../../core/models/ediciones_vehiculo_response.dart';
 import '../../../base_widgets/base_form_widget.dart';
 import '../../../base_widgets/base_text_field_widget.dart';
 import '../../solicitud_estimacion_view_model.dart';
