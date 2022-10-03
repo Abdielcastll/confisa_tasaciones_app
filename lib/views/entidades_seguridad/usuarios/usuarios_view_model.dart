@@ -1,5 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/adjuntos.dart';
+import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
 import 'package:tasaciones_app/core/models/usuarios_response.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
@@ -23,15 +30,20 @@ class UsuariosViewModel extends BaseViewModel {
   final _rolesApi = locator<RolesAPI>();
   final listController = ScrollController();
   final _navigationService = locator<NavigatorService>();
+  final _picker = ImagePicker();
+  final _adjuntoApi = locator<AdjuntosApi>();
 
   TextEditingController tcBuscar = TextEditingController();
 
   List<UsuariosData> usuarios = [];
   int pageNumber = 1;
   bool _cargando = false;
+  bool _tieneFoto = false;
   bool _busqueda = false;
   bool hasNextPage = false;
   late UsuariosResponse usuariosResponse;
+  late File foto;
+  late AdjuntoFoto? fotoPerfil;
 
   UsuariosViewModel() {
     listController.addListener(() {
@@ -161,37 +173,171 @@ class UsuariosViewModel extends BaseViewModel {
     tcBuscar.clear();
   }
 
+  /* Future<void> editarFoto(BuildContext ctx, String idUser) async {
+    var croppedFile = await ImageCropper().cropImage(
+      sourcePath: foto.path,
+      cropStyle: CropStyle.circle,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Editar foto',
+          toolbarColor: AppColors.orange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+
+          lockAspectRatio: false,
+          // showCropGrid: true,
+        ),
+        IOSUiSettings(
+          title: 'Editar foto',
+        ),
+      ],
+    );
+    foto = File(croppedFile!.path);
+    ProgressDialog.show(ctx);
+    var resp = await _adjuntoApi.updateFotoPerfil(
+        adjuntoInBytes: base64Encode(foto.readAsBytesSync()), idUser: idUser);
+    if (resp is Success) {
+      ProgressDialog.dissmiss(ctx);
+      Dialogs.success(msg: "Foto ingresada correctamente");
+      _navigationService.pop(ctx);
+    }
+    if (resp is Failure) {
+      ProgressDialog.dissmiss(ctx);
+      Dialogs.error(msg: resp.messages.first);
+    }
+    notifyListeners();
+  } */
+
+  /* void cargarFoto(BuildContext context, String idUser) async {
+    var img = await _picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 720,
+    );
+    if (img != null) {
+      foto = File(img.path);
+      editarFoto(context, idUser);
+    }
+  } */
+
+  Widget _noImage(BuildContext context, String idUser) {
+    return Stack(
+      children: [
+        ClipOval(
+          child: Container(
+            height: MediaQuery.of(context).size.width * .25,
+            width: MediaQuery.of(context).size.width * .25,
+            padding: const EdgeInsets.all(8),
+            color: Colors.grey,
+            child: Image.asset(
+              'assets/img/no-avatar.png',
+              color: Colors.white,
+            ),
+          ),
+        ),
+        /* Positioned(
+            bottom: 0,
+            right: 0,
+            child: ClipOval(
+              child: Container(
+                height: 35,
+                width: 35,
+                color: AppColors.brown,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.add_a_photo_rounded,
+                    size: 20,
+                  ),
+                  onPressed: () => cargarFoto(context, idUser),
+                  color: Colors.white,
+                ),
+              ),
+            )) */
+      ],
+    );
+  }
+
+  Widget _haveImage(BuildContext context, String image, String idUser) {
+    return Stack(
+      children: [
+        ClipOval(
+          child: Container(
+            height: MediaQuery.of(context).size.width * .25,
+            width: MediaQuery.of(context).size.width * .25,
+            color: Colors.white,
+            child: IconButton(
+                padding: EdgeInsets.zero,
+                color: Colors.red,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: Image.memory(
+                        base64Decode(image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+                icon: Image.memory(
+                  base64Decode(image),
+                  fit: BoxFit.fill,
+                  height: MediaQuery.of(context).size.width * .25,
+                  width: MediaQuery.of(context).size.width * .25,
+                )),
+          ),
+        ),
+        /* Positioned(
+            bottom: 0,
+            right: 0,
+            child: ClipOval(
+              child: Container(
+                height: 35,
+                width: 35,
+                color: AppColors.brown,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.add_a_photo_rounded,
+                    size: 20,
+                  ),
+                  onPressed: () => cargarFoto(context, idUser),
+                  color: Colors.white,
+                ),
+              ),
+            )) */
+      ],
+    );
+  }
+
   Future<void> modificarUsuario(
       UsuariosData usuario, BuildContext context, Size size) async {
     String email = "", telefono = "", nombre = "";
     int idSuplidor = 0;
     GlobalKey<FormState> _key = GlobalKey();
-    /* if (user.role.any((element) => element == "AprobadorTasaciones")) {
-      ProgressDialog.show(context);
-      var resp = await _usuariosApi.getUsuarios(email: user.email);
-      if (resp is Success<UsuariosResponse>) {
-        var resp2 =
-            await _usuariosApi.getUsuario(id: resp.response.data.first.id);
-        if (resp2 is Success<UsuariosResponse>) {
-          ProgressDialog.dissmiss(context);
-          idSuplidor = resp2.response.data.first.idSuplidor;
-        } else if (resp2 is Failure) {
-          ProgressDialog.dissmiss(context);
-          Dialogs.error(msg: resp2.messages.first);
-          return;
-        }
-      } else {
-        if (resp is Failure) {
-          ProgressDialog.dissmiss(context);
-          Dialogs.error(msg: resp.messages.first);
-          return;
-        }
-        if (resp is TokenFail) {
-          Dialogs.error(msg: 'su sesión a expirado');
-          _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
-        }
+    _tieneFoto = false;
+
+    cargando = true;
+    var resp = await _adjuntoApi.getFotoPerfil(idUser: usuario.id);
+    if (resp is Success<AdjuntoFoto>) {
+      fotoPerfil = resp.response;
+      _tieneFoto = true;
+    } else {
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages.first);
       }
-    } */
+      if (resp is TokenFail) {
+        Dialogs.error(msg: 'su sesión a expirado');
+        _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      }
+    }
+    cargando = false;
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -203,19 +349,9 @@ class UsuariosViewModel extends BaseViewModel {
             content: SizedBox(
               width: MediaQuery.of(context).size.width * .75,
               child: dialogActualizarInformacion(
-                  Container(
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.grey,
-                    ),
-                    height: 100,
-                    width: 100,
-                    child: const Icon(
-                      AppIcons.personOutline,
-                      size: 70,
-                    ),
-                  ),
+                  _tieneFoto
+                      ? _haveImage(context, fotoPerfil!.adjunto!, usuario.id)
+                      : _noImage(context, usuario.id),
                   size,
                   context,
                   _key,

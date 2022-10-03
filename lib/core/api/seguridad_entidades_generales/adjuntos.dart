@@ -187,7 +187,7 @@ class AdjuntosApi {
     }
   }
 
-  Future<Object> getFotoPerfil() async {
+  Future<Object> getFotoPerfil({String idUser = ""}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -196,6 +196,7 @@ class AdjuntosApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
+        queryParameters: {"IdUser": idUser},
         parser: (data) {
           return AdjuntoFoto.fromJson(data["data"]);
         },
@@ -205,7 +206,8 @@ class AdjuntosApi {
     }
   }
 
-  Future<Object> updateFotoPerfil({required String adjuntoInBytes}) async {
+  Future<Object> updateFotoPerfil(
+      {required String adjuntoInBytes, String idUser = ""}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -214,7 +216,7 @@ class AdjuntosApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {"adjuntoInBytes": adjuntoInBytes},
+        data: {"adjuntoInBytes": adjuntoInBytes, "idUser": idUser},
         parser: (data) {
           return AdjuntosPOSTResponse.fromJson(data);
         },
