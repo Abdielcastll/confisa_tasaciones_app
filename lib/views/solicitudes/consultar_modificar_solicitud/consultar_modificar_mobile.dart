@@ -7,6 +7,7 @@ class _ConsultarModificarMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    vm.getAlarmas(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(

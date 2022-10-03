@@ -173,59 +173,6 @@ class UsuariosViewModel extends BaseViewModel {
     tcBuscar.clear();
   }
 
-  /* Future<void> editarFoto(BuildContext ctx, String idUser) async {
-    var croppedFile = await ImageCropper().cropImage(
-      sourcePath: foto.path,
-      cropStyle: CropStyle.circle,
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Editar foto',
-          toolbarColor: AppColors.orange,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-
-          lockAspectRatio: false,
-          // showCropGrid: true,
-        ),
-        IOSUiSettings(
-          title: 'Editar foto',
-        ),
-      ],
-    );
-    foto = File(croppedFile!.path);
-    ProgressDialog.show(ctx);
-    var resp = await _adjuntoApi.updateFotoPerfil(
-        adjuntoInBytes: base64Encode(foto.readAsBytesSync()), idUser: idUser);
-    if (resp is Success) {
-      ProgressDialog.dissmiss(ctx);
-      Dialogs.success(msg: "Foto ingresada correctamente");
-      _navigationService.pop(ctx);
-    }
-    if (resp is Failure) {
-      ProgressDialog.dissmiss(ctx);
-      Dialogs.error(msg: resp.messages.first);
-    }
-    notifyListeners();
-  } */
-
-  /* void cargarFoto(BuildContext context, String idUser) async {
-    var img = await _picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 720,
-    );
-    if (img != null) {
-      foto = File(img.path);
-      editarFoto(context, idUser);
-    }
-  } */
-
   Widget _noImage(BuildContext context, String idUser) {
     return Stack(
       children: [
@@ -241,24 +188,6 @@ class UsuariosViewModel extends BaseViewModel {
             ),
           ),
         ),
-        /* Positioned(
-            bottom: 0,
-            right: 0,
-            child: ClipOval(
-              child: Container(
-                height: 35,
-                width: 35,
-                color: AppColors.brown,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.add_a_photo_rounded,
-                    size: 20,
-                  ),
-                  onPressed: () => cargarFoto(context, idUser),
-                  color: Colors.white,
-                ),
-              ),
-            )) */
       ],
     );
   }
@@ -293,24 +222,6 @@ class UsuariosViewModel extends BaseViewModel {
                 )),
           ),
         ),
-        /* Positioned(
-            bottom: 0,
-            right: 0,
-            child: ClipOval(
-              child: Container(
-                height: 35,
-                width: 35,
-                color: AppColors.brown,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.add_a_photo_rounded,
-                    size: 20,
-                  ),
-                  onPressed: () => cargarFoto(context, idUser),
-                  color: Colors.white,
-                ),
-              ),
-            )) */
       ],
     );
   }

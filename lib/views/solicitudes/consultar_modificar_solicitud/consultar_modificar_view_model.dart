@@ -119,17 +119,21 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   Future<void> getAlarmas(BuildContext context) async {
-    if (solicitud.id != null) {
-      var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
-      if (resp is Success<AlarmasResponse>) {
-        alarmasResponse = resp.response;
-        alarmas = resp.response.data;
-        Provider.of<AlarmasProvider>(context, listen: false).alarmas = alarmas;
-      } else if (resp is Failure) {
-        Dialogs.error(msg: resp.messages.first);
+    if (Provider.of<AlarmasProvider>(context, listen: false).alarmas !=
+        alarmas) {
+      if (solicitud.id != null) {
+        var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
+        if (resp is Success<AlarmasResponse>) {
+          alarmasResponse = resp.response;
+          alarmas = resp.response.data;
+          Provider.of<AlarmasProvider>(context, listen: false).alarmas =
+              alarmas;
+        } else if (resp is Failure) {
+          Dialogs.error(msg: resp.messages.first);
+        }
       }
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   List<ComponenteTasacion> listaComponentes = [];
