@@ -25,7 +25,7 @@ Form dialogActualizarInformacion(
 ) {
   final _navigationService = locator<NavigatorService>();
   final session = locator<AuthenticationClient>().loadSession;
-
+  int noTasador = 0;
   return Form(
     key: _formKey,
     child: Column(
@@ -38,7 +38,7 @@ Form dialogActualizarInformacion(
         Flexible(
           child: ListView(shrinkWrap: true, children: [
             Padding(
-              padding: const EdgeInsets.all(14.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   const SizedBox(
@@ -51,8 +51,7 @@ Form dialogActualizarInformacion(
                             element.description == "Oficial Negocios")),
                     initialValue: usuariosData.nombreCompleto,
                     decoration: const InputDecoration(
-                        labelText: 'Nombre Completo',
-                        border: UnderlineInputBorder()),
+                        label: Text("Nombre"), border: UnderlineInputBorder()),
                     onSaved: (value) {
                       nombreCompleto = value!;
                     },
@@ -81,7 +80,8 @@ Form dialogActualizarInformacion(
                     initialValue: usuariosData.phoneNumber,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                        labelText: 'Telefono', border: UnderlineInputBorder()),
+                        label: Text("Teléfono"),
+                        border: UnderlineInputBorder()),
                     onSaved: (value) {
                       telefono = value!;
                     },
@@ -109,7 +109,7 @@ Form dialogActualizarInformacion(
                             element.description == "Oficial Negocios")),
                     initialValue: usuariosData.email,
                     decoration: const InputDecoration(
-                        labelText: 'Email', border: UnderlineInputBorder()),
+                        label: Text("Email"), border: UnderlineInputBorder()),
                     onSaved: (value) {
                       email = value!;
                     },
@@ -132,6 +132,36 @@ Form dialogActualizarInformacion(
                   const SizedBox(
                     height: 10,
                   ),
+                  usuariosData.roles
+                          .any((element) => (element.description == "Tasador"))
+                      ? TextFormField(
+                          keyboardType: TextInputType.number,
+                          initialValue: usuariosData.noTasador.toString(),
+                          decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              label: Text("No Tasador")),
+                          onSaved: (value) {
+                            value != ""
+                                ? noTasador = int.parse(value!)
+                                : noTasador = 0;
+                          },
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length < 4) {
+                              return 'Debe ingresar un no tasador';
+                            }
+
+                            return null;
+                          },
+                        )
+                      : const SizedBox.shrink(),
+                  !usuariosData.roles
+                          .any((element) => (element.description == "Tasador"))
+                      ? const SizedBox(
+                          height: 10,
+                        )
+                      : const SizedBox.shrink(),
                   TextFormField(
                     readOnly: true,
                     maxLines: null,
@@ -141,7 +171,7 @@ Form dialogActualizarInformacion(
                         .toList()
                         .join(", "),
                     decoration: const InputDecoration(
-                        labelText: 'Roles', border: UnderlineInputBorder()),
+                        label: Text("Roles"), border: UnderlineInputBorder()),
                   ),
                   const SizedBox(
                     height: 10,
@@ -155,7 +185,7 @@ Form dialogActualizarInformacion(
                               : usuariosData.nombreSuplidor,
                           style: const TextStyle(color: Colors.black54),
                           decoration: const InputDecoration(
-                              labelText: 'Suplidor',
+                              label: Text("Suplidor"),
                               border: UnderlineInputBorder()),
                         )
                       : const SizedBox(),
@@ -168,7 +198,7 @@ Form dialogActualizarInformacion(
                     style: const TextStyle(color: Colors.black54),
                     initialValue: usuariosData.isActive ? "Activo" : "Inactivo",
                     decoration: const InputDecoration(
-                        labelText: 'Estado', border: UnderlineInputBorder()),
+                        label: Text("Estado"), border: UnderlineInputBorder()),
                   ),
                   const SizedBox(
                     height: 10,
@@ -280,12 +310,12 @@ Form dialogActualizarInformacion(
                         element.description == "Oficial Negocios"))
                 ? TextButton(
                     onPressed: () {
-                      if (validator) {
+                      if (_formKey.currentState!.validate()) {
                         _formKey.currentState?.save();
-                        modificar(nombreCompleto, email, telefono);
+                        modificar(nombreCompleto, email, telefono, noTasador);
                       } else if (_formKey.currentState!.validate()) {
                         _formKey.currentState?.save();
-                        modificar(nombreCompleto, email, telefono);
+                        modificar(nombreCompleto, email, telefono, noTasador);
                       }
                     },
                     // button pressed

@@ -258,7 +258,7 @@ class UsuariosViewModel extends BaseViewModel {
                 side: const BorderSide(color: AppColors.gold, width: 3)),
             contentPadding: EdgeInsets.zero,
             content: SizedBox(
-              width: MediaQuery.of(context).size.width * .75,
+              width: MediaQuery.of(context).size.width * 75,
               child: dialogActualizarInformacion(
                   _tieneFoto
                       ? _haveImage(context, fotoPerfil!.adjunto!, usuario.id)
@@ -270,14 +270,15 @@ class UsuariosViewModel extends BaseViewModel {
                   telefono,
                   email,
                   true,
-                  (nombref, emailf, telefonof) async {
+                  (nombref, emailf, telefonof, noTasador) async {
                     if (nombref != "" || emailf != "" || telefonof != "") {
                       ProgressDialog.show(context);
                       var creacion = await _usuariosApi.updateUsuarios(
                           id: usuario.id,
                           email: emailf,
                           phoneNumber: telefonof,
-                          fullName: nombref);
+                          fullName: nombref,
+                          noTasador: noTasador == 0 ? null : noTasador);
                       if (creacion is Success<UsuarioPOSTResponse>) {
                         ProgressDialog.dissmiss(context);
                         Dialogs.success(msg: "Modificación de datos exitosa");
@@ -569,16 +570,9 @@ class UsuariosViewModel extends BaseViewModel {
         }
       }
 
-      dialogCrearUsuario(
-          titulo,
-          size,
-          context,
-          _formKey,
-          roles,
-          nombre,
-          telefono,
-          email,
-          validator, (nombref, emailf, telefonof, codigoSuplidorf) async {
+      dialogCrearUsuario(titulo, size, context, _formKey, roles, nombre,
+          telefono, email, validator,
+          (nombref, emailf, telefonof, codigoSuplidorf, noTasador) async {
         if (codigoSuplidorf == 0) {
           ProgressDialog.show(context);
           var creacion = await _usuariosApi.createUsuarios(
@@ -586,7 +580,8 @@ class UsuariosViewModel extends BaseViewModel {
               phoneNumber: telefonof,
               fullName: nombref,
               roleId: rol1['id'],
-              codigoSuplidor: suplidor["codigoRelacional"]);
+              codigoSuplidor: suplidor["codigoRelacional"],
+              noTasador: noTasador == 0 ? null : noTasador);
           if (creacion is Success<UsuarioPOSTResponse>) {
             ProgressDialog.dissmiss(context);
             Dialogs.success(msg: "Creación de usuario exitosa");
@@ -603,7 +598,8 @@ class UsuariosViewModel extends BaseViewModel {
               phoneNumber: telefonof,
               fullName: nombref,
               roleId: rol1['id'],
-              codigoSuplidor: codigoSuplidorf);
+              codigoSuplidor: codigoSuplidorf,
+              noTasador: noTasador == 0 ? null : noTasador);
           if (creacion is Success<UsuarioPOSTResponse>) {
             ProgressDialog.dissmiss(context);
             Dialogs.success(msg: "Creación de usuario exitosa");

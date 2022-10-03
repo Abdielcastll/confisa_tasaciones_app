@@ -94,6 +94,7 @@ class UsuariosAPI {
       required String email,
       required String roleId,
       required String phoneNumber,
+      int? noTasador,
       int codigoSuplidor = 0}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
@@ -105,7 +106,8 @@ class UsuariosAPI {
           "email": email,
           "roleId": roleId,
           "codigoSuplidor": codigoSuplidor,
-          "phoneNumber": phoneNumber
+          "phoneNumber": phoneNumber,
+          "noTasador": noTasador,
         },
         headers: {
           'Authorization': 'Bearer $_token',
@@ -123,7 +125,8 @@ class UsuariosAPI {
       {required String id,
       required String fullName,
       required String phoneNumber,
-      required String email}) async {
+      required String email,
+      int? noTasador}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -133,7 +136,8 @@ class UsuariosAPI {
           "id": id,
           "fullName": fullName,
           "phoneNumber": phoneNumber,
-          "email": email
+          "email": email,
+          "noTasador": noTasador,
         },
         headers: {
           'Authorization': 'Bearer $_token',

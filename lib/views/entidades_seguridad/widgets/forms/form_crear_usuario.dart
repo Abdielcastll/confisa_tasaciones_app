@@ -38,6 +38,7 @@ Future<dynamic> dialogCrearUsuario(
   suplidor['codigoRelacional'] = 0;
   suplidor["nombre"] = "";
   suplidor["identificacion"] = "";
+  int noTasador = 0;
   int codSuplidor = 0;
   final _usuariosApi = locator<UsuariosAPI>();
   final _suplidoresApi = locator<SuplidoresApi>();
@@ -238,6 +239,50 @@ Future<dynamic> dialogCrearUsuario(
                                                     const SizedBox(
                                                       height: 10,
                                                     ),
+                                                    rol1["description"] ==
+                                                            "Tasador"
+                                                        ? TextFormField(
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            decoration: const InputDecoration(
+                                                                label: Text(
+                                                                    "No Tasador"),
+                                                                border:
+                                                                    UnderlineInputBorder()),
+                                                            onSaved: (value) {
+                                                              value != ""
+                                                                  ? noTasador =
+                                                                      int.parse(
+                                                                          value!)
+                                                                  : noTasador =
+                                                                      0;
+                                                            },
+                                                            validator: (value) {
+                                                              if (rol1[
+                                                                      "description"] ==
+                                                                  "Tasador") {
+                                                                if (value ==
+                                                                        null ||
+                                                                    value
+                                                                        .isEmpty ||
+                                                                    value.length <
+                                                                        4) {
+                                                                  return 'Debe ingresar un No tasador válido';
+                                                                }
+                                                              }
+                                                              return null;
+                                                            },
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    rol1["description"] ==
+                                                            "Tasador"
+                                                        ? const SizedBox(
+                                                            height: 10,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
                                                     codSuplidor == 0
                                                         ? DropdownSearch<
                                                             String>(
@@ -360,7 +405,8 @@ Future<dynamic> dialogCrearUsuario(
                                                                   nombreCompleto,
                                                                   email,
                                                                   telefono,
-                                                                  codSuplidor);
+                                                                  codSuplidor,
+                                                                  noTasador);
                                                             }
                                                           },
                                                         ),
@@ -465,6 +511,50 @@ Future<dynamic> dialogCrearUsuario(
                                                     const SizedBox(
                                                       height: 10,
                                                     ),
+                                                    rol1["description"] ==
+                                                            "Tasador"
+                                                        ? TextFormField(
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            decoration: const InputDecoration(
+                                                                label: Text(
+                                                                    "No Tasador"),
+                                                                border:
+                                                                    UnderlineInputBorder()),
+                                                            onSaved: (value) {
+                                                              value != ""
+                                                                  ? noTasador =
+                                                                      int.parse(
+                                                                          value!)
+                                                                  : noTasador =
+                                                                      0;
+                                                            },
+                                                            validator: (value) {
+                                                              if (rol1[
+                                                                      "description"] ==
+                                                                  "Tasador") {
+                                                                if (value ==
+                                                                        null ||
+                                                                    value
+                                                                        .isEmpty ||
+                                                                    value.length <
+                                                                        4) {
+                                                                  return 'Debe ingresar un No tasador válido';
+                                                                }
+                                                              }
+                                                              return null;
+                                                            },
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    rol1["description"] ==
+                                                            "Tasador"
+                                                        ? const SizedBox(
+                                                            height: 10,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
                                                     TextFormField(
                                                       readOnly: true,
                                                       onChanged: (value) {
@@ -576,7 +666,8 @@ Future<dynamic> dialogCrearUsuario(
                                                                   nombreCompleto,
                                                                   email,
                                                                   telefono,
-                                                                  codSuplidor);
+                                                                  codSuplidor,
+                                                                  noTasador);
                                                             }
                                                           },
                                                         ),
@@ -836,7 +927,8 @@ Future<dynamic> dialogCrearUsuario(
                                                                               .email,
                                                                           resp.response
                                                                               .telefono,
-                                                                          codSuplidor);
+                                                                          codSuplidor,
+                                                                          noTasador);
                                                                     }
                                                                   },
                                                                 ),
