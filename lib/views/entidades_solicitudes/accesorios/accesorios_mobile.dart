@@ -102,13 +102,13 @@ class _AccesoriosMobile extends StatelessWidget {
                                       child: CircularProgressIndicator()),
                             );
                           }
-                          var componenteVehiculo = vm.accesorios[i];
+                          var accesorioVehiculo = vm.accesorios[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
                               onPressed: () => vm.modificarAccesorios(
-                                  context, componenteVehiculo),
+                                  context, accesorioVehiculo),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
@@ -127,7 +127,7 @@ class _AccesoriosMobile extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            componenteVehiculo.descripcion,
+                                            accesorioVehiculo.descripcion,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                               color: AppColors.brownDark,
@@ -135,10 +135,10 @@ class _AccesoriosMobile extends StatelessWidget {
                                               fontWeight: FontWeight.w800,
                                             ),
                                           ),
-                                          componenteVehiculo.idSegmento == 0
+                                          accesorioVehiculo.idSegmento == 0
                                               ? const SizedBox()
                                               : Text(
-                                                  "Segmento: ${vm.segmentosAccesoriosVehiculos.firstWhere((element) => element.id == componenteVehiculo.idSegmento).descripcion}",
+                                                  "Segmento: ${vm.segmentosAccesoriosVehiculos.firstWhere((element) => element.id == accesorioVehiculo.idSegmento).descripcion}",
                                                   style: const TextStyle(
                                                       overflow:
                                                           TextOverflow.ellipsis,

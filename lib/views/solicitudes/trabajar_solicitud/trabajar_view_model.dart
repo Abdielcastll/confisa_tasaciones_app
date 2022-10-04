@@ -37,7 +37,6 @@ import '../../../theme/theme.dart';
 import '../../../widgets/escaner.dart';
 import '../../auth/login/login_view.dart';
 import '../consultar_modificar_solicitud/consultar_modificar_view_model.dart';
-import '../solicitud_estimacion/solicitud_estimacion_view_model.dart';
 
 class TrabajarViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();

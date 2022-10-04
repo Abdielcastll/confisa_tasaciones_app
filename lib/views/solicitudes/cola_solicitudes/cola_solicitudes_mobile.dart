@@ -57,7 +57,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.filter_alt_rounded),
+                              icon: const Icon(Icons.filter_alt_rounded),
                               onPressed: () => vm.filtro(context),
                             ),
                             !vm.busqueda

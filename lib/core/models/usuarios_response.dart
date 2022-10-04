@@ -63,7 +63,8 @@ class UsuariosData {
       required this.nombreSuplidor,
       required this.phoneNumber,
       required this.userName,
-      required this.roles});
+      required this.roles,
+      required this.noTasador});
 
   String id,
       userName,
@@ -76,7 +77,7 @@ class UsuariosData {
       nombreSuplidor;
   List<RolData2> roles;
   bool isActive, emailConfirmed;
-  int idSuplidor;
+  int idSuplidor, noTasador;
 
   factory UsuariosData.fromJson(Map<String, dynamic> json) => UsuariosData(
         id: json["id"] ?? '',
@@ -91,6 +92,7 @@ class UsuariosData {
         isActive: json["isActive"] ?? false,
         emailConfirmed: json["emailConfirmed"] ?? false,
         idSuplidor: json["idSuplidor"] ?? 0,
+        noTasador: json["noTasador"] ?? 0,
         roles:
             json["roles"].map<RolData2>((e) => RolData2.fromJson(e)).toList(),
       );
