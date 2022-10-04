@@ -7,6 +7,7 @@ class _ConsultarModificarMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    vm.getAlarmas(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
@@ -14,7 +15,6 @@ class _ConsultarModificarMobile extends StatelessWidget {
             titulo: vm.solicitud.descripcionTipoTasacion ?? '',
             textSize: 18,
             // getAlarmas: vm.getAlarmas(),
-            alarmas: vm.alarmas,
             esColaSolicitud: (vm.solicitud.id != null) ? false : true,
             idSolicitud: vm.solicitud.id ??
                 0) /* AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')) */,

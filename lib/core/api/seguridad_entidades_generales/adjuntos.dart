@@ -187,11 +187,50 @@ class AdjuntosApi {
     }
   }
 
-  Future<Object> getFotoPerfil() async {
+  Future<Object> getFotoPerfil({String idUser = ""}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
         '/api/adjuntos/get-foto-perfil',
+        method: "GET",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {"IdUser": idUser},
+        parser: (data) {
+          return AdjuntoFoto.fromJson(data["data"]);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> updateFotoPerfil(
+      {required String adjuntoInBytes, String idUser = ""}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/add-foto-perfil',
+        method: "POST",
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"adjuntoInBytes": adjuntoInBytes, "idUser": idUser},
+        parser: (data) {
+          return AdjuntosPOSTResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> getLogoSuplidor({required int idSuplidor}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/adjuntos/get-logo-suplidor/$idSuplidor',
         method: "GET",
         headers: {
           'Authorization': 'Bearer $_token',
@@ -205,16 +244,27 @@ class AdjuntosApi {
     }
   }
 
-  Future<Object> updateFotoPerfil({required String adjuntoInBytes}) async {
+  Future<Object> updateLogoSuplidor(
+      {required String adjuntoInBytes,
+      required String idUser,
+      required int idSuplidor}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
-        '/api/adjuntos/add-foto-perfil',
+        '/api/adjuntos/add-logo-suplidor',
         method: "POST",
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {"adjuntoInBytes": adjuntoInBytes},
+        data: {
+          "idSuplidor": idSuplidor,
+          "adjuntos": {
+            "adjuntoInBytes": adjuntoInBytes,
+            "idUser": idUser,
+            "descripcion": "LOGO SUPLIDOR",
+            "tipoAdjunto": 5
+          }
+        },
         parser: (data) {
           return AdjuntosPOSTResponse.fromJson(data);
         },

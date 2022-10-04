@@ -4,6 +4,7 @@ import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/core/user_client.dart';
@@ -72,9 +73,7 @@ class AlarmasViewModel extends BaseViewModel {
   Future<void> onInit(BuildContext context) async {
     cargando = true;
     usuario = _userClient.loadProfile;
-    profilePermisoResponse =
-        Provider.of<ProfilePermisosProvider>(context, listen: false)
-            .profilePermisos;
+
     Object resp = Failure;
     if (idSolicitud == 0) {
       switch (usuario!.roles!.any((element) =>
@@ -99,9 +98,7 @@ class AlarmasViewModel extends BaseViewModel {
           break;
         case false:
           resp = await _alarmasApi.getAlarmas(
-              pageNumber: pageNumber,
-              usuario: usuario!.id ?? "",
-              idSolicitud: idSolicitud);
+              pageNumber: pageNumber, idSolicitud: idSolicitud);
           break;
         default:
       }
@@ -111,6 +108,7 @@ class AlarmasViewModel extends BaseViewModel {
       alarmasResponse = resp.response as AlarmasResponse;
       alarmas = alarmasResponse.data;
       ordenar();
+      await changeProvider(alarmas, context);
       hasNextPage = alarmasResponse.hasNextPage;
       notifyListeners();
     }
@@ -121,7 +119,14 @@ class AlarmasViewModel extends BaseViewModel {
       _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
+    changeProvider(alarmas, context);
     cargando = false;
+  }
+
+  Future<void> changeProvider(
+      List<AlarmasData> nuevas, BuildContext context) async {
+    Provider.of<AlarmasProvider>(context, listen: false).alarmas = nuevas;
+    notifyListeners();
   }
 
   bool tienePermiso(String permisoRequerido) {
@@ -257,7 +262,6 @@ class AlarmasViewModel extends BaseViewModel {
       alarmasResponse = temp;
       alarmas = temp.data;
       ordenar();
-      hasNextPage = temp.hasNextPage;
       notifyListeners();
     }
     if (resp is Failure) {
@@ -415,7 +419,7 @@ class AlarmasViewModel extends BaseViewModel {
                     children: [
                       eliminar
                           ? TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.pop(context);
                                 Dialogs.confirm(ctx,
                                     tittle: 'Eliminar Alarma',
@@ -425,7 +429,12 @@ class AlarmasViewModel extends BaseViewModel {
                                   ProgressDialog.show(ctx);
                                   var resp = await _alarmasApi.deleteAlarma(
                                       id: alarma.id);
+
                                   ProgressDialog.dissmiss(ctx);
+                                  if (resp is Success) {
+                                    await onInit(ctx);
+                                    Dialogs.success(msg: 'Alarma eliminada');
+                                  }
                                   if (resp is Failure) {
                                     Dialogs.error(msg: resp.messages[0]);
                                   }
@@ -434,10 +443,6 @@ class AlarmasViewModel extends BaseViewModel {
                                         .navigateToPageAndRemoveUntil(
                                             LoginView.routeName);
                                     Dialogs.error(msg: 'Sesión expirada');
-                                  }
-                                  if (resp is Success) {
-                                    Dialogs.success(msg: 'Alarma eliminada');
-                                    await onRefresh();
                                   }
                                 });
                               }, // button pressed
@@ -577,197 +582,206 @@ class AlarmasViewModel extends BaseViewModel {
               borderRadius: BorderRadius.circular(10),
             ),
             contentPadding: EdgeInsets.zero,
-            content: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 80,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    color: AppColors.brownLight,
-                    child: const Text(
-                      'Crear Alarma',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 80,
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  color: AppColors.brownLight,
+                  child: const Text(
+                    'Crear Alarma',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewTitulo,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un titulo';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "Titulo",
-                          label: Text("Titulo"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        readOnly: true,
-                        controller: tcNewFechaCompromiso,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Seleccione una fecha';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Fecha"),
-                          suffixIcon: Icon(Icons.calendar_today),
-                          border: UnderlineInputBorder(),
-                        ),
-                        onTap: () async {
-                          tcNewFechaCompromiso.text =
-                              await Pickers.selectDate(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        readOnly: true,
-                        controller: tcNewHoraCompromiso,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Seleccione una hora';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Hora"),
-                          suffixIcon: Icon(Icons.alarm),
-                          border: UnderlineInputBorder(),
-                        ),
-                        onTap: () async {
-                          tcNewHoraCompromiso.text =
-                              await Pickers.selectTime(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewDescription,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
-                          } else {
-                            return null;
-                          }
-                        },
-                        maxLines: 5,
-                        decoration: const InputDecoration(
-                          label: Text("Descripción"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          tcNewDescription.clear();
-                          tcNewFechaCompromiso.clear();
-                          tcNewHoraCompromiso.clear();
-                          tcNewTitulo.clear();
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.closeCircle,
-                              color: Colors.red,
+                ),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewTitulo,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba un titulo';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Titulo",
+                                  label: Text("Titulo"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
                             ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Cancelar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            ProgressDialog.show(context);
-                            var resp = await _alarmasApi.createAlarma(
-                                correo: usuario!.email!,
-                                fechaCompromiso:
-                                    tcNewFechaCompromiso.text.trim() +
-                                        "T" +
-                                        tcNewHoraCompromiso.text.trim(),
-                                titulo: tcNewTitulo.text.trim(),
-                                idSolicitud: idSolicitud,
-                                descripcion: tcNewDescription.text.trim());
-
-                            if (resp is Success) {
-                              ProgressDialog.dissmiss(context);
-                              Dialogs.success(msg: 'Alarma Creada');
-                              Navigator.of(context).pop();
-                              await onRefresh();
-                              tcNewDescription.clear();
-                              tcNewFechaCompromiso.clear();
-                              tcNewHoraCompromiso.clear();
-                              tcNewTitulo.clear();
-                            }
-
-                            if (resp is Failure) {
-                              ProgressDialog.dissmiss(context);
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is TokenFail) {
-                              _navigationService.navigateToPageAndRemoveUntil(
-                                  LoginView.routeName);
-                              Dialogs.error(msg: 'Sesión expirada');
-                            }
-                          }
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.save,
-                              color: AppColors.green,
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                keyboardType: TextInputType.datetime,
+                                readOnly: true,
+                                controller: tcNewFechaCompromiso,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Seleccione una fecha';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Fecha"),
+                                  suffixIcon: Icon(Icons.calendar_today),
+                                  border: UnderlineInputBorder(),
+                                ),
+                                onTap: () async {
+                                  tcNewFechaCompromiso.text =
+                                      await Pickers.selectDate(context);
+                                },
+                              ),
                             ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Guardar"), // text
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                keyboardType: TextInputType.datetime,
+                                readOnly: true,
+                                controller: tcNewHoraCompromiso,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Seleccione una hora';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Hora"),
+                                  suffixIcon: Icon(Icons.alarm),
+                                  border: UnderlineInputBorder(),
+                                ),
+                                onTap: () async {
+                                  tcNewHoraCompromiso.text =
+                                      await Pickers.selectTime(context);
+                                },
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: tcNewDescription,
+                                validator: (value) {
+                                  if (value!.trim() == '') {
+                                    return 'Escriba una descripción';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                maxLines: 5,
+                                decoration: const InputDecoration(
+                                  label: Text("Descripción"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                ],
-              ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        tcNewDescription.clear();
+                        tcNewFechaCompromiso.clear();
+                        tcNewHoraCompromiso.clear();
+                        tcNewTitulo.clear();
+                      }, // button pressed
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const <Widget>[
+                          Icon(
+                            AppIcons.closeCircle,
+                            color: Colors.red,
+                          ),
+                          SizedBox(
+                            height: 3,
+                          ), // icon
+                          Text("Cancelar"), // text
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          ProgressDialog.show(context);
+                          var resp = await _alarmasApi.createAlarma(
+                              correo: usuario!.email!,
+                              fechaCompromiso:
+                                  tcNewFechaCompromiso.text.trim() +
+                                      "T" +
+                                      tcNewHoraCompromiso.text.trim(),
+                              titulo: tcNewTitulo.text.trim(),
+                              idSolicitud: idSolicitud,
+                              descripcion: tcNewDescription.text.trim());
+
+                          if (resp is Success) {
+                            ProgressDialog.dissmiss(context);
+                            Dialogs.success(msg: 'Alarma Creada');
+                            await onInit(context);
+                            Navigator.of(context).pop();
+                            tcNewDescription.clear();
+                            tcNewFechaCompromiso.clear();
+                            tcNewHoraCompromiso.clear();
+                            tcNewTitulo.clear();
+                          }
+
+                          if (resp is Failure) {
+                            ProgressDialog.dissmiss(context);
+                            Dialogs.error(msg: resp.messages[0]);
+                          }
+                          if (resp is TokenFail) {
+                            _navigationService.navigateToPageAndRemoveUntil(
+                                LoginView.routeName);
+                            Dialogs.error(msg: 'Sesión expirada');
+                          }
+                        }
+                      }, // button pressed
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const <Widget>[
+                          Icon(
+                            AppIcons.save,
+                            color: AppColors.green,
+                          ),
+                          SizedBox(
+                            height: 3,
+                          ), // icon
+                          Text("Guardar"), // text
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
         });
@@ -775,7 +789,6 @@ class AlarmasViewModel extends BaseViewModel {
 
   @override
   Future<void> dispose() async {
-    await appbar.getAlarmas;
     listController.dispose();
     tcNewDescription.dispose();
     tcNewFechaCompromiso.dispose();

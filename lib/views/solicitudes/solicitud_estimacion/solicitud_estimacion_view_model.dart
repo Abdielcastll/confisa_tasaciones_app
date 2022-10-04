@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
@@ -25,6 +26,7 @@ import 'package:tasaciones_app/core/models/tracciones_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -151,16 +153,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   set fotosPermitidas(int i) {
     _fotosPermitidas = i;
     notifyListeners();
-  }
-
-  Future<void> getAlarmas() async {
-    var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitudCreada!.id);
-    if (resp is Success<AlarmasResponse>) {
-      alarmasResponse = resp.response;
-      alarmas = resp.response.data;
-    } else if (resp is Failure) {
-      Dialogs.error(msg: resp.messages.first);
-    }
   }
 
   void onInit(SolicitudesData? arg) async {
@@ -405,26 +397,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> cargarAlarmas() async {
-    Session data = _authenticationAPI.loadSession;
-    Profile perfil = _usuarioApi.loadProfile;
-    Object respalarm;
-    data.role.any((element) => element == "AprobadorTasaciones")
-        ? respalarm = await _alarmasApi.getAlarmas()
-        : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
-    if (respalarm is Success) {
-      alarmasResponse = respalarm.response as AlarmasResponse;
-      alarmas = alarmasResponse!.data;
-    }
-    if (respalarm is Failure) {
-      Dialogs.error(msg: respalarm.messages[0]);
-    }
-    if (respalarm is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'Sesión expirada');
-    }
-  }
-
   Future<void> editarFoto(int i) async {
     var croppedFile = await ImageCropper().cropImage(
       sourcePath: await createFileFromString(fotos[i].adjunto!),
@@ -461,6 +433,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     if (vinData == null) {
       Dialogs.error(msg: 'Debe consultar el No. VIN');
     } else {
+// <<<<<<< HEAD
       if (solicitudCreada == null) {
         if (formKey3.currentState!.validate()) {
           ProgressDialog.show(context);
@@ -473,10 +446,25 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
               int cantidad = int.parse(resp.response.data.descripcion ?? '0');
               fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
               fotosPermitidas = cantidad;
-              await getAlarmas();
+              // await getAlarmas();
               currentForm = 3;
               ProgressDialog.dissmiss(context);
             }
+// =======
+//       if (formKey3.currentState!.validate()) {
+//         ProgressDialog.show(context);
+//         int? idSuplidor = await crearSolicitud(context);
+//         if (idSuplidor != null) {
+//           log.i('ID SUPLIDOR $idSuplidor');
+//           var resp =
+//               await _solicitudesApi.getCantidadFotos(idSuplidor: idSuplidor);
+//           if (resp is Success<EntidadResponse>) {
+//             int cantidad = int.parse(resp.response.data.descripcion ?? '0');
+//             fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
+//             fotosPermitidas = cantidad;
+//             currentForm = 3;
+//             ProgressDialog.dissmiss(context);
+// >>>>>>> a23256244821557b9855d8ad45d6b0a629ed319b
           }
         }
       } else {
@@ -486,7 +474,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
           int cantidad = int.parse(resp.response.data.descripcion ?? '0');
           fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
           fotosPermitidas = cantidad;
-          await getAlarmas();
+          // await getAlarmas();
           currentForm = 3;
           ProgressDialog.dissmiss(context);
         }
@@ -535,7 +523,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       Dialogs.success(msg: 'Solicitud creada correctamente');
       solicitudCreada = resp.response;
       var suplidor = resp.response.suplidorTasacion;
-      getAlarmas();
       notifyListeners();
       return suplidor;
     }

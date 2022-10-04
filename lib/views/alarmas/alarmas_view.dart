@@ -1,7 +1,9 @@
 library alarmas_view;
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
+import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';
@@ -26,6 +28,9 @@ class AlarmasView extends StatelessWidget {
   Widget build(BuildContext context) {
     AlarmasViewModel viewModel =
         AlarmasViewModel(idSolicitud: idSolicitud, appbar: appbar);
+    viewModel.profilePermisoResponse =
+        Provider.of<ProfilePermisosProvider>(context, listen: false)
+            .profilePermisos;
     return ViewModelBuilder<AlarmasViewModel>.reactive(
         viewModelBuilder: () => viewModel,
         onModelReady: (viewModel) {

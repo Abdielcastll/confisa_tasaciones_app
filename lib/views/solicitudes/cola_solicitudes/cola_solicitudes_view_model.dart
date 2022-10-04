@@ -10,7 +10,9 @@ import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
+import 'package:tasaciones_app/core/models/solicitudes/solicitud_tipo_estado_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/providers/componentes_vehiculo_provider.dart';
 import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
@@ -40,12 +42,13 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   late GetSolicitudesResponse solicitudesResponse;
 
   AlarmasResponse? alarmasResponse;
+  List<TipoTasacionData> tiposTasacion = [];
+  List<EstadoSolicitudData> estadosSolicitud = [];
   List<SolicitudesData> solicitudes = [];
   List<AlarmasData> alarmas = [];
   TextEditingController tcBuscar = TextEditingController();
   List<String> roles = [];
   List<String> opcionesFiltro = [
-    "Todos",
     "No. Tasación",
     "No. Solicitud Crédito",
     "Estado",
@@ -54,6 +57,8 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     "Nombre Cliente",
     "Tipo de Tasación"
   ];
+  List<int> seleccionEstado = [];
+  List<int> seleccionTipo = [];
   List<String> seleccionFiltro = [];
 
   bool _loading = true;
@@ -117,6 +122,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
 
   void filtro(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    busqueda = false;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -135,10 +141,16 @@ class ColaSolicitudesViewModel extends BaseViewModel {
                     const SizedBox.shrink(),
                     [
                       DataTable(
-                          onSelectAll: (value) {},
-                          columns: [
+                          onSelectAll: (isSelectedAll) {
+                            setState(() => {
+                                  isSelectedAll!
+                                      ? seleccionFiltro.addAll(opcionesFiltro)
+                                      : seleccionFiltro = [],
+                                });
+                          },
+                          columns: const [
                             DataColumn(
-                              label: Container(),
+                              label: Text("Todos"),
                             ),
                           ],
                           rows: opcionesFiltro
@@ -146,23 +158,11 @@ class ColaSolicitudesViewModel extends BaseViewModel {
                                       selected: seleccionFiltro
                                           .any((element) => element == e),
                                       onSelectChanged: (isSelected) {
-                                        if (e == "Todos") {
-                                          if (isSelected!) {
-                                            seleccionFiltro.add(e);
-                                            seleccionFiltro.removeWhere(
-                                                (element) =>
-                                                    element != "Todos");
-                                          } else {
-                                            seleccionFiltro.removeWhere(
+                                        isSelected!
+                                            ? seleccionFiltro.add(e)
+                                            : seleccionFiltro.removeWhere(
                                                 (element) => element == e);
-                                          }
-                                        } else if (!seleccionFiltro.any(
-                                            (element) => element == "Todos")) {
-                                          isSelected!
-                                              ? seleccionFiltro.add(e)
-                                              : seleccionFiltro.removeWhere(
-                                                  (element) => element == e);
-                                        }
+
                                         setState((() {}));
                                       },
                                       cells: [
@@ -175,6 +175,165 @@ class ColaSolicitudesViewModel extends BaseViewModel {
                               .toList()),
                     ],
                     size,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            _navigatorService.pop();
+                          },
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                AppIcons.closeCircle,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Cancelar"), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: seleccionFiltro
+                                  .any((element) => element == "Estado")
+                              ? () {
+                                  dialogFiltro("Estado", context);
+                                }
+                              : () {},
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.change_circle_outlined,
+                                color: AppColors.gold,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Estado"), // text
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: seleccionFiltro.any(
+                                  (element) => element == "Tipo de Tasación")
+                              ? () {
+                                  dialogFiltro("Tipo de Tasación", context);
+                                }
+                              : () {},
+                          // button pressed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.topic_outlined,
+                                color: AppColors.gold,
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ), // icon
+                              Text("Tipo"), // text
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            );
+          }));
+        });
+  }
+
+  void dialogFiltro(String seleccion, BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                width: MediaQuery.of(context).size.width * .75,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColors.gold, width: 3)),
+                child: dialogMostrarInformacionPermisos(
+                    const SizedBox.shrink(),
+                    const SizedBox.shrink(),
+                    [
+                      DataTable(
+                          onSelectAll: (isSelectedAll) {
+                            setState(() => {
+                                  seleccion == "Estado"
+                                      ? isSelectedAll!
+                                          ? seleccionEstado = estadosSolicitud
+                                              .map<int>((e) => e.id)
+                                              .toList()
+                                          : seleccionEstado = []
+                                      : isSelectedAll!
+                                          ? seleccionTipo = tiposTasacion
+                                              .map<int>((e) => e.id)
+                                              .toList()
+                                          : seleccionTipo = [],
+                                });
+                          },
+                          columns: const [
+                            DataColumn(
+                              label: Text("Todos"),
+                            ),
+                          ],
+                          rows: seleccion == "Estado"
+                              ? estadosSolicitud
+                                  .map((e) => DataRow(
+                                          selected: seleccionEstado.any(
+                                              (element) => element == e.id),
+                                          onSelectChanged: (isSelected) {
+                                            isSelected!
+                                                ? seleccionEstado.add(e.id)
+                                                : seleccionEstado.removeWhere(
+                                                    (element) =>
+                                                        element == e.id);
+
+                                            setState((() {}));
+                                          },
+                                          cells: [
+                                            DataCell(
+                                              Text(
+                                                e.descripcion,
+                                              ),
+                                            ),
+                                          ]))
+                                  .toList()
+                              : tiposTasacion
+                                  .map((e) => DataRow(
+                                          selected: seleccionTipo.any(
+                                              (element) => element == e.id),
+                                          onSelectChanged: (isSelected) {
+                                            isSelected!
+                                                ? seleccionTipo.add(e.id)
+                                                : seleccionTipo.removeWhere(
+                                                    (element) =>
+                                                        element == e.id);
+
+                                            setState((() {}));
+                                          },
+                                          cells: [
+                                            DataCell(
+                                              Text(
+                                                e.descripcion,
+                                              ),
+                                            ),
+                                          ]))
+                                  .toList()),
+                    ],
+                    size,
                     const SizedBox.shrink()),
               ),
             );
@@ -182,24 +341,29 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         });
   }
 
-  Future<void> getAlarma() async {
+  Future<void> getAlarma(BuildContext context) async {
     Object respalarm;
     Profile perfil = _usuarioApi.loadProfile;
     Session data = _authenticationAPI.loadSession;
-    data.role.any((element) =>
-            element == "AprobadorTasaciones" || element == "Administrador")
-        ? respalarm = await _alarmasApi.getAlarmas()
-        : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
-    if (respalarm is Success) {
-      alarmasResponse = respalarm.response as AlarmasResponse;
-      alarmas = alarmasResponse!.data;
-    }
-    if (respalarm is Failure) {
-      Dialogs.error(msg: respalarm.messages[0]);
-    }
-    if (respalarm is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'Sesión expirada');
+    if (Provider.of<AlarmasProvider>(context, listen: false).alarmas !=
+        alarmas) {
+      data.role.any((element) =>
+              element == "AprobadorTasaciones" || element == "Administrador")
+          ? respalarm = await _alarmasApi.getAlarmas()
+          : respalarm = await _alarmasApi.getAlarmas(usuario: perfil.id!);
+      if (respalarm is Success) {
+        alarmasResponse = respalarm.response as AlarmasResponse;
+        alarmas = alarmasResponse!.data;
+        Provider.of<AlarmasProvider>(context, listen: false).alarmas = alarmas;
+      }
+      if (respalarm is Failure) {
+        Dialogs.error(msg: respalarm.messages[0]);
+      }
+      if (respalarm is TokenFail) {
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'Sesión expirada');
+      }
+      notifyListeners();
     }
   }
 
@@ -212,7 +376,18 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     loading = true;
     user = _authenticationClient.loadSession;
     userData = _userClient.loadProfile;
-
+    var resp = await _solicitudesApi.getTiposTasacion();
+    if (resp is Success<TipoTasacionResponse>) {
+      tiposTasacion = resp.response.data;
+    } else if (resp is Failure) {
+      Dialogs.error(msg: resp.messages.first);
+    }
+    var resp2 = await _solicitudesApi.getEstadosSolicitud();
+    if (resp2 is Success<EstadoSolicitudResponse>) {
+      estadosSolicitud = resp2.response.data;
+    } else if (resp2 is Failure) {
+      Dialogs.error(msg: resp2.messages.first);
+    }
     var resp1 = await _personalApi.getPermisos();
     if (resp1 is Success<ProfilePermisoResponse>) {
       Provider.of<ProfilePermisosProvider>(context, listen: false)
@@ -225,9 +400,8 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
+    getAlarma(context);
     await onRefresh();
-
-    getAlarma();
     loading = false;
     final componentesProv = ComponentesVehiculosProvider.instance;
     final accesoriosProv = AccesoriosProvider.instance;
@@ -292,45 +466,41 @@ class ColaSolicitudesViewModel extends BaseViewModel {
 
   Future<void> buscar(String query) async {
     loading = true;
-    if (query.isEmpty) {
+    if (query.isEmpty && seleccionEstado.isEmpty && seleccionTipo.isEmpty) {
       loading = false;
       return;
     }
     var resp;
-    if (seleccionFiltro.any((element) => element == "Todos")) {
+
+    if (seleccionFiltro.isNotEmpty) {
       resp = await _solicitudesApi.getColaSolicitudes(
-          noSolicitud: int.tryParse(query),
-          chasis: query,
-          estado: query,
-          identificacion: query,
-          nombreCliente: query,
-          tipoTasacion: query);
-    } else {
-      if (seleccionFiltro.isNotEmpty) {
-        resp = await _solicitudesApi.getColaSolicitudes(
-            noSolicitud: seleccionFiltro
-                    .any((element) => element == "No. Solicitud Crédito")
-                ? int.tryParse(query)
-                : null,
-            chasis: seleccionFiltro.any((element) => element == "Chasis")
-                ? query
-                : "",
-            estado: seleccionFiltro.any((element) => element == "Estado")
-                ? query
-                : "",
-            identificacion: seleccionFiltro
-                    .any((element) => element == "Identificación Cliente")
-                ? query
-                : "",
-            nombreCliente:
-                seleccionFiltro.any((element) => element == "Nombre Cliente")
-                    ? query
-                    : "",
-            tipoTasacion:
-                seleccionFiltro.any((element) => element == "Tipo de Tasación")
-                    ? query
-                    : "");
-      }
+          pageSize: 999,
+          noSolicitud: seleccionFiltro
+                  .any((element) => element == "No. Solicitud Crédito")
+              ? int.tryParse(query)
+              : null,
+          noTasacion:
+              seleccionFiltro.any((element) => element == "No. Tasación")
+                  ? int.tryParse(query)
+                  : null,
+          chasis: seleccionFiltro.any((element) => element == "Chasis")
+              ? query
+              : "",
+          estado: seleccionFiltro.any((element) => element == "Estado")
+              ? seleccionEstado
+              : [],
+          identificacion: seleccionFiltro
+                  .any((element) => element == "Identificación Cliente")
+              ? query
+              : "",
+          nombreCliente:
+              seleccionFiltro.any((element) => element == "Nombre Cliente")
+                  ? query
+                  : "",
+          tipoTasacion:
+              seleccionFiltro.any((element) => element == "Tipo de Tasación")
+                  ? seleccionTipo
+                  : []);
     }
 
     if (seleccionFiltro.isEmpty) {

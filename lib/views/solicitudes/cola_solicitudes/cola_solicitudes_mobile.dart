@@ -7,6 +7,8 @@ class _ColaSolicitudesMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    vm.getAlarma(context);
+
     return ProgressWidget(
       inAsyncCall: vm.loading,
       opacity: false,
@@ -17,8 +19,6 @@ class _ColaSolicitudesMobile extends StatelessWidget {
           appBar: Appbar(
             textSize: 18,
             titulo: 'Cola de solicitudes',
-            alarmas: vm.alarmas,
-            getAlarmas: vm.getAlarma(),
             esColaSolicitud: true,
             vmColaSolicitudes: vm,
             idSolicitud: 0,

@@ -15,10 +15,8 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
                 title: const Text('Solicitud de Estimación'),
               )
             : Appbar(
-                getAlarmas: vm.getAlarmas(),
                 titulo: 'Solicitud de Estimación',
                 textSize: 17,
-                alarmas: vm.alarmas,
                 esColaSolicitud: false,
                 idSolicitud: vm.solicitudCreada!.id!),
         body: Column(

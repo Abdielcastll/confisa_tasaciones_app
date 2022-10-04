@@ -1,5 +1,6 @@
 import 'package:provider/single_child_widget.dart';
 import 'package:tasaciones_app/core/providers/accesorios_provider.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/providers/componentes_vehiculo_provider.dart';
 import 'package:tasaciones_app/core/providers/condiciones_provider.dart';
 import 'package:tasaciones_app/core/providers/menu_provider.dart';
@@ -33,5 +34,6 @@ class ProviderInjector {
     ChangeNotifierProvider(
         create: (_) => CondicionesComponentesVehiculosProvider.instance),
     ChangeNotifierProvider(create: (_) => AccesoriosProvider.instance),
+    ChangeNotifierProvider(create: (_) => AlarmasProvider()),
   ];
 }
