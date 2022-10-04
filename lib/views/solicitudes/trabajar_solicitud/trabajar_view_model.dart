@@ -57,6 +57,7 @@ class TrabajarViewModel extends BaseViewModel {
   TextEditingController tcKilometraje = TextEditingController();
   TextEditingController tcPlaca = TextEditingController();
   TextEditingController tcValor = TextEditingController();
+  TextEditingController tcObservacion = TextEditingController();
   // List<AdjuntoFoto> fotosAdjuntos = [];
   int _currentForm = 1;
   late SolicitudesData solicitud;
@@ -87,6 +88,7 @@ class TrabajarViewModel extends BaseViewModel {
     tcKilometraje.dispose();
     tcPlaca.dispose();
     tcValor.dispose();
+    tcObservacion.dispose();
     super.dispose();
   }
 
@@ -123,7 +125,7 @@ class TrabajarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  VersionVehiculoData get versionVehiculo => _versionVehiculo!;
+  VersionVehiculoData? get versionVehiculo => _versionVehiculo;
 
   set versionVehiculo(VersionVehiculoData? value) {
     _versionVehiculo = value;
@@ -137,7 +139,7 @@ class TrabajarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  EdicionVehiculo get edicionVehiculo => _edicionVehiculos!;
+  EdicionVehiculo? get edicionVehiculo => _edicionVehiculos;
 
   set edicionVehiculo(EdicionVehiculo? value) {
     _edicionVehiculos = value;
@@ -151,7 +153,7 @@ class TrabajarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  ColorVehiculo get colorVehiculo => _colorVehiculo!;
+  ColorVehiculo? get colorVehiculo => _colorVehiculo;
 
   set colorVehiculo(ColorVehiculo? value) {
     _colorVehiculo = value;
@@ -246,8 +248,8 @@ class TrabajarViewModel extends BaseViewModel {
           id: solicitud.id!,
           ano: vinData?.ano ?? 0,
           chasis: tcVIN.text,
-          color: colorVehiculo.id,
-          edicion: edicionVehiculo.id!,
+          color: colorVehiculo!.id,
+          edicion: edicionVehiculo!.id!,
           fuerzaMotriz: double.tryParse(tcFuerzaMotriz.text.trim())!.round(),
           kilometraje: double.tryParse(tcKilometraje.text.trim())!.round(),
           marca: solicitudData?.idMarcaTasaciones ?? vinData?.codigoMarca ?? 0,
@@ -257,11 +259,9 @@ class TrabajarViewModel extends BaseViewModel {
           noPuertas: nPuertas!,
           nuevoUsado: _estadoID!,
           placa: tcPlaca.text.trim(),
-          // serie: vinData!.idSerie,
           tipoVehiculoLocal: tipoVehiculo!.id,
           traccion: traccion?.id ?? vinData!.idTraccion!,
-          // trim: vinData!.idTrim,
-          versionLocal: versionVehiculo.id,
+          versionLocal: versionVehiculo!.id,
           sistemaTransmision: transmision?.id ?? vinData!.idSistemaCambio!,
         );
         if (upResp is Success) {
@@ -739,12 +739,15 @@ class TrabajarViewModel extends BaseViewModel {
       ProgressDialog.show(context);
 
       var resp = await _solicitudesApi.updateValoracion(
-          noTasacion: solicitud.noTasacion!,
-          valorizacion: int.tryParse(tcValor.text.trim())!,
-          valorConsultaSalvamento: isSalvage,
-          valorUltimas3Tasaciones: referencias[0].valor!.round(),
-          valorUltimaEstimacion: referencias[1].valor!.round(),
-          valorCarrosRD: referencias[2].valor!.round());
+        noTasacion: solicitud.noTasacion!,
+        valorizacion: int.tryParse(tcValor.text.trim())!,
+        valorConsultaSalvamento: isSalvage,
+        valorUltimas3Tasaciones: referencias[0].valor!.round(),
+        valorUltimaEstimacion: referencias[1].valor!.round(),
+        valorCarrosRD: referencias[2].valor!.round(),
+        observacion: tcObservacion.text.trim(),
+      );
+
       if (resp is Success) {
         Dialogs.success(msg: 'Valor Actualizado');
         ProgressDialog.dissmiss(context);

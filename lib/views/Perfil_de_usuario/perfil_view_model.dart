@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/personal_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/adjuntos.dart';
@@ -11,6 +12,7 @@ import '../../core/base/base_view_model.dart';
 import '../../core/locator.dart';
 import '../../core/models/profile_response.dart';
 import '../../core/services/navigator_service.dart';
+import '../auth/confirm_password/confirm_password_view.dart';
 import '../auth/login/login_view.dart';
 
 class PerfilViewModel extends BaseViewModel {
@@ -152,6 +154,17 @@ class PerfilViewModel extends BaseViewModel {
   void onChangedPhone(String value) {
     profile?.phoneNumber = value;
     notifyListeners();
+  }
+
+  void goToChangePassword() {
+    _navigatorService.navigatorKey.currentState!
+        .push(MaterialPageRoute(builder: (context) {
+      return ConfirmPasswordView(
+        activateUser: false,
+        token: session.token,
+        email: session.email,
+      );
+    }));
   }
 
   void guardarPerfil(BuildContext context) async {

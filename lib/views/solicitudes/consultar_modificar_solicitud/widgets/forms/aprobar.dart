@@ -68,7 +68,10 @@ class AprobarForm extends StatelessWidget {
                 // key: vm.formKeyValor,
                 child: BaseTextFieldNoEdit(
               label: 'Valor Tasación',
-              initialValue: vm.solicitud.valorTasacionFinal?.toString() ?? '',
+              initialValue: vm.fmf
+                  .copyWith(amount: vm.solicitud.valorTasacion)
+                  .output
+                  .symbolOnLeft,
             )),
             const SizedBox(height: 50),
             AppButton(

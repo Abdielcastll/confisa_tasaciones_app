@@ -41,12 +41,15 @@ class ValoracionForm extends StatelessWidget {
                 children: [
                   BaseTextFieldNoEdit(
                     label: 'Consulta de salvamento',
-                    initialValue: vm.isSalvage.toString().toUpperCase(),
+                    initialValue:
+                        vm.solicitud.isSalvage.toString().toUpperCase(),
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Valor Tasación',
-                    initialValue:
-                        vm.solicitud.valorFacturacion?.toString() ?? '',
+                    initialValue: vm.fmf
+                        .copyWith(amount: vm.solicitud.valorTasacion)
+                        .output
+                        .symbolOnLeft,
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Estado',

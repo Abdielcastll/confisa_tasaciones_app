@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../core/utils/numeric_text_formater.dart';
 import '../../../../../../theme/theme.dart';
 import '../../../../../../widgets/app_buttons.dart';
 import '../../../../base_widgets/base_form_widget.dart';
@@ -64,12 +65,18 @@ class ValoracionTasacionForm extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
+            BaseTextField(
+              label: 'Observación',
+              controller: vm.tcObservacion,
+              maxLength: 500,
+            ),
             Form(
               key: vm.formKeyValor,
               child: BaseTextField(
                 label: 'Valor Tasación',
                 controller: vm.tcValor,
                 keyboardType: TextInputType.number,
+                inputFormatters: [NumericTextFormatter()],
                 validator: (v) {
                   if (v == '') {
                     return 'Ingrese el Valor';

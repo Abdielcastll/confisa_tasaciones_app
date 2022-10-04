@@ -12,6 +12,7 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../theme/theme.dart';
 import '../../../widgets/app_buttons.dart';
+import '../../auth/confirm_password/confirm_password_view.dart';
 import '../../auth/recover_password/recovery_password_view.dart';
 
 class CardProfileWidget extends StatelessWidget {
@@ -194,9 +195,7 @@ class CardProfileWidget extends StatelessWidget {
             visible: vm.editable(),
             child: AppButtonLogin(
                 text: 'Cambiar Contraseña',
-                onPressed: () {
-                  Navigator.pushNamed(context, RecoveryPasswordView.routeName);
-                },
+                onPressed: () => vm.goToChangePassword(),
                 color: AppColors.brownDark),
           ),
         ],

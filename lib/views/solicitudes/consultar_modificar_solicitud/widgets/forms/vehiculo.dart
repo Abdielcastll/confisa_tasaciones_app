@@ -34,9 +34,7 @@ class VehiculoForm extends StatelessWidget {
       labelNext: 'Siguiente',
       onPressedNext: () {
         vm.cargarAlarmas(vm.solicitud.id!);
-        vm.isTasador && vm.mostrarAccComp
-            ? vm.currentForm = 3
-            : vm.goToFotos(context);
+        vm.mostrarAccComp ? vm.currentForm = 3 : vm.goToFotos(context);
       },
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -124,7 +122,10 @@ class VehiculoForm extends StatelessWidget {
                           asyncItems: (text) => vm.getversionVehiculo(text),
                           dropdownBuilder: (context, tipo) {
                             return Text(
-                              tipo == null ? 'Seleccione' : tipo.descripcion,
+                              tipo == null
+                                  ? vm.versionVehiculo?.descripcion ??
+                                      'Seleccione'
+                                  : tipo.descripcion,
                               style: const TextStyle(
                                 fontSize: 15,
                               ),
@@ -149,7 +150,7 @@ class VehiculoForm extends StatelessWidget {
                           validator: vm.solicitud.estadoTasacion != 34
                               ? null
                               : (v) {
-                                  if (v == null) {
+                                  if (v == null && vm.versionVehiculo == null) {
                                     return 'Seleccione una versión';
                                   } else {
                                     return null;

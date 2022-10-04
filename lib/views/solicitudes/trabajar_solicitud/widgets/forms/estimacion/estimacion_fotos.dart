@@ -61,8 +61,8 @@ class FotosActuales extends StatelessWidget {
                   child: Container(
                     clipBehavior: Clip.antiAlias,
                     margin: const EdgeInsets.all(10),
-                    height: 100,
-                    width: 100,
+                    height: 120,
+                    width: 120,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.brown)),
@@ -81,8 +81,21 @@ class FotosActuales extends StatelessWidget {
                 foto.adjunto == null
                     ? const Spacer()
                     : Expanded(
-                        child: BaseTextFieldNoEdit(
-                            label: 'Tipo:', initialValue: foto.descripcion)),
+                        child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          BaseTextFieldNoEdit(
+                              label: 'Tipo:',
+                              initialValue: foto.tipo,
+                              border: false),
+                          const SizedBox(height: 15),
+                          BaseTextFieldNoEdit(
+                            label: 'Descripción:',
+                            initialValue: foto.descripcion,
+                            border: false,
+                          ),
+                        ],
+                      )),
               ],
             ),
             const Divider(),

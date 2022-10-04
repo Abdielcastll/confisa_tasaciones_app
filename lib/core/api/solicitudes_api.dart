@@ -511,6 +511,7 @@ class SolicitudesApi {
     required int valorUltimas3Tasaciones,
     required int valorUltimaEstimacion,
     required int valorCarrosRD,
+    required String observacion,
   }) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
@@ -527,6 +528,7 @@ class SolicitudesApi {
           "valorUltimas3Tasaciones": valorUltimas3Tasaciones.toString(),
           "valorUltimaEstimacion": valorUltimaEstimacion.toString(),
           "valorCarrosRD": valorCarrosRD.toString(),
+          "observacion": observacion,
         },
       );
     } else {

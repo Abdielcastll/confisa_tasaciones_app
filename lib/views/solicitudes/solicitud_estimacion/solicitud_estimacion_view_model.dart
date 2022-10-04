@@ -461,21 +461,34 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     if (vinData == null) {
       Dialogs.error(msg: 'Debe consultar el No. VIN');
     } else {
-      if (formKey3.currentState!.validate()) {
-        ProgressDialog.show(context);
-        int? idSuplidor = await crearSolicitud(context);
-        if (idSuplidor != null) {
-          log.i('ID SUPLIDOR $idSuplidor');
-          var resp =
-              await _solicitudesApi.getCantidadFotos(idSuplidor: idSuplidor);
-          if (resp is Success<EntidadResponse>) {
-            int cantidad = int.parse(resp.response.data.descripcion ?? '0');
-            fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
-            fotosPermitidas = cantidad;
-            await getAlarmas();
-            currentForm = 3;
-            ProgressDialog.dissmiss(context);
+      if (solicitudCreada == null) {
+        if (formKey3.currentState!.validate()) {
+          ProgressDialog.show(context);
+          int? idSuplidor = await crearSolicitud(context);
+          if (idSuplidor != null) {
+            log.i('ID SUPLIDOR $idSuplidor');
+            var resp =
+                await _solicitudesApi.getCantidadFotos(idSuplidor: idSuplidor);
+            if (resp is Success<EntidadResponse>) {
+              int cantidad = int.parse(resp.response.data.descripcion ?? '0');
+              fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
+              fotosPermitidas = cantidad;
+              await getAlarmas();
+              currentForm = 3;
+              ProgressDialog.dissmiss(context);
+            }
           }
+        }
+      } else {
+        var resp = await _solicitudesApi.getCantidadFotos(
+            idSuplidor: solicitudCreada!.suplidorTasacion);
+        if (resp is Success<EntidadResponse>) {
+          int cantidad = int.parse(resp.response.data.descripcion ?? '0');
+          fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
+          fotosPermitidas = cantidad;
+          await getAlarmas();
+          currentForm = 3;
+          ProgressDialog.dissmiss(context);
         }
       }
     }

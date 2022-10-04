@@ -50,6 +50,7 @@ class VehiculoForm extends StatelessWidget {
                       hint: 'Ingrese el número VIN del vehículo',
                       validator: vm.noVINValidator,
                       controller: vm.tcVIN,
+                      maxLength: 17,
                     ),
                   ),
                 ),

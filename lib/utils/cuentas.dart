@@ -9,8 +9,10 @@ class AppCuentas {
   String claveAprobadorTasaciones = "eXterno!123.";
   String usuarioAprobadorTasacionesid = "aprobadortester@hotmail.com";
   String claveAprobadorTasacionesid = "eXterno!123.";
+
   String tasador = "tasadortester@hotmail.com";
   String claveTasador = "eXterno!123.";
+
   String internoAdmin = "anibalvc1999@gmail.com";
   String claveInterna = "123Pa\$\$word!";
 

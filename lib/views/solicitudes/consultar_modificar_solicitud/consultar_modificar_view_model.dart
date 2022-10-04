@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
@@ -85,6 +86,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   List<ReferenciaValoracion> referencias = [];
   bool isAprobador = false;
   bool isTasador = false;
+  bool isOficial = false;
   bool mostrarAccComp = false;
   List<ComponentePorSegmento> componentes = [];
   List<ComponentePorSegmento> accesorios = [];
@@ -96,6 +98,16 @@ class ConsultarModificarViewModel extends BaseViewModel {
   final _picker = ImagePicker();
 
   ConsultarModificarViewModel();
+
+  MoneyFormatter fmf = MoneyFormatter(
+      amount: 12345678.9012345,
+      settings: MoneyFormatterSettings(
+          symbol: 'RD\$',
+          thousandSeparator: ',',
+          decimalSeparator: '.',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 2,
+          compactFormatType: CompactFormatType.short));
 
   int get currentForm => _currentForm;
   set currentForm(int i) {
@@ -110,7 +122,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  VersionVehiculoData get versionVehiculo => _versionVehiculo!;
+  VersionVehiculoData? get versionVehiculo => _versionVehiculo;
 
   set versionVehiculo(VersionVehiculoData? value) {
     _versionVehiculo = value;
@@ -142,6 +154,9 @@ class ConsultarModificarViewModel extends BaseViewModel {
     session.role.forEach((e) => print(e));
     isAprobador = session.role.contains("AprobadorTasaciones");
     isTasador = session.role.contains("Tasador") && session.role.length == 1;
+    isOficial =
+        session.role.contains("OficialNegocios") && session.role.length == 1;
+
     mostrarAccComp = solicitud.estadoTasacion! >= 10 &&
         solicitud.estadoTasacion! <= 13 &&
         solicitud.tipoTasacion != 21;
@@ -329,7 +344,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   Future goToFotos(BuildContext context) async {
-    if (isTasador && mostrarAccComp) {
+    if (mostrarAccComp) {
       ProgressDialog.show(context);
       loadFotos(context);
     } else if (formKey3.currentState!.validate()) {
@@ -408,7 +423,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     if (resp is Failure) {
       print('NO HAY FOTOS GUARDADAS');
     }
-    isTasador && mostrarAccComp ? currentForm = 5 : currentForm = 3;
+    mostrarAccComp ? currentForm = 5 : currentForm = 3;
     ProgressDialog.dissmiss(context);
   }
 
@@ -589,7 +604,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
       } else if (isTasador) {
         currentForm = 6;
       } else {
-        goToValorar(context);
+        currentForm = 6;
+        // goToValorar(context);
         // Navigator.of(context).pop();
       }
     } else {
@@ -643,7 +659,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     }
     notifyListeners();
     ProgressDialog.dissmiss(context);
-    currentForm = 4;
+    currentForm = 6;
   }
 
   Future<void> consultarVIN(BuildContext context) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/core/utils/numeric_text_formater.dart';
 import 'package:tasaciones_app/widgets/app_buttons.dart';
 
 import '../../../../../../theme/theme.dart';
@@ -33,7 +34,7 @@ class ValoracionEstimacionForm extends StatelessWidget {
           children: [
             BaseTextFieldNoEdit(
               label: 'Consulta de salvamento',
-              initialValue: vm.isSalvage.toString().toUpperCase(),
+              initialValue: vm.solicitud.isSalvage.toString().toUpperCase(),
             ),
             BaseTextFieldNoEdit(
               label: 'Tasación promedio',
@@ -63,12 +64,19 @@ class ValoracionEstimacionForm extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
+            BaseTextField(
+              label: 'Observaciónes',
+              controller: vm.tcObservacion,
+              maxLength: 500,
+            ),
+            // const SizedBox(height: 10),
             Form(
               key: vm.formKeyValor,
               child: BaseTextField(
                 label: 'Valor Tasación',
                 controller: vm.tcValor,
                 keyboardType: TextInputType.number,
+                inputFormatters: [NumericTextFormatter()],
                 validator: (v) {
                   if (v == '') {
                     return 'Ingrese el Valor';
@@ -78,7 +86,7 @@ class ValoracionEstimacionForm extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 20),
             AppButton(
                 text: 'Valorar',
                 onPressed: () => vm.guardarValoracion(context),

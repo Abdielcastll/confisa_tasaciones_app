@@ -60,7 +60,7 @@ class GeneralesTasacionForm extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Oficial de negocios',
-              initialValue: vm.solicitud.idOficial.toString(),
+              initialValue: vm.solicitud.nombreOficial ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Sucursal',

@@ -50,6 +50,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                       hint: 'Ingrese el número VIN del vehículo',
                       validator: vm.noVINValidator,
                       controller: vm.tcVIN,
+                      maxLength: 17,
                     ),
                   ),
                 ),
@@ -116,7 +117,10 @@ class VehiculoTasacionForm extends StatelessWidget {
                           asyncItems: (text) => vm.getversionVehiculo(text),
                           dropdownBuilder: (context, tipo) {
                             return Text(
-                              tipo == null ? 'Seleccione' : tipo.descripcion,
+                              tipo == null
+                                  ? vm.versionVehiculo?.descripcion ??
+                                      'Seleccione'
+                                  : tipo.descripcion,
                               style: const TextStyle(fontSize: 15),
                             );
                           },
@@ -137,7 +141,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                             ),
                           ),
                           validator: (v) {
-                            if (v == null) {
+                            if (v == null && vm.versionVehiculo == null) {
                               return 'Seleccione una versión';
                             } else {
                               return null;
@@ -150,7 +154,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           dropdownBuilder: (context, tipo) {
                             return Text(
                               tipo == null
-                                  ? 'Seleccione'
+                                  ? vm.edicionVehiculo?.descripcionEasyBank ??
+                                      'Seleccione'
                                   : tipo.descripcionEasyBank ?? '',
                               style: const TextStyle(
                                 fontSize: 15,
@@ -174,7 +179,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                             ),
                           ),
                           validator: (v) {
-                            if (v == null) {
+                            if (v == null && vm.edicionVehiculo == null) {
                               return 'Seleccione una edición';
                             } else {
                               return null;
@@ -189,7 +194,9 @@ class VehiculoTasacionForm extends StatelessWidget {
                           dropdownBuilder: (context, tipo) {
                             return Text(
                               tipo == null
-                                  ? vm.vinData?.tipoVehiculo ?? 'Seleccione'
+                                  ? vm.tipoVehiculo?.descripcion ??
+                                      vm.vinData?.tipoVehiculo ??
+                                      'Seleccione'
                                   : tipo.descripcion,
                               style: const TextStyle(
                                 fontSize: 15,
@@ -213,7 +220,9 @@ class VehiculoTasacionForm extends StatelessWidget {
                             ),
                           ),
                           validator: (v) {
-                            if (v == null && vm.vinData?.tipoVehiculo == null) {
+                            if (v == null &&
+                                vm.vinData?.tipoVehiculo == null &&
+                                vm.tipoVehiculo == null) {
                               return 'Seleccione un tipo';
                             } else {
                               return null;
@@ -228,7 +237,9 @@ class VehiculoTasacionForm extends StatelessWidget {
                           dropdownBuilder: (context, tipo) {
                             return Text(
                                 tipo == null
-                                    ? vm.vinData?.sistemaCambio ?? 'Seleccione'
+                                    ? vm.transmision?.descripcion ??
+                                        vm.vinData?.sistemaCambio ??
+                                        'Seleccione'
                                     : tipo.descripcion,
                                 style: const TextStyle(fontSize: 15));
                           },
@@ -250,7 +261,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           ),
                           validator: (v) {
                             if (v == null &&
-                                vm.vinData?.sistemaCambio == null) {
+                                vm.vinData?.sistemaCambio == null &&
+                                vm.traccion == null) {
                               return 'Seleccione un sistema de cambios';
                             } else {
                               return null;
@@ -265,7 +277,9 @@ class VehiculoTasacionForm extends StatelessWidget {
                           dropdownBuilder: (context, tipo) {
                             return Text(
                                 tipo == null
-                                    ? vm.vinData?.traccion ?? 'Seleccione'
+                                    ? vm.traccion?.descripcion ??
+                                        vm.vinData?.traccion ??
+                                        'Seleccione'
                                     : tipo.descripcion,
                                 style: const TextStyle(fontSize: 15));
                           },
@@ -287,7 +301,9 @@ class VehiculoTasacionForm extends StatelessWidget {
                             ),
                           ),
                           validator: (v) {
-                            if (v == null && vm.vinData?.traccion == null) {
+                            if (v == null &&
+                                vm.vinData?.traccion == null &&
+                                vm.traccion == null) {
                               return 'Seleccione una tracción';
                             } else {
                               return null;
@@ -303,7 +319,9 @@ class VehiculoTasacionForm extends StatelessWidget {
                           dropdownBuilder: (context, nPuertas) {
                             return Text(
                                 nPuertas == null
-                                    ? '${vm.vinData?.numeroPuertas ?? 'Seleccione'}'
+                                    ? vm.nPuertas?.toString() ??
+                                        vm.vinData?.numeroPuertas?.toString() ??
+                                        'Seleccione'
                                     : nPuertas.toString(),
                                 style: const TextStyle(fontSize: 15));
                           },
@@ -325,7 +343,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           ),
                           validator: (v) {
                             if (v == null &&
-                                vm.vinData?.numeroPuertas == null) {
+                                vm.vinData?.numeroPuertas == null &&
+                                vm.nPuertas == null) {
                               return 'Seleccione número de puertas';
                             } else {
                               return null;
@@ -341,7 +360,10 @@ class VehiculoTasacionForm extends StatelessWidget {
                           dropdownBuilder: (context, nCilindros) {
                             return Text(
                                 nCilindros == null
-                                    ? '${vm.vinData?.numeroCilindros ?? 'Seleccione'}'
+                                    ? vm.nCilindros?.toString() ??
+                                        vm.vinData?.numeroCilindros
+                                            ?.toString() ??
+                                        'Seleccione'
                                     : nCilindros.toString(),
                                 style: const TextStyle(fontSize: 15));
                           },
@@ -363,7 +385,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           ),
                           validator: (v) {
                             if (v == null &&
-                                vm.vinData?.numeroCilindros == null) {
+                                vm.vinData?.numeroCilindros == null &&
+                                vm.nCilindros == null) {
                               return 'Seleccione número de cilindros';
                             } else {
                               return null;
@@ -409,7 +432,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                             dropdownBuilder: (context, tipo) {
                               return Text(
                                   tipo == null
-                                      ? 'Seleccione'
+                                      ? vm.colorVehiculo?.descripcion ??
+                                          'Seleccione'
                                       : tipo.descripcion,
                                   style: const TextStyle(fontSize: 15));
                             },
@@ -433,7 +457,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                               ),
                             ),
                             validator: (v) {
-                              if (v == null) {
+                              if (v == null && vm.colorVehiculo == null) {
                                 return 'Seleccione un color';
                               } else {
                                 return null;

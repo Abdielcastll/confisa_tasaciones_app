@@ -29,17 +29,15 @@ class GeneralesEstimacionForm extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            BaseTextField(
+            BaseTextFieldNoEdit(
               label: 'Tipo de Tasación',
               initialValue: vm.solicitud.descripcionTipoTasacion ?? '',
-              enabled: false,
             ),
-            BaseTextField(
+            BaseTextFieldNoEdit(
               label: 'Fecha de Solicitud',
               initialValue: DateFormat.yMMMMd('es')
                   .format(vm.solicitud.fechaCreada!)
                   .toUpperCase(),
-              enabled: false,
             ),
             BaseTextFieldNoEdit(
               label: 'No. de Solicitud de Crédito',

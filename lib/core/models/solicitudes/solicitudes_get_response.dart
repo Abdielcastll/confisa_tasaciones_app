@@ -72,7 +72,7 @@ class SolicitudesData {
     this.identificacion,
     this.observacion,
     this.tasacionAutorizada,
-    this.valorTasacionFinal,
+    this.valorTasacion,
     this.fechaCreada,
     this.fechaSolicitada,
     this.fechaValorada,
@@ -175,6 +175,8 @@ class SolicitudesData {
     this.accesoriosTasacion,
     this.nota,
     this.descripcionEntidad,
+    this.isSalvage,
+    this.nombreOficial,
   });
 
   int? id;
@@ -183,6 +185,7 @@ class SolicitudesData {
   int? suplidorTasacion;
   String? descripcionSuplidorTasacion;
   int? idOficial;
+  String? nombreOficial;
   int? estadoTasacion;
   String? descripcionEntidad;
   String? descripcionEstadoTasacion;
@@ -195,7 +198,7 @@ class SolicitudesData {
   String? identificacion;
   String? observacion;
   int? tasacionAutorizada;
-  double? valorTasacionFinal;
+  double? valorTasacion;
   DateTime? fechaCreada;
   DateTime? fechaSolicitada;
   DateTime? fechaValorada;
@@ -297,6 +300,7 @@ class SolicitudesData {
   List<CondicionComponenteTasacion>? condicionComponenteTasacion;
   List<AccesoriosTasacion>? accesoriosTasacion;
   Nota? nota;
+  bool? isSalvage;
 
   factory SolicitudesData.fromJson(Map<String, dynamic> json) =>
       SolicitudesData(
@@ -307,6 +311,7 @@ class SolicitudesData {
         descripcionSuplidorTasacion:
             json["descripcionSuplidorTasacion"] ?? null,
         idOficial: json["idOficial"] ?? null,
+        nombreOficial: json["nombreOficial"] ?? null,
         estadoTasacion: json["estadoTasacion"] ?? null,
         descripcionEstadoTasacion: json["descripcionEstadoTasacion"] ?? null,
         tipoTasacion: json["tipoTasacion"] ?? null,
@@ -318,7 +323,7 @@ class SolicitudesData {
         identificacion: json["identificacion"] ?? null,
         observacion: json["observacion"] ?? null,
         tasacionAutorizada: json["tasacionAutorizada"] ?? null,
-        valorTasacionFinal: json["valorTasacionFinal"] ?? null,
+        valorTasacion: json["valorTasacion"] ?? null,
         fechaCreada: json["fechaCreada"] == null
             ? null
             : DateTime.parse(json["fechaCreada"]),
@@ -450,6 +455,7 @@ class SolicitudesData {
             : List<AccesoriosTasacion>.from(json["accesoriosTasacion"]
                 .map((x) => AccesoriosTasacion.fromJson(x))),
         nota: json["nota"] == null ? null : Nota.fromJson(json["nota"]),
+        isSalvage: json["salvamentoVin"]?["is_salvage"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -460,6 +466,7 @@ class SolicitudesData {
         "descripcionEntidad": descripcionEntidad ?? null,
         "descripcionSuplidorTasacion": descripcionSuplidorTasacion ?? null,
         "idOficial": idOficial ?? null,
+        "nombreOficial": nombreOficial ?? null,
         "estadoTasacion": estadoTasacion ?? null,
         "descripcionEstadoTasacion": descripcionEstadoTasacion ?? null,
         "tipoTasacion": tipoTasacion ?? null,
@@ -471,7 +478,7 @@ class SolicitudesData {
         "identificacion": identificacion ?? null,
         "observacion": observacion ?? null,
         "tasacionAutorizada": tasacionAutorizada ?? null,
-        "valorTasacionFinal": valorTasacionFinal ?? null,
+        "valorTasacion": valorTasacion ?? null,
         "fechaCreada":
             fechaCreada == null ? null : fechaCreada?.toIso8601String(),
         "fechaSolicitada":

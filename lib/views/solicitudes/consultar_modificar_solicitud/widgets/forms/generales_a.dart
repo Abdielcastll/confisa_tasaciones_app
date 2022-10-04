@@ -65,7 +65,7 @@ class GeneralesA extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Oficial de Negocios',
-              initialValue: vm.solicitud.idOficial.toString(),
+              initialValue: vm.solicitud.nombreOficial ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Sucursal',
