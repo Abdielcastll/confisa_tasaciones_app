@@ -124,9 +124,6 @@ class PerfilViewModel extends BaseViewModel {
       var d = resp2.response as AdjuntoFoto;
       fotoPerfil = d;
     }
-    if (resp2 is Failure) {
-      Dialogs.error(msg: resp2.messages[0]);
-    }
     if (resp2 is TokenFail) {
       Dialogs.error(msg: 'su sesión a expirado');
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);

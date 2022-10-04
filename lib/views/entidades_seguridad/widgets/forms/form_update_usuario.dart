@@ -22,6 +22,7 @@ Form dialogActualizarInformacion(
   Function changeStatus,
   Function changeRol,
   int idSuplidor,
+  List<Widget> firma,
 ) {
   final _navigationService = locator<NavigatorService>();
   final session = locator<AuthenticationClient>().loadSession;
@@ -203,6 +204,7 @@ Form dialogActualizarInformacion(
                   const SizedBox(
                     height: 10,
                   ),
+                  ...firma,
                 ],
               ),
             ),

@@ -232,194 +232,204 @@ class UsuariosViewModel extends BaseViewModel {
   }
 
   Widget _noImageFirma(BuildContext context, String idUser) {
-    return IconButton(
+    return SizedBox(
+        height: 45,
+        width: MediaQuery.of(context).size.width * .70,
+        child: OutlinedButton.icon(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                      contentPadding: EdgeInsets.zero,
+                      titlePadding: EdgeInsets.zero,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      title: Container(
+                        height: 80,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                            color: AppColors.brownLight,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10))),
+                        child: const Text(
+                          'Firma Tasador',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                      content: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 15, bottom: 15),
+                              child: Stack(
+                                children: [
+                                  ClipOval(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(20),
+                                      color: Colors.grey,
+                                      child: const Icon(
+                                        Icons.key,
+                                        size: 70,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: ClipOval(
+                                        child: Container(
+                                          height: 35,
+                                          width: 35,
+                                          color: AppColors.brown,
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.add_a_photo_rounded,
+                                              size: 20,
+                                            ),
+                                            onPressed: () =>
+                                                cargarFoto(context, idUser),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ));
+                });
+          },
+          style: OutlinedButton.styleFrom(
+              side: const BorderSide(width: 2.0, color: Colors.transparent),
+              alignment: Alignment.centerLeft),
+          icon: const Icon(
+            Icons.key,
+            color: AppColors.brown,
+          ),
+          label:
+              const Text("Editar Firma", style: TextStyle(color: Colors.black)),
+        ));
+  }
+
+  Widget _haveImageFirma(BuildContext context, String image, String idUser) {
+    return SizedBox(
+      height: 45,
+      width: MediaQuery.of(context).size.width * .70,
+      child: OutlinedButton.icon(
         onPressed: () {
           showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
-                    contentPadding: EdgeInsets.zero,
-                    titlePadding: EdgeInsets.zero,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    title: Container(
-                      height: 80,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                          color: AppColors.brownLight,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10))),
-                      child: const Text(
-                        'Firma Tasador',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w800,
-                        ),
+                  contentPadding: EdgeInsets.zero,
+                  titlePadding: EdgeInsets.zero,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  title: Container(
+                    height: 80,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                        color: AppColors.brownLight,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10))),
+                    child: const Text(
+                      'Firma Tasador',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    content: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15, bottom: 15),
-                            child: Stack(
-                              children: [
-                                ClipOval(
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15, bottom: 15),
+                        child: Stack(
+                          children: [
+                            ClipOval(
+                              child: Container(
+                                height: MediaQuery.of(context).size.width * .25,
+                                width: MediaQuery.of(context).size.width * .25,
+                                color: Colors.white,
+                                child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    color: Colors.red,
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          content: Image.memory(
+                                            base64Decode(image),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: Image.memory(
+                                      base64Decode(image),
+                                      fit: BoxFit.fill,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              .25,
+                                      width: MediaQuery.of(context).size.width *
+                                          .25,
+                                    )),
+                              ),
+                            ),
+                            Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: ClipOval(
                                   child: Container(
-                                    padding: const EdgeInsets.all(20),
-                                    color: Colors.grey,
-                                    child: const Icon(
-                                      Icons.key,
-                                      size: 70,
+                                    height: 35,
+                                    width: 35,
+                                    color: AppColors.brown,
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.add_a_photo_rounded,
+                                        size: 20,
+                                      ),
+                                      onPressed: () =>
+                                          cargarFoto(context, idUser),
                                       color: Colors.white,
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: ClipOval(
-                                      child: Container(
-                                        height: 35,
-                                        width: 35,
-                                        color: AppColors.brown,
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.add_a_photo_rounded,
-                                            size: 20,
-                                          ),
-                                          onPressed: () =>
-                                              cargarFoto(context, idUser),
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ))
-                              ],
-                            ),
-                          ),
-                        ],
+                                ))
+                          ],
+                        ),
                       ),
-                    ));
+                    ],
+                  ),
+                );
               });
         },
-        icon: Container(
-          width: 35,
-          height: 35,
-          color: AppColors.brownDark,
-          child: const Icon(
-            Icons.key,
-            color: Colors.white,
-          ),
-        ));
-  }
-
-  Widget _haveImageFirma(BuildContext context, String image, String idUser) {
-    return IconButton(
-      onPressed: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                contentPadding: EdgeInsets.zero,
-                titlePadding: EdgeInsets.zero,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                title: Container(
-                  height: 80,
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                      color: AppColors.brownLight,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10))),
-                  child: const Text(
-                    'Firma Tasador',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15, bottom: 15),
-                      child: Stack(
-                        children: [
-                          ClipOval(
-                            child: Container(
-                              height: MediaQuery.of(context).size.width * .25,
-                              width: MediaQuery.of(context).size.width * .25,
-                              color: Colors.white,
-                              child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  color: Colors.red,
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        content: Image.memory(
-                                          base64Decode(image),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  icon: Image.memory(
-                                    base64Decode(image),
-                                    fit: BoxFit.fill,
-                                    height:
-                                        MediaQuery.of(context).size.width * .25,
-                                    width:
-                                        MediaQuery.of(context).size.width * .25,
-                                  )),
-                            ),
-                          ),
-                          Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: ClipOval(
-                                child: Container(
-                                  height: 35,
-                                  width: 35,
-                                  color: AppColors.brown,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.add_a_photo_rounded,
-                                      size: 20,
-                                    ),
-                                    onPressed: () =>
-                                        cargarFoto(context, idUser),
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            });
-      },
-      icon: Container(
-        width: 35,
-        height: 35,
-        color: AppColors.brownDark,
-        child: const Icon(
+        style: OutlinedButton.styleFrom(
+            side: const BorderSide(width: 2.0, color: Colors.transparent),
+            alignment: Alignment.centerLeft),
+        icon: const Icon(
           Icons.key,
-          color: Colors.white,
+          color: AppColors.brown,
         ),
+        label:
+            const Text("Editar Firma", style: TextStyle(color: Colors.black)),
       ),
     );
   }
@@ -491,9 +501,6 @@ class UsuariosViewModel extends BaseViewModel {
       fotoPerfil = resp.response;
       _tieneFoto = true;
     } else {
-      if (resp is Failure) {
-        Dialogs.error(msg: resp.messages.first);
-      }
       if (resp is TokenFail) {
         Dialogs.error(msg: 'su sesión a expirado');
         _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
@@ -501,16 +508,18 @@ class UsuariosViewModel extends BaseViewModel {
     }
     cargando = false;
 
-    if (usuario.roles.any((element) => element.description == "Tasador")) {
+    if (usuario.roles.any((element) =>
+        element.description == "Tasador" ||
+        element.typeRolDescription == "Externo")) {
       cargando = true;
       var resp = await _adjuntoApi.getFotoFirma(idUser: usuario.id);
       if (resp is Success<AdjuntoFoto>) {
         fotoFirma = resp.response;
         _tieneFirma = true;
       } else {
-        if (resp is Failure) {
+        /* if (resp is Failure) {
           Dialogs.error(msg: resp.messages.first);
-        }
+        } */
         if (resp is TokenFail) {
           Dialogs.error(msg: 'su sesión a expirado');
           _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
@@ -530,33 +539,9 @@ class UsuariosViewModel extends BaseViewModel {
             content: SizedBox(
               width: MediaQuery.of(context).size.width * 75,
               child: dialogActualizarInformacion(
-                  Column(
-                    children: [
-                      _tieneFoto
-                          ? _haveImage(
-                              context, fotoPerfil!.adjunto!, usuario.id)
-                          : _noImage(context, usuario.id),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          usuario.roles.any(
-                                  (element) => element.description == "Tasador")
-                              ? _tieneFirma
-                                  ? _haveImageFirma(
-                                      context, fotoFirma!.adjunto!, usuario.id)
-                                  : _noImageFirma(context, usuario.id)
-                              : const SizedBox.shrink(),
-                          usuario.roles.any(
-                                  (element) => element.description == "Tasador")
-                              ? const SizedBox(
-                                  width: 15,
-                                )
-                              : const SizedBox.shrink(),
-                        ],
-                      ),
-                    ],
-                  ),
+                  _tieneFoto
+                      ? _haveImage(context, fotoPerfil!.adjunto!, usuario.id)
+                      : _noImage(context, usuario.id),
                   size,
                   context,
                   _key,
@@ -826,7 +811,24 @@ class UsuariosViewModel extends BaseViewModel {
                           .navigateToPageAndRemoveUntil(LoginView.routeName);
                     }
                   },
-                  idSuplidor),
+                  idSuplidor,
+                  [
+                    usuario.roles.any((element) =>
+                            element.description == "Tasador" ||
+                            element.typeRolDescription == "Externo")
+                        ? _tieneFirma
+                            ? _haveImageFirma(
+                                context, fotoFirma!.adjunto!, usuario.id)
+                            : _noImageFirma(context, usuario.id)
+                        : const SizedBox.shrink(),
+                    usuario.roles.any((element) =>
+                            element.description == "Tasador" ||
+                            element.typeRolDescription == "Externo")
+                        ? const SizedBox(
+                            width: 15,
+                          )
+                        : const SizedBox.shrink(),
+                  ]),
             ),
           );
         });

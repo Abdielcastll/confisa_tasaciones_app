@@ -50,15 +50,15 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   List<String> opcionesFiltro = [
     "No. Tasación",
     "No. Solicitud Crédito",
-    "Estado",
     "Chasis",
     "Identificación Cliente",
     "Nombre Cliente",
-    "Tipo de Tasación"
   ];
   List<int> seleccionEstado = [];
   List<int> seleccionTipo = [];
   List<String> seleccionFiltro = [];
+  Map<EstadoSolicitudData, bool> boolMapEstado = {};
+  Map<TipoTasacionData, bool> boolMapTipos = {};
 
   bool _loading = true;
   int pageNumber = 1;
@@ -134,205 +134,159 @@ class ColaSolicitudesViewModel extends BaseViewModel {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: AppColors.gold, width: 3)),
-                child: dialogMostrarInformacionPermisos(
-                    const SizedBox.shrink(),
-                    const SizedBox.shrink(),
-                    [
-                      DataTable(
-                          onSelectAll: (isSelectedAll) {
-                            setState(() => {
-                                  isSelectedAll!
-                                      ? seleccionFiltro.addAll(opcionesFiltro)
-                                      : seleccionFiltro = [],
-                                });
-                          },
-                          columns: const [
-                            DataColumn(
-                              label: Text("Todos"),
-                            ),
-                          ],
-                          rows: opcionesFiltro
-                              .map((e) => DataRow(
-                                      selected: seleccionFiltro
-                                          .any((element) => element == e),
-                                      onSelectChanged: (isSelected) {
-                                        isSelected!
-                                            ? seleccionFiltro.add(e)
-                                            : seleccionFiltro.removeWhere(
-                                                (element) => element == e);
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: SingleChildScrollView(
+                          child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            DataTable(
+                                onSelectAll: (isSelectedAll) {
+                                  setState(() => {
+                                        isSelectedAll!
+                                            ? seleccionFiltro
+                                                .addAll(opcionesFiltro)
+                                            : seleccionFiltro = [],
+                                      });
+                                },
+                                columns: const [
+                                  DataColumn(
+                                    label: Text("Todos"),
+                                  ),
+                                ],
+                                rows: opcionesFiltro
+                                    .map((e) => DataRow(
+                                            selected: seleccionFiltro
+                                                .any((element) => element == e),
+                                            onSelectChanged: (isSelected) {
+                                              isSelected!
+                                                  ? seleccionFiltro.add(e)
+                                                  : seleccionFiltro.removeWhere(
+                                                      (element) =>
+                                                          element == e);
 
-                                        setState((() {}));
-                                      },
-                                      cells: [
-                                        DataCell(
-                                          Text(
-                                            e,
-                                          ),
-                                        ),
-                                      ]))
-                              .toList()),
-                    ],
-                    size,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            _navigatorService.pop();
-                          },
-                          // button pressed
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const <Widget>[
-                              Icon(
-                                AppIcons.closeCircle,
-                                color: Colors.red,
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ), // icon
-                              Text("Cancelar"), // text
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: seleccionFiltro
-                                  .any((element) => element == "Estado")
-                              ? () {
-                                  dialogFiltro("Estado", context);
-                                }
-                              : () {},
-                          // button pressed
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const <Widget>[
-                              Icon(
-                                Icons.change_circle_outlined,
-                                color: AppColors.gold,
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ), // icon
-                              Text("Estado"), // text
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: seleccionFiltro.any(
-                                  (element) => element == "Tipo de Tasación")
-                              ? () {
-                                  dialogFiltro("Tipo de Tasación", context);
-                                }
-                              : () {},
-                          // button pressed
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const <Widget>[
-                              Icon(
-                                Icons.topic_outlined,
-                                color: AppColors.gold,
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ), // icon
-                              Text("Tipo"), // text
-                            ],
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
-            );
-          }));
-        });
-  }
-
-  void dialogFiltro(String seleccion, BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: ((context, setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              contentPadding: EdgeInsets.zero,
-              content: Container(
-                width: MediaQuery.of(context).size.width * .75,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.gold, width: 3)),
-                child: dialogMostrarInformacionPermisos(
-                    const SizedBox.shrink(),
-                    const SizedBox.shrink(),
-                    [
-                      DataTable(
-                          onSelectAll: (isSelectedAll) {
-                            setState(() => {
-                                  seleccion == "Estado"
-                                      ? isSelectedAll!
-                                          ? seleccionEstado = estadosSolicitud
-                                              .map<int>((e) => e.id)
-                                              .toList()
-                                          : seleccionEstado = []
-                                      : isSelectedAll!
-                                          ? seleccionTipo = tiposTasacion
-                                              .map<int>((e) => e.id)
-                                              .toList()
-                                          : seleccionTipo = [],
-                                });
-                          },
-                          columns: const [
-                            DataColumn(
-                              label: Text("Todos"),
-                            ),
-                          ],
-                          rows: seleccion == "Estado"
-                              ? estadosSolicitud
-                                  .map((e) => DataRow(
-                                          selected: seleccionEstado.any(
-                                              (element) => element == e.id),
-                                          onSelectChanged: (isSelected) {
-                                            isSelected!
-                                                ? seleccionEstado.add(e.id)
-                                                : seleccionEstado.removeWhere(
-                                                    (element) =>
-                                                        element == e.id);
-
-                                            setState((() {}));
-                                          },
-                                          cells: [
-                                            DataCell(
-                                              Text(
-                                                e.descripcion,
+                                              setState((() {}));
+                                            },
+                                            cells: [
+                                              DataCell(
+                                                Text(
+                                                  e,
+                                                ),
                                               ),
-                                            ),
-                                          ]))
-                                  .toList()
-                              : tiposTasacion
-                                  .map((e) => DataRow(
-                                          selected: seleccionTipo.any(
-                                              (element) => element == e.id),
-                                          onSelectChanged: (isSelected) {
-                                            isSelected!
-                                                ? seleccionTipo.add(e.id)
-                                                : seleccionTipo.removeWhere(
-                                                    (element) =>
-                                                        element == e.id);
+                                            ]))
+                                    .toList()),
+                            Divider(
+                              color: Colors.grey.shade300,
+                              thickness: 1,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Text("Tipos de Tasacion"),
+                            ),
+                            Divider(
+                              color: Colors.grey.shade300,
+                              thickness: 1,
+                            ),
+                            ...boolMapTipos.keys
+                                .map(
+                                  (e) => CheckboxListTile(
+                                    visualDensity: VisualDensity.compact,
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    contentPadding:
+                                        const EdgeInsets.only(left: 13),
+                                    shape: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey.shade300)),
+                                    value: boolMapTipos[e],
+                                    onChanged: (isSelected) {
+                                      boolMapTipos[e] = isSelected!;
+                                      isSelected
+                                          ? seleccionTipo.add(e.id)
+                                          : seleccionTipo.removeWhere(
+                                              (element) => element == e.id);
 
-                                            setState((() {}));
-                                          },
-                                          cells: [
-                                            DataCell(
-                                              Text(
-                                                e.descripcion,
-                                              ),
-                                            ),
-                                          ]))
-                                  .toList()),
-                    ],
-                    size,
-                    const SizedBox.shrink()),
+                                      setState((() {}));
+                                    },
+                                    title: Text(
+                                      e.descripcion,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 15, top: 20),
+                              child: Text("Estados de Tasacion"),
+                            ),
+                            Divider(
+                              color: Colors.grey.shade300,
+                              thickness: 1,
+                            ),
+                            ...boolMapEstado.keys
+                                .map(
+                                  (e) => CheckboxListTile(
+                                    visualDensity: VisualDensity.compact,
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    contentPadding:
+                                        const EdgeInsets.only(left: 13),
+                                    shape: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey.shade300)),
+                                    value: boolMapEstado[e],
+                                    onChanged: (isSelected) {
+                                      boolMapEstado[e] = isSelected!;
+                                      isSelected
+                                          ? seleccionEstado.add(e.id)
+                                          : seleccionEstado.removeWhere(
+                                              (element) => element == e.id);
+
+                                      setState((() {}));
+                                    },
+                                    title: Text(
+                                      e.descripcion,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ],
+                        ),
+                      )),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              _navigatorService.pop();
+                            },
+                            // button pressed
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const <Widget>[
+                                Icon(
+                                  AppIcons.closeCircle,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ), // icon
+                                Text("Cancelar"), // text
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           }));
@@ -377,12 +331,18 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     var resp = await _solicitudesApi.getTiposTasacion();
     if (resp is Success<TipoTasacionResponse>) {
       tiposTasacion = resp.response.data;
+      for (var element in tiposTasacion) {
+        boolMapTipos.addAll({element: false});
+      }
     } else if (resp is Failure) {
       Dialogs.error(msg: resp.messages.first);
     }
     var resp2 = await _solicitudesApi.getEstadosSolicitud();
     if (resp2 is Success<EstadoSolicitudResponse>) {
       estadosSolicitud = resp2.response.data;
+      for (var element in estadosSolicitud) {
+        boolMapEstado.addAll({element: false});
+      }
     } else if (resp2 is Failure) {
       Dialogs.error(msg: resp2.messages.first);
     }
@@ -470,7 +430,9 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     }
     var resp;
 
-    if (seleccionFiltro.isNotEmpty) {
+    if (seleccionFiltro.isNotEmpty ||
+        seleccionEstado.isNotEmpty ||
+        seleccionTipo.isNotEmpty) {
       resp = await _solicitudesApi.getColaSolicitudes(
           pageSize: 999,
           noSolicitud: seleccionFiltro
@@ -484,9 +446,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
           chasis: seleccionFiltro.any((element) => element == "Chasis")
               ? query
               : "",
-          estado: seleccionFiltro.any((element) => element == "Estado")
-              ? seleccionEstado
-              : [],
+          estado: seleccionEstado.isEmpty ? [] : seleccionEstado,
           identificacion: seleccionFiltro
                   .any((element) => element == "Identificación Cliente")
               ? query
@@ -495,15 +455,14 @@ class ColaSolicitudesViewModel extends BaseViewModel {
               seleccionFiltro.any((element) => element == "Nombre Cliente")
                   ? query
                   : "",
-          tipoTasacion:
-              seleccionFiltro.any((element) => element == "Tipo de Tasación")
-                  ? seleccionTipo
-                  : []);
+          tipoTasacion: seleccionTipo.isEmpty ? [] : seleccionTipo);
     }
 
-    if (seleccionFiltro.isEmpty) {
+    if (seleccionFiltro.isEmpty &&
+        seleccionEstado.isEmpty &&
+        seleccionTipo.isEmpty) {
       resp = await _solicitudesApi.getColaSolicitudes(
-        noSolicitud: int.parse(query),
+        noSolicitud: query.isEmpty ? null : int.parse(query),
       );
     }
     if (resp is Success<GetSolicitudesResponse>) {
