@@ -15,7 +15,6 @@ import 'package:tasaciones_app/utils/cuentas.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
-import 'package:tasaciones_app/views/home/home_view.dart';
 
 import '../../../core/api/recursos_api.dart';
 import '../../../core/user_client.dart';
@@ -30,9 +29,9 @@ class LoginViewModel extends BaseViewModel {
   final GlobalKey<FormState> formKey = GlobalKey();
   bool _loading = false;
   TextEditingController tcEmail =
-      TextEditingController(text: AppCuentas().usuarioAprobadorTasacionesid);
+      TextEditingController(text: AppCuentas().usuarioAdmin);
   TextEditingController tcPassword =
-      TextEditingController(text: AppCuentas().claveExterna);
+      TextEditingController(text: AppCuentas().claveInterna);
   bool obscurePassword = true;
   bool get loading => _loading;
   set loading(bool value) {
