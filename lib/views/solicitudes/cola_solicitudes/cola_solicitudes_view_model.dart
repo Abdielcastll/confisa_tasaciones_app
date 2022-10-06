@@ -320,7 +320,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   }
 
   Future<void> onInit(BuildContext context) async {
-    pageNumber = 1;
+    // pageNumber = 1;
     seleccionFiltro = [];
     Session data = _authenticationAPI.loadSession;
     Profile perfil = _usuarioApi.loadProfile;
@@ -369,6 +369,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   }
 
   Future<void> onRefresh() async {
+    pageNumber = 1;
     var resp = await _solicitudesApi.getColaSolicitudes(pageNumber: pageNumber);
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudesResponse = resp.response;
@@ -377,7 +378,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
       if (roles.contains("Tasador") || roles.contains("AprobadorTasaciones")) {
         solicitudes.removeWhere((e) => e.estadoTasacion == 34);
       }
-      // ordenar();
+      notifyListeners();
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);

@@ -507,7 +507,7 @@ class SolicitudesApi {
 
   Future<Object> updateValoracion({
     required int noTasacion,
-    required int valorizacion,
+    required String valorizacion,
     required bool valorConsultaSalvamento,
     required int valorUltimas3Tasaciones,
     required int valorUltimaEstimacion,
@@ -638,9 +638,6 @@ class SolicitudesApi {
           'Authorization': 'Bearer $_token',
         },
         data: body,
-        // parser: (data) {
-        //   return EntidadResponse.fromJson(data);
-        // },
       );
     } else {
       return TokenFail();
@@ -782,77 +779,6 @@ class SolicitudesApi {
       return TokenFail();
     }
   }
-
-  // Future<Object> getSalvamento({required String vin}) async {
-  //   String? _token = await _authenticationClient.accessToken;
-  //   if (_token != null) {
-  //     return _http.request(
-  //       '/api/procesar-solicitudes/get-salvamento',
-  //       method: 'GET',
-  //       headers: {
-  //         'Authorization': 'Bearer $_token',
-  //       },
-  //       queryParameters: {
-  //         "vin": vin,
-  //       },
-  //     );
-  //   } else {
-  //     return TokenFail();
-  //   }
-  // }
-
-  // Future<Object> getReference({
-  //   required String vin,
-  //   required int noTasacion,
-  // }) async {
-  //   String? _token = await _authenticationClient.accessToken;
-  //   if (_token != null) {
-  //     return _http.request(
-  //       '/api/procesar-solicitudes/get-reference',
-  //       method: 'GET',
-  //       headers: {
-  //         'Authorization': 'Bearer $_token',
-  //       },
-  //       queryParameters: {
-  //         "NoTasacion": noTasacion,
-  //         "Chasis": vin,
-  //       },
-  //     );
-  //   } else {
-  //     return TokenFail();
-  //   }
-  // }
-
-  // Future<Object> updateValoracion({
-  //   required int noTasacion,
-  //   required int valorizacion,
-  //   required bool valorConsultaSalvamento,
-  //   required int valorUltimas3Tasaciones,
-  //   required int valorUltimaEstimacion,
-  //   required int valorCarrosRD,
-  // }) async {
-  //   String? _token = await _authenticationClient.accessToken;
-  //   if (_token != null) {
-  //     final data = {
-  //       "noTasacion": noTasacion.toString(),
-  //       "valorizacion": valorizacion.toString(),
-  //       "valorConsultaSalvamento": valorConsultaSalvamento.toString(),
-  //       "valorUltimas3Tasaciones": valorUltimas3Tasaciones.toString(),
-  //       "valorUltimaEstimacion": valorUltimaEstimacion.toString(),
-  //       "valorCarrosRD": valorCarrosRD.toString(),
-  //     };
-  //     return _http.request(
-  //       '/api/procesarsolicitudes/update-valoracion',
-  //       method: 'PUT',
-  //       headers: {
-  //         'Authorization': 'Bearer $_token',
-  //       },
-  //       data: data,
-  //     );
-  //   } else {
-  //     return TokenFail();
-  //   }
-  // }
 
   Future<Object> updateEstimacion({
     required int id,

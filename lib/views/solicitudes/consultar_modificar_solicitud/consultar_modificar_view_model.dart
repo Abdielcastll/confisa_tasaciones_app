@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:money_formatter/money_formatter.dart';
@@ -60,8 +61,16 @@ class ConsultarModificarViewModel extends BaseViewModel {
 
   SolicitudCreditoData? solicitudCreditoData;
 
-  TextEditingController tcFuerzaMotriz = TextEditingController();
-  TextEditingController tcKilometraje = TextEditingController();
+  MoneyMaskedTextController tcFuerzaMotriz = MoneyMaskedTextController(
+      precision: 0,
+      thousandSeparator: ',',
+      decimalSeparator: '',
+      initialValue: 0);
+  MoneyMaskedTextController tcKilometraje = MoneyMaskedTextController(
+      precision: 0,
+      thousandSeparator: ',',
+      decimalSeparator: '',
+      initialValue: 0);
   TextEditingController tcPlaca = TextEditingController();
   TextEditingController tcVIN = TextEditingController();
   TipoVehiculoData? _tipoVehiculos;
@@ -144,9 +153,9 @@ class ConsultarModificarViewModel extends BaseViewModel {
   void onInit(BuildContext context, SolicitudesData? data) async {
     solicitud = data!;
     tcVIN.text = solicitud.chasis ?? 'No disponible';
-    tcKilometraje.text = solicitud.kilometraje?.toString() ?? 'No disponible';
+    tcKilometraje.updateValue(solicitud.kilometraje ?? 0);
     tcPlaca.text = solicitud.placa ?? 'No disponible';
-    tcFuerzaMotriz.text = solicitud.fuerzaMotriz?.toString() ?? 'No disponible';
+    tcFuerzaMotriz.updateValue(solicitud.fuerzaMotriz?.toDouble() ?? 0);
     Session session = _authenticationAPI.loadSession;
     session.role.forEach((e) => print(e));
     isAprobador = session.role.contains("AprobadorTasaciones");
@@ -296,7 +305,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  EdicionVehiculo get edicionVehiculo => _edicionVehiculos!;
+  EdicionVehiculo? get edicionVehiculo => _edicionVehiculos;
 
   set edicionVehiculo(EdicionVehiculo? value) {
     _edicionVehiculos = value;
@@ -327,10 +336,10 @@ class ConsultarModificarViewModel extends BaseViewModel {
           traccion: traccion?.id ?? vinData?.idTraccion ?? solicitud.traccion!,
           noPuertas: nPuertas ?? solicitud.noPuertas!,
           noCilindros: nCilindros ?? solicitud.noCilindros!,
-          fuerzaMotriz: double.tryParse(tcFuerzaMotriz.text)!.round(),
+          fuerzaMotriz: tcFuerzaMotriz.numberValue.toInt(),
           ano: solicitud.ano!,
           nuevoUsado: solicitud.nuevoUsado!,
-          kilometraje: double.tryParse(tcKilometraje.text)!.round(),
+          kilometraje: tcKilometraje.numberValue.toInt(),
           color: colorVehiculo?.id ?? 0,
           placa: tcPlaca.text == '' ? solicitud.placa! : tcPlaca.text,
         );
@@ -637,20 +646,25 @@ class ConsultarModificarViewModel extends BaseViewModel {
       if (resp is Success) {
         var data = resp.response as VinDecoderResponse;
         vinData = data.data;
+
+        // if (vinData!.message != null) {
+        //   Dialogs.vinMessage(msg: vinData!.message!);
+        // }
+
         if (vinData!.fuerzaMotriz != null) {
           tcFuerzaMotriz.text = vinData?.fuerzaMotriz?.toString() ?? '';
         }
         if (vinData!.numeroCilindros != null) {
-          nCilindros = null;
+          _nCilindros = null;
         }
         if (vinData!.numeroPuertas != null) {
-          nPuertas = null;
+          _nPuertas = null;
         }
         if (vinData!.sistemaCambio != null) {
-          transmision = null;
+          _transmision = null;
         }
         if (vinData!.traccion != null) {
-          traccion = null;
+          _traccion = null;
         }
 
         int currentYear = DateTime.now().year;

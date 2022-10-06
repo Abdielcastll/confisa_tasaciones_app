@@ -177,6 +177,9 @@ class SolicitudesData {
     this.descripcionEntidad,
     this.isSalvage,
     this.nombreOficial,
+    this.edicion,
+    this.descripcionEdicion,
+    this.descripcionVersion,
   });
 
   int? id;
@@ -187,6 +190,7 @@ class SolicitudesData {
   int? idOficial;
   String? nombreOficial;
   int? estadoTasacion;
+  int? edicion;
   String? descripcionEntidad;
   String? descripcionEstadoTasacion;
   int? tipoTasacion;
@@ -223,6 +227,8 @@ class SolicitudesData {
   int? versionLocal;
   int? serie;
   String? descripcionSerie;
+  String? descripcionVersion;
+  String? descripcionEdicion;
   int? trim;
   String? descripcionTrim;
   int? sistemaTransmision;
@@ -324,6 +330,8 @@ class SolicitudesData {
         observacion: json["observacion"] ?? null,
         tasacionAutorizada: json["tasacionAutorizada"] ?? null,
         valorTasacion: json["valorTasacion"] ?? null,
+        descripcionEdicion: json["descripcionEdicion"] ?? null,
+        descripcionVersion: json["descripcionVersion"] ?? null,
         fechaCreada: json["fechaCreada"] == null
             ? null
             : DateTime.parse(json["fechaCreada"]),
@@ -380,6 +388,7 @@ class SolicitudesData {
         lateraIzquierdo: json["lateraIzquierdo"] ?? null,
         descripcionLateraIzquierdo: json["descripcionLateraIzquierdo"] ?? null,
         puertaDerecha: json["puertaDerecha"] ?? null,
+        edicion: json["edicion"] ?? null,
         descripcionPuertaDerecha: json["descripcionPuertaDerecha"] ?? null,
         puertaIzquierda: json["puertaIzquierda"] ?? null,
         descripcionPuertaIzquierda: json["descripcionPuertaIzquierda"] ?? null,
@@ -468,6 +477,8 @@ class SolicitudesData {
         "idOficial": idOficial ?? null,
         "nombreOficial": nombreOficial ?? null,
         "estadoTasacion": estadoTasacion ?? null,
+        "descripcionVersion": descripcionVersion ?? null,
+        "descripcionEdicion": descripcionEdicion ?? null,
         "descripcionEstadoTasacion": descripcionEstadoTasacion ?? null,
         "tipoTasacion": tipoTasacion ?? null,
         "descripcionTipoTasacion": descripcionTipoTasacion ?? null,
@@ -510,6 +521,7 @@ class SolicitudesData {
         "serie": serie ?? null,
         "descripcionSerie": descripcionSerie ?? null,
         "trim": trim ?? null,
+        "edicion": edicion ?? null,
         "descripcionTrim": descripcionTrim ?? null,
         "sistemaTransmision": sistemaTransmision ?? null,
         "descripcionSistemaTransmision": descripcionSistemaTransmision ?? null,

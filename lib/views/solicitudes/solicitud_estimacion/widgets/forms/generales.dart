@@ -55,17 +55,22 @@ class GeneralesForm extends StatelessWidget {
                             dropdownBuilder: (context, tipo) {
                               return Text(
                                 tipo == null
-                                    ? 'Seleccione'
+                                    ? vm.solicitudDisponible?.noSolicitud
+                                            ?.toString() ??
+                                        'Seleccione'
                                     : tipo.noSolicitud.toString(),
                                 style: const TextStyle(
                                   fontSize: 15,
                                 ),
                               );
                             },
-                            onChanged: (v) => vm.solicitudDisponible = v!,
+                            onChanged: (v) =>
+                                vm.solicitudDisponibleOnChanged(context, v),
                             dropdownDecoratorProps:
                                 const DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
+                                        labelStyle: TextStyle(
+                                            color: AppColors.brownDark),
                                         label: Text('No. Solicitud de crédito'),
                                         border: UnderlineInputBorder())),
                             popupProps: PopupProps.menu(
@@ -81,7 +86,7 @@ class GeneralesForm extends StatelessWidget {
                               ),
                             ),
                             validator: (v) {
-                              if (v == null) {
+                              if (v == null && vm.solicitudDisponible == null) {
                                 return 'Seleccione una solicitud';
                               } else {
                                 return null;
@@ -90,17 +95,17 @@ class GeneralesForm extends StatelessWidget {
                           ),
                         ),
                       ),
-                      IconButton(
-                        iconSize: 50,
-                        onPressed: () => vm.solicitudCredito(context),
-                        icon: const CircleAvatar(
-                          child: Icon(
-                            Icons.search,
-                            color: AppColors.white,
-                          ),
-                          backgroundColor: AppColors.brownDark,
-                        ),
-                      ),
+                      // IconButton(
+                      //   iconSize: 50,
+                      //   onPressed: () => vm.solicitudCredito(context),
+                      //   icon: const CircleAvatar(
+                      //     child: Icon(
+                      //       Icons.search,
+                      //       color: AppColors.white,
+                      //     ),
+                      //     backgroundColor: AppColors.brownDark,
+                      //   ),
+                      // ),
                     ],
                   ),
             if (vm.solicitud != null)

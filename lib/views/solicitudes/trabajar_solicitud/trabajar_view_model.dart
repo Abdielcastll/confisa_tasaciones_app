@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
@@ -52,10 +53,22 @@ class TrabajarViewModel extends BaseViewModel {
   GlobalKey<FormState> formKeyFotos = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyCondiciones = GlobalKey<FormState>();
   TextEditingController tcVIN = TextEditingController();
-  TextEditingController tcFuerzaMotriz = TextEditingController();
-  TextEditingController tcKilometraje = TextEditingController();
+  MoneyMaskedTextController tcFuerzaMotriz = MoneyMaskedTextController(
+      precision: 0,
+      thousandSeparator: ',',
+      decimalSeparator: '',
+      initialValue: 0);
+  MoneyMaskedTextController tcKilometraje = MoneyMaskedTextController(
+      precision: 0,
+      thousandSeparator: ',',
+      decimalSeparator: '',
+      initialValue: 0);
   TextEditingController tcPlaca = TextEditingController();
-  TextEditingController tcValor = TextEditingController();
+  MoneyMaskedTextController tcValor = MoneyMaskedTextController(
+    decimalSeparator: '.',
+    thousandSeparator: ',',
+    leftSymbol: 'RD\$ ',
+  );
   TextEditingController tcObservacion = TextEditingController();
   // List<AdjuntoFoto> fotosAdjuntos = [];
   int _currentForm = 1;
@@ -249,8 +262,8 @@ class TrabajarViewModel extends BaseViewModel {
           chasis: tcVIN.text,
           color: colorVehiculo!.id,
           edicion: edicionVehiculo!.id!,
-          fuerzaMotriz: double.tryParse(tcFuerzaMotriz.text.trim())!.round(),
-          kilometraje: double.tryParse(tcKilometraje.text.trim())!.round(),
+          fuerzaMotriz: tcFuerzaMotriz.numberValue.toInt(),
+          kilometraje: tcKilometraje.numberValue.toInt(),
           marca: solicitudData?.idMarcaTasaciones ?? vinData?.codigoMarca ?? 0,
           modelo:
               solicitudData?.idModeloTasaciones ?? vinData?.codigoModelo ?? 0,
@@ -739,7 +752,7 @@ class TrabajarViewModel extends BaseViewModel {
 
       var resp = await _solicitudesApi.updateValoracion(
         noTasacion: solicitud.noTasacion!,
-        valorizacion: int.tryParse(tcValor.text.trim())!,
+        valorizacion: tcValor.numberValue.toString(),
         valorConsultaSalvamento: isSalvage,
         valorUltimas3Tasaciones: referencias[0].valor!.round(),
         valorUltimaEstimacion: referencias[1].valor!.round(),
@@ -762,6 +775,7 @@ class TrabajarViewModel extends BaseViewModel {
         _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
       }
       // }
+
     }
   }
 }
