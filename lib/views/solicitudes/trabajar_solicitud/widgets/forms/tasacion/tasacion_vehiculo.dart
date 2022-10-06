@@ -86,11 +86,17 @@ class VehiculoTasacionForm extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
-                        color: AppColors.green,
+                        color: Colors.yellow[600],
                       ),
                       margin: const EdgeInsets.only(top: 5),
                       padding: const EdgeInsets.all(5),
-                      child: Text(vm.vinData!.message!),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.warning_amber_rounded),
+                          const SizedBox(width: 5),
+                          Expanded(child: Text(vm.vinData!.message!)),
+                        ],
+                      ),
                     ),
                   BaseTextFieldNoEdit(
                     label: 'Marca',
