@@ -64,10 +64,13 @@ class GeneralesForm extends StatelessWidget {
                                 ),
                               );
                             },
-                            onChanged: (v) => vm.solicitudDisponible = v!,
+                            onChanged: (v) =>
+                                vm.solicitudDisponibleOnChanged(context, v),
                             dropdownDecoratorProps:
                                 const DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
+                                        labelStyle: TextStyle(
+                                            color: AppColors.brownDark),
                                         label: Text('No. Solicitud de crédito'),
                                         border: UnderlineInputBorder())),
                             popupProps: PopupProps.menu(
@@ -92,17 +95,17 @@ class GeneralesForm extends StatelessWidget {
                           ),
                         ),
                       ),
-                      IconButton(
-                        iconSize: 50,
-                        onPressed: () => vm.solicitudCredito(context),
-                        icon: const CircleAvatar(
-                          child: Icon(
-                            Icons.search,
-                            color: AppColors.white,
-                          ),
-                          backgroundColor: AppColors.brownDark,
-                        ),
-                      ),
+                      // IconButton(
+                      //   iconSize: 50,
+                      //   onPressed: () => vm.solicitudCredito(context),
+                      //   icon: const CircleAvatar(
+                      //     child: Icon(
+                      //       Icons.search,
+                      //       color: AppColors.white,
+                      //     ),
+                      //     backgroundColor: AppColors.brownDark,
+                      //   ),
+                      // ),
                     ],
                   ),
             if (vm.solicitud != null)

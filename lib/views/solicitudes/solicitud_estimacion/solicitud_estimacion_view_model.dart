@@ -171,9 +171,10 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
 
   SolicitudesDisponibles? _solicitudDisponible;
   SolicitudesDisponibles? get solicitudDisponible => _solicitudDisponible;
-  set solicitudDisponible(SolicitudesDisponibles? v) {
+  void solicitudDisponibleOnChanged(
+      BuildContext context, SolicitudesDisponibles? v) {
     _solicitudDisponible = v;
-    notifyListeners();
+    solicitudCredito(context);
   }
 
   Future<void> solicitudCredito(BuildContext context) async {

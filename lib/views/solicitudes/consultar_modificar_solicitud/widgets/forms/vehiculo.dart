@@ -145,7 +145,7 @@ class VehiculoForm extends StatelessWidget {
                             return Text(
                               tipo == null
                                   ? vm.versionVehiculo?.descripcion ??
-                                      vm.solicitud.versionLocal?.toString() ??
+                                      vm.solicitud.descripcionVersion ??
                                       'Seleccione'
                                   : tipo.descripcion,
                               style: const TextStyle(
@@ -188,7 +188,7 @@ class VehiculoForm extends StatelessWidget {
                         dropdownBuilder: (context, tipo) {
                           return Text(
                             tipo == null
-                                ? vm.solicitud.edicion?.toString() ??
+                                ? vm.solicitud.descripcionEdicion ??
                                     vm.edicionVehiculo?.descripcionEasyBank ??
                                     'Seleccione'
                                 : tipo.descripcionEasyBank ?? '',

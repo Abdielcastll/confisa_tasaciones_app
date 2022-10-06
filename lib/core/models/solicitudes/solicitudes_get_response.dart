@@ -178,6 +178,8 @@ class SolicitudesData {
     this.isSalvage,
     this.nombreOficial,
     this.edicion,
+    this.descripcionEdicion,
+    this.descripcionVersion,
   });
 
   int? id;
@@ -225,6 +227,8 @@ class SolicitudesData {
   int? versionLocal;
   int? serie;
   String? descripcionSerie;
+  String? descripcionVersion;
+  String? descripcionEdicion;
   int? trim;
   String? descripcionTrim;
   int? sistemaTransmision;
@@ -326,6 +330,8 @@ class SolicitudesData {
         observacion: json["observacion"] ?? null,
         tasacionAutorizada: json["tasacionAutorizada"] ?? null,
         valorTasacion: json["valorTasacion"] ?? null,
+        descripcionEdicion: json["descripcionEdicion"] ?? null,
+        descripcionVersion: json["descripcionVersion"] ?? null,
         fechaCreada: json["fechaCreada"] == null
             ? null
             : DateTime.parse(json["fechaCreada"]),
@@ -471,6 +477,8 @@ class SolicitudesData {
         "idOficial": idOficial ?? null,
         "nombreOficial": nombreOficial ?? null,
         "estadoTasacion": estadoTasacion ?? null,
+        "descripcionVersion": descripcionVersion ?? null,
+        "descripcionEdicion": descripcionEdicion ?? null,
         "descripcionEstadoTasacion": descripcionEstadoTasacion ?? null,
         "tipoTasacion": tipoTasacion ?? null,
         "descripcionTipoTasacion": descripcionTipoTasacion ?? null,
