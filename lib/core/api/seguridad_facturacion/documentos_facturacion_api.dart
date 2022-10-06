@@ -49,7 +49,7 @@ class DocumentosFacturacionApi {
           "descripcion": descripcion,
         },
         parser: (data) {
-          return DocumentosFacturacionResponse.fromJson(data);
+          return DocumentosFacturacionData.fromJson(data["data"]);
         },
       );
     } else {
