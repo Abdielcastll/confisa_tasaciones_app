@@ -46,6 +46,7 @@ class VinDecoderData {
     this.idSerie,
     this.trim,
     this.idTrim,
+    this.message,
   });
 
   int? codigoMarca;
@@ -65,6 +66,7 @@ class VinDecoderData {
   int? idSerie;
   String? trim;
   int? idTrim;
+  String? message;
 
   factory VinDecoderData.fromJson(Map<String, dynamic> json) => VinDecoderData(
         codigoMarca: json["codigoMarca"],
@@ -82,6 +84,7 @@ class VinDecoderData {
         idSerie: json["idSerie"],
         trim: json["trim"],
         idTrim: json["idTrim"],
+        message: json["message"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -100,5 +103,6 @@ class VinDecoderData {
         "idSerie": idSerie,
         "trim": trim,
         "idTrim": idTrim,
+        "message": message,
       };
 }

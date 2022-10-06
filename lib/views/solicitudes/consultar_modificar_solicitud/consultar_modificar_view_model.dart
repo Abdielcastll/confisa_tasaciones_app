@@ -646,6 +646,11 @@ class ConsultarModificarViewModel extends BaseViewModel {
       if (resp is Success) {
         var data = resp.response as VinDecoderResponse;
         vinData = data.data;
+
+        // if (vinData!.message != null) {
+        //   Dialogs.vinMessage(msg: vinData!.message!);
+        // }
+
         if (vinData!.fuerzaMotriz != null) {
           tcFuerzaMotriz.text = vinData?.fuerzaMotriz?.toString() ?? '';
         }

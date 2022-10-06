@@ -56,6 +56,7 @@ class VehiculoForm extends StatelessWidget {
                             label: 'No. VIN',
                             hint: 'Ingrese el número VIN del vehículo',
                             validator: vm.noVINValidator,
+                            maxLength: 17,
                             controller: vm.tcVIN,
                           ),
                         ),
@@ -88,6 +89,16 @@ class VehiculoForm extends StatelessWidget {
               key: vm.formKey3,
               child: Column(
                 children: [
+                  if (vm.vinData?.message != null)
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: AppColors.green,
+                      ),
+                      margin: const EdgeInsets.only(top: 5),
+                      padding: const EdgeInsets.all(5),
+                      child: Text(vm.vinData!.message!),
+                    ),
                   BaseTextFieldNoEdit(
                     label: 'Marca',
                     initialValue:
@@ -106,12 +117,16 @@ class VehiculoForm extends StatelessWidget {
                   if (vm.vinData?.serie != null)
                     BaseTextFieldNoEdit(
                       label: 'Serie',
-                      initialValue: vm.vinData?.serie ?? 'No disponible',
+                      initialValue: vm.vinData?.serie == ''
+                          ? 'No disponible'
+                          : vm.vinData?.serie ?? 'No disponible',
                     ),
                   if (vm.vinData?.trim != null)
                     BaseTextFieldNoEdit(
                       label: 'Trim',
-                      initialValue: vm.vinData?.trim ?? 'No disponible',
+                      initialValue: vm.vinData?.trim == ''
+                          ? 'No disponible'
+                          : vm.vinData?.trim ?? 'No disponible',
                     ),
                   // if (vm.vinData != null)
                   Column(

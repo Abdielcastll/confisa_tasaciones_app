@@ -82,6 +82,16 @@ class VehiculoForm extends StatelessWidget {
               key: vm.formKey3,
               child: Column(
                 children: [
+                  if (vm.vinData?.message != null)
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: AppColors.green,
+                      ),
+                      margin: const EdgeInsets.only(top: 5),
+                      padding: const EdgeInsets.all(5),
+                      child: Text(vm.vinData!.message!),
+                    ),
                   BaseTextFieldNoEdit(
                     label: 'Marca',
                     initialValue: vm.solicitud?.marca ?? '',

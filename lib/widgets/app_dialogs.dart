@@ -57,6 +57,18 @@ abstract class Dialogs {
     );
   }
 
+  static vinMessage({required String msg}) {
+    Fluttertoast.showToast(
+      msg: msg,
+      backgroundColor: AppColors.green,
+      timeInSecForIosWeb: 1,
+      gravity: ToastGravity.BOTTOM,
+      fontSize: 18,
+      toastLength: Toast.LENGTH_LONG,
+      textColor: Colors.black,
+    );
+  }
+
   static error({required String msg}) {
     Fluttertoast.showToast(
       msg: msg,
