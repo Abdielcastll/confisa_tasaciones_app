@@ -31,7 +31,7 @@ class LoginViewModel extends BaseViewModel {
   TextEditingController tcEmail =
       TextEditingController(text: AppCuentas().usuarioAdmin);
   TextEditingController tcPassword =
-      TextEditingController(text: AppCuentas().claveInterna);
+      TextEditingController(text: AppCuentas().claveAdmin);
   bool obscurePassword = true;
   bool get loading => _loading;
   set loading(bool value) {
