@@ -230,7 +230,7 @@ class VehiculoForm extends StatelessWidget {
                         vm.vinData?.sistemaCambio != null &&
                                 vm.vinData?.sistemaCambio != ''
                             ? BaseTextFieldNoEdit(
-                                label: 'Sistema de cambio',
+                                label: 'Sistema de Cambio',
                                 initialValue: vm.vinData?.sistemaCambio,
                               )
                             : DropdownSearch<TransmisionesData>(
@@ -250,7 +250,7 @@ class VehiculoForm extends StatelessWidget {
                                         dropdownSearchDecoration:
                                             InputDecoration(
                                                 label:
-                                                    Text('Sistema de cambios'),
+                                                    Text('Sistema de Cambios'),
                                                 border:
                                                     UnderlineInputBorder())),
                                 popupProps: PopupProps.menu(
@@ -329,7 +329,7 @@ class VehiculoForm extends StatelessWidget {
 
                         vm.vinData?.numeroPuertas != null
                             ? BaseTextFieldNoEdit(
-                                label: 'No. de puertas',
+                                label: 'No. de Puertas',
                                 initialValue:
                                     vm.vinData?.numeroPuertas.toString(),
                               )
@@ -350,7 +350,7 @@ class VehiculoForm extends StatelessWidget {
                                     const DropDownDecoratorProps(
                                         dropdownSearchDecoration:
                                             InputDecoration(
-                                                label: Text('No. de puertas'),
+                                                label: Text('No. de Puertas'),
                                                 border:
                                                     UnderlineInputBorder())),
                                 popupProps: PopupProps.menu(
@@ -379,7 +379,7 @@ class VehiculoForm extends StatelessWidget {
 
                         vm.vinData?.numeroCilindros != null
                             ? BaseTextFieldNoEdit(
-                                label: 'No. de cilindros',
+                                label: 'No. de Cilindros',
                                 initialValue:
                                     vm.vinData?.numeroCilindros.toString(),
                               )
@@ -400,7 +400,7 @@ class VehiculoForm extends StatelessWidget {
                                     const DropDownDecoratorProps(
                                         dropdownSearchDecoration:
                                             InputDecoration(
-                                                label: Text('No. de cilindros'),
+                                                label: Text('No. de Cilindros'),
                                                 border:
                                                     UnderlineInputBorder())),
                                 popupProps: PopupProps.menu(
@@ -427,13 +427,14 @@ class VehiculoForm extends StatelessWidget {
                         // Fuerza Motriz
                         vm.vinData?.fuerzaMotriz != null
                             ? BaseTextFieldNoEdit(
-                                label: 'Fuerza motriz',
+                                label: 'Fuerza Motriz',
                                 initialValue:
                                     vm.vinData!.fuerzaMotriz.toString(),
                               )
                             : BaseTextField(
-                                label: 'Fuerza motriz',
+                                label: 'Fuerza Motriz',
                                 controller: vm.tcFuerzaMotriz,
+                                maxLength: 7,
                                 keyboardType: TextInputType.number,
                                 validator: (v) {
                                   if (v?.trim() == '') {
@@ -450,6 +451,7 @@ class VehiculoForm extends StatelessWidget {
                             label: 'Kilometraje',
                             keyboardType: TextInputType.number,
                             controller: vm.tcKilometraje,
+                            maxLength: 9,
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba el Kilometraje';
@@ -497,6 +499,7 @@ class VehiculoForm extends StatelessWidget {
                             }),
                         BaseTextField(
                             label: 'Placa',
+                            maxLength: 8,
                             controller: vm.tcPlaca,
                             validator: (v) {
                               if (v?.trim() == '') {

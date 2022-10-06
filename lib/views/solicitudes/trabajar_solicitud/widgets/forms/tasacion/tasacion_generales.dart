@@ -30,7 +30,7 @@ class GeneralesTasacionForm extends StatelessWidget {
         child: Column(
           children: [
             BaseTextFieldNoEdit(
-              label: 'Tipo de tasación',
+              label: 'Tipo de Tasación',
               initialValue: vm.solicitud.descripcionTipoTasacion ?? '',
             ),
             BaseTextFieldNoEdit(
@@ -40,7 +40,7 @@ class GeneralesTasacionForm extends StatelessWidget {
                   .toUpperCase(),
             ),
             BaseTextFieldNoEdit(
-              label: 'No. de Solicitud de crédito',
+              label: 'No. de Solicitud de Crédito',
               initialValue: vm.solicitud.noSolicitudCredito.toString(),
             ),
             BaseTextFieldNoEdit(
@@ -51,15 +51,15 @@ class GeneralesTasacionForm extends StatelessWidget {
                 label: 'Entidad Solicitante',
                 initialValue: vm.solicitud.descripcionEntidad ?? ''),
             BaseTextFieldNoEdit(
-              label: 'Cédula del cliente',
+              label: 'Cédula del Cliente',
               initialValue: vm.solicitud.identificacion ?? '',
             ),
             BaseTextFieldNoEdit(
-              label: 'Nombre del cliente',
+              label: 'Nombre del Cliente',
               initialValue: vm.solicitud.nombreCliente ?? '',
             ),
             BaseTextFieldNoEdit(
-              label: 'Oficial de negocios',
+              label: 'Oficial de Negocios',
               initialValue: vm.solicitud.nombreOficial ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(

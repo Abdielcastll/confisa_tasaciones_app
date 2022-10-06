@@ -55,7 +55,9 @@ class GeneralesForm extends StatelessWidget {
                             dropdownBuilder: (context, tipo) {
                               return Text(
                                 tipo == null
-                                    ? 'Seleccione'
+                                    ? vm.solicitudDisponible?.noSolicitud
+                                            ?.toString() ??
+                                        'Seleccione'
                                     : tipo.noSolicitud.toString(),
                                 style: const TextStyle(
                                   fontSize: 15,
@@ -81,7 +83,7 @@ class GeneralesForm extends StatelessWidget {
                               ),
                             ),
                             validator: (v) {
-                              if (v == null) {
+                              if (v == null && vm.solicitudDisponible == null) {
                                 return 'Seleccione una solicitud';
                               } else {
                                 return null;

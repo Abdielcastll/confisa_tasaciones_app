@@ -177,6 +177,7 @@ class SolicitudesData {
     this.descripcionEntidad,
     this.isSalvage,
     this.nombreOficial,
+    this.edicion,
   });
 
   int? id;
@@ -187,6 +188,7 @@ class SolicitudesData {
   int? idOficial;
   String? nombreOficial;
   int? estadoTasacion;
+  int? edicion;
   String? descripcionEntidad;
   String? descripcionEstadoTasacion;
   int? tipoTasacion;
@@ -380,6 +382,7 @@ class SolicitudesData {
         lateraIzquierdo: json["lateraIzquierdo"] ?? null,
         descripcionLateraIzquierdo: json["descripcionLateraIzquierdo"] ?? null,
         puertaDerecha: json["puertaDerecha"] ?? null,
+        edicion: json["edicion"] ?? null,
         descripcionPuertaDerecha: json["descripcionPuertaDerecha"] ?? null,
         puertaIzquierda: json["puertaIzquierda"] ?? null,
         descripcionPuertaIzquierda: json["descripcionPuertaIzquierda"] ?? null,
@@ -510,6 +513,7 @@ class SolicitudesData {
         "serie": serie ?? null,
         "descripcionSerie": descripcionSerie ?? null,
         "trim": trim ?? null,
+        "edicion": edicion ?? null,
         "descripcionTrim": descripcionTrim ?? null,
         "sistemaTransmision": sistemaTransmision ?? null,
         "descripcionSistemaTransmision": descripcionSistemaTransmision ?? null,

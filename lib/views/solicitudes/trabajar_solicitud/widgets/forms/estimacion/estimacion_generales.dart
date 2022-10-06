@@ -61,7 +61,8 @@ class GeneralesEstimacionForm extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Oficial de Negocios',
-              initialValue: vm.solicitud.idOficial.toString(),
+              initialValue:
+                  vm.solicitud.nombreOficial?.toString() ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Sucursal',

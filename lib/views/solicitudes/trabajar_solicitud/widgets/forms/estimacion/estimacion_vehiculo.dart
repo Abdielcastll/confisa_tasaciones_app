@@ -52,11 +52,20 @@ class VehiculoEstimacionForm extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Serie',
-              initialValue: vm.solicitud.descripcionSerie ?? '',
+              initialValue: vm.solicitud.descripcionSerie ?? 'No Disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Trim',
-              initialValue: vm.solicitud.descripcionTrim ?? '',
+              initialValue: vm.solicitud.descripcionTrim ?? 'No Disponible',
+            ),
+            BaseTextFieldNoEdit(
+              label: 'Versión',
+              initialValue:
+                  vm.solicitud.versionLocal?.toString() ?? 'No Disponible',
+            ),
+            BaseTextFieldNoEdit(
+              label: 'Edición',
+              initialValue: vm.solicitud.edicion?.toString() ?? 'No Disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Tipo',
@@ -84,7 +93,7 @@ class VehiculoEstimacionForm extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Estado del vehículo',
-              initialValue: vm.estado,
+              initialValue: vm.solicitud.descripcionNuevoUsado,
             ),
             BaseTextFieldNoEdit(
               label: 'Kilometraje',

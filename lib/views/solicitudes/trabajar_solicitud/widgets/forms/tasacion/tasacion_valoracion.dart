@@ -76,7 +76,6 @@ class ValoracionTasacionForm extends StatelessWidget {
                 label: 'Valor Tasación',
                 controller: vm.tcValor,
                 keyboardType: TextInputType.number,
-                inputFormatters: [NumericTextFormatter()],
                 validator: (v) {
                   if (v == '') {
                     return 'Ingrese el Valor';

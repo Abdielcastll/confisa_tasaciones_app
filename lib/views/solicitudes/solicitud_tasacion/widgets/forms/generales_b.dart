@@ -36,19 +36,19 @@ class GeneralesB extends StatelessWidget {
               child: Column(
                 children: [
                   BaseTextFieldNoEdit(
-                    label: 'Entidad solicitante',
+                    label: 'Entidad Solicitante',
                     initialValue: vm.solicitud.entidad ?? '',
                   ),
                   BaseTextFieldNoEdit(
-                    label: 'Cédula cliente',
+                    label: 'Cédula Cliente',
                     initialValue: vm.solicitud.noIdentificacion ?? '',
                   ),
                   BaseTextFieldNoEdit(
-                    label: 'Nombre del cliente',
+                    label: 'Nombre del Cliente',
                     initialValue: vm.solicitud.nombreCliente ?? '',
                   ),
                   BaseTextFieldNoEdit(
-                    label: 'Oficial de negocio',
+                    label: 'Oficial de Negocio',
                     initialValue: vm.solicitud.nombreOficialNegocios ?? '',
                   ),
                   BaseTextFieldNoEdit(

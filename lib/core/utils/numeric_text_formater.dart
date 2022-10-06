@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+// import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class NumericTextFormatter extends TextInputFormatter {
   @override
@@ -24,3 +25,8 @@ class NumericTextFormatter extends TextInputFormatter {
     }
   }
 }
+
+// var maskMoney = MaskTextInputFormatter(
+//     mask: 'RD\$ ###,###,###.##',
+//     filter: {"#": RegExp(r'[0-9]')},
+//     type: MaskAutoCompletionType.lazy);

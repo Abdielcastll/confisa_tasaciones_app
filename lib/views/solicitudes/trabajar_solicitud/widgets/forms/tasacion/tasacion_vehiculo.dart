@@ -103,12 +103,16 @@ class VehiculoTasacionForm extends StatelessWidget {
                   if (vm.vinData?.serie != null)
                     BaseTextFieldNoEdit(
                       label: 'Serie',
-                      initialValue: vm.vinData?.serie ?? '',
+                      initialValue: vm.vinData?.serie == ''
+                          ? 'No Disponible'
+                          : vm.vinData?.serie ?? 'No Disponible',
                     ),
                   if (vm.vinData?.trim != null)
                     BaseTextFieldNoEdit(
                       label: 'Trim',
-                      initialValue: vm.vinData?.trim ?? '',
+                      initialValue: vm.vinData?.trim == ''
+                          ? 'No Disponible'
+                          : vm.vinData?.trim ?? 'No Disponible',
                     ),
                   if (vm.vinData != null)
                     Column(
@@ -127,6 +131,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           onChanged: (v) => vm.versionVehiculo = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('Versión'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -165,6 +171,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           onChanged: (v) => vm.edicionVehiculo = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('Edición'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -206,6 +214,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           onChanged: (v) => vm.tipoVehiculo = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('Tipo'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -246,7 +256,9 @@ class VehiculoTasacionForm extends StatelessWidget {
                           onChanged: (v) => vm.transmision = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
-                                  label: Text('Sistema de cambios'),
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
+                                  label: Text('Sistema de Cambios'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
                             itemBuilder: (context, otp, isSelected) {
@@ -286,6 +298,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           onChanged: (v) => vm.traccion = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('Tracción'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -328,6 +342,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                           onChanged: (v) => vm.nPuertas = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('No. de puertas'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -370,7 +386,9 @@ class VehiculoTasacionForm extends StatelessWidget {
                           onChanged: (v) => vm.nCilindros = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
-                                  label: Text('No. de cilindros'),
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
+                                  label: Text('No. de Cilindros'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
                             itemBuilder: (context, nCilindros, isSelected) {
@@ -397,9 +415,10 @@ class VehiculoTasacionForm extends StatelessWidget {
                         // Fuerza Motriz
 
                         BaseTextField(
-                            label: 'Fuerza motriz',
+                            label: 'Fuerza Motríz',
                             controller: vm.tcFuerzaMotriz,
                             keyboardType: TextInputType.number,
+                            maxLength: 7,
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba la fuerza motriz';
@@ -410,13 +429,14 @@ class VehiculoTasacionForm extends StatelessWidget {
                               }
                             }),
                         BaseTextFieldNoEdit(
-                          label: 'Estado del vehículo',
+                          label: 'Estado del Vehículo',
                           initialValue: vm.estado,
                         ),
                         BaseTextField(
                             label: 'Kilometraje',
                             keyboardType: TextInputType.number,
                             controller: vm.tcKilometraje,
+                            maxLength: 9,
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba el Kilometraje';
@@ -441,6 +461,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                             dropdownDecoratorProps:
                                 const DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
+                                        labelStyle: TextStyle(
+                                            color: AppColors.brownDark),
                                         label: Text('Color'),
                                         border: UnderlineInputBorder())),
                             popupProps: PopupProps.menu(
@@ -466,6 +488,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                         BaseTextField(
                             label: 'Placa',
                             controller: vm.tcPlaca,
+                            maxLength: 8,
                             validator: (v) {
                               if (v?.trim() == '') {
                                 return 'Escriba el número de placa';
