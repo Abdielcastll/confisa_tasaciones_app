@@ -518,8 +518,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         )
             .then((v) {
           if (v != null) {
-            print('ONINIT');
-            onInit(context);
+            onRefresh();
           }
         });
       } else {

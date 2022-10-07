@@ -64,11 +64,38 @@ class ValoracionEstimacionForm extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            BaseTextField(
-              label: 'Observaciónes',
-              controller: vm.tcObservacion,
-              maxLength: 500,
+            Row(
+              children: const [
+                Text(
+                  'Observaciones',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: AppColors.brownDark),
+                ),
+              ],
             ),
+            const SizedBox(height: 3),
+            SizedBox(
+              height: 200,
+              child: TextField(
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.all(5),
+                  filled: true,
+                  isDense: true,
+                  // hintText: 'Observaciones',
+
+                  border: InputBorder.none,
+                ),
+                maxLength: 500,
+                maxLines: null,
+                expands: true,
+                controller: vm.tcObservacion,
+              ),
+            ),
+            // BaseTextField(
+            //   label: 'Observaciónes',
+            //   controller: vm.tcObservacion,
+            //   maxLength: 500,
+            // ),
             // const SizedBox(height: 10),
             Form(
               key: vm.formKeyValor,

@@ -91,11 +91,9 @@ class FotosTrabajar extends StatelessWidget {
                             dropdownBuilder: (context, tipo) {
                               return Text(
                                 tipo?.descripcion ??
-                                    vm.fotos[i].descripcion ??
+                                    vm.fotos[i].tipo ??
                                     'Seleccione',
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                ),
+                                style: const TextStyle(fontSize: 15),
                               );
                             },
                             onChanged: (v) {
@@ -113,9 +111,7 @@ class FotosTrabajar extends StatelessWidget {
                             popupProps: PopupProps.menu(
                               itemBuilder: (context, opt, isSelected) {
                                 return ListTile(
-                                  title: Text(opt.descripcion ??
-                                      vm.fotos[i].descripcion ??
-                                      'Seleccione'),
+                                  title: Text(opt.descripcion ?? ''),
                                   selected: isSelected,
                                 );
                               },
@@ -134,6 +130,8 @@ class FotosTrabajar extends StatelessWidget {
                           ),
                           BaseTextField(
                             label: 'Descripción:',
+                            enabled: vm.fotos[i].nueva,
+                            initialValue: vm.fotos[i].descripcion ?? '',
                             onChanged: (v) {
                               vm.fotos[i] =
                                   vm.fotos[i].copyWith(descripcion: v);
@@ -157,6 +155,7 @@ class FotosTrabajar extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            const SizedBox(height: 10),
                             IconButton(
                                 onPressed: () {
                                   Dialogs.confirm(context,
@@ -170,16 +169,17 @@ class FotosTrabajar extends StatelessWidget {
                                   color: Colors.grey,
                                   size: 30,
                                 )),
-                            // const Spacer(),
-                            IconButton(
-                                onPressed: () {
-                                  vm.editarFoto(context, i);
-                                },
-                                icon: const Icon(
-                                  AppIcons.pencilAlt,
-                                  color: Colors.grey,
-                                  size: 28,
-                                ))
+                            const Spacer(),
+                            if (vm.fotos[i].nueva)
+                              IconButton(
+                                  onPressed: () {
+                                    vm.editarFoto(context, i);
+                                  },
+                                  icon: const Icon(
+                                    AppIcons.pencilAlt,
+                                    color: Colors.grey,
+                                    size: 28,
+                                  ))
                           ],
                         ),
                       )

@@ -29,7 +29,6 @@ class VehiculoTasacionForm extends StatelessWidget {
       labelBack: 'Anterior',
       onPressedBack: () {
         vm.currentForm = 1;
-        vm.vinData = null;
       },
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
@@ -216,10 +215,13 @@ class VehiculoTasacionForm extends StatelessWidget {
                         DropdownSearch<TipoVehiculoData>(
                           asyncItems: (text) => vm.getTipoVehiculo(text),
                           dropdownBuilder: (context, tipo) {
+                            final String? vin = vm.vinData?.tipoVehiculo == ''
+                                ? 'No disponible'
+                                : vm.vinData?.tipoVehiculo;
                             return Text(
                               tipo == null
                                   ? vm.tipoVehiculo?.descripcion ??
-                                      vm.vinData?.tipoVehiculo ??
+                                      vin ??
                                       'Seleccione'
                                   : tipo.descripcion,
                               style: const TextStyle(
@@ -261,10 +263,13 @@ class VehiculoTasacionForm extends StatelessWidget {
                         DropdownSearch<TransmisionesData>(
                           asyncItems: (text) => vm.getTransmisiones(text),
                           dropdownBuilder: (context, tipo) {
+                            final String? vin = vm.vinData?.sistemaCambio == ''
+                                ? 'No disponible'
+                                : vm.vinData?.sistemaCambio;
                             return Text(
                                 tipo == null
                                     ? vm.transmision?.descripcion ??
-                                        vm.vinData?.sistemaCambio ??
+                                        vin ??
                                         'Seleccione'
                                     : tipo.descripcion,
                                 style: const TextStyle(fontSize: 15));
@@ -303,10 +308,13 @@ class VehiculoTasacionForm extends StatelessWidget {
                         DropdownSearch<TraccionesData>(
                           asyncItems: (text) => vm.getTracciones(text),
                           dropdownBuilder: (context, tipo) {
+                            final String? vin = vm.vinData?.traccion == ''
+                                ? 'No disponible'
+                                : vm.vinData?.traccion;
                             return Text(
                                 tipo == null
                                     ? vm.traccion?.descripcion ??
-                                        vm.vinData?.traccion ??
+                                        vin ??
                                         'Seleccione'
                                     : tipo.descripcion,
                                 style: const TextStyle(fontSize: 15));

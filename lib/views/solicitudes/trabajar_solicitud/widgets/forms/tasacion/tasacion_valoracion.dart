@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../../../../core/utils/numeric_text_formater.dart';
 import '../../../../../../theme/theme.dart';
@@ -23,7 +24,11 @@ class ValoracionTasacionForm extends StatelessWidget {
       titleHeader: 'Valorar',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
-      onPressedBack: () => vm.currentForm = 5,
+      onPressedBack: () async {
+        ProgressDialog.show(context);
+        await vm.loadFotos(context);
+        vm.currentForm = 5;
+      },
       iconNext: AppIcons.save,
       labelNext: '',
       isValoracion: true,
@@ -65,10 +70,32 @@ class ValoracionTasacionForm extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            BaseTextField(
-              label: 'Observación',
-              controller: vm.tcObservacion,
-              maxLength: 500,
+            Row(
+              children: const [
+                Text(
+                  'Observaciones',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: AppColors.brownDark),
+                ),
+              ],
+            ),
+            const SizedBox(height: 3),
+            SizedBox(
+              height: 200,
+              child: TextField(
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.all(5),
+                  filled: true,
+                  isDense: true,
+                  // hintText: 'Observaciones',
+
+                  border: InputBorder.none,
+                ),
+                maxLength: 500,
+                maxLines: null,
+                expands: true,
+                controller: vm.tcObservacion,
+              ),
             ),
             Form(
               key: vm.formKeyValor,

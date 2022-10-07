@@ -99,7 +99,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                                     .routeName)
                                             .then((v) {
                                           if (v != null) {
-                                            vmColaSolicitudes?.onInit(context);
+                                            vmColaSolicitudes?.onRefresh();
                                           }
                                         });
                                       },
@@ -128,7 +128,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                         });
                                       },
                                       child: const Text(
-                                        'Tasación',
+                                        'Tasación Crédito',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,

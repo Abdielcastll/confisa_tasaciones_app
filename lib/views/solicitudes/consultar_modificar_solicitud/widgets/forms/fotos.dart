@@ -20,8 +20,6 @@ class FotosForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Es Aprobador==> ${vm.isAprobador}');
-    print('Es Tasador==> ${vm.isTasador}');
     return BaseFormWidget(
       iconHeader: Icons.add_chart_sharp,
       titleHeader: 'Fotos',
@@ -42,7 +40,6 @@ class FotosForm extends StatelessWidget {
               'Siguente'
               : 'Salir',
       onPressedNext: () => vm.subirFotos(context),
-      // : vm.subirFotosNuevas(context),
       child: Container(
         padding: const EdgeInsets.all(10),
         color: Colors.white,
@@ -201,6 +198,7 @@ class FotosActuales extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
+                              const SizedBox(height: 10),
                               IconButton(
                                   onPressed: () {
                                     Dialogs.confirm(context,
@@ -215,16 +213,17 @@ class FotosActuales extends StatelessWidget {
                                     color: Colors.grey,
                                     size: 30,
                                   )),
-                              // const Spacer(),
-                              IconButton(
-                                  onPressed: () {
-                                    vm.editarFoto(context, i);
-                                  },
-                                  icon: const Icon(
-                                    AppIcons.pencilAlt,
-                                    color: Colors.grey,
-                                    size: 28,
-                                  ))
+                              const Spacer(),
+                              if (vm.fotos[i].nueva)
+                                IconButton(
+                                    onPressed: () {
+                                      vm.editarFoto(context, i);
+                                    },
+                                    icon: const Icon(
+                                      AppIcons.pencilAlt,
+                                      color: Colors.grey,
+                                      size: 28,
+                                    ))
                             ],
                           ),
                         )

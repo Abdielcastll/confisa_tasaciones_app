@@ -31,7 +31,8 @@ class GeneralesEstimacionForm extends StatelessWidget {
           children: [
             BaseTextFieldNoEdit(
               label: 'Tipo de Tasación',
-              initialValue: vm.solicitud.descripcionTipoTasacion ?? '',
+              initialValue:
+                  vm.solicitud.descripcionTipoTasacion ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Fecha de Solicitud',
@@ -49,24 +50,23 @@ class GeneralesEstimacionForm extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Entidad Solicitante',
-              initialValue: vm.solicitud.descripcionEntidad ?? '',
+              initialValue: vm.solicitud.descripcionEntidad ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Cédula del Cliente',
-              initialValue: vm.solicitud.identificacion ?? '',
+              initialValue: vm.solicitud.identificacion ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Nombre del Cliente',
-              initialValue: vm.solicitud.nombreCliente ?? '',
+              initialValue: vm.solicitud.nombreCliente ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Oficial de Negocios',
-              initialValue:
-                  vm.solicitud.nombreOficial?.toString() ?? 'No disponible',
+              initialValue: vm.solicitud.nombreOficial ?? 'No disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Sucursal',
-              initialValue: vm.solicitud.descripcionSucursal ?? '',
+              initialValue: vm.solicitud.descripcionSucursal ?? 'No disponible',
             ),
           ],
         ),
