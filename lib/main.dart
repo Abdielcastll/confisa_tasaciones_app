@@ -12,6 +12,7 @@ import 'package:tasaciones_app/core/services/navigator_service.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/auth/confirm_password/confirm_password_view.dart';
 import 'package:tasaciones_app/views/auth/recover_password/recovery_password_view.dart';
+import 'package:tasaciones_app/views/splash/splash_view.dart';
 import 'package:tasaciones_app/widgets/no_scale_widget.dart';
 
 import 'dart:async';
@@ -119,7 +120,7 @@ class _MainApplicationState extends State<MainApplication> {
         debugShowCheckedModeBanner: false,
         navigatorKey: locator<NavigatorService>().navigatorKey,
         onGenerateRoute: generateRoute,
-        initialRoute: LoginView.routeName,
+        initialRoute: SplashView.routeName,
         theme: myTheme,
         builder: (context, child) {
           return NoScaleTextWidget(

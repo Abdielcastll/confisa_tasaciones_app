@@ -27,6 +27,7 @@ class AuthenticationClient {
     if (difference >= 20) {
       return session.token;
     } else if (difference <= 0) {
+      isLogged = false;
       logger.wtf('IR A LOGIN');
       return null;
     } else {
@@ -37,9 +38,18 @@ class AuthenticationClient {
         logger.wtf('TOKEN ACTUALIZADO: ${resp.response.data.token}');
         return resp.response.data.token;
       } else {
+        isLogged = false;
         return null;
       }
     }
+  }
+
+  set isLogged(bool v) {
+    _storage.setBool('isLogged', v);
+  }
+
+  bool get isLogged {
+    return _storage.getBool('isLogged') ?? false;
   }
 
   Session get loadSession {

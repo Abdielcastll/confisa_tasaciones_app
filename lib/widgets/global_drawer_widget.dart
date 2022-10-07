@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/models/menu_response.dart';
+import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/utils/drawer_menu.dart';
 import 'package:tasaciones_app/views/Perfil_de_usuario/perfil_view.dart';
@@ -111,7 +112,8 @@ class GlobalDrawerDartDesktop extends StatelessWidget {
                                   fontSize: 17, fontWeight: FontWeight.w500),
                             ),
                             leading: const Icon(Icons.exit_to_app),
-                            onTap: () {
+                            onTap: () async {
+                              await _authenticationClient.signOut();
                               _navigationService.pop();
                               _navigationService.navigateToPageAndRemoveUntil(
                                   LoginView.routeName);
