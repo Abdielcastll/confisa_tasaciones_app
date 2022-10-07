@@ -202,7 +202,11 @@ class VencimientoEstadosViewModel extends BaseViewModel {
                           if (value!.trim() == '') {
                             return 'Escriba un periodo';
                           } else {
-                            return null;
+                            if (int.parse(value.trim()) > 100) {
+                              return "Debe ser menor a 100";
+                            } else {
+                              return null;
+                            }
                           }
                         },
                         decoration: const InputDecoration(
