@@ -30,7 +30,7 @@ class GeneralesA extends StatelessWidget {
         child: Column(
           children: [
             BaseTextField(
-              label: 'Tipo de tasación',
+              label: 'Tipo de Tasación',
               initialValue: vm.incautado ? 'Tasación de Incautado' : 'Tasación',
               enabled: false,
             ),
@@ -40,7 +40,10 @@ class GeneralesA extends StatelessWidget {
                 asyncItems: (text) => vm.getSolicitudes(),
                 dropdownBuilder: (context, tipo) {
                   return Text(
-                    tipo == null ? 'Seleccione' : tipo.noSolicitud.toString(),
+                    tipo == null
+                        ? vm.solicitudDisponible?.noSolicitud?.toString() ??
+                            'Seleccione'
+                        : tipo.noSolicitud.toString(),
                     style: const TextStyle(
                       fontSize: 15,
                     ),
@@ -49,7 +52,7 @@ class GeneralesA extends StatelessWidget {
                 onChanged: (v) => vm.solicitudDisponible = v!,
                 dropdownDecoratorProps: const DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
-                        label: Text('No. Solicitud de crédito'),
+                        label: Text('No. Solicitud de Crédito'),
                         border: UnderlineInputBorder())),
                 popupProps: PopupProps.menu(
                   itemBuilder: (context, value, isSelected) {
@@ -64,7 +67,7 @@ class GeneralesA extends StatelessWidget {
                   ),
                 ),
                 validator: (v) {
-                  if (v == null) {
+                  if (v == null && vm.solicitudDisponible == null) {
                     return 'Seleccione una solicitud';
                   } else {
                     return null;

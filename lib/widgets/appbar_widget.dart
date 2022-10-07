@@ -123,7 +123,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                                 SolicitudTasacionView.routeName)
                                             .then((v) {
                                           if (v != null) {
-                                            vmColaSolicitudes?.onInit(context);
+                                            vmColaSolicitudes?.onRefresh();
                                           }
                                         });
                                       },
@@ -151,7 +151,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                           },
                                         )).then((v) {
                                           if (v != null) {
-                                            vmColaSolicitudes?.onInit(context);
+                                            vmColaSolicitudes?.onRefresh();
                                           }
                                         });
                                       },

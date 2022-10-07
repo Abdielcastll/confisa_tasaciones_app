@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,8 +53,16 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   GlobalKey<FormState> formKeyFotos = GlobalKey<FormState>();
   TextEditingController tcNoSolicitud = TextEditingController();
   TextEditingController tcVIN = TextEditingController();
-  TextEditingController tcFuerzaMotriz = TextEditingController();
-  TextEditingController tcKilometraje = TextEditingController();
+  MoneyMaskedTextController tcFuerzaMotriz = MoneyMaskedTextController(
+      precision: 0,
+      thousandSeparator: ',',
+      decimalSeparator: '',
+      initialValue: 0);
+  MoneyMaskedTextController tcKilometraje = MoneyMaskedTextController(
+      precision: 0,
+      thousandSeparator: ',',
+      decimalSeparator: '',
+      initialValue: 0);
   TextEditingController tcPlaca = TextEditingController();
   int _currentForm = 1;
   List<AlarmasData> alarmas = [];
@@ -162,11 +171,12 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     }
   }
 
-  late SolicitudesDisponibles _solicitudDisponible;
-  SolicitudesDisponibles get solicitudDisponible => _solicitudDisponible;
-  set solicitudDisponible(SolicitudesDisponibles v) {
+  SolicitudesDisponibles? _solicitudDisponible;
+  SolicitudesDisponibles? get solicitudDisponible => _solicitudDisponible;
+  void solicitudDisponibleOnChanged(
+      BuildContext context, SolicitudesDisponibles? v) {
     _solicitudDisponible = v;
-    notifyListeners();
+    solicitudCredito(context);
   }
 
   Future<void> getAlarmas(BuildContext context) async {
@@ -193,7 +203,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     if (formKey.currentState!.validate()) {
       ProgressDialog.show(context);
       var resp = await _solicitudesApi.getSolicitudCredito(
-          idSolicitud: _solicitudDisponible.noSolicitud!);
+          idSolicitud: _solicitudDisponible!.noSolicitud!);
       if (resp is Success) {
         var data = resp.response as SolicitudCreditoResponse;
         solicitud = data.data;
@@ -450,7 +460,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     if (vinData == null) {
       Dialogs.error(msg: 'Debe consultar el No. VIN');
     } else {
-// <<<<<<< HEAD
       if (solicitudCreada == null) {
         if (formKey3.currentState!.validate()) {
           ProgressDialog.show(context);
@@ -466,21 +475,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
               currentForm = 3;
               ProgressDialog.dissmiss(context);
             }
-// =======
-//       if (formKey3.currentState!.validate()) {
-//         ProgressDialog.show(context);
-//         int? idSuplidor = await crearSolicitud(context);
-//         if (idSuplidor != null) {
-//           log.i('ID SUPLIDOR $idSuplidor');
-//           var resp =
-//               await _solicitudesApi.getCantidadFotos(idSuplidor: idSuplidor);
-//           if (resp is Success<EntidadResponse>) {
-//             int cantidad = int.parse(resp.response.data.descripcion ?? '0');
-//             fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
-//             fotosPermitidas = cantidad;
-//             currentForm = 3;
-//             ProgressDialog.dissmiss(context);
-// >>>>>>> a23256244821557b9855d8ad45d6b0a629ed319b
           }
         }
       } else {
@@ -500,11 +494,11 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   Future<int?> crearSolicitud(BuildContext context) async {
     var resp = await _solicitudesApi.createNewSolicitudEstimacion(
       ano: int.parse(solicitud!.ano!),
-      chasis: solicitud!.chasis ?? tcVIN.text,
+      chasis: tcVIN.text,
       color: colorVehiculo.id,
       edicion: edicionVehiculo.id,
-      fuerzaMotriz: vinData?.fuerzaMotriz ?? int.parse(tcFuerzaMotriz.text),
-      kilometraje: int.parse(tcKilometraje.text),
+      fuerzaMotriz: vinData?.fuerzaMotriz ?? tcFuerzaMotriz.numberValue.toInt(),
+      kilometraje: tcKilometraje.numberValue.toInt(),
       marca: solicitud!.idMarcaTasaciones ?? vinData!.codigoMarca ?? 0,
       modelo: solicitud!.idModeloTasaciones ?? vinData!.codigoModelo ?? 0,
       noCilindros: vinData?.numeroCilindros ?? _nCilindros!,

@@ -55,6 +55,7 @@ class VehiculoForm extends StatelessWidget {
                             label: 'No. VIN',
                             hint: 'Ingrese el número VIN del vehículo',
                             validator: vm.noVINValidator,
+                            maxLength: 17,
                             controller: vm.tcVIN,
                           ),
                         ),
@@ -87,6 +88,22 @@ class VehiculoForm extends StatelessWidget {
               key: vm.formKey3,
               child: Column(
                 children: [
+                  if (vm.vinData?.message != null)
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.yellow[600],
+                      ),
+                      margin: const EdgeInsets.only(top: 5),
+                      padding: const EdgeInsets.all(5),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.warning_amber_rounded),
+                          const SizedBox(width: 5),
+                          Expanded(child: Text(vm.vinData!.message!)),
+                        ],
+                      ),
+                    ),
                   BaseTextFieldNoEdit(
                     label: 'Marca',
                     initialValue:
@@ -105,12 +122,16 @@ class VehiculoForm extends StatelessWidget {
                   if (vm.vinData?.serie != null)
                     BaseTextFieldNoEdit(
                       label: 'Serie',
-                      initialValue: vm.vinData?.serie ?? 'No disponible',
+                      initialValue: vm.vinData?.serie == ''
+                          ? 'No disponible'
+                          : vm.vinData?.serie ?? 'No disponible',
                     ),
                   if (vm.vinData?.trim != null)
                     BaseTextFieldNoEdit(
                       label: 'Trim',
-                      initialValue: vm.vinData?.trim ?? 'No disponible',
+                      initialValue: vm.vinData?.trim == ''
+                          ? 'No disponible'
+                          : vm.vinData?.trim ?? 'No disponible',
                     ),
                   // if (vm.vinData != null)
                   Column(
@@ -123,6 +144,7 @@ class VehiculoForm extends StatelessWidget {
                             return Text(
                               tipo == null
                                   ? vm.versionVehiculo?.descripcion ??
+                                      vm.solicitud.descripcionVersion ??
                                       'Seleccione'
                                   : tipo.descripcion,
                               style: const TextStyle(
@@ -149,7 +171,9 @@ class VehiculoForm extends StatelessWidget {
                           validator: vm.solicitud.estadoTasacion != 34
                               ? null
                               : (v) {
-                                  if (v == null && vm.versionVehiculo == null) {
+                                  if (v == null &&
+                                      vm.versionVehiculo == null &&
+                                      vm.solicitud.versionLocal == null) {
                                     return 'Seleccione una versión';
                                   } else {
                                     return null;
@@ -163,16 +187,18 @@ class VehiculoForm extends StatelessWidget {
                         dropdownBuilder: (context, tipo) {
                           return Text(
                             tipo == null
-                                ? 'Seleccione'
+                                ? vm.solicitud.descripcionEdicion ??
+                                    vm.edicionVehiculo?.descripcionEasyBank ??
+                                    'Seleccione'
                                 : tipo.descripcionEasyBank ?? '',
-                            style: const TextStyle(
-                              fontSize: 15,
-                            ),
+                            style: const TextStyle(fontSize: 15),
                           );
                         },
                         onChanged: (v) => vm.edicionVehiculo = v,
                         dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
+                                labelStyle:
+                                    TextStyle(color: AppColors.brownDark),
                                 label: Text('Edición'),
                                 border: UnderlineInputBorder())),
                         popupProps: PopupProps.menu(
@@ -186,13 +212,15 @@ class VehiculoForm extends StatelessWidget {
                             child: Text('No hay resultados'),
                           ),
                         ),
-                        // validator: (v) {
-                        //   if (v == null) {
-                        //     return 'Seleccione una edición';
-                        //   } else {
-                        //     return null;
-                        //   }
-                        // },
+                        validator: (v) {
+                          if (v == null &&
+                              vm.solicitud.edicion == null &&
+                              vm.edicionVehiculo == null) {
+                            return 'Seleccione una edición';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                       // TIPO DE VEHICULO
 
@@ -212,7 +240,8 @@ class VehiculoForm extends StatelessWidget {
                         dropdownBuilder: (context, tipo) {
                           return Text(
                               tipo == null
-                                  ? vm.vinData?.sistemaCambio ??
+                                  ? vm.transmision?.descripcion ??
+                                      vm.vinData?.sistemaCambio ??
                                       vm.solicitud
                                           .descripcionSistemaTransmision ??
                                       'Seleccione'
@@ -222,7 +251,9 @@ class VehiculoForm extends StatelessWidget {
                         onChanged: (v) => vm.transmision = v,
                         dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                                label: Text('Sistema de cambios'),
+                                labelStyle:
+                                    TextStyle(color: AppColors.brownDark),
+                                label: Text('Sistema de Cambios'),
                                 border: UnderlineInputBorder())),
                         popupProps: PopupProps.menu(
                           itemBuilder: (context, otp, isSelected) {
@@ -267,6 +298,8 @@ class VehiculoForm extends StatelessWidget {
                         onChanged: (v) => vm.traccion = v,
                         dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
+                                labelStyle:
+                                    TextStyle(color: AppColors.brownDark),
                                 label: Text('Tracción'),
                                 border: UnderlineInputBorder())),
                         popupProps: PopupProps.menu(
@@ -304,14 +337,17 @@ class VehiculoForm extends StatelessWidget {
                         dropdownBuilder: (context, nPuertas) {
                           return Text(
                               nPuertas == null
-                                  ? '${vm.vinData?.numeroPuertas ?? vm.solicitud.noPuertas?.toString() ?? 'Seleccione'}'
+                                  ? vm.nPuertas?.toString() ??
+                                      '${vm.vinData?.numeroPuertas ?? vm.solicitud.noPuertas?.toString() ?? 'Seleccione'}'
                                   : nPuertas.toString(),
                               style: const TextStyle(fontSize: 15));
                         },
                         onChanged: (v) => vm.nPuertas = v,
                         dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                                label: Text('No. de puertas'),
+                                labelStyle:
+                                    TextStyle(color: AppColors.brownDark),
+                                label: Text('No. de Puertas'),
                                 border: UnderlineInputBorder())),
                         popupProps: PopupProps.menu(
                           itemBuilder: (context, otp, isSelected) {
@@ -345,14 +381,17 @@ class VehiculoForm extends StatelessWidget {
                         dropdownBuilder: (context, nCilindros) {
                           return Text(
                               nCilindros == null
-                                  ? '${vm.vinData?.numeroCilindros ?? vm.solicitud.noCilindros ?? 'Seleccione'}'
+                                  ? vm.nCilindros?.toString() ??
+                                      '${vm.vinData?.numeroCilindros ?? vm.solicitud.noCilindros ?? 'Seleccione'}'
                                   : nCilindros.toString(),
                               style: const TextStyle(fontSize: 15));
                         },
                         onChanged: (v) => vm.nCilindros = v,
                         dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                                label: Text('No. de cilindros'),
+                                labelStyle:
+                                    TextStyle(color: AppColors.brownDark),
+                                label: Text('No. de Cilindros'),
                                 border: UnderlineInputBorder())),
                         popupProps: PopupProps.menu(
                           itemBuilder: (context, nCilindros, isSelected) {
@@ -381,8 +420,9 @@ class VehiculoForm extends StatelessWidget {
                       // Fuerza Motriz
                       BaseTextField(
                           enabled: vm.solicitud.estadoTasacion == 34,
-                          label: 'Fuerza motriz',
+                          label: 'Fuerza Motriz',
                           controller: vm.tcFuerzaMotriz,
+                          maxLength: 7,
                           keyboardType: TextInputType.number,
                           validator: vm.solicitud.estadoTasacion != 34
                               ? null
@@ -406,6 +446,7 @@ class VehiculoForm extends StatelessWidget {
                           enabled: vm.solicitud.estadoTasacion == 34,
                           label: 'Kilometraje',
                           keyboardType: TextInputType.number,
+                          maxLength: 9,
                           controller: vm.tcKilometraje,
                           validator: vm.solicitud.estadoTasacion != 34
                               ? null
@@ -434,6 +475,8 @@ class VehiculoForm extends StatelessWidget {
                           onChanged: (v) => vm.colorVehiculo = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('Color'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -463,6 +506,7 @@ class VehiculoForm extends StatelessWidget {
                           enabled: vm.solicitud.estadoTasacion == 34,
                           label: 'Placa',
                           controller: vm.tcPlaca,
+                          maxLength: 8,
                           validator: vm.solicitud.estadoTasacion != 34
                               ? null
                               : (v) {

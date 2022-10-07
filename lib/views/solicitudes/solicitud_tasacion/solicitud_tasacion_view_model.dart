@@ -48,9 +48,9 @@ class SolicitudTasacionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  late SolicitudesDisponibles _solicitudDisponible;
-  SolicitudesDisponibles get solicitudDisponible => _solicitudDisponible;
-  set solicitudDisponible(SolicitudesDisponibles v) {
+  SolicitudesDisponibles? _solicitudDisponible;
+  SolicitudesDisponibles? get solicitudDisponible => _solicitudDisponible;
+  set solicitudDisponible(SolicitudesDisponibles? v) {
     _solicitudDisponible = v;
     notifyListeners();
   }
@@ -69,7 +69,7 @@ class SolicitudTasacionViewModel extends BaseViewModel {
       ProgressDialog.show(context);
 
       var resp = await _solicitudesApi.getSolicitudCredito(
-          idSolicitud: _solicitudDisponible.noSolicitud!);
+          idSolicitud: _solicitudDisponible!.noSolicitud!);
       if (resp is Success) {
         var data = resp.response as SolicitudCreditoResponse;
         solicitud = data.data;
