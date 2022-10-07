@@ -29,7 +29,6 @@ class VehiculoForm extends StatelessWidget {
       labelBack: 'Anterior',
       onPressedBack: () {
         vm.currentForm = 1;
-        vm.vinData = null;
       },
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
@@ -113,12 +112,16 @@ class VehiculoForm extends StatelessWidget {
                   if (vm.vinData?.serie != null)
                     BaseTextFieldNoEdit(
                       label: 'Serie',
-                      initialValue: vm.vinData?.serie ?? '',
+                      initialValue: vm.vinData?.serie == ''
+                          ? 'No disponible'
+                          : vm.vinData?.serie ?? '',
                     ),
                   if (vm.vinData?.trim != null)
                     BaseTextFieldNoEdit(
                       label: 'Trim',
-                      initialValue: vm.vinData?.trim ?? '',
+                      initialValue: vm.vinData?.trim == ''
+                          ? 'No disponible'
+                          : vm.vinData?.trim ?? '',
                     ),
                   if (vm.vinData != null)
                     Column(
@@ -127,15 +130,18 @@ class VehiculoForm extends StatelessWidget {
                           asyncItems: (text) => vm.getversionVehiculo(text),
                           dropdownBuilder: (context, tipo) {
                             return Text(
-                              tipo == null ? 'Seleccione' : tipo.descripcion,
-                              style: const TextStyle(
-                                fontSize: 15,
-                              ),
+                              tipo == null
+                                  ? vm.versionVehiculo?.descripcion ??
+                                      'Seleccione'
+                                  : tipo.descripcion,
+                              style: const TextStyle(fontSize: 15),
                             );
                           },
                           onChanged: (v) => vm.versionVehiculo = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('Versión'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -150,7 +156,7 @@ class VehiculoForm extends StatelessWidget {
                             ),
                           ),
                           validator: (v) {
-                            if (v == null) {
+                            if (v == null && vm.versionVehiculo == null) {
                               return 'Seleccione una versión';
                             } else {
                               return null;
@@ -165,7 +171,8 @@ class VehiculoForm extends StatelessWidget {
                           dropdownBuilder: (context, tipo) {
                             return Text(
                               tipo == null
-                                  ? 'Seleccione'
+                                  ? vm.edicionVehiculo?.descripcionEasyBank ??
+                                      'Seleccione'
                                   : tipo.descripcionEasyBank ?? '',
                               style: const TextStyle(
                                 fontSize: 15,
@@ -175,6 +182,8 @@ class VehiculoForm extends StatelessWidget {
                           onChanged: (v) => vm.edicionVehiculo = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('Edición'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -189,7 +198,7 @@ class VehiculoForm extends StatelessWidget {
                             ),
                           ),
                           validator: (v) {
-                            if (v == null) {
+                            if (v == null && vm.edicionVehiculo == null) {
                               return 'Seleccione una edición';
                             } else {
                               return null;
@@ -198,14 +207,15 @@ class VehiculoForm extends StatelessWidget {
                         ),
                         // TIPO DE VEHICULO
 
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
 
                         DropdownSearch<TipoVehiculoData>(
                           asyncItems: (text) => vm.getTipoVehiculo(text),
                           dropdownBuilder: (context, tipo) {
                             return Text(
                               tipo == null
-                                  ? vm.solicitudCola
+                                  ? vm.tipoVehiculo?.descripcion ??
+                                      vm.solicitudCola
                                           ?.descripcionTipoVehiculoLocal ??
                                       'Seleccione'
                                   : tipo.descripcion,
@@ -217,6 +227,8 @@ class VehiculoForm extends StatelessWidget {
                           onChanged: (v) => vm.tipoVehiculo = v,
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
+                                  labelStyle:
+                                      TextStyle(color: AppColors.brownDark),
                                   label: Text('Tipo'),
                                   border: UnderlineInputBorder())),
                           popupProps: PopupProps.menu(
@@ -231,7 +243,7 @@ class VehiculoForm extends StatelessWidget {
                             ),
                           ),
                           validator: (v) {
-                            if (v == null) {
+                            if (v == null && vm.tipoVehiculo == null) {
                               return 'Seleccione un tipo';
                             } else {
                               return null;
@@ -239,7 +251,7 @@ class VehiculoForm extends StatelessWidget {
                           },
                         ),
 
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
 
                         // SISTEMA DE TRANSMISIÓN
 
@@ -254,7 +266,8 @@ class VehiculoForm extends StatelessWidget {
                                 dropdownBuilder: (context, tipo) {
                                   return Text(
                                       tipo == null
-                                          ? vm.solicitudCola
+                                          ? vm.transmision?.descripcion ??
+                                              vm.solicitudCola
                                                   ?.descripcionSistemaTransmision ??
                                               'Seleccione'
                                           : tipo.descripcion,
@@ -265,6 +278,8 @@ class VehiculoForm extends StatelessWidget {
                                     const DropDownDecoratorProps(
                                         dropdownSearchDecoration:
                                             InputDecoration(
+                                                labelStyle: TextStyle(
+                                                    color: AppColors.brownDark),
                                                 label:
                                                     Text('Sistema de Cambios'),
                                                 border:
@@ -281,7 +296,7 @@ class VehiculoForm extends StatelessWidget {
                                   ),
                                 ),
                                 validator: (v) {
-                                  if (v == null) {
+                                  if (v == null && vm.transmision == null) {
                                     return 'Seleccione un sistema de cambios';
                                   } else {
                                     return null;
@@ -289,7 +304,7 @@ class VehiculoForm extends StatelessWidget {
                                 },
                               ),
 
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
 
                         // SISTEMA DE TRACCION
 
@@ -304,7 +319,8 @@ class VehiculoForm extends StatelessWidget {
                                 dropdownBuilder: (context, tipo) {
                                   return Text(
                                       tipo == null
-                                          ? vm.solicitudCola
+                                          ? vm.traccion?.descripcion ??
+                                              vm.solicitudCola
                                                   ?.descripcionTraccion ??
                                               'Seleccione'
                                           : tipo.descripcion,
@@ -315,6 +331,8 @@ class VehiculoForm extends StatelessWidget {
                                     const DropDownDecoratorProps(
                                         dropdownSearchDecoration:
                                             InputDecoration(
+                                                labelStyle: TextStyle(
+                                                    color: AppColors.brownDark),
                                                 label: Text('Tracción'),
                                                 border:
                                                     UnderlineInputBorder())),
@@ -331,7 +349,7 @@ class VehiculoForm extends StatelessWidget {
                                   ),
                                 ),
                                 validator: (v) {
-                                  if (v == null) {
+                                  if (v == null && vm.traccion == null) {
                                     return 'Seleccione una tracción';
                                   } else {
                                     return null;
@@ -339,7 +357,7 @@ class VehiculoForm extends StatelessWidget {
                                 },
                               ),
 
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
 
                         // Numero de puertas
 
@@ -355,7 +373,8 @@ class VehiculoForm extends StatelessWidget {
                                 dropdownBuilder: (context, nPuertas) {
                                   return Text(
                                       nPuertas == null
-                                          ? vm.solicitudCola?.noPuertas
+                                          ? vm.nPuertas?.toString() ??
+                                              vm.solicitudCola?.noPuertas
                                                   .toString() ??
                                               'Seleccione'
                                           : nPuertas.toString(),
@@ -366,6 +385,8 @@ class VehiculoForm extends StatelessWidget {
                                     const DropDownDecoratorProps(
                                         dropdownSearchDecoration:
                                             InputDecoration(
+                                                labelStyle: TextStyle(
+                                                    color: AppColors.brownDark),
                                                 label: Text('No. de Puertas'),
                                                 border:
                                                     UnderlineInputBorder())),
@@ -381,7 +402,7 @@ class VehiculoForm extends StatelessWidget {
                                   ),
                                 ),
                                 validator: (v) {
-                                  if (v == null) {
+                                  if (v == null && vm.nPuertas == null) {
                                     return 'Seleccione número de puertas';
                                   } else {
                                     return null;
@@ -389,7 +410,7 @@ class VehiculoForm extends StatelessWidget {
                                 },
                               ),
 
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
 
                         // Numero de cilindros
 
@@ -405,7 +426,8 @@ class VehiculoForm extends StatelessWidget {
                                 dropdownBuilder: (context, nCilindros) {
                                   return Text(
                                       nCilindros == null
-                                          ? vm.solicitudCola?.noCilindros
+                                          ? vm.nCilindros?.toString() ??
+                                              vm.solicitudCola?.noCilindros
                                                   .toString() ??
                                               'Seleccione'
                                           : nCilindros.toString(),
@@ -416,6 +438,8 @@ class VehiculoForm extends StatelessWidget {
                                     const DropDownDecoratorProps(
                                         dropdownSearchDecoration:
                                             InputDecoration(
+                                                labelStyle: TextStyle(
+                                                    color: AppColors.brownDark),
                                                 label: Text('No. de Cilindros'),
                                                 border:
                                                     UnderlineInputBorder())),
@@ -432,7 +456,7 @@ class VehiculoForm extends StatelessWidget {
                                   ),
                                 ),
                                 validator: (v) {
-                                  if (v == null) {
+                                  if (v == null && vm.nCilindros == null) {
                                     return 'Seleccione número de cilindros';
                                   } else {
                                     return null;
@@ -475,14 +499,15 @@ class VehiculoForm extends StatelessWidget {
                                 return null;
                               }
                             }),
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
 
                         DropdownSearch<ColorVehiculo>(
                             asyncItems: (text) => vm.getColores(text),
                             dropdownBuilder: (context, tipo) {
                               return Text(
                                   tipo == null
-                                      ? vm.solicitudCola?.descripcionColor ??
+                                      ? vm.colorVehiculo?.descripcion ??
+                                          vm.solicitudCola?.descripcionColor ??
                                           'Seleccione'
                                       : tipo.descripcion,
                                   style: const TextStyle(fontSize: 15));
@@ -491,6 +516,8 @@ class VehiculoForm extends StatelessWidget {
                             dropdownDecoratorProps:
                                 const DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
+                                        labelStyle: TextStyle(
+                                            color: AppColors.brownDark),
                                         label: Text('Color'),
                                         border: UnderlineInputBorder())),
                             popupProps: PopupProps.menu(
@@ -507,7 +534,7 @@ class VehiculoForm extends StatelessWidget {
                               ),
                             ),
                             validator: (v) {
-                              if (v == null) {
+                              if (v == null && vm.colorVehiculo == null) {
                                 return 'Seleccione un color';
                               } else {
                                 return null;

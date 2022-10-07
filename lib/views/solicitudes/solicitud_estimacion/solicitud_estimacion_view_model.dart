@@ -31,6 +31,7 @@ import 'package:tasaciones_app/widgets/escaner.dart';
 
 import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
 import '../../../core/base/base_view_model.dart';
+import '../../../core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import '../../../core/models/solicitudes/solicitud_credito_response.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../core/utils/create_file_from_string.dart';
@@ -112,42 +113,42 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
 
   String? get estado => _estado;
 
-  TipoVehiculoData get tipoVehiculo => _tipoVehiculos!;
+  TipoVehiculoData? get tipoVehiculo => _tipoVehiculos;
 
   set tipoVehiculo(TipoVehiculoData? value) {
     _tipoVehiculos = value;
     notifyListeners();
   }
 
-  VersionVehiculoData get versionVehiculo => _versionVehiculo!;
+  VersionVehiculoData? get versionVehiculo => _versionVehiculo;
 
   set versionVehiculo(VersionVehiculoData? value) {
     _versionVehiculo = value;
     notifyListeners();
   }
 
-  EdicionVehiculo get edicionVehiculo => _edicionVehiculos!;
+  EdicionVehiculo? get edicionVehiculo => _edicionVehiculos;
 
   set edicionVehiculo(EdicionVehiculo? value) {
     _edicionVehiculos = value;
     notifyListeners();
   }
 
-  TransmisionesData get transmision => _transmision!;
+  TransmisionesData? get transmision => _transmision;
 
   set transmision(TransmisionesData? value) {
     _transmision = value;
     notifyListeners();
   }
 
-  TraccionesData get traccion => _traccion!;
+  TraccionesData? get traccion => _traccion;
 
   set traccion(TraccionesData? value) {
     _traccion = value;
     notifyListeners();
   }
 
-  ColorVehiculo get colorVehiculo => _colorVehiculo!;
+  ColorVehiculo? get colorVehiculo => _colorVehiculo;
 
   set colorVehiculo(ColorVehiculo? value) {
     _colorVehiculo = value;
@@ -347,19 +348,30 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   void cargarFoto(int i) async {
-    var img = await _picker.pickImage(
-      source: ImageSource.camera,
-      maxWidth: 720,
-    );
-    if (img != null) {
-      final foto = File(img.path);
-      final fotoBase = base64Encode(foto.readAsBytesSync());
-      fotos[i] = fotos[i].copyWith(adjunto: fotoBase);
-      notifyListeners();
+    if (fotos[i].adjunto == null) {
+      var img = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 720,
+      );
+      if (img != null) {
+        final foto = File(img.path);
+        final fotoBase = base64Encode(foto.readAsBytesSync());
+        fotos[i] = fotos[i].copyWith(adjunto: fotoBase);
+        notifyListeners();
+      }
     }
   }
 
-  void borrarFoto(int i) async {
+  // void borrarFoto(int i) async {
+  //   fotos[i] = AdjuntoFoto();
+  //   notifyListeners();
+  // }
+  void borrarFoto(BuildContext context, int i) async {
+    if (fotos[i].id != null) {
+      ProgressDialog.show(context);
+      await _adjuntosApi.deleteFotoTasacion(id: fotos[i].id!);
+      ProgressDialog.dissmiss(context);
+    }
     fotos[i] = AdjuntoFoto();
     notifyListeners();
   }
@@ -444,40 +456,65 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
           ProgressDialog.show(context);
           int? idSuplidor = await crearSolicitud(context);
           if (idSuplidor != null) {
-            log.i('ID SUPLIDOR $idSuplidor');
-            var resp =
-                await _solicitudesApi.getCantidadFotos(idSuplidor: idSuplidor);
-            if (resp is Success<EntidadResponse>) {
-              int cantidad = int.parse(resp.response.data.descripcion ?? '0');
-              fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
-              fotosPermitidas = cantidad;
-              // await getAlarmas();
-              currentForm = 3;
-              ProgressDialog.dissmiss(context);
-            }
+            loadFotos(context);
           }
         }
       } else {
-        var resp = await _solicitudesApi.getCantidadFotos(
-            idSuplidor: solicitudCreada!.suplidorTasacion);
-        if (resp is Success<EntidadResponse>) {
-          int cantidad = int.parse(resp.response.data.descripcion ?? '0');
-          fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
-          fotosPermitidas = cantidad;
-          // await getAlarmas();
-          currentForm = 3;
-          ProgressDialog.dissmiss(context);
-        }
+        ProgressDialog.show(context);
+        loadFotos(context);
       }
     }
+  }
+
+  Future<void> loadFotos(BuildContext context) async {
+    var r = await _solicitudesApi.getCantidadFotos(
+        idSuplidor: solicitudCreada!.suplidorTasacion);
+    if (r is Failure) {
+      ProgressDialog.dissmiss(context);
+      Dialogs.error(msg: r.messages[0]);
+    }
+    if (r is Success<EntidadResponse>) {
+      int cantidad = int.parse(r.response.data.descripcion ?? '0');
+      fotos = List.generate(cantidad, (i) => AdjuntoFoto(nueva: true));
+      fotosPermitidas = cantidad;
+    }
+    var resp = await _adjuntosApi.getFotosTasacion(
+        noTasacion: solicitudCreada!.noTasacion!);
+
+    if (resp is Success<AdjuntosFotoResponse>) {
+      var d = await _adjuntosApi.getAdjuntos(esFotoVehiculo: 1);
+      if (d is Success<AdjuntosResponse>) {
+        List<AdjuntosData> adjuntos = d.response.data;
+
+        var f = resp.response.data;
+        for (var i = 0; i < f.length; i++) {
+          fotos[i] = fotos[i].copyWith(
+            adjunto: f[i].adjunto,
+            descripcion: f[i].descripcion,
+            tipoAdjunto: f[i].tipoAdjunto,
+            tipo: adjuntos
+                .firstWhere((e) => e.id == f[i].tipoAdjunto)
+                .descripcion,
+            id: f[i].id,
+            nueva: false,
+          );
+        }
+        notifyListeners();
+      }
+    }
+    if (resp is Failure) {
+      print('NO HAY FOTOS GUARDADAS');
+    }
+    currentForm = 3;
+    ProgressDialog.dissmiss(context);
   }
 
   Future<int?> crearSolicitud(BuildContext context) async {
     var resp = await _solicitudesApi.createNewSolicitudEstimacion(
       ano: int.parse(solicitud!.ano!),
       chasis: tcVIN.text,
-      color: colorVehiculo.id,
-      edicion: edicionVehiculo.id,
+      color: colorVehiculo!.id,
+      edicion: edicionVehiculo!.id,
       fuerzaMotriz: vinData?.fuerzaMotriz ?? tcFuerzaMotriz.numberValue.toInt(),
       kilometraje: tcKilometraje.numberValue.toInt(),
       marca: solicitud!.idMarcaTasaciones ?? vinData!.codigoMarca ?? 0,
@@ -490,10 +527,10 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       serie: vinData?.idSerie,
       sistemaTransmision: _transmision!.id,
       tipoTasacion: 21,
-      tipoVehiculoLocal: tipoVehiculo.id,
+      tipoVehiculoLocal: tipoVehiculo!.id,
       traccion: _traccion!.id,
       trim: vinData?.idTrim,
-      versionLocal: versionVehiculo.id, /* INFO VEHICULOGET VERSIONES   */
+      versionLocal: versionVehiculo!.id, /* INFO VEHICULOGET VERSIONES   */
     );
     if (resp is Failure) {
       ProgressDialog.dissmiss(context);

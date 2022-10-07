@@ -232,7 +232,6 @@ class TrabajarViewModel extends BaseViewModel {
         Dialogs.error(msg: resp.messages[0]);
       }
       if (resp is TokenFail) {
-        // _navigatorService.pop();
         _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
         Dialogs.error(msg: 'su sesión a expirado');
       }
@@ -396,25 +395,6 @@ class TrabajarViewModel extends BaseViewModel {
           }
         }
       }
-
-//  for (var accesorio in accesorios) {
-//               if (!segmentoAccesorio.any(
-//                   (e) => e.nombreSegmento == accesorio.)) {
-//                 segmentoAccesorio.add(
-//                     SegmentoCondiciones(componente.descripcionSegmento!, []));
-//               }
-//               for (var c in componentes) {
-//                 for (var s in segmentoAccesorio) {
-//                   if (c.descripcionSegmento == s.nombreSegmento) {
-//                     if (!s.componentes.any((e) =>
-//                         e.componenteDescripcion == c.componenteDescripcion)) {
-//                       s.componentes.add(c);
-//                     }
-//                   }
-//                 }
-//               }
-//             }
-
       currentForm = 4;
     }
     if (resp is Failure) {

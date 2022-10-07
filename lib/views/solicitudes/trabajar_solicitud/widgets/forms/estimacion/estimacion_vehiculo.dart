@@ -106,7 +106,7 @@ class VehiculoEstimacionForm extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Color',
-              initialValue: vm.solicitud.color?.toString() ?? 'No Disponible',
+              initialValue: vm.solicitud.descripcionColor ?? 'No Disponible',
             ),
             BaseTextFieldNoEdit(
               label: 'Placa',

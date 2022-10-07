@@ -35,8 +35,8 @@ class FotosForm extends StatelessWidget {
         child: Form(
           key: vm.formKeyFotos,
           child: Column(children: [
-            ...List.generate(vm.fotosPermitidas, (i) {
-              final foto = vm.fotos[i];
+            ...List.generate(vm.fotos.length, (i) {
+              // final foto = vm.fotos[i];
               return Column(
                 children: [
                   Row(
@@ -72,9 +72,12 @@ class FotosForm extends StatelessWidget {
                               children: [
                                 DropdownSearch<TipoFotoVehiculos>(
                                   asyncItems: (_) => vm.getDescripcionFotos(_),
+                                  enabled: vm.fotos[i].nueva,
                                   dropdownBuilder: (context, tipo) {
                                     return Text(
-                                      tipo?.descripcion ?? '',
+                                      tipo?.descripcion ??
+                                          vm.fotos[i].tipo ??
+                                          'Seleccione',
                                       style: const TextStyle(
                                         fontSize: 15,
                                       ),
@@ -107,7 +110,7 @@ class FotosForm extends StatelessWidget {
                                     ),
                                   ),
                                   validator: (v) {
-                                    if (v == null) {
+                                    if (v == null && vm.fotos[i].tipo == null) {
                                       return 'Seleccione';
                                     } else {
                                       return null;
@@ -116,6 +119,8 @@ class FotosForm extends StatelessWidget {
                                 ),
                                 BaseTextField(
                                   label: 'Descripción:',
+                                  enabled: vm.fotos[i].nueva,
+                                  initialValue: vm.fotos[i].descripcion ?? '',
                                   onChanged: (v) {
                                     vm.fotos[i] =
                                         vm.fotos[i].copyWith(descripcion: v);
@@ -133,36 +138,37 @@ class FotosForm extends StatelessWidget {
                             ),
                           ),
                         ),
-                      foto.adjunto != null
+                      vm.fotos[i].adjunto != null
                           ? SizedBox(
                               height: 130,
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
+                                  const SizedBox(height: 10),
                                   IconButton(
                                       onPressed: () {
                                         Dialogs.confirm(context,
                                             tittle: 'Borrar foto',
                                             description:
                                                 '¿Está seguro de borrar esta foto?',
-                                            confirm: () => vm.borrarFoto(i));
+                                            confirm: () =>
+                                                vm.borrarFoto(context, i));
                                       },
                                       icon: const Icon(
                                         AppIcons.closeCircle,
                                         color: Colors.grey,
                                         size: 30,
                                       )),
-                                  // const Spacer(),
-                                  IconButton(
-                                      onPressed: () {
-                                        vm.editarFoto(i);
-                                      },
-                                      icon: const Icon(
-                                        AppIcons.pencilAlt,
-                                        color: Colors.grey,
-                                        size: 28,
-                                      ))
+                                  const Spacer(),
+                                  if (vm.fotos[i].id == null)
+                                    IconButton(
+                                        onPressed: () => vm.editarFoto(i),
+                                        icon: const Icon(
+                                          AppIcons.pencilAlt,
+                                          color: Colors.grey,
+                                          size: 28,
+                                        ))
                                 ],
                               ),
                             )

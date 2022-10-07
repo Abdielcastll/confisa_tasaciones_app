@@ -40,7 +40,10 @@ class _SolicitudEstimacionMobile extends StatelessWidget {
         return FotosForm(vm);
       case 4:
         return EnviarForm(
-          atras: () => vm.currentForm = 3,
+          atras: () {
+            ProgressDialog.show(context);
+            vm.loadFotos(context);
+          },
           enviar: () => vm.enviarSolicitud(context),
         );
       default:

@@ -64,7 +64,9 @@ class CondicionesTasacionForm extends StatelessWidget {
       asyncItems: (_) => vm.getCondiciones(idComponente: e.id!),
       dropdownBuilder: (context, tipo) {
         return Text(
-          tipo == null ? 'Seleccione' : tipo.condicionDescripcion!,
+          tipo == null
+              ? e.descripcionCondicion ?? 'Seleccione'
+              : tipo.condicionDescripcion!,
           style: const TextStyle(fontSize: 15),
         );
       },
@@ -90,7 +92,7 @@ class CondicionesTasacionForm extends StatelessWidget {
         ),
       ),
       validator: (v) {
-        if (v == null) {
+        if (v == null && e.descripcionCondicion == null) {
           return 'Seleccione';
         } else {
           return null;

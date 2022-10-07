@@ -5,6 +5,7 @@ import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view_model.dart';
 
 import '../../../../../core/models/ediciones_vehiculo_response.dart';
+import '../../../../../core/models/tipo_vehiculo_response.dart';
 import '../../../../../core/models/tracciones_response.dart';
 import '../../../../../core/models/versiones_vehiculo_response.dart';
 import '../../../../../theme/theme.dart';
@@ -138,58 +139,61 @@ class VehiculoForm extends StatelessWidget {
                   Column(
                     children: [
                       // VERSION VEHICULO
-                      if (vm.solicitud.estadoTasacion == 34)
-                        DropdownSearch<VersionVehiculoData>(
-                          asyncItems: (text) => vm.getversionVehiculo(text),
-                          dropdownBuilder: (context, tipo) {
-                            return Text(
-                              tipo == null
-                                  ? vm.versionVehiculo?.descripcion ??
-                                      vm.solicitud.descripcionVersion ??
-                                      'Seleccione'
-                                  : tipo.descripcion,
-                              style: const TextStyle(
-                                fontSize: 15,
-                              ),
+                      // if ()
+                      DropdownSearch<VersionVehiculoData>(
+                        enabled: vm.solicitud.estadoTasacion == 34,
+                        asyncItems: (text) => vm.getversionVehiculo(text),
+                        dropdownBuilder: (context, tipo) {
+                          return Text(
+                            tipo == null
+                                ? vm.versionVehiculo?.descripcion ??
+                                    vm.solicitud.descripcionVersion ??
+                                    'Seleccione'
+                                : tipo.descripcion,
+                            style: const TextStyle(
+                              fontSize: 15,
+                            ),
+                          );
+                        },
+                        onChanged: (v) => vm.versionVehiculo = v,
+                        dropdownDecoratorProps: const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                                labelStyle:
+                                    TextStyle(color: AppColors.brownDark),
+                                label: Text('Versión'),
+                                border: UnderlineInputBorder())),
+                        popupProps: PopupProps.menu(
+                          itemBuilder: (context, otp, isSelected) {
+                            return ListTile(
+                              title: Text(otp.descripcion),
+                              selected: isSelected,
                             );
                           },
-                          onChanged: (v) => vm.versionVehiculo = v,
-                          dropdownDecoratorProps: const DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                  label: Text('Versión'),
-                                  border: UnderlineInputBorder())),
-                          popupProps: PopupProps.menu(
-                            itemBuilder: (context, otp, isSelected) {
-                              return ListTile(
-                                title: Text(otp.descripcion),
-                                selected: isSelected,
-                              );
-                            },
-                            emptyBuilder: (_, __) => const Center(
-                              child: Text('No hay resultados'),
-                            ),
+                          emptyBuilder: (_, __) => const Center(
+                            child: Text('No hay resultados'),
                           ),
-                          validator: vm.solicitud.estadoTasacion != 34
-                              ? null
-                              : (v) {
-                                  if (v == null &&
-                                      vm.versionVehiculo == null &&
-                                      vm.solicitud.versionLocal == null) {
-                                    return 'Seleccione una versión';
-                                  } else {
-                                    return null;
-                                  }
-                                },
                         ),
-                      // const SizedBox(height: 10),
+                        validator: vm.solicitud.estadoTasacion != 34
+                            ? null
+                            : (v) {
+                                if (v == null &&
+                                    vm.versionVehiculo == null &&
+                                    vm.solicitud.descripcionVersion == null) {
+                                  return 'Seleccione una versión';
+                                } else {
+                                  return null;
+                                }
+                              },
+                      ),
+                      //  EDICIONES
                       DropdownSearch<EdicionVehiculo>(
                         asyncItems: (text) => vm.getEdiciones(text),
                         enabled: vm.solicitud.estadoTasacion == 34,
                         dropdownBuilder: (context, tipo) {
                           return Text(
                             tipo == null
-                                ? vm.solicitud.descripcionEdicion ??
-                                    vm.edicionVehiculo?.descripcionEasyBank ??
+                                ? vm.edicionVehiculo?.descripcionEasyBank ??
+                                    vm.solicitud.descripcionEdicion ??
                                     'Seleccione'
                                 : tipo.descripcionEasyBank ?? '',
                             style: const TextStyle(fontSize: 15),
@@ -214,9 +218,7 @@ class VehiculoForm extends StatelessWidget {
                           ),
                         ),
                         validator: (v) {
-                          if (v == null &&
-                              vm.solicitud.edicion == null &&
-                              vm.edicionVehiculo == null) {
+                          if (v == null && vm.solicitud.edicion == null) {
                             return 'Seleccione una edición';
                           } else {
                             return null;
@@ -225,11 +227,48 @@ class VehiculoForm extends StatelessWidget {
                       ),
                       // TIPO DE VEHICULO
 
-                      BaseTextFieldNoEdit(
-                        label: 'Tipo',
-                        initialValue:
-                            vm.solicitud.descripcionTipoVehiculoLocal ??
-                                'No disponible',
+                      DropdownSearch<TipoVehiculoData>(
+                        enabled: vm.solicitud.estadoTasacion == 34,
+                        asyncItems: (text) => vm.getTipoVehiculo(text),
+                        dropdownBuilder: (context, tipo) {
+                          return Text(
+                            tipo == null
+                                ? vm.tipoVehiculo?.descripcion ??
+                                    vm.vinData?.tipoVehiculo ??
+                                    vm.solicitud.descripcionTipoVehiculoLocal ??
+                                    'Seleccione'
+                                : tipo.descripcion,
+                            style: const TextStyle(fontSize: 15),
+                          );
+                        },
+                        onChanged: (v) => vm.tipoVehiculo = v,
+                        dropdownDecoratorProps: const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                                labelStyle:
+                                    TextStyle(color: AppColors.brownDark),
+                                label: Text('Tipo'),
+                                border: UnderlineInputBorder())),
+                        popupProps: PopupProps.menu(
+                          itemBuilder: (context, otp, isSelected) {
+                            return ListTile(
+                              title: Text(otp.descripcion),
+                              selected: isSelected,
+                            );
+                          },
+                          emptyBuilder: (_, __) => const Center(
+                            child: Text('No hay resultados'),
+                          ),
+                        ),
+                        validator: (v) {
+                          if (v == null &&
+                              vm.vinData?.tipoVehiculo == null &&
+                              vm.solicitud.descripcionTipoVehiculoLocal ==
+                                  null) {
+                            return 'Seleccione un tipo';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                       // const SizedBox(height: 10),
 
@@ -290,7 +329,8 @@ class VehiculoForm extends StatelessWidget {
                         dropdownBuilder: (context, tipo) {
                           return Text(
                               tipo == null
-                                  ? vm.vinData?.traccion ??
+                                  ? vm.traccion?.descripcion ??
+                                      vm.vinData?.traccion ??
                                       vm.solicitud.descripcionTraccion ??
                                       'Seleccione'
                                   : tipo.descripcion,
@@ -468,7 +508,8 @@ class VehiculoForm extends StatelessWidget {
                           dropdownBuilder: (context, tipo) {
                             return Text(
                                 tipo == null
-                                    ? vm.solicitud.descripcionColor ??
+                                    ? vm.colorVehiculo?.descripcion ??
+                                        vm.solicitud.descripcionColor ??
                                         'Seleccione'
                                     : tipo.descripcion,
                                 style: const TextStyle(fontSize: 15));
