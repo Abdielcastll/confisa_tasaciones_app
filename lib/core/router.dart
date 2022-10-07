@@ -36,6 +36,7 @@ import 'package:tasaciones_app/views/seguridad_facturacion/porcentajes_honorario
 import 'package:tasaciones_app/views/seguridad_facturacion/tarifario_tasacion/tarifario_tasacion_view.dart';
 import 'package:tasaciones_app/views/solicitudes/cola_solicitudes/cola_solicitudes_view.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
+import 'package:tasaciones_app/views/splash/splash_view.dart';
 import 'package:tasaciones_app/widgets/escaner.dart';
 
 import '../views/Perfil_de_usuario/perfil_view.dart';
@@ -159,6 +160,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case EscanerPage.routeName:
       return CupertinoPageRoute(builder: (context) => const EscanerPage());
+
+    case SplashView.routeName:
+      return CupertinoPageRoute(builder: (context) => const SplashView());
 
     /* case AlarmasView.routeName:
       return CupertinoPageRoute(

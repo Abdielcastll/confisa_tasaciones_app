@@ -45,6 +45,7 @@ class LoginViewModel extends BaseViewModel {
         password: tcPassword.text,
       );
       if (resp is Success<SignInResponse>) {
+        _autenticationClient.isLogged = true;
         _autenticationClient.saveSession(resp.response.data);
         var resp1 = await _recursosAPI.getMenu();
         if (resp1 is Success<MenuResponse>) {
@@ -87,17 +88,17 @@ class LoginViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> getMenu(BuildContext context) async {
-    ProgressDialog.show(context);
-    var resp = await _recursosAPI.getMenu();
-    if (resp is Success<MenuResponse>) {
-      ProgressDialog.dissmiss(context);
-      Provider.of<MenuProvider>(context, listen: false).menu = resp.response;
-    } else if (resp is Failure) {
-      ProgressDialog.dissmiss(context);
-      Dialogs.error(msg: resp.messages.first);
-    }
-  }
+  // Future<void> getMenu(BuildContext context) async {
+  //   ProgressDialog.show(context);
+  //   var resp = await _recursosAPI.getMenu();
+  //   if (resp is Success<MenuResponse>) {
+  //     ProgressDialog.dissmiss(context);
+  //     Provider.of<MenuProvider>(context, listen: false).menu = resp.response;
+  //   } else if (resp is Failure) {
+  //     ProgressDialog.dissmiss(context);
+  //     Dialogs.error(msg: resp.messages.first);
+  //   }
+  // }
 
   void changeObscure() {
     obscurePassword = !obscurePassword;
