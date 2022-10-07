@@ -6,6 +6,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
@@ -24,6 +25,7 @@ import 'package:tasaciones_app/core/models/tracciones_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
@@ -176,6 +178,25 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       BuildContext context, SolicitudesDisponibles? v) {
     _solicitudDisponible = v;
     solicitudCredito(context);
+  }
+
+  Future<void> getAlarmas(BuildContext context) async {
+    if (Provider.of<AlarmasProvider>(context, listen: false).alarmas !=
+        alarmas) {
+      if (solicitudCreada!.id != null) {
+        var resp =
+            await _alarmasApi.getAlarmas(idSolicitud: solicitudCreada!.id);
+        if (resp is Success<AlarmasResponse>) {
+          alarmasResponse = resp.response;
+          alarmas = resp.response.data;
+          Provider.of<AlarmasProvider>(context, listen: false).alarmas =
+              alarmas;
+        } else if (resp is Failure) {
+          Dialogs.error(msg: resp.messages.first);
+        }
+      }
+      notifyListeners();
+    }
   }
 
   Future<void> solicitudCredito(BuildContext context) async {

@@ -274,22 +274,49 @@ class ModulosViewModel extends BaseViewModel {
                                 description:
                                     '¿Esta seguro de ${modulo.estado == 1 ? "inactivar" : "activar"} el módulo ${modulo.nombre}?',
                                 confirm: () async {
-                              ProgressDialog.show(ctx);
-                              var resp = await _modulosApi.deleteModulos(
-                                  id: modulo.id);
-                              ProgressDialog.dissmiss(ctx);
-                              if (resp is Failure) {
-                                Dialogs.error(msg: resp.messages[0]);
-                              }
-                              if (resp is Success) {
-                                Dialogs.success(
-                                    msg: 'Estado modificado con éxito');
-                                await onRefresh();
-                              }
-                              if (resp is TokenFail) {
-                                Dialogs.error(msg: 'Su sesión a expirado');
-                                _navigatorService.navigateToPageAndRemoveUntil(
-                                    LoginView.routeName);
+                              if (modulo.estado == 0) {
+                                cargando = true;
+                                var resp = await _modulosApi.updateModulos(
+                                    cssIcon: modulo.cssIcon,
+                                    estado: 1,
+                                    moduloPadre: modulo.moduloPadre,
+                                    name: modulo.nombre,
+                                    id: modulo.id);
+                                if (resp is Success) {
+                                  Dialogs.success(
+                                      msg: 'Estado modificado con éxito');
+                                  await onRefresh();
+                                }
+
+                                if (resp is Failure) {
+                                  Dialogs.error(msg: resp.messages[0]);
+                                }
+                                if (resp is TokenFail) {
+                                  Dialogs.error(msg: 'su sesión a expirado');
+                                  _navigatorService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
+                                }
+                                cargando = false;
+                              } else if (modulo.estado == 1) {
+                                cargando = true;
+                                var resp = await _modulosApi.deleteModulos(
+                                    id: modulo.id);
+                                if (resp is Failure) {
+                                  Dialogs.error(msg: resp.messages[0]);
+                                }
+                                if (resp is Success) {
+                                  Dialogs.success(
+                                      msg: 'Estado modificado con éxito');
+                                  await onRefresh();
+                                }
+                                if (resp is TokenFail) {
+                                  Dialogs.error(msg: 'Su sesión a expirado');
+                                  _navigatorService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
+                                }
+                                cargando = false;
                               }
                             });
                           }, // button pressed

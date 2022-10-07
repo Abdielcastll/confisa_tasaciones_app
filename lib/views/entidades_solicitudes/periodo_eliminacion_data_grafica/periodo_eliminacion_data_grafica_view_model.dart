@@ -299,6 +299,11 @@ class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
                           if (value!.trim() == '') {
                             return 'Escriba una descripción';
                           } else {
+                            if (int.parse(value.trim()) > 30) {
+                              tcNewDescripcion.text =
+                                  periodoEliminacionDataGrafica.descripcion;
+                              return "No puede ser mayor a 30";
+                            }
                             return null;
                           }
                         },

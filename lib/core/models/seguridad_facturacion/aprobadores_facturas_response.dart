@@ -56,12 +56,10 @@ class AprobadoresFacturasData {
       required this.email,
       required this.emailConfirmed,
       required this.firtsName,
-      required this.idSuplidor,
       required this.imageUrl,
       required this.isActive,
       required this.lastName,
       required this.nombreCompleto,
-      required this.nombreSuplidor,
       required this.phoneNumber,
       required this.userName,
       required this.roles,
@@ -75,11 +73,10 @@ class AprobadoresFacturasData {
       email,
       phoneNumber,
       imageUrl,
-      nombreCompleto,
-      nombreSuplidor;
+      nombreCompleto;
   List<RolData2> roles;
   bool isActive, emailConfirmed, estadoAprobadorFactura;
-  int idSuplidor, idOficial;
+  int idOficial;
 
   factory AprobadoresFacturasData.fromJson(Map<String, dynamic> json) =>
       AprobadoresFacturasData(
@@ -91,10 +88,8 @@ class AprobadoresFacturasData {
         phoneNumber: json["phoneNumber"] ?? '',
         imageUrl: json["imageUrl"] ?? '',
         nombreCompleto: json["nombreCompleto"] ?? '',
-        nombreSuplidor: json["nombreSuplidor"] ?? '',
         isActive: json["isActive"] ?? false,
         emailConfirmed: json["emailConfirmed"] ?? false,
-        idSuplidor: json["idSuplidor"] ?? 0,
         estadoAprobadorFactura: json["estadoAprobadorFactura"] ?? false,
         idOficial: json["idOficial"] ?? 0,
         roles:
@@ -110,10 +105,8 @@ class AprobadoresFacturasData {
         "phoneNumber": phoneNumber,
         "imageUrl": imageUrl,
         "nombreCompleto": nombreCompleto,
-        "nombreSuplidor": nombreSuplidor,
         "isActive": isActive,
         "emailConfirmed": emailConfirmed,
-        "idSuplidor": idSuplidor,
         "estadoAprobadorFactura": estadoAprobadorFactura,
         "idOficial": idOficial,
         "roles": List<dynamic>.from(roles.map((x) => x)),
