@@ -10,8 +10,13 @@ class _TrabajarMobile extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-          appBar:
-              AppBar(title: Text(vm.solicitud.descripcionTipoTasacion ?? '')),
+          appBar: Appbar(
+              titulo: vm.solicitud.descripcionTipoTasacion ?? '',
+              textSize: 18,
+              esColaSolicitud: false,
+              idSolicitud: vm.solicitud.id!,
+              vmTrabajar: vm,
+              tipoPage: "Trabajar"),
           body:
               vm.solicitud.tipoTasacion == 22 || vm.solicitud.tipoTasacion == 23
                   ? Column(

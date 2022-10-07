@@ -4,15 +4,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/accesorios_suplidor_response.dart';
+import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import 'package:tasaciones_app/core/models/referencia_valoracion_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
@@ -43,6 +47,8 @@ class TrabajarViewModel extends BaseViewModel {
   final _solicitudesApi = locator<SolicitudesApi>();
   final _adjuntosApi = locator<AdjuntosApi>();
   final _authenticationAPI = locator<AuthenticationClient>();
+  final _alarmasApi = locator<AlarmasApi>();
+
   late DateTime fechaActual;
   String? _estado;
   int? _estadoID;
@@ -69,10 +75,12 @@ class TrabajarViewModel extends BaseViewModel {
   EdicionVehiculo? _edicionVehiculos;
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
+  AlarmasResponse? alarmasResponse;
   late int _fotosPermitidas;
   late List<AdjuntoFoto> fotos;
   final _picker = ImagePicker();
   List<TipoFotoVehiculos> descripcionFotos = [];
+  List<AlarmasData> alarmas = [];
   SolicitudCreditoData? solicitudData;
   List<ComponenteTasacion> componentes = [];
   List<AccesoriosSuplidor> accesorios = [];
@@ -175,6 +183,7 @@ class TrabajarViewModel extends BaseViewModel {
       // await Future.delayed(const Duration(milliseconds: 150));
       // solicitudCredito(context);
     }
+    getAlarmas(context);
   }
 
   Future<List<EdicionVehiculo>> getEdiciones(String text) async {
@@ -185,6 +194,24 @@ class TrabajarViewModel extends BaseViewModel {
       return resp.response;
     } else {
       return [];
+    }
+  }
+
+  Future<void> getAlarmas(BuildContext context) async {
+    if (Provider.of<AlarmasProvider>(context, listen: false).alarmas !=
+        alarmas) {
+      if (solicitud.id != null) {
+        var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
+        if (resp is Success<AlarmasResponse>) {
+          alarmasResponse = resp.response;
+          alarmas = resp.response.data;
+          Provider.of<AlarmasProvider>(context, listen: false).alarmas =
+              alarmas;
+        } else if (resp is Failure) {
+          Dialogs.error(msg: resp.messages.first);
+        }
+      }
+      notifyListeners();
     }
   }
 

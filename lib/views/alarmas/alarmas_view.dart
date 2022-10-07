@@ -16,18 +16,15 @@ class AlarmasView extends StatelessWidget {
   static const routeName = 'Alarmas';
   final bool showCreate;
   final int idSolicitud;
-  final Appbar appbar;
-  const AlarmasView(
-      {Key? key,
-      required this.showCreate,
-      required this.idSolicitud,
-      required this.appbar})
-      : super(key: key);
+  const AlarmasView({
+    Key? key,
+    required this.showCreate,
+    required this.idSolicitud,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    AlarmasViewModel viewModel =
-        AlarmasViewModel(idSolicitud: idSolicitud, appbar: appbar);
+    AlarmasViewModel viewModel = AlarmasViewModel(idSolicitud: idSolicitud);
     viewModel.profilePermisoResponse =
         Provider.of<ProfilePermisosProvider>(context, listen: false)
             .profilePermisos;
