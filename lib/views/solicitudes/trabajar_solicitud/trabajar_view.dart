@@ -5,6 +5,7 @@ import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/views/solicitudes/trabajar_solicitud/trabajar_view_model.dart';
 import 'package:tasaciones_app/views/solicitudes/trabajar_solicitud/widgets/forms/estimacion/estimacion_generales.dart';
 import 'package:tasaciones_app/views/solicitudes/trabajar_solicitud/widgets/forms/estimacion/estimacion_valoracion.dart';
+import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import '../../../core/models/solicitudes/solicitudes_get_response.dart';
 import '../../../widgets/app_progress_widget.dart';
 import 'widgets/forms/estimacion/estimacion_fotos.dart';

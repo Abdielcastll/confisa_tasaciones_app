@@ -9,8 +9,11 @@ import 'package:tasaciones_app/core/providers/profile_permisos_provider.dart';
 import 'package:tasaciones_app/views/acciones_solicitud/acciones_solicitud_view.dart';
 import 'package:tasaciones_app/views/alarmas/alarmas_view.dart';
 import 'package:tasaciones_app/views/notas/notas_view.dart';
+import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view_model.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view.dart';
+import 'package:tasaciones_app/views/solicitudes/solicitud_estimacion/solicitud_estimacion_view_model.dart';
 import 'package:tasaciones_app/views/solicitudes/solicitud_tasacion/solicitud_tasacion_view.dart';
+import 'package:tasaciones_app/views/solicitudes/trabajar_solicitud/trabajar_view_model.dart';
 
 import '../core/authentication_client.dart';
 import '../core/locator.dart';
@@ -24,7 +27,11 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       required this.textSize,
       this.vmColaSolicitudes,
       required this.esColaSolicitud,
-      required this.idSolicitud})
+      required this.idSolicitud,
+      this.vmConsultarModificar,
+      required this.tipoPage,
+      this.vmSolicitudEstimacion,
+      this.vmTrabajar})
       : super(key: key);
   final String titulo;
   final double textSize;
@@ -32,7 +39,11 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final bool esColaSolicitud;
   final int idSolicitud;
   final ColaSolicitudesViewModel? vmColaSolicitudes;
+  final ConsultarModificarViewModel? vmConsultarModificar;
+  final SolicitudEstimacionViewModel? vmSolicitudEstimacion;
+  final TrabajarViewModel? vmTrabajar;
   late ProfilePermisoResponse profilePermisoResponse;
+  final String tipoPage;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +52,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
     profilePermisoResponse =
         Provider.of<ProfilePermisosProvider>(context, listen: false)
             .profilePermisos;
+
     return AppBar(
       title: Text(
         titulo,
@@ -177,9 +189,12 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                       builder: (context) => AlarmasView(
                                             showCreate: false,
                                             idSolicitud: idSolicitud,
-                                            appbar: this,
                                           )),
-                                );
+                                ).whenComplete(() {
+                                  if (tipoPage == "Cola") {
+                                    vmColaSolicitudes?.getAlarma(context);
+                                  }
+                                });
                               },
                               icon: const Icon(
                                 AppIcons.bell,
@@ -241,9 +256,19 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                                         builder: (context) => AlarmasView(
                                               showCreate: true,
                                               idSolicitud: idSolicitud,
-                                              appbar: this,
                                             )),
-                                  );
+                                  ).whenComplete(() {
+                                    if (tipoPage == "Consultar Modificar") {
+                                      vmConsultarModificar?.getAlarmas(context);
+                                    }
+                                    if (tipoPage == "Solicitud Estimacion") {
+                                      vmSolicitudEstimacion
+                                          ?.getAlarmas(context);
+                                    }
+                                    if (tipoPage == "Trabajar") {
+                                      vmTrabajar?.getAlarmas(context);
+                                    }
+                                  });
                                 },
                                 icon: const Icon(
                                   AppIcons.bell,

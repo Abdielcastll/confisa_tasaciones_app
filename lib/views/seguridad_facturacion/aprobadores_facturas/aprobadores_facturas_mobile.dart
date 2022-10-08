@@ -114,16 +114,6 @@ class _AprobadoresFacturasMobile extends StatelessWidget {
                                               fontWeight: FontWeight.w800,
                                             ),
                                           ),
-                                          aprobadorFactura
-                                                  .nombreSuplidor.isNotEmpty
-                                              ? Text(
-                                                  "Suplidor: ${aprobadorFactura.nombreSuplidor}",
-                                                  style: const TextStyle(
-                                                      color:
-                                                          AppColors.brownDark,
-                                                      fontSize: 12),
-                                                )
-                                              : const SizedBox.shrink(),
                                           Text(
                                             "Email: ${aprobadorFactura.email}",
                                             style: const TextStyle(

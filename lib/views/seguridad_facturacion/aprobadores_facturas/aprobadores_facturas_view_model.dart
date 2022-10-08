@@ -210,21 +210,6 @@ class AprobadoresFacturasViewModel extends BaseViewModel {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                readOnly: true,
-                                initialValue:
-                                    aprobadoresFacturas.nombreSuplidor,
-                                decoration: const InputDecoration(
-                                  label: Text("Suplidor"),
-                                  border: UnderlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
                                 initialValue: aprobadoresFacturas.email,
                                 readOnly: true,
                                 decoration: const InputDecoration(

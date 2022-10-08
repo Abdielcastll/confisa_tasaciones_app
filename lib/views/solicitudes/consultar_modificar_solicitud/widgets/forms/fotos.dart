@@ -31,10 +31,13 @@ class FotosForm extends StatelessWidget {
       iconNext: Icons.arrow_forward_ios,
       labelNext: vm.solicitud.estadoTasacion == 9
           ? 'Salir'
+          // : vm.solicitud.estadoTasacion == 10
           : vm.mostrarAccComp || vm.solicitud.tipoTasacion == 21
-              ? vm.fotos.any((e) => e.adjunto == null)
-                  ? 'Guardar'
-                  : 'Siguiente'
+              ?
+              // ? vm.isAprobador || vm.isTasador
+              //     ? 'Siguiente'
+              //     :
+              'Siguente'
               : 'Salir',
       onPressedNext: () => vm.subirFotos(context),
       child: Container(

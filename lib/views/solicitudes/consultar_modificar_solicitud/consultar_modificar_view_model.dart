@@ -526,64 +526,50 @@ class ConsultarModificarViewModel extends BaseViewModel {
 
   Future<void> subirFotos(BuildContext context) async {
     if (solicitud.estadoTasacion == 34) {
-      final fotosCompletas =
-          fotos.where((e) => e.adjunto != null).length == _fotosPermitidas;
-      if (fotosCompletas &&
-          !fotos.any((e) => e.id == null && e.adjunto != null)) {
-        currentForm = 4;
-        // Dialogs.error(msg: 'Debes enviar por lo menos 1 foto');
-      } else {
-        if (formKeyFotos.currentState!.validate()) {
-          if (fotos.any((e) => e.nueva)) {
-            List<Map<String, dynamic>> dataList = [];
+      if (formKeyFotos.currentState!.validate()) {
+        if (fotos.any((e) => e.nueva)) {
+          ProgressDialog.show(context);
 
-            for (var e in fotos) {
-              if (e.id == null && e.adjunto != null) {
-                Map<String, dynamic> data = {
-                  "adjuntoInBytes": e.adjunto,
-                  "tipoAdjunto": e.tipoAdjunto,
-                  "descripcion": e.descripcion,
-                };
+          List<Map<String, dynamic>> dataList = [];
 
-                dataList.add(data);
-              }
+          for (var e in fotos) {
+            if (e.id == null && e.adjunto != null) {
+              Map<String, dynamic> data = {
+                "adjuntoInBytes": e.adjunto,
+                "tipoAdjunto": e.tipoAdjunto,
+                "descripcion": e.descripcion,
+              };
+
+              dataList.add(data);
             }
-            if (dataList.isEmpty) {
-              // ProgressDialog.dissmiss(context);
-              Dialogs.error(msg: 'Debes capturar por lo menos 1 foto');
-            } else {
-              ProgressDialog.show(context);
-              var resp = await _adjuntosApi.addFotosTasacion(
-                  noTasacion: solicitud.noTasacion!, adjuntos: dataList);
-
-              if (resp is Failure) {
-                Dialogs.error(msg: resp.messages[0]);
-                ProgressDialog.dissmiss(context);
-              }
-
-              if (resp is Success) {
-                Dialogs.success(msg: 'Fotos Actualizadas');
-                // ProgressDialog.dissmiss(context);
-                // goToValorar();
-
-                if (!fotos.any((e) => e.adjunto == null)) {
-                  ProgressDialog.dissmiss(context);
-                  currentForm = 4;
-                } else {
-                  loadFotos(context);
-                }
-              }
-
-              if (resp is TokenFail) {
-                Dialogs.error(msg: 'su sesión a expirado');
-                ProgressDialog.dissmiss(context);
-                _navigatorService
-                    .navigateToPageAndRemoveUntil(LoginView.routeName);
-              }
-            }
-          } else {
-            goToValorar();
           }
+          if (dataList.isEmpty) {
+            ProgressDialog.dissmiss(context);
+            await goToValorar(context);
+          } else {
+            var resp = await _adjuntosApi.addFotosTasacion(
+                noTasacion: solicitud.noTasacion!, adjuntos: dataList);
+
+            if (resp is Failure) {
+              Dialogs.error(msg: resp.messages[0]);
+              ProgressDialog.dissmiss(context);
+            }
+
+            if (resp is Success) {
+              Dialogs.success(msg: 'Fotos Actualizadas');
+              ProgressDialog.dissmiss(context);
+              await goToValorar(context);
+            }
+
+            if (resp is TokenFail) {
+              Dialogs.error(msg: 'su sesión a expirado');
+              ProgressDialog.dissmiss(context);
+              _navigatorService
+                  .navigateToPageAndRemoveUntil(LoginView.routeName);
+            }
+          }
+        } else {
+          await goToValorar(context);
         }
       }
     } else if (solicitud.estadoTasacion == 9) {
@@ -599,7 +585,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
         // Navigator.of(context).pop();
       }
     } else {
-      goToValorar();
+      goToValorar(context);
     }
   }
 
@@ -734,7 +720,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void goToValorar() {
+  Future<void> goToValorar(BuildContext context) async {
     currentForm = 4;
   }
 

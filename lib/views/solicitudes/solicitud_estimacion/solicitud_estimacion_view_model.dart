@@ -6,8 +6,11 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
+import 'package:tasaciones_app/core/authentication_client.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/adjunto_foto_response.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
@@ -22,6 +25,8 @@ import 'package:tasaciones_app/core/models/tracciones_response.dart';
 import 'package:tasaciones_app/core/models/transmisiones_response.dart';
 import 'package:tasaciones_app/core/models/versiones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/vin_decoder_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
+import 'package:tasaciones_app/core/user_client.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/widgets/escaner.dart';
@@ -37,6 +42,9 @@ import '../../auth/login/login_view.dart';
 class SolicitudEstimacionViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final _solicitudesApi = locator<SolicitudesApi>();
+  final _authenticationAPI = locator<AuthenticationClient>();
+  final _usuarioApi = locator<UserClient>();
+  final _alarmasApi = locator<AlarmasApi>();
   final _adjuntosApi = locator<AdjuntosApi>();
   late DateTime fechaActual;
   String? _estado;
@@ -170,6 +178,25 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       BuildContext context, SolicitudesDisponibles? v) {
     _solicitudDisponible = v;
     solicitudCredito(context);
+  }
+
+  Future<void> getAlarmas(BuildContext context) async {
+    if (Provider.of<AlarmasProvider>(context, listen: false).alarmas !=
+        alarmas) {
+      if (solicitudCreada!.id != null) {
+        var resp =
+            await _alarmasApi.getAlarmas(idSolicitud: solicitudCreada!.id);
+        if (resp is Success<AlarmasResponse>) {
+          alarmasResponse = resp.response;
+          alarmas = resp.response.data;
+          Provider.of<AlarmasProvider>(context, listen: false).alarmas =
+              alarmas;
+        } else if (resp is Failure) {
+          Dialogs.error(msg: resp.messages.first);
+        }
+      }
+      notifyListeners();
+    }
   }
 
   Future<void> solicitudCredito(BuildContext context) async {
@@ -309,10 +336,6 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
     var resp = await _solicitudesApi.getTipoFotosVehiculos();
     if (resp is Success<List<TipoFotoVehiculos>>) {
       return resp.response;
-    } else if (resp is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'su sesión a expirado');
-      return [];
     } else {
       return [];
     }
@@ -378,60 +401,39 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   Future<void> subirFotos(BuildContext context) async {
-    // if (fotos.any((e) => e.id != null)) {
-    //   currentForm = 4;
-    // } else {
-    final fotosCompletas =
-        fotos.where((e) => e.adjunto != null).length == _fotosPermitidas;
+    if (formKeyFotos.currentState!.validate()) {
+      ProgressDialog.show(context);
 
-    if (fotosCompletas &&
-        !fotos.any((e) => e.id == null && e.adjunto != null)) {
-      currentForm = 4;
-      // Dialogs.error(msg: 'Debes enviar por lo menos 1 foto');
-    } else {
-      if (formKeyFotos.currentState!.validate()) {
-        List<Map<String, dynamic>> dataList = [];
+      List<Map<String, dynamic>> dataList = [];
 
-        for (var e in fotos) {
-          if (e.id == null && e.adjunto != null) {
-            Map<String, dynamic> data = {
-              "adjuntoInBytes": e.adjunto,
-              "tipoAdjunto": e.tipoAdjunto,
-              "descripcion": e.descripcion,
-            };
+      for (var e in fotos) {
+        if (e.id == null && e.adjunto != null) {
+          Map<String, dynamic> data = {
+            "adjuntoInBytes": e.adjunto,
+            "tipoAdjunto": e.tipoAdjunto,
+            "descripcion": e.descripcion,
+          };
 
-            dataList.add(data);
-          }
+          dataList.add(data);
         }
+      }
 
-        if (dataList.isEmpty) {
-          Dialogs.error(msg: 'Debes capturar por lo menos 1 foto');
-        } else {
-          ProgressDialog.show(context);
+      var resp = await _adjuntosApi.addFotosTasacion(
+          noTasacion: solicitudCreada!.noTasacion!, adjuntos: dataList);
 
-          var resp = await _adjuntosApi.addFotosTasacion(
-              noTasacion: solicitudCreada!.noTasacion!, adjuntos: dataList);
-
-          if (resp is Success) {
-            Dialogs.success(msg: 'Fotos guardadas');
-            if (!fotos.any((e) => e.adjunto == null)) {
-              ProgressDialog.dissmiss(context);
-              currentForm = 4;
-            } else {
-              loadFotos(context);
-            }
-          }
-          if (resp is Failure) {
-            Dialogs.error(msg: resp.messages[0]);
-            ProgressDialog.dissmiss(context);
-          }
-          if (resp is TokenFail) {
-            ProgressDialog.dissmiss(context);
-            _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-            Dialogs.error(msg: 'su sesión a expirado');
-          }
-        }
-        // }
+      if (resp is Success) {
+        Dialogs.success(msg: 'Fotos guardadas');
+        ProgressDialog.dissmiss(context);
+        currentForm = 4;
+      }
+      if (resp is Failure) {
+        Dialogs.error(msg: resp.messages[0]);
+        ProgressDialog.dissmiss(context);
+      }
+      if (resp is TokenFail) {
+        ProgressDialog.dissmiss(context);
+        _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+        Dialogs.error(msg: 'su sesión a expirado');
       }
       // }
     }

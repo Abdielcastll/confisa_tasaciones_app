@@ -5,15 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/solicitudes_api.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/accesorios_suplidor_response.dart';
+import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/descripcion_foto_vehiculo.dart';
 import 'package:tasaciones_app/core/models/referencia_valoracion_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
+import 'package:tasaciones_app/core/providers/alarmas_provider.dart';
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../core/api/seguridad_entidades_generales/adjuntos.dart';
@@ -44,6 +48,8 @@ class TrabajarViewModel extends BaseViewModel {
   final _solicitudesApi = locator<SolicitudesApi>();
   final _adjuntosApi = locator<AdjuntosApi>();
   final _authenticationAPI = locator<AuthenticationClient>();
+  final _alarmasApi = locator<AlarmasApi>();
+
   late DateTime fechaActual;
   String? _estado;
   int? _estadoID;
@@ -82,18 +88,18 @@ class TrabajarViewModel extends BaseViewModel {
   EdicionVehiculo? _edicionVehiculos;
   int? _nCilindros;
   ColorVehiculo? _colorVehiculo;
+  AlarmasResponse? alarmasResponse;
   late int _fotosPermitidas;
   late List<AdjuntoFoto> fotos;
   final _picker = ImagePicker();
   List<TipoFotoVehiculos> descripcionFotos = [];
+  List<AlarmasData> alarmas = [];
   SolicitudCreditoData? solicitudData;
   List<ComponenteTasacion> componentes = [];
   List<AccesoriosSuplidor> accesorios = [];
   List<ReferenciaValoracion> referencias = [];
   late bool isSalvage;
   late double tasacionPromedio;
-  List<SegmentoCondiciones> segmentoComponente = [];
-  List<SegmentoCond> segmentoAccesorio = [];
 
   List<CondicionComponente> condicionesComponentesAll = [];
 
@@ -201,6 +207,7 @@ class TrabajarViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages.first);
     }
+    getAlarmas(context);
   }
 
   Future<List<EdicionVehiculo>> getEdiciones(String text) async {
@@ -211,6 +218,24 @@ class TrabajarViewModel extends BaseViewModel {
       return resp.response;
     } else {
       return [];
+    }
+  }
+
+  Future<void> getAlarmas(BuildContext context) async {
+    if (Provider.of<AlarmasProvider>(context, listen: false).alarmas !=
+        alarmas) {
+      if (solicitud.id != null) {
+        var resp = await _alarmasApi.getAlarmas(idSolicitud: solicitud.id);
+        if (resp is Success<AlarmasResponse>) {
+          alarmasResponse = resp.response;
+          alarmas = resp.response.data;
+          Provider.of<AlarmasProvider>(context, listen: false).alarmas =
+              alarmas;
+        } else if (resp is Failure) {
+          Dialogs.error(msg: resp.messages.first);
+        }
+      }
+      notifyListeners();
     }
   }
 
@@ -259,6 +284,9 @@ class TrabajarViewModel extends BaseViewModel {
     });
   }
 
+  List<SegmentoCondiciones> segmentoComponente = [];
+  List<SegmentoCond> segmentoAccesorio = [];
+
   Future goToCondiciones(BuildContext context) async {
     if (formKey3.currentState!.validate()) {
       if (vinData == null) {
@@ -282,7 +310,7 @@ class TrabajarViewModel extends BaseViewModel {
           placa: tcPlaca.text.trim(),
           tipoVehiculoLocal: tipoVehiculo!.id,
           traccion: traccion?.id ?? vinData!.idTraccion!,
-          versionLocal: versionVehiculo?.id ?? 0,
+          versionLocal: versionVehiculo!.id,
           sistemaTransmision: transmision?.id ?? vinData!.idSistemaCambio!,
         );
         if (upResp is Success) {
@@ -642,18 +670,10 @@ class TrabajarViewModel extends BaseViewModel {
   }
 
   Future<void> subirFotos(BuildContext context) async {
-    final fotosCompletas =
-        fotos.where((e) => e.adjunto != null).length == _fotosPermitidas;
+    if (formKeyFotos.currentState!.validate()) {
+      if (fotos.any((e) => e.nueva)) {
+        ProgressDialog.show(context);
 
-    if (fotosCompletas &&
-        !fotos.any((e) => e.id == null && e.adjunto != null)) {
-      // currentForm = 4;
-      goToValorar(context);
-
-      // Dialogs.error(msg: 'Debes enviar por lo menos 1 foto');
-    } else {
-      if (formKeyFotos.currentState!.validate()) {
-        // if (fotos.any((e) => e.nueva)) {
         List<Map<String, dynamic>> dataList = [];
 
         for (var e in fotos) {
@@ -668,9 +688,9 @@ class TrabajarViewModel extends BaseViewModel {
           }
         }
         if (dataList.isEmpty) {
-          Dialogs.error(msg: 'Debes capturar por lo menos 1 foto');
+          ProgressDialog.dissmiss(context);
+          await goToValorar(context);
         } else {
-          ProgressDialog.show(context);
           var resp = await _adjuntosApi.addFotosTasacion(
               noTasacion: solicitud.noTasacion!, adjuntos: dataList);
 
@@ -680,17 +700,9 @@ class TrabajarViewModel extends BaseViewModel {
           }
 
           if (resp is Success) {
-            // Dialogs.success(msg: 'Fotos Actualizadas');
-            // ProgressDialog.dissmiss(context);
-            // await goToValorar(context);
-
-            Dialogs.success(msg: 'Fotos guardadas');
-            if (!fotos.any((e) => e.adjunto == null)) {
-              ProgressDialog.dissmiss(context);
-              goToValorar(context);
-            } else {
-              loadFotos(context);
-            }
+            Dialogs.success(msg: 'Fotos Actualizadas');
+            ProgressDialog.dissmiss(context);
+            await goToValorar(context);
           }
 
           if (resp is TokenFail) {
@@ -699,9 +711,8 @@ class TrabajarViewModel extends BaseViewModel {
             _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
           }
         }
-        // } else {
-        //   await goToValorar(context);
-        // }
+      } else {
+        await goToValorar(context);
       }
     }
   }

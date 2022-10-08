@@ -57,16 +57,18 @@ class CardProfileWidget extends StatelessWidget {
                         //         keyboardType: TextInputType.name,
                         //       )
                         // :
-                        Text(
-                          vm.profile?.nombreCompleto ?? '',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w700,
+                        Flexible(
+                          child: Text(
+                            vm.profile?.nombreCompleto ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                         // Visibility(
                         //   visible: false,
@@ -256,6 +258,7 @@ class CardProfileWidget extends StatelessWidget {
                       content: Image.memory(
                         base64Decode(image),
                         fit: BoxFit.cover,
+                        gaplessPlayback: true,
                       ),
                     ),
                   );
@@ -263,6 +266,7 @@ class CardProfileWidget extends StatelessWidget {
                 icon: Image.memory(
                   base64Decode(image),
                   fit: BoxFit.fill,
+                  gaplessPlayback: true,
                   height: MediaQuery.of(context).size.width * .25,
                   width: MediaQuery.of(context).size.width * .25,
                 )),
