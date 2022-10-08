@@ -217,7 +217,9 @@ class VehiculoForm extends StatelessWidget {
                           ),
                         ),
                         validator: (v) {
-                          if (v == null && vm.solicitud.edicion == null) {
+                          if (v == null &&
+                              vm.solicitud.edicion == null &&
+                              vm.edicionVehiculo == null) {
                             return 'Seleccione una edición';
                           } else {
                             return null;
@@ -260,6 +262,7 @@ class VehiculoForm extends StatelessWidget {
                         ),
                         validator: (v) {
                           if (v == null &&
+                              vm.tipoVehiculo == null &&
                               vm.vinData?.tipoVehiculo == null &&
                               vm.solicitud.descripcionTipoVehiculoLocal ==
                                   null) {
@@ -309,6 +312,7 @@ class VehiculoForm extends StatelessWidget {
                             ? null
                             : (v) {
                                 if (v == null &&
+                                    vm.transmision == null &&
                                     vm.vinData?.sistemaCambio == null &&
                                     vm.solicitud
                                             .descripcionSistemaTransmision ==
@@ -358,6 +362,7 @@ class VehiculoForm extends StatelessWidget {
                             ? null
                             : (v) {
                                 if (v == null &&
+                                    vm.traccion == null &&
                                     vm.vinData?.traccion == null &&
                                     vm.solicitud
                                             .descripcionSistemaTransmision ==
@@ -404,6 +409,7 @@ class VehiculoForm extends StatelessWidget {
                             ? null
                             : (v) {
                                 if (v == null &&
+                                    vm.nPuertas == null &&
                                     vm.vinData?.numeroPuertas == null &&
                                     vm.solicitud.noPuertas == null) {
                                   return 'Seleccione número de puertas';
@@ -448,6 +454,7 @@ class VehiculoForm extends StatelessWidget {
                             ? null
                             : (v) {
                                 if (v == null &&
+                                    vm.nCilindros == null &&
                                     vm.vinData?.numeroCilindros == null &&
                                     vm.solicitud.noCilindros == null) {
                                   return 'Seleccione número de cilindros';
@@ -535,6 +542,7 @@ class VehiculoForm extends StatelessWidget {
                               ? null
                               : (v) {
                                   if (v == null &&
+                                      vm.colorVehiculo == null &&
                                       vm.solicitud.descripcionColor == null) {
                                     return 'Seleccione un color';
                                   } else {

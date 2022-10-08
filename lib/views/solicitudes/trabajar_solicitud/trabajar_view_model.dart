@@ -100,6 +100,8 @@ class TrabajarViewModel extends BaseViewModel {
   List<ReferenciaValoracion> referencias = [];
   late bool isSalvage;
   late double tasacionPromedio;
+  List<SegmentoCondiciones> segmentoComponente = [];
+  List<SegmentoCond> segmentoAccesorio = [];
 
   @override
   void dispose() {
@@ -273,9 +275,6 @@ class TrabajarViewModel extends BaseViewModel {
     });
   }
 
-  List<SegmentoCondiciones> segmentoComponente = [];
-  List<SegmentoCond> segmentoAccesorio = [];
-
   Future goToCondiciones(BuildContext context) async {
     if (formKey3.currentState!.validate()) {
       if (vinData == null) {
@@ -299,7 +298,7 @@ class TrabajarViewModel extends BaseViewModel {
           placa: tcPlaca.text.trim(),
           tipoVehiculoLocal: tipoVehiculo!.id,
           traccion: traccion?.id ?? vinData!.idTraccion!,
-          versionLocal: versionVehiculo!.id,
+          versionLocal: versionVehiculo?.id ?? 0,
           sistemaTransmision: transmision?.id ?? vinData!.idSistemaCambio!,
         );
         if (upResp is Success) {
@@ -657,10 +656,18 @@ class TrabajarViewModel extends BaseViewModel {
   }
 
   Future<void> subirFotos(BuildContext context) async {
-    if (formKeyFotos.currentState!.validate()) {
-      if (fotos.any((e) => e.nueva)) {
-        ProgressDialog.show(context);
+    final fotosCompletas =
+        fotos.where((e) => e.adjunto != null).length == _fotosPermitidas;
 
+    if (fotosCompletas &&
+        !fotos.any((e) => e.id == null && e.adjunto != null)) {
+      // currentForm = 4;
+      goToValorar(context);
+
+      // Dialogs.error(msg: 'Debes enviar por lo menos 1 foto');
+    } else {
+      if (formKeyFotos.currentState!.validate()) {
+        // if (fotos.any((e) => e.nueva)) {
         List<Map<String, dynamic>> dataList = [];
 
         for (var e in fotos) {
@@ -675,9 +682,9 @@ class TrabajarViewModel extends BaseViewModel {
           }
         }
         if (dataList.isEmpty) {
-          ProgressDialog.dissmiss(context);
-          await goToValorar(context);
+          Dialogs.error(msg: 'Debes capturar por lo menos 1 foto');
         } else {
+          ProgressDialog.show(context);
           var resp = await _adjuntosApi.addFotosTasacion(
               noTasacion: solicitud.noTasacion!, adjuntos: dataList);
 
@@ -687,9 +694,17 @@ class TrabajarViewModel extends BaseViewModel {
           }
 
           if (resp is Success) {
-            Dialogs.success(msg: 'Fotos Actualizadas');
-            ProgressDialog.dissmiss(context);
-            await goToValorar(context);
+            // Dialogs.success(msg: 'Fotos Actualizadas');
+            // ProgressDialog.dissmiss(context);
+            // await goToValorar(context);
+
+            Dialogs.success(msg: 'Fotos guardadas');
+            if (!fotos.any((e) => e.adjunto == null)) {
+              ProgressDialog.dissmiss(context);
+              goToValorar(context);
+            } else {
+              loadFotos(context);
+            }
           }
 
           if (resp is TokenFail) {
@@ -698,8 +713,9 @@ class TrabajarViewModel extends BaseViewModel {
             _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
           }
         }
-      } else {
-        await goToValorar(context);
+        // } else {
+        //   await goToValorar(context);
+        // }
       }
     }
   }
