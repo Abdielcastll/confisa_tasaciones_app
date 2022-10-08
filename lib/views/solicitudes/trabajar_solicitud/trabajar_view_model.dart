@@ -207,7 +207,7 @@ class TrabajarViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages.first);
     }
-    getAlarmas(context);
+    // getAlarmas(context);
   }
 
   Future<List<EdicionVehiculo>> getEdiciones(String text) async {
