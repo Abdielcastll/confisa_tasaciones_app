@@ -216,7 +216,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                           asyncItems: (text) => vm.getTipoVehiculo(text),
                           dropdownBuilder: (context, tipo) {
                             final String? vin = vm.vinData?.tipoVehiculo == ''
-                                ? 'Seleccione'
+                                ? 'No disponible'
                                 : vm.vinData?.tipoVehiculo;
                             return Text(
                               tipo == null
@@ -249,8 +249,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                           ),
                           validator: (v) {
                             if (v == null &&
-                                (vm.vinData?.tipoVehiculo == null ||
-                                    vm.vinData?.tipoVehiculo == '') &&
+                                vm.vinData?.tipoVehiculo == null &&
                                 vm.tipoVehiculo == null) {
                               return 'Seleccione un tipo';
                             } else {
@@ -265,7 +264,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                           asyncItems: (text) => vm.getTransmisiones(text),
                           dropdownBuilder: (context, tipo) {
                             final String? vin = vm.vinData?.sistemaCambio == ''
-                                ? 'Seleccione'
+                                ? 'No disponible'
                                 : vm.vinData?.sistemaCambio;
                             return Text(
                                 tipo == null
@@ -295,8 +294,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                           ),
                           validator: (v) {
                             if (v == null &&
-                                (vm.vinData?.sistemaCambio == null ||
-                                    vm.vinData?.sistemaCambio == '') &&
+                                vm.vinData?.sistemaCambio == null &&
                                 vm.traccion == null) {
                               return 'Seleccione un sistema de cambios';
                             } else {
@@ -311,7 +309,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                           asyncItems: (text) => vm.getTracciones(text),
                           dropdownBuilder: (context, tipo) {
                             final String? vin = vm.vinData?.traccion == ''
-                                ? 'Seleccione'
+                                ? 'No disponible'
                                 : vm.vinData?.traccion;
                             return Text(
                                 tipo == null
@@ -342,8 +340,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                           ),
                           validator: (v) {
                             if (v == null &&
-                                (vm.vinData?.traccion == null ||
-                                    vm.vinData?.traccion == '') &&
+                                vm.vinData?.traccion == null &&
                                 vm.traccion == null) {
                               return 'Seleccione una tracción';
                             } else {

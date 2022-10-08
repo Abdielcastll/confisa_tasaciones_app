@@ -27,8 +27,7 @@ class FotosForm extends StatelessWidget {
       labelBack: 'Anterior',
       onPressedBack: () => vm.currentForm = 2,
       iconNext: Icons.arrow_forward_ios,
-      labelNext:
-          vm.fotos.any((e) => e.adjunto == null) ? 'Guardar' : 'Siguiente',
+      labelNext: 'Siguiente',
       onPressedNext: () => vm.subirFotos(context),
       child: Container(
         padding: const EdgeInsets.all(10),
