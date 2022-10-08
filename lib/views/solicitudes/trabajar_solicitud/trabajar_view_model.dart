@@ -95,6 +95,8 @@ class TrabajarViewModel extends BaseViewModel {
   List<SegmentoCondiciones> segmentoComponente = [];
   List<SegmentoCond> segmentoAccesorio = [];
 
+  List<CondicionComponente> condicionesComponentesAll = [];
+
   @override
   void dispose() {
     tcVIN.dispose();
@@ -187,8 +189,17 @@ class TrabajarViewModel extends BaseViewModel {
     roles = data.role;
     if (arg != null) {
       solicitud = arg;
-      // await Future.delayed(const Duration(milliseconds: 150));
-      // solicitudCredito(context);
+    }
+    await cargarComponentes();
+  }
+
+  Future<void> cargarComponentes() async {
+    var resp = await _solicitudesApi.getCondicionComponente();
+    if (resp is Success<List<CondicionComponente>>) {
+      condicionesComponentesAll = resp.response;
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages.first);
     }
   }
 
@@ -278,6 +289,7 @@ class TrabajarViewModel extends BaseViewModel {
           Dialogs.success(msg: 'Datos actualizados');
           var resp = await _solicitudesApi.getComponenteVehiculoSuplidor(
               idSuplidor: solicitud.suplidorTasacion!);
+
           if (resp is Success<List<ComponenteTasacion>>) {
             componentes = resp.response;
             for (var componente in componentes) {
@@ -286,6 +298,7 @@ class TrabajarViewModel extends BaseViewModel {
                 segmentoComponente.add(
                     SegmentoCondiciones(componente.descripcionSegmento!, []));
               }
+
               for (var c in componentes) {
                 for (var s in segmentoComponente) {
                   if (c.descripcionSegmento == s.nombreSegmento) {
@@ -321,9 +334,15 @@ class TrabajarViewModel extends BaseViewModel {
   Future<void> goToAccesorios(BuildContext context) async {
     if (formKeyCondiciones.currentState!.validate()) {
       ProgressDialog.show(context);
+
+      List<ComponenteTasacion> comp = [];
+      for (var e in segmentoComponente) {
+        comp.addAll(e.componentes);
+      }
+
       Map<String, dynamic> data = {
         "condicionesComponenteVehiculo": List.from(
-          componentes.map((x) => {
+          comp.map((x) => {
                 "idComponenteVehiculo": x.idComponente,
                 "idCondicionComponenteVehiculo": x.idCondicion,
               }),
@@ -492,17 +511,11 @@ class TrabajarViewModel extends BaseViewModel {
     }
   }
 
-  Future<List<CondicionComponente>> getCondiciones({
-    required int idComponente,
-  }) async {
-    var resp = await _solicitudesApi.getCondicionComponente(
-        idComponente: idComponente);
-    if (resp is Success<List<CondicionComponente>>) {
-      return resp.response;
-    } else {
-      return [];
-    }
-  }
+  // Future<List<CondicionComponente>> getCondiciones({
+  //   required int idComponente,
+  // }) async {
+
+  // }
 
   Future<List<TipoVehiculoData>> getTipoVehiculo(String text) async {
     var resp = await _solicitudesApi.getTipoVehiculo(text);
@@ -776,20 +789,20 @@ class TrabajarViewModel extends BaseViewModel {
   }
 }
 
-class CondicionComponenteVehiculoCreate {
-  int idComponenteVehiculo;
-  int idCondicionComponenteVehiculo;
+// class CondicionComponenteVehiculoCreate {
+//   int idComponenteVehiculo;
+//   int idCondicionComponenteVehiculo;
 
-  CondicionComponenteVehiculoCreate(
-      this.idComponenteVehiculo, this.idCondicionComponenteVehiculo);
+//   CondicionComponenteVehiculoCreate(
+//       this.idComponenteVehiculo, this.idCondicionComponenteVehiculo);
 
-  Map<String, dynamic> toJson() {
-    return {
-      "idComponenteVehiculo": idComponenteVehiculo,
-      "idCondicionComponenteVehiculo": idCondicionComponenteVehiculo,
-    };
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     return {
+//       "idComponenteVehiculo": idComponenteVehiculo,
+//       "idCondicionComponenteVehiculo": idCondicionComponenteVehiculo,
+//     };
+//   }
+// }
 
 class SegmentoCondiciones {
   String nombreSegmento;

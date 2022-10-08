@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 
 import 'app_buttons.dart';
@@ -55,6 +58,21 @@ abstract class Dialogs {
       fontSize: 18,
       toastLength: Toast.LENGTH_LONG,
     );
+  }
+
+  static showPhoto(
+    BuildContext context, {
+    required String imgTxt,
+  }) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return PhotoView(
+              imageProvider: MemoryImage(
+                base64Decode(imgTxt),
+              ),
+              enableRotation: true);
+        });
   }
 
   static vinMessage({required String msg}) {

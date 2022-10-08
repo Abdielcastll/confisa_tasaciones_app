@@ -47,7 +47,8 @@ class SolicitudesApi {
     }
   }
 
-  Future<Object> getSolicitudesDisponibles() async {
+  Future<Object> getSolicitudesDisponibles(
+      {required int idTipoTasacion}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -56,6 +57,7 @@ class SolicitudesApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
+        queryParameters: {'IdTipoTasacion': idTipoTasacion},
         parser: (data) {
           return solicitudesDisponiblesFromJson(jsonEncode(data['data']));
         },
@@ -283,7 +285,7 @@ class SolicitudesApi {
     }
   }
 
-  Future<Object> getCondicionComponente({required int idComponente}) async {
+  Future<Object> getCondicionComponente({int? idComponente}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
@@ -294,6 +296,7 @@ class SolicitudesApi {
         },
         queryParameters: {
           'IdComponente': idComponente,
+          'PageSize': 999,
         },
         parser: (data) {
           return condicionComponenteFromJson(jsonEncode(data['data']));

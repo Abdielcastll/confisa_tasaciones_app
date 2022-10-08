@@ -44,7 +44,10 @@ class FotosForm extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
-                        onTap: () => vm.cargarFoto(i),
+                        onTap: () => vm.fotos[i].adjunto == null
+                            ? vm.cargarFoto(i)
+                            : Dialogs.showPhoto(context,
+                                imgTxt: vm.fotos[i].adjunto!),
                         child: Container(
                           clipBehavior: Clip.antiAlias,
                           margin: const EdgeInsets.all(10),

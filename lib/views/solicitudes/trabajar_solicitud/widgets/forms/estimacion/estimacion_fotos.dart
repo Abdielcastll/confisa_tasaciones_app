@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tasaciones_app/views/solicitudes/base_widgets/base_text_field_widget.dart';
 
 import '../../../../../../theme/theme.dart';
+import '../../../../../../widgets/app_dialogs.dart';
 import '../../../../base_widgets/base_form_widget.dart';
 import '../../../trabajar_view_model.dart';
 
@@ -58,6 +59,10 @@ class FotosActuales extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
+                  onTap: () => vm.fotos[i].adjunto == null
+                      ? vm.cargarFoto(i)
+                      : Dialogs.showPhoto(context,
+                          imgTxt: vm.fotos[i].adjunto!),
                   child: Container(
                     clipBehavior: Clip.antiAlias,
                     margin: const EdgeInsets.all(10),

@@ -56,7 +56,8 @@ class SolicitudTasacionViewModel extends BaseViewModel {
   }
 
   Future<List<SolicitudesDisponibles>> getSolicitudes() async {
-    var resp = await _solicitudesApi.getSolicitudesDisponibles();
+    var resp = await _solicitudesApi.getSolicitudesDisponibles(
+        idTipoTasacion: incautado ? 23 : 22);
     if (resp is Success<List<SolicitudesDisponibles>>) {
       return resp.response;
     } else {

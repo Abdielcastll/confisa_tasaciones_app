@@ -60,12 +60,30 @@ class CondicionesTasacionForm extends StatelessWidget {
   }
 
   Widget _itemComponente(ComponenteTasacion e) {
+    e.descripcionCondicion = vm.condicionesComponentesAll
+        .where((d) => d.idComponente == e.idComponente)
+        .toList()
+        .first
+        .condicionDescripcion!;
+    e.idCondicion = vm.condicionesComponentesAll
+        .where((d) => d.idComponente == e.idComponente)
+        .toList()
+        .first
+        .id!;
     return DropdownSearch<CondicionComponente>(
-      asyncItems: (_) => vm.getCondiciones(idComponente: e.id!),
+      // asyncItems: (_) => vm.getCondiciones(idComponente: e.id!),
+      items: vm.condicionesComponentesAll
+          .where((d) => d.idComponente == e.idComponente)
+          .toList(),
       dropdownBuilder: (context, tipo) {
         return Text(
           tipo == null
-              ? e.descripcionCondicion ?? 'Seleccione'
+              ? e.descripcionCondicion ??
+                  vm.condicionesComponentesAll
+                      .where((d) => d.idComponente == e.idComponente)
+                      .toList()
+                      .first
+                      .condicionDescripcion!
               : tipo.condicionDescripcion!,
           style: const TextStyle(fontSize: 15),
         );
@@ -74,6 +92,7 @@ class CondicionesTasacionForm extends StatelessWidget {
         e.descripcionCondicion = condicion!.condicionDescripcion!;
         e.idCondicion = condicion.id!;
       },
+
       dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
           label: Text(e.componenteDescripcion ?? ''),

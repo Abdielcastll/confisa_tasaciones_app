@@ -234,16 +234,18 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
             notifyListeners();
           }
         }
+
+        ProgressDialog.dissmiss(context);
       }
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages[0]);
+        ProgressDialog.dissmiss(context);
       }
       if (resp is TokenFail) {
         _navigatorService.pop();
         _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
         Dialogs.error(msg: 'su sesión a expirado');
       }
-      ProgressDialog.dissmiss(context);
     }
   }
 
@@ -337,7 +339,8 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   Future<List<SolicitudesDisponibles>> getSolicitudes() async {
-    var resp = await _solicitudesApi.getSolicitudesDisponibles();
+    var resp =
+        await _solicitudesApi.getSolicitudesDisponibles(idTipoTasacion: 21);
     if (resp is Success<List<SolicitudesDisponibles>>) {
       return resp.response;
     } else {
