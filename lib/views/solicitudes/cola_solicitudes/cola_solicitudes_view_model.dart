@@ -278,7 +278,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
                                 SizedBox(
                                   height: 3,
                                 ), // icon
-                                Text("Cancelar"), // text
+                                Text("Salir"), // text
                               ],
                             ),
                           ),
