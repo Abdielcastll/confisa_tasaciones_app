@@ -317,7 +317,7 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      TextButton(
+                      /* TextButton(
                         onPressed: () async {
                           Dialogs.confirm(context,
                               tittle: "Eliminar Monto Factura Mínima",
@@ -361,7 +361,7 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                             Text("Eliminar"), // text
                           ],
                         ),
-                      ),
+                      ), */
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
