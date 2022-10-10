@@ -26,7 +26,8 @@ class FotosTasacionForm extends StatelessWidget {
       labelBack: 'Anterior',
       onPressedBack: () => vm.currentForm = 4,
       iconNext: Icons.arrow_forward_ios,
-      labelNext: 'Siguiente',
+      labelNext:
+          vm.fotos.any((e) => e.adjunto == null) ? 'Guardar' : 'Siguiente',
       onPressedNext: () => vm.subirFotos(context),
       child: Container(
         padding: const EdgeInsets.all(10),
