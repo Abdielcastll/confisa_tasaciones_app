@@ -62,6 +62,22 @@ class _MontosFacturaMinimaMobile extends StatelessWidget {
                     ),
                   ),
                 ),
+                MaterialButton(
+                  onPressed: () => vm.crearMontoFacturaMinima(context),
+                  color: Colors.white,
+                  minWidth: 30,
+                  height: 48,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  elevation: 4,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      AppIcons.iconPlus,
+                      color: AppColors.green,
+                    ),
+                  ),
+                )
               ],
             ),
             Expanded(

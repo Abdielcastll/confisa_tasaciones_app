@@ -29,9 +29,9 @@ class LoginViewModel extends BaseViewModel {
   final GlobalKey<FormState> formKey = GlobalKey();
   bool _loading = false;
   TextEditingController tcEmail =
-      TextEditingController(text: AppCuentas().usuarioAprobadorTasaciones);
+      TextEditingController(text: AppCuentas().usuarioAdmin);
   TextEditingController tcPassword =
-      TextEditingController(text: AppCuentas().claveExterna);
+      TextEditingController(text: AppCuentas().claveInterna);
   bool obscurePassword = true;
   bool get loading => _loading;
   set loading(bool value) {

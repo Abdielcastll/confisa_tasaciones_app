@@ -1,7 +1,10 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
+import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/montos_factura_minima_api.dart';
 import 'package:tasaciones_app/core/api/sucursales_api.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_generales/suplidores_response.dart';
 import 'package:tasaciones_app/core/models/seguridad_facturacion/montos_factura_minima_response.dart';
 import 'package:tasaciones_app/core/models/sucursales_response.dart';
 import 'package:tasaciones_app/core/services/navigator_service.dart';
@@ -15,19 +18,25 @@ import '../../../theme/theme.dart';
 class MontosFacturaMinimaViewModel extends BaseViewModel {
   final _montosFacturaMinimaApi = locator<MontosFacturaMinimaApi>();
   final _sucursalesApi = locator<SucursalesApi>();
+  final _suplidoresApi = locator<SuplidoresApi>();
   final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewMonto = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
   List<MontosFacturaMinimaData> montosFacturaMinima = [];
+  List<SuplidorData> suplidores = [];
   List<SucursalesData> sucursales = [];
+
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   // bool hasNextPage = false;
   late MontosFacturaMinimaResponse montosFacturaMinimaResponse;
   late SucursalesResponse sucursalesResponse;
+  late SuplidoresResponse suplidoresResponse;
+
+  late SucursalesData sucursalSelected;
 
   /*  MontosFacturaMinimaViewModel() {
     listController.addListener(() {
@@ -87,6 +96,21 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
       return onInit();
     }
     if (resp2 is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    var resp3 = await _suplidoresApi.getSuplidores(pageNumber: pageNumber);
+    if (resp3 is Success) {
+      suplidoresResponse = resp3.response as SuplidoresResponse;
+      suplidores = suplidoresResponse.data;
+      ordenar();
+      notifyListeners();
+    }
+    if (resp3 is Failure) {
+      Dialogs.error(msg: resp3.messages[0]);
+      return onInit();
+    }
+    if (resp3 is TokenFail) {
       _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
@@ -307,7 +331,7 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                             ProgressDialog.dissmiss(context);
                             if (resp is Success) {
                               Dialogs.success(
-                                  msg: 'Monto Facura Minima Eliminado');
+                                  msg: 'Monto Facura Mínima Eliminado');
                               Navigator.of(context).pop();
                               await onRefresh();
                             }
@@ -370,7 +394,7 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
                                 Dialogs.success(
-                                    msg: 'Monto Facura Minima Actualizado');
+                                    msg: 'Monto Facura Mínima Actualizado');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -387,7 +411,7 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                               tcNewMonto.clear();
                             } else {
                               Dialogs.success(
-                                  msg: 'Monto Facura Minima Actualizado');
+                                  msg: 'Monto Facura Mínima Actualizado');
                               Navigator.of(context).pop();
                             }
                           }
@@ -412,6 +436,211 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                 ],
               ),
             ),
+          );
+        });
+  }
+
+  Future<void> crearMontoFacturaMinima(BuildContext ctx) async {
+    tcNewMonto.clear();
+    List<SucursalesData> sucursalesSuplidor = [];
+    SuplidorData suplidorSelected = SuplidorData(
+        codigoRelacionado: 0,
+        estado: 0,
+        nombre: "",
+        identificacion: "",
+        direccion: "",
+        celular: "",
+        detalles: "",
+        email: "",
+        registro: "",
+        telefono: "");
+
+    final GlobalKey<FormState> _formKey = GlobalKey();
+    showDialog(
+        context: ctx,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                contentPadding: EdgeInsets.zero,
+                content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        height: 80,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        color: AppColors.brownLight,
+                        child: const Text(
+                          'Crear Monto Facura Mínima',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownSearch<String>(
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  label: Text("Suplidor"))),
+                          validator: (value) =>
+                              value == null ? 'Debe escojer un suplidor' : null,
+                          popupProps: const PopupProps.menu(
+                              fit: FlexFit.loose,
+                              showSelectedItems: true,
+                              searchDelay: Duration(microseconds: 0)),
+                          items: suplidores.map((e) => e.nombre).toList(),
+                          onChanged: (newValue) {
+                            setState(
+                              () {
+                                suplidorSelected = suplidores.firstWhere(
+                                    (element) => element.nombre == newValue);
+                                for (var element in sucursales) {
+                                  if (suplidorSelected.codigoRelacionado ==
+                                      element.codigoRelacionado) {
+                                    sucursalesSuplidor.add(element);
+                                  }
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      suplidorSelected.codigoRelacionado != 0
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: DropdownSearch<String>(
+                                dropdownDecoratorProps:
+                                    const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                                border: UnderlineInputBorder(),
+                                                label: Text("Sucursal"))),
+                                validator: (value) => value == null
+                                    ? 'Debe escojer una sucursal'
+                                    : null,
+                                popupProps: const PopupProps.menu(
+                                    fit: FlexFit.loose,
+                                    showSelectedItems: true,
+                                    searchDelay: Duration(microseconds: 0)),
+                                items: sucursalesSuplidor
+                                    .map((e) => e.nombre)
+                                    .toList(),
+                                onChanged: (newValue) {
+                                  sucursalSelected =
+                                      sucursalesSuplidor.firstWhere((element) =>
+                                          element.nombre == newValue);
+                                },
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                      SizedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            controller: tcNewMonto,
+                            validator: (value) {
+                              if (value!.trim() == '') {
+                                return 'Escriba una monto';
+                              } else {
+                                return null;
+                              }
+                            },
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              label: Text("Monto"),
+                              border: UnderlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              tcNewMonto.clear();
+                            }, // button pressed
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const <Widget>[
+                                Icon(
+                                  AppIcons.closeCircle,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ), // icon
+                                Text("Cancelar"), // text
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                ProgressDialog.show(context);
+                                var resp = await _montosFacturaMinimaApi
+                                    .updateMontosFacturaMinima(
+                                        codigoEntidad: suplidorSelected
+                                            .codigoRelacionado
+                                            .toString(),
+                                        codigoSucursal:
+                                            sucursalSelected.codigoSucursal,
+                                        valor: tcNewMonto.text.trim());
+                                ProgressDialog.dissmiss(context);
+                                if (resp is Success) {
+                                  Dialogs.success(
+                                      msg: 'Monto Facura Mínima Creada');
+                                  Navigator.of(context).pop();
+                                  await onRefresh();
+                                }
+
+                                if (resp is Failure) {
+                                  ProgressDialog.dissmiss(context);
+                                  Dialogs.error(msg: resp.messages[0]);
+                                }
+                                if (resp is TokenFail) {
+                                  _navigationService
+                                      .navigateToPageAndRemoveUntil(
+                                          LoginView.routeName);
+                                  Dialogs.error(msg: 'Sesión expirada');
+                                }
+                                tcNewMonto.clear();
+                              }
+                            }, // button pressed
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const <Widget>[
+                                Icon(
+                                  AppIcons.save,
+                                  color: AppColors.green,
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ), // icon
+                                Text("Guardar"), // text
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         });
   }
