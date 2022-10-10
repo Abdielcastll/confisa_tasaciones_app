@@ -589,11 +589,21 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   void resetData() {
+    vinData = null;
     tcVIN.clear();
     tcPlaca.clear();
     tcNoSolicitud.clear();
-    tcFuerzaMotriz.clear();
-    tcKilometraje.clear();
+    tcFuerzaMotriz.updateValue(0);
+    tcKilometraje.updateValue(0);
+    versionVehiculo = null;
+    edicionVehiculo = null;
+    tipoVehiculo = null;
+    transmision = null;
+    traccion = null;
+    nPuertas = null;
+    nCilindros = null;
+    colorVehiculo = null;
+    notifyListeners();
   }
 
   Future<void> enviarSolicitud(BuildContext context) async {
