@@ -41,6 +41,7 @@ import '../../auth/login/login_view.dart';
 class SolicitudEstimacionViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final _solicitudesApi = locator<SolicitudesApi>();
+  final _alarmasApi = locator<AlarmasApi>();
   final _adjuntosApi = locator<AdjuntosApi>();
   late DateTime fechaActual;
   String? _estado;
