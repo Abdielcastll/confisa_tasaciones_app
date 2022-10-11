@@ -26,6 +26,24 @@ class Http {
     T Function(dynamic data)? parser,
   }) async {
     try {
+      if (path == "/api/monto-factura-minima-sucursal/get") {
+        final response = await _dio
+            .request<List<dynamic>>(
+              path,
+              options: Options(
+                method: method,
+                headers: headers,
+              ),
+              queryParameters: queryParameters,
+              data: data,
+            )
+            .timeout(durationLoading);
+        if (_logsEnabled) _logger.i(response.data);
+        if (parser != null) {
+          return Success<T>(response: parser(response.data));
+        }
+        return Success(response: response.data!);
+      }
       final response = await _dio
           .request<Map<String, dynamic>>(
             path,

@@ -11,12 +11,11 @@ class MontosFacturaMinimaApi {
 
   Future<Object> getMontosFacturaMinima(
       {int? idSuplidor,
-      String codigoEntidad = "",
+      String descripcionSucursal = "",
       String codigoSucursal = "",
-      int? idCatalogoParametro,
-      int? idTipoTasacion,
+      String descripcionSuplidor = "",
       String valor = "",
-      int pageSize = 999,
+      int pageSize = 10000,
       int pageNumber = 1}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
@@ -28,9 +27,9 @@ class MontosFacturaMinimaApi {
         },
         queryParameters: {
           "IdSuplidor": idSuplidor,
-          "CodigoEntidad": codigoEntidad,
+          "DescripcionSucursal": descripcionSucursal,
           "CodigoSucursal": codigoSucursal,
-          "IdTipoTasacion": idTipoTasacion,
+          "DescripcionSuplidor": descripcionSuplidor,
           "Valor": valor,
           "PageSize": pageSize,
           "PageNumber": pageNumber
@@ -45,7 +44,7 @@ class MontosFacturaMinimaApi {
   }
 
   Future<Object> updateMontosFacturaMinima({
-    required String codigoEntidad,
+    required int idSuplidor,
     required String codigoSucursal,
     required String valor,
   }) async {
@@ -59,7 +58,7 @@ class MontosFacturaMinimaApi {
         },
         data: {
           "valor": valor,
-          "codigoEntidad": codigoEntidad,
+          "idSuplidor": idSuplidor,
           "codigoSucursal": codigoSucursal
         },
         parser: (data) {

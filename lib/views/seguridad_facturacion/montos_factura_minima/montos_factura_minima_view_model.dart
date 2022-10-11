@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
@@ -87,8 +89,15 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
     var resp2 = await _sucursalesApi.getSucursales(pageNumber: pageNumber);
     if (resp2 is Success) {
       sucursalesResponse = resp2.response as SucursalesResponse;
-      sucursales = sucursalesResponse.data;
-      ordenar();
+      //Revision de que no se repita la sucursal
+      var temp = [
+        ...LinkedHashSet<SucursalesData>(
+          equals: (sucursal1, sucursal2) =>
+              sucursal1.nombre == sucursal2.nombre,
+          hashCode: (sucursal) => sucursal.nombre.hashCode,
+        )..addAll(sucursalesResponse.data)
+      ];
+      sucursales = temp;
       notifyListeners();
     }
     if (resp2 is Failure) {
@@ -156,13 +165,13 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
 
   Future<void> buscarSucursal(String query) async {
     cargando = true;
-    var resp = await _sucursalesApi.getSucursales(
-      nombre: query,
+    var resp = await _montosFacturaMinimaApi.getMontosFacturaMinima(
+      descripcionSucursal: query,
       pageSize: 0,
     );
     if (resp is Success) {
-      var temp = resp.response as SucursalesResponse;
-      sucursales = temp.data;
+      var temp = resp.response as MontosFacturaMinimaResponse;
+      montosFacturaMinima = temp.data;
       ordenar();
       // hasNextPage = temp.hasNextPage;
       _busqueda = true;
@@ -228,16 +237,9 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
   }
 
   Future<void> modificarMontosFacturaMinima(
-      BuildContext ctx, SucursalesData sucursal) async {
-    String monto = "";
-    if (montosFacturaMinima
-        .any((element) => element.codigoSucursal == sucursal.codigoSucursal)) {
-      monto = montosFacturaMinima
-          .firstWhere(
-              (element) => element.codigoSucursal == sucursal.codigoSucursal)
-          .valor;
-    }
-    tcNewMonto.text = monto;
+      BuildContext ctx, MontosFacturaMinimaData montoFactura) async {
+    tcNewMonto.clear();
+    tcNewMonto.text = montoFactura.valor;
 
     final GlobalKey<FormState> _formKey = GlobalKey();
 
@@ -282,9 +284,23 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                               child: TextFormField(
                                 keyboardType: TextInputType.number,
                                 readOnly: true,
-                                initialValue: sucursal.nombre,
+                                initialValue: montoFactura.descripcionSucursal,
                                 decoration: const InputDecoration(
                                   label: Text("Sucursal"),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                readOnly: true,
+                                initialValue: montoFactura.descripcionSuplidor,
+                                decoration: const InputDecoration(
+                                  label: Text("Suplidor"),
                                   border: UnderlineInputBorder(),
                                 ),
                               ),
@@ -384,13 +400,14 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                       TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            if (tcNewMonto.text.trim() != monto) {
+                            if (tcNewMonto.text.trim() != montoFactura.valor) {
                               ProgressDialog.show(context);
                               var resp = await _montosFacturaMinimaApi
                                   .updateMontosFacturaMinima(
                                       valor: tcNewMonto.text.trim(),
-                                      codigoEntidad: sucursal.codigoEntidad,
-                                      codigoSucursal: sucursal.codigoSucursal);
+                                      idSuplidor: montoFactura.idSuplidor,
+                                      codigoSucursal:
+                                          montoFactura.codigoSucursal);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
                                 Dialogs.success(
@@ -442,7 +459,6 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
 
   Future<void> crearMontoFacturaMinima(BuildContext ctx) async {
     tcNewMonto.clear();
-    List<SucursalesData> sucursalesSuplidor = [];
     SuplidorData suplidorSelected = SuplidorData(
         codigoRelacionado: 0,
         estado: 0,
@@ -508,7 +524,7 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                                 for (var element in sucursales) {
                                   if (suplidorSelected.codigoRelacionado ==
                                       element.codigoRelacionado) {
-                                    sucursalesSuplidor.add(element);
+                                    sucursales.add(element);
                                   }
                                 }
                               },
@@ -516,34 +532,27 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                           },
                         ),
                       ),
-                      suplidorSelected.codigoRelacionado != 0
-                          ? Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: DropdownSearch<String>(
-                                dropdownDecoratorProps:
-                                    const DropDownDecoratorProps(
-                                        dropdownSearchDecoration:
-                                            InputDecoration(
-                                                border: UnderlineInputBorder(),
-                                                label: Text("Sucursal"))),
-                                validator: (value) => value == null
-                                    ? 'Debe escojer una sucursal'
-                                    : null,
-                                popupProps: const PopupProps.menu(
-                                    fit: FlexFit.loose,
-                                    showSelectedItems: true,
-                                    searchDelay: Duration(microseconds: 0)),
-                                items: sucursalesSuplidor
-                                    .map((e) => e.nombre)
-                                    .toList(),
-                                onChanged: (newValue) {
-                                  sucursalSelected =
-                                      sucursalesSuplidor.firstWhere((element) =>
-                                          element.nombre == newValue);
-                                },
-                              ),
-                            )
-                          : const SizedBox.shrink(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownSearch<String>(
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  label: Text("Sucursal"))),
+                          validator: (value) => value == null
+                              ? 'Debe escojer una sucursal'
+                              : null,
+                          popupProps: const PopupProps.menu(
+                              fit: FlexFit.loose,
+                              showSelectedItems: true,
+                              searchDelay: Duration(microseconds: 0)),
+                          items: sucursales.map((e) => e.nombre).toList(),
+                          onChanged: (newValue) {
+                            sucursalSelected = sucursales.firstWhere(
+                                (element) => element.nombre == newValue);
+                          },
+                        ),
+                      ),
                       SizedBox(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -592,9 +601,8 @@ class MontosFacturaMinimaViewModel extends BaseViewModel {
                                 ProgressDialog.show(context);
                                 var resp = await _montosFacturaMinimaApi
                                     .updateMontosFacturaMinima(
-                                        codigoEntidad: suplidorSelected
-                                            .codigoRelacionado
-                                            .toString(),
+                                        idSuplidor:
+                                            suplidorSelected.codigoRelacionado,
                                         codigoSucursal:
                                             sucursalSelected.codigoSucursal,
                                         valor: tcNewMonto.text.trim());

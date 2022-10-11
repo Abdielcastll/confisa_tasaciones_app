@@ -84,20 +84,20 @@ class _MontosFacturaMinimaMobile extends StatelessWidget {
               child: RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 onRefresh: () => vm.onRefresh(),
-                child: vm.sucursales.isEmpty
+                child: vm.montosFacturaMinima.isEmpty
                     ? const RefreshWidget()
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemCount: vm.sucursales.length,
+                        itemCount: vm.montosFacturaMinima.length,
                         controller: vm.listController,
                         itemBuilder: (context, i) {
-                          var sucursal = vm.sucursales[i];
+                          var montoFactura = vm.montosFacturaMinima[i];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 5),
                             child: MaterialButton(
                               onPressed: () => vm.modificarMontosFacturaMinima(
-                                  context, sucursal),
+                                  context, montoFactura),
                               color: Colors.white,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
@@ -111,28 +111,25 @@ class _MontosFacturaMinimaMobile extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      sucursal.nombre,
+                                      montoFactura.descripcionSucursal,
                                       style: const TextStyle(
                                         color: AppColors.brownDark,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w800,
                                       ),
                                     ),
-                                    vm.montosFacturaMinima.any((element) =>
-                                            element.codigoSucursal ==
-                                            sucursal.codigoSucursal)
-                                        ? Text(
-                                            "Monto: ${vm.montosFacturaMinima.firstWhere((element) => element.codigoSucursal == sucursal.codigoSucursal).valor}",
-                                            style: const TextStyle(
-                                                color: AppColors.brownDark,
-                                                fontSize: 12),
-                                          )
-                                        : const Text(
-                                            "Monto a definir",
-                                            style: TextStyle(
-                                                color: AppColors.brownDark,
-                                                fontSize: 12),
-                                          ),
+                                    Text(
+                                      "Suplidor: ${montoFactura.descripcionSuplidor}",
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Monto: ${montoFactura.valor}",
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
                                   ],
                                 ),
                               ),

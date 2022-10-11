@@ -7,68 +7,46 @@ String montosFacturaMinimaResponseToJson(MontosFacturaMinimaResponse data) =>
     json.encode(data.toJson());
 
 class MontosFacturaMinimaResponse {
-  MontosFacturaMinimaResponse(
-      {required this.data,
-      required this.totalCount,
-      required this.totalPages,
-      required this.pageSize,
-      required this.currentPage,
-      required this.hasNextPage,
-      required this.hasPreviousPage,
-      required this.nextPageUrl});
+  MontosFacturaMinimaResponse({required this.data});
 
   List<MontosFacturaMinimaData> data;
-  String nextPageUrl;
-  int totalCount, pageSize, currentPage, totalPages;
-  bool hasNextPage, hasPreviousPage;
 
-  factory MontosFacturaMinimaResponse.fromJson(Map<String, dynamic> json) =>
+  factory MontosFacturaMinimaResponse.fromJson(List<dynamic> list) =>
       MontosFacturaMinimaResponse(
-          data: json["data"]
+          data: list
               .map<MontosFacturaMinimaData>(
                   (e) => MontosFacturaMinimaData.fromJson(e))
-              .toList(),
-          totalCount: json["meta"]["totalCount"],
-          totalPages: json["meta"]["totalPages"],
-          pageSize: json["meta"]["pageSize"],
-          currentPage: json["meta"]["currentPage"],
-          hasNextPage: json["meta"]["hasNextPage"],
-          hasPreviousPage: json["meta"]["hasPreviousPage"],
-          nextPageUrl: json["meta"]["nextPageUrl"]);
+              .toList());
 
   Map<String, dynamic> toJson() => {
         "data": data.map((e) => e.toJson()),
-        "totalCount": totalCount,
-        "totalPage": totalPages,
-        "pageSize": pageSize,
-        "currentPage": currentPage,
-        "hasNextPage": hasNextPage,
-        "hasPreviousPage": hasPreviousPage,
-        "nextPageUrl": totalCount,
       };
 }
 
 class MontosFacturaMinimaData {
   MontosFacturaMinimaData(
-      {required this.id,
-      required this.codigoEntidad,
-      required this.codigoSucursal,
-      required this.valor});
+      {required this.codigoSucursal,
+      required this.valor,
+      required this.descripcionSucursal,
+      required this.idSuplidor,
+      required this.descripcionSuplidor});
 
-  String codigoEntidad, codigoSucursal, valor;
-  int id;
+  String descripcionSucursal, codigoSucursal, valor, descripcionSuplidor;
+  int idSuplidor;
 
   factory MontosFacturaMinimaData.fromJson(Map<String, dynamic> json) =>
       MontosFacturaMinimaData(
-        id: json["id"] ?? 0,
-        codigoEntidad: json["codigoEntidad"] ?? '',
+        descripcionSucursal: json["descripcionSucursal"] ?? '',
+        idSuplidor: json["idSuplidor"] ?? '',
+        descripcionSuplidor: json["descripcionSuplidor"] ?? '',
         codigoSucursal: json["codigoSucursal"] ?? '',
         valor: json["valor"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "codigoEntidad": codigoEntidad,
+        "idSuplidor": idSuplidor,
+        "descripcionSuplidor": descripcionSuplidor,
+        "descripcionSucursal": descripcionSucursal,
         "codigoSucursal": codigoSucursal,
         "valor": valor
       };
