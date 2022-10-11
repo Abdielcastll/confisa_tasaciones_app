@@ -69,7 +69,7 @@ class TrabajarViewModel extends BaseViewModel {
       thousandSeparator: ',',
       decimalSeparator: '',
       initialValue: 0);
-  TextEditingController tcPlaca = TextEditingController();
+  MaskedTextController tcPlaca = MaskedTextController(mask: '@@@@@@@@@');
   MoneyMaskedTextController tcValor = MoneyMaskedTextController(
     decimalSeparator: '.',
     thousandSeparator: ',',
