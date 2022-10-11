@@ -104,11 +104,8 @@ Form dialogActualizarInformacion(
                     height: 10,
                   ),
                   TextFormField(
-                    enabled: !usuariosData.roles.any((element) =>
-                        (element.description == "Administrador" ||
-                            element.description == "Aprobador Facturas" ||
-                            element.description == "Oficial Negocios")),
                     initialValue: usuariosData.email,
+                    readOnly: true,
                     decoration: const InputDecoration(
                         label: Text("Email"), border: UnderlineInputBorder()),
                     onSaved: (value) {
