@@ -463,8 +463,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
         seleccionEstado.isEmpty &&
         seleccionTipo.isEmpty) {
       resp = await _solicitudesApi.getColaSolicitudes(
-        noSolicitud: query.isEmpty ? null : int.parse(query),
-      );
+          noSolicitud: query.isEmpty ? null : int.tryParse(query));
     }
     if (resp is Success<GetSolicitudesResponse>) {
       solicitudes = resp.response.data;

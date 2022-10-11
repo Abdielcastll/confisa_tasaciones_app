@@ -185,7 +185,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                     child: const Padding(
                       padding: EdgeInsets.all(12.0),
                       child: Text(
-                        'Modificar Condicion Componente Vehículo',
+                        'Modificar Condicion Vehículo',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -247,8 +247,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                               );
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
-                                Dialogs.success(
-                                    msg: 'Condición Componente Actualizada');
+                                Dialogs.success(msg: 'Condición Actualizada');
                                 Navigator.of(context).pop();
                                 await onRefresh();
                               }
@@ -263,8 +262,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                               }
                               tcNewDescripcion.clear();
                             } else {
-                              Dialogs.success(
-                                  msg: 'Condición Componente Actualizada');
+                              Dialogs.success(msg: 'Condición Actualizada');
                               Navigator.of(context).pop();
                             }
                           }
@@ -318,7 +316,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                         alignment: Alignment.center,
                         color: AppColors.brownLight,
                         child: const Text(
-                          'Crear Condición Vehiculo Componente ',
+                          'Crear Condición Vehiculo',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -390,8 +388,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                                 ProgressDialog.dissmiss(context);
                                 if (resp is Success) {
                                   Dialogs.success(
-                                      msg:
-                                          'Condición Vehículo Componente  Creado');
+                                      msg: 'Condición Vehículo Creado');
                                   Navigator.of(context).pop();
                                   await onRefresh();
                                 }

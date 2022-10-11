@@ -23,6 +23,7 @@ class PorcentajesHonorariosEntidadViewModel extends BaseViewModel {
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
+
   late PorcentajesHonorariosEntidadResponse
       porcentajesHonorariosEntidadResponse;
 

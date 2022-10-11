@@ -43,6 +43,7 @@ class _PorcentajesHonorariosEntidadMobile extends StatelessWidget {
                                       child: CircularProgressIndicator()),
                             );
                           }
+                          final GlobalKey<FormState> _formKey = GlobalKey();
                           var porcentajeHonorarioEntidad =
                               vm.porcentajesHonorariosEntidad[i];
                           TextEditingController controller =
@@ -61,62 +62,74 @@ class _PorcentajesHonorariosEntidadMobile extends StatelessWidget {
                               elevation: 4,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5)),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    height: 70,
-                                    padding: const EdgeInsets.all(10),
-                                    child: Text(
-                                      porcentajeHonorarioEntidad
-                                          .descripcionEntidad,
-                                      style: const TextStyle(
-                                        color: AppColors.brownDark,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w800,
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      height: 70,
+                                      padding: const EdgeInsets.all(10),
+                                      child: Text(
+                                        porcentajeHonorarioEntidad
+                                            .descripcionEntidad,
+                                        style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    padding: const EdgeInsets.all(10),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller: controller,
-                                            decoration: const InputDecoration(
-                                              border: UnderlineInputBorder(),
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              controller: controller,
+                                              validator: (newValor) => int
+                                                          .parse(newValor!) >
+                                                      100
+                                                  ? "El porcentaje no puede ser mayor a 100"
+                                                  : null,
+                                              decoration: const InputDecoration(
+                                                border: UnderlineInputBorder(),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        TextButton(
-                                          onPressed: () => vm
-                                              .modificarPorcentajeHonorarioEntidad(
-                                                  context,
-                                                  porcentajeHonorarioEntidad,
-                                                  controller
-                                                      .text), // button pressed
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const <Widget>[
-                                              Icon(
-                                                AppIcons.save,
-                                                color: AppColors.green,
-                                              ),
-                                              SizedBox(
-                                                height: 3,
-                                              ), // icon
-                                              Text("Actualizar"), // text
-                                            ],
+                                          TextButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                vm.modificarPorcentajeHonorarioEntidad(
+                                                    context,
+                                                    porcentajeHonorarioEntidad,
+                                                    controller.text);
+                                              }
+                                            }, // button pressed
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const <Widget>[
+                                                Icon(
+                                                  AppIcons.save,
+                                                  color: AppColors.green,
+                                                ),
+                                                SizedBox(
+                                                  height: 3,
+                                                ), // icon
+                                                Text("Actualizar"), // text
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           );
