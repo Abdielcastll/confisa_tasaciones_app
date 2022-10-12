@@ -61,18 +61,13 @@ class FacturacionApi {
     }
   }
 
-  Future<Object> getDetalleFactura({
-    required int noFactura,
-    required String codEntidad,
-  }) async {
+  Future<Object> getDetalleFactura({required int noFactura}) async {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
-        '/api/facturaciontasacion/get-detalle-factura/$noFactura/$codEntidad',
+        '/api/facturaciontasacion/get-detalle-factura/$noFactura',
         method: 'GET',
-        headers: {
-          'Authorization': 'Bearer $_token',
-        },
+        headers: {'Authorization': 'Bearer $_token'},
         parser: (data) {
           return detalleFacturaFromJson(jsonEncode(data['data']));
         },

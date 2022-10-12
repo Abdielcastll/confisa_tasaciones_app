@@ -4,12 +4,10 @@
 
 import 'dart:convert';
 
-List<DetalleFactura> detalleFacturaFromJson(String str) =>
-    List<DetalleFactura>.from(
-        json.decode(str).map((x) => DetalleFactura.fromJson(x)));
+DetalleFactura detalleFacturaFromJson(String str) =>
+    DetalleFactura.fromJson(json.decode(str));
 
-String detalleFacturaToJson(List<DetalleFactura> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String detalleFacturaToJson(DetalleFactura data) => json.encode(data.toJson());
 
 class DetalleFactura {
   DetalleFactura({
@@ -85,13 +83,13 @@ class DetalleSucursale {
   DetalleSucursale({
     this.nombreSucursal,
     this.idSucursal,
+    this.tasacionesReserva,
+    this.totalReservas,
     this.subTotalSucursal,
     this.itbisSucursal,
     this.totalGeneralSucursal,
-    this.tasacionesReserva,
     this.tasacionesGastos,
     this.honorarios,
-    this.totalReservas,
     this.totalGastos,
   });
 
@@ -117,7 +115,7 @@ class DetalleSucursale {
             json["tasacionesReserva"].map((x) => Tasaciones.fromJson(x))),
         tasacionesGastos: List<Tasaciones>.from(
             json["tasacionesGastos"].map((x) => Tasaciones.fromJson(x))),
-        honorarios: json["honorarios"],
+        honorarios: json["honorariosSucursal"],
         totalReservas: json["totalReservas"],
         totalGastos: json["totalGastos"],
       );
@@ -132,7 +130,7 @@ class DetalleSucursale {
             List<dynamic>.from(tasacionesReserva!.map((x) => x.toJson())),
         "tasacionesGastos":
             List<dynamic>.from(tasacionesGastos!.map((x) => x.toJson())),
-        "honorarios": honorarios,
+        "honorariosSucursal": honorarios,
         "totalReservas": totalReservas,
         "totalGastos": totalGastos,
       };

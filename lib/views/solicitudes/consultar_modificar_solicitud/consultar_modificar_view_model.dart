@@ -71,7 +71,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
       thousandSeparator: ',',
       decimalSeparator: '',
       initialValue: 0);
-  TextEditingController tcPlaca = TextEditingController();
+  MaskedTextController tcPlaca = MaskedTextController(mask: '@@@@@@@@@');
+  // TextEditingController tcPlaca = TextEditingController();
   TextEditingController tcVIN = TextEditingController();
   TipoVehiculoData? _tipoVehiculos;
   TransmisionesData? _transmision;
@@ -160,8 +161,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     session.role.forEach((e) => print(e));
     isAprobador = session.role.contains("AprobadorTasaciones");
     isTasador = session.role.contains("Tasador") && session.role.length == 1;
-    isOficial =
-        session.role.contains("OficialNegocios") && session.role.length == 1;
+    isOficial = session.role.contains("OficialNegocios");
 
     mostrarAccComp = solicitud.estadoTasacion! >= 10 &&
         solicitud.estadoTasacion! <= 13 &&
@@ -586,7 +586,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
           }
         }
       }
-    } else if (solicitud.estadoTasacion == 9) {
+    } else if (solicitud.estadoTasacion == 9 ||
+        solicitud.estadoTasacion == 10) {
       Navigator.of(context).pop();
     } else if (mostrarAccComp) {
       if (isAprobador) {
@@ -779,6 +780,34 @@ class ConsultarModificarViewModel extends BaseViewModel {
       ProgressDialog.dissmiss(context);
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
+  }
+
+  void resetData() {
+    vinData = null;
+    tcVIN.clear();
+    tcPlaca.clear();
+    // tcNoSolicitud.clear();
+    tcFuerzaMotriz.updateValue(0);
+    tcKilometraje.updateValue(0);
+    versionVehiculo = null;
+    edicionVehiculo = null;
+    tipoVehiculo = null;
+    transmision = null;
+    traccion = null;
+    nPuertas = null;
+    nCilindros = null;
+    colorVehiculo = null;
+    solicitud.descripcionVersion = null;
+    solicitud.descripcionSistemaTransmision = null;
+    solicitud.descripcionTraccion = null;
+    solicitud.descripcionEdicion = null;
+    solicitud.descripcionTipoVehiculoLocal = null;
+    solicitud.noPuertas = null;
+    solicitud.noCilindros = null;
+    solicitud.descripcionColor = null;
+    solicitud.descripcionNuevoUsado = null;
+    _estado = null;
+    notifyListeners();
   }
 }
 

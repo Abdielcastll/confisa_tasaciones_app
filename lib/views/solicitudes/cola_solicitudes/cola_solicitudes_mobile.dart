@@ -159,7 +159,7 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 3),
                                     Text(
-                                      'Fecha de Solicitud:  ${DateFormat.yMEd('es').format(s.fechaCreada!).toUpperCase()}',
+                                      'Fecha de Solicitud:  ${DateFormat.yMMMMd('es').format(s.fechaCreada!).toUpperCase()}',
                                       style: const TextStyle(
                                         color: AppColors.brownDark,
                                         fontSize: 14,

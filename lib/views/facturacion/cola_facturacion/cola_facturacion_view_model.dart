@@ -102,10 +102,9 @@ class ColaFacturacionViewModel extends BaseViewModel {
     loading = true;
     late DetalleFactura detalleFactura;
     late List<DetalleAprobacionFactura> detalleAprobacionFactura;
-    var r = await _facturacionApi.getDetalleFactura(
-        noFactura: f.noFactura!, codEntidad: f.codigoEntidad!);
-    if (r is Success<List<DetalleFactura>>) {
-      detalleFactura = r.response[0];
+    var r = await _facturacionApi.getDetalleFactura(noFactura: f.noFactura!);
+    if (r is Success<DetalleFactura>) {
+      detalleFactura = r.response;
       var d =
           await _facturacionApi.getDetalleAprobacionFactura(idFactura: f.id!);
       if (d is Success<List<DetalleAprobacionFactura>>) {

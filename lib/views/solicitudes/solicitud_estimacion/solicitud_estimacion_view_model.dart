@@ -61,7 +61,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
       thousandSeparator: ',',
       decimalSeparator: '',
       initialValue: 0);
-  TextEditingController tcPlaca = TextEditingController();
+  MaskedTextController tcPlaca = MaskedTextController(mask: '@@@@@@@@@');
   int _currentForm = 1;
   List<AlarmasData> alarmas = [];
   SolicitudCreditoData? solicitud;

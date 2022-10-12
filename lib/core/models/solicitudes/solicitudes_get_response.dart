@@ -331,7 +331,7 @@ class SolicitudesData {
         tasacionAutorizada: json["tasacionAutorizada"] ?? null,
         valorTasacion: json["valorTasacion"] ?? null,
         descripcionEdicion: json["descripcionEdicion"] ?? null,
-        descripcionVersion: json["descripcionVersion"] ?? null,
+        descripcionVersion: json["descripcionVersionLocal"] ?? null,
         fechaCreada: json["fechaCreada"] == null
             ? null
             : DateTime.parse(json["fechaCreada"]),

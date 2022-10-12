@@ -155,7 +155,9 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 3),
-                                    Row(
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'Período de Facturación: ',
@@ -165,15 +167,13 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
-                                        Expanded(
-                                          child: Text(
-                                            '${DateFormat.yMd('es').format(s.periodoFacturacionInicial!)} - ${DateFormat.yMd('es').format(s.periodoFacturacionFinal!)}',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              color: AppColors.brownDark,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                        Text(
+                                          '${DateFormat.yMMMMd('es').format(s.periodoFacturacionInicial!).toUpperCase()} - ${DateFormat.yMMMMd('es').format(s.periodoFacturacionFinal!).toUpperCase()}',
+                                          // overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            color: AppColors.brownDark,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ],
