@@ -516,6 +516,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
           arguments: s,
         )
             .then((v) {
+          getAlarma(context);
           if (v != null) {
             onRefresh();
           }
