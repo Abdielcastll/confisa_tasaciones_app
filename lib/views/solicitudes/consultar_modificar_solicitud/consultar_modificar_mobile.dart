@@ -16,8 +16,7 @@ class _ConsultarModificarMobile extends StatelessWidget {
             textSize: 18,
             vmConsultarModificar: vm,
             esColaSolicitud: (vm.solicitud.id != null) ? false : true,
-            idSolicitud: vm.solicitud.id ??
-                0) /* AppBar(title: Text(vm.solicitudCola.descripcionTipoTasacion ?? '')) */,
+            idSolicitud: vm.solicitud.id ?? 0),
         body: Column(
           children: [
             const SizedBox(height: 10),
@@ -42,6 +41,9 @@ class _ConsultarModificarMobile extends StatelessWidget {
     if (vm.solicitud.tipoTasacion == 23 && vm.solicitud.estadoTasacion == 9) {
       return false;
     }
+    if (vm.isOficial && vm.solicitud.estadoTasacion == 10) {
+      return false;
+    }
     return true;
   }
 
@@ -50,7 +52,7 @@ class _ConsultarModificarMobile extends StatelessWidget {
       case 9:
         return 3;
       case 10:
-        return 4;
+        return vm.isOficial ? 3 : 4;
       default:
         return 4;
     }

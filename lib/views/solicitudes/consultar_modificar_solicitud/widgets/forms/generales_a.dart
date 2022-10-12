@@ -23,10 +23,11 @@ class GeneralesA extends StatelessWidget {
       onPressedBack: () => Navigator.of(context).pop(),
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Siguiente',
-      isValoracion:
-          vm.solicitud.tipoTasacion != 21 && vm.solicitud.estadoTasacion == 9
-              ? true
-              : false,
+      isValoracion: (vm.solicitud.tipoTasacion != 21 &&
+                  vm.solicitud.estadoTasacion == 9) ||
+              (vm.solicitud.estadoTasacion == 10 && vm.isOficial)
+          ? true
+          : false,
       onPressedNext: () => vm.currentForm = 2,
       child: Container(
         padding: const EdgeInsets.all(10),

@@ -34,7 +34,9 @@ class FotosForm extends StatelessWidget {
           : vm.mostrarAccComp || vm.solicitud.tipoTasacion == 21
               ? vm.fotos.any((e) => e.adjunto == null)
                   ? 'Guardar'
-                  : 'Siguiente'
+                  : vm.isOficial
+                      ? 'Salir'
+                      : 'Siguiente'
               : 'Salir',
       onPressedNext: () => vm.subirFotos(context),
       child: Container(

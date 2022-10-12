@@ -199,7 +199,7 @@ class DetalleFacturaPage extends StatelessWidget {
             ...detalleAprobacionFactura.map((e) => builRow([
                   e.nombreAprobador ?? 'No disponible',
                   e.descripcionEstado ?? 'No disponible',
-                  DateFormat.yMd('es').format(e.fecha!)
+                  DateFormat.yMMMMd('es').format(e.fecha!).toUpperCase()
                 ])),
           ],
         ),
@@ -279,8 +279,11 @@ class DetalleFacturaPage extends StatelessWidget {
                       _divider(),
                       _itemTasacion('No. Tasación', t.noTasacion.toString()),
                       _itemTasacion('Id Crédito', t.idCredito.toString()),
-                      _itemTasacion('Fecha',
-                          DateFormat.yMd('es').format(t.fechaTransaccion!)),
+                      _itemTasacion(
+                          'Fecha',
+                          DateFormat.yMMMMd('es')
+                              .format(t.fechaTransaccion!)
+                              .toUpperCase()),
                       _itemTasacion('Cliente', t.nombreCliente ?? ''),
                       _itemTasacion('Cédula', t.cedulaCliente ?? ''),
                       _itemTasacion(
@@ -307,8 +310,11 @@ class DetalleFacturaPage extends StatelessWidget {
                       _divider(),
                       _itemTasacion('No. Tasación', t.noTasacion.toString()),
                       _itemTasacion('Id Crédito', t.idCredito.toString()),
-                      _itemTasacion('Fecha',
-                          DateFormat.yMd('es').format(t.fechaTransaccion!)),
+                      _itemTasacion(
+                          'Fecha',
+                          DateFormat.yMMMMd('es')
+                              .format(t.fechaTransaccion!)
+                              .toUpperCase()),
                       _itemTasacion('Cliente', t.nombreCliente ?? ''),
                       _itemTasacion('Cédula', t.cedulaCliente ?? ''),
                       _itemTasacion('Costo',

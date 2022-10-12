@@ -161,8 +161,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     session.role.forEach((e) => print(e));
     isAprobador = session.role.contains("AprobadorTasaciones");
     isTasador = session.role.contains("Tasador") && session.role.length == 1;
-    isOficial =
-        session.role.contains("OficialNegocios") && session.role.length == 1;
+    isOficial = session.role.contains("OficialNegocios");
 
     mostrarAccComp = solicitud.estadoTasacion! >= 10 &&
         solicitud.estadoTasacion! <= 13 &&
@@ -587,7 +586,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
           }
         }
       }
-    } else if (solicitud.estadoTasacion == 9) {
+    } else if (solicitud.estadoTasacion == 9 ||
+        solicitud.estadoTasacion == 10) {
       Navigator.of(context).pop();
     } else if (mostrarAccComp) {
       if (isAprobador) {
