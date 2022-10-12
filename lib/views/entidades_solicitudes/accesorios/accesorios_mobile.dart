@@ -138,7 +138,7 @@ class _AccesoriosMobile extends StatelessWidget {
                                           accesorioVehiculo.idSegmento == 0
                                               ? const SizedBox()
                                               : Text(
-                                                  "Segmento: ${vm.segmentosAccesoriosVehiculos.firstWhere((element) => element.id == accesorioVehiculo.idSegmento).descripcion}",
+                                                  "Segmento: ${vm.segmentosAccesoriosVehiculos.firstWhere((element) => element.id == accesorioVehiculo.idSegmento, orElse: () => SegmentosAccesoriosVehiculosData(id: 0, descripcion: "Ningun segmento encontrado")).descripcion}",
                                                   style: const TextStyle(
                                                       overflow:
                                                           TextOverflow.ellipsis,

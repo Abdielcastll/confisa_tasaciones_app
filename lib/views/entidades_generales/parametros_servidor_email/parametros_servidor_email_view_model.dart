@@ -669,14 +669,13 @@ class ParametrosServidorEmailViewModel extends BaseViewModel {
 
   @override
   void dispose() {
-    listController.dispose();
     tcNewRemitente.dispose();
     tcNewHost.dispose();
     tcNewPassword.dispose();
     tcNewPuerto.dispose();
-    tcNewRemitente.dispose();
     tcNewUsuario.dispose();
     tcBuscar.dispose();
+    listController.dispose();
     super.dispose();
   }
 }

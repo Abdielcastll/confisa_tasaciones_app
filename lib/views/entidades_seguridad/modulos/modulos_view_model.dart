@@ -325,7 +325,7 @@ class ModulosViewModel extends BaseViewModel {
                             children: <Widget>[
                               Icon(
                                 modulo.estado == 1
-                                    ? AppIcons.trash
+                                    ? AppIcons.uncheckCircle
                                     : AppIcons.checkCircle,
                                 color: AppColors.grey,
                               ),

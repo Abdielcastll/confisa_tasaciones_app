@@ -74,6 +74,7 @@ class AppIcons {
   static const accountOutline = Icons.account_circle_outlined;
   static const messageOutline = Icons.messenger_outline_sharp;
   static const checkCircle = Icons.check_circle_outline;
+  static const uncheckCircle = Icons.radio_button_unchecked;
   static const iconPlus = Icons.add_circle_outline;
   static const trash = Themify.trash;
   static const arrowCircleLeft = Themify.arrow_circle_left;

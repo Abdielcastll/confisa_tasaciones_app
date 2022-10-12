@@ -51,7 +51,10 @@ class _TiposFotosMobile extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      foto.descripcion ?? "",
+                                      foto.descripcion != null
+                                          ? foto.descripcion!
+                                              .replaceFirst(",", "")
+                                          : "",
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         color: AppColors.brownDark,

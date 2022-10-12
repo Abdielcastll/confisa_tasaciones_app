@@ -372,11 +372,9 @@ class SuplidoresViewModel extends BaseViewModel {
                         children: <Widget>[
                           Icon(
                             suplidor.estado == 1
-                                ? AppIcons.trash
-                                : AppIcons.iconPlus,
-                            color: suplidor.estado == 1
-                                ? AppColors.grey
-                                : AppColors.gold,
+                                ? AppIcons.uncheckCircle
+                                : AppIcons.checkCircle,
+                            color: AppColors.grey,
                           ),
                           const SizedBox(
                             height: 3,

@@ -2,6 +2,7 @@ library accesorios_view;
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:tasaciones_app/core/models/seguridad_entidades_solicitudes/segmentos_accesorios_vehiculos_response.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/entidades_solicitudes/accesorios/accesorios_view_model.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';

@@ -192,7 +192,7 @@ class CrearEndpointForm extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const <Widget>[
                               Icon(
-                                AppIcons.trash,
+                                AppIcons.uncheckCircle,
                                 color: AppColors.grey,
                               ),
                               SizedBox(

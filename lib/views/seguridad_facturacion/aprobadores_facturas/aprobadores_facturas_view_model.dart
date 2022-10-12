@@ -287,7 +287,7 @@ class AprobadoresFacturasViewModel extends BaseViewModel {
                           children: <Widget>[
                             Icon(
                               aprobadoresFacturas.estadoAprobadorFactura
-                                  ? AppIcons.trash
+                                  ? AppIcons.uncheckCircle
                                   : AppIcons.checkCircle,
                               color: AppColors.grey,
                             ),
