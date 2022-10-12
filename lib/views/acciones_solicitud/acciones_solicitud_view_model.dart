@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/acciones_solicitud_api.dart';
@@ -27,11 +28,15 @@ class AccionesSolicitudViewModel extends BaseViewModel {
   TextEditingController tcBuscar = TextEditingController();
 
   List<AccionesSolicitudData> accionesSolicitud = [];
+  List<TipoAccionesSolicitudData> tipoAccionesSolicitud = [];
   int pageNumber = 1;
   bool _cargando = false;
   bool _busqueda = false;
   bool hasNextPage = false;
+
+  late TipoAccionesSolicitudData tipoAccionSeleccionada;
   late AccionesSolicitudResponse accionesSolicitudResponse;
+  late TipoAccionesSolicitudResponse tipoAccionesSolicitudResponse;
   late ProfilePermisoResponse profilePermisoResponse;
   Profile? usuario;
 
@@ -111,6 +116,20 @@ class AccionesSolicitudViewModel extends BaseViewModel {
       Dialogs.error(msg: resp.messages[0]);
     }
     if (resp is TokenFail) {
+      _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+    var resp2 = await _accionesSolicitudApi.getTiposAccionesSolicitud();
+    if (resp2 is Success) {
+      tipoAccionesSolicitudResponse =
+          resp2.response as TipoAccionesSolicitudResponse;
+      tipoAccionesSolicitud = tipoAccionesSolicitudResponse.data;
+      notifyListeners();
+    }
+    if (resp2 is Failure) {
+      Dialogs.error(msg: resp2.messages[0]);
+    }
+    if (resp2 is TokenFail) {
       _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
       Dialogs.error(msg: 'Sesión expirada');
     }
@@ -313,25 +332,32 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        readOnly: !readOnly,
-                        controller: tcNewTipo,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un tipo';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Tipo"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownSearch<String>(
+                      selectedItem: tipoAccionesSolicitud
+                          .firstWhere(
+                              (element) => accionSolicitud.tipo == element.id)
+                          .descripcion,
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              label: Text("Tipo Acción Solicitud"))),
+                      validator: (value) => value == null
+                          ? 'Debe escojer un tipo acción solicitud'
+                          : null,
+                      popupProps: const PopupProps.menu(
+                          fit: FlexFit.loose,
+                          showSelectedItems: true,
+                          searchDelay: Duration(microseconds: 0)),
+                      items: tipoAccionesSolicitud
+                          .map((e) => e.descripcion)
+                          .toList(),
+                      onChanged: (newValue) {
+                        tipoAccionSeleccionada =
+                            tipoAccionesSolicitud.firstWhere(
+                                (element) => element.descripcion == newValue);
+                      },
                     ),
                   ),
                   SizedBox(
@@ -453,7 +479,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                           children: <Widget>[
                             Icon(
                               accionSolicitud.listo
-                                  ? AppIcons.trash
+                                  ? Icons.lock_clock_sharp
                                   : AppIcons.checkCircle,
                               color: AppColors.grey,
                             ),
@@ -494,15 +520,15 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                                     accionSolicitud.notas ||
                                 tcNewComentario.text.trim() !=
                                     accionSolicitud.comentario ||
-                                tcNewTipo.text.trim() !=
-                                    accionSolicitud.tipo.toString()) {
+                                tipoAccionSeleccionada.id !=
+                                    accionSolicitud.tipo) {
                               ProgressDialog.show(context);
                               var resp = await _accionesSolicitudApi
                                   .updateAccionSolicitud(
                                       comentario: tcNewComentario.text.trim(),
                                       listo: accionSolicitud.listo,
                                       notas: tcNewNotas.text.trim(),
-                                      tipo: int.parse(tcNewTipo.text.trim()),
+                                      tipo: tipoAccionSeleccionada.id,
                                       id: accionSolicitud.id);
                               ProgressDialog.dissmiss(context);
                               if (resp is Success) {
@@ -607,24 +633,28 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: tcNewTipo,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un tipo';
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          label: Text("Tipo"),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownSearch<String>(
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              label: Text("Tipo Acción Solicitud"))),
+                      validator: (value) => value == null
+                          ? 'Debe escojer un tipo acción solicitud'
+                          : null,
+                      popupProps: const PopupProps.menu(
+                          fit: FlexFit.loose,
+                          showSelectedItems: true,
+                          searchDelay: Duration(microseconds: 0)),
+                      items: tipoAccionesSolicitud
+                          .map((e) => e.descripcion)
+                          .toList(),
+                      onChanged: (newValue) {
+                        tipoAccionSeleccionada =
+                            tipoAccionesSolicitud.firstWhere(
+                                (element) => element.descripcion == newValue);
+                      },
                     ),
                   ),
                   SizedBox(
@@ -679,7 +709,7 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                                 .createAccionSolicitud(
                                     comentario: tcNewComentario.text.trim(),
                                     notas: tcNewNotas.text.trim(),
-                                    tipo: int.parse(tcNewTipo.text.trim()),
+                                    tipo: tipoAccionSeleccionada.id,
                                     idSolicitud: idSolicitud);
 
                             if (resp is Success) {

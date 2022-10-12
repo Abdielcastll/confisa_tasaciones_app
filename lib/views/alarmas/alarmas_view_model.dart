@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
@@ -26,6 +27,7 @@ class AlarmasViewModel extends BaseViewModel {
   TextEditingController tcNewHoraCompromiso = TextEditingController();
   TextEditingController tcNewTitulo = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
+  TextEditingController tcNewFechaMostrar = TextEditingController();
 
   List<AlarmasData> alarmas = [];
   int pageNumber = 1;
@@ -271,6 +273,22 @@ class AlarmasViewModel extends BaseViewModel {
     cargando = false;
   }
 
+  String formatFecha(String fecha) {
+    var temp = DateTime.tryParse(fecha);
+
+    String r = temp!.day.toString() +
+        "-" +
+        DateFormat.MMM().format(temp) +
+        "-" +
+        temp.year.toString();
+    r = r.replaceAll("Jan", "Ene");
+    r = r.replaceAll("Apr", "Abr");
+    r = r.replaceAll("Aug", "Ago");
+    r = r.replaceAll("Apr", "Abr");
+    r = r.replaceAll("Dec", "Dic");
+    return r;
+  }
+
   Future<void> modificarAlarma(BuildContext ctx, AlarmasData alarma) async {
     tcNewDescription.text = alarma.descripcion;
     tcNewTitulo.text = alarma.titulo;
@@ -279,6 +297,7 @@ class AlarmasViewModel extends BaseViewModel {
       alarma.fechaHora.substring(0, idx).trim(),
       alarma.fechaHora.substring(idx + 1).trim()
     ];
+    tcNewFechaMostrar.text = formatFecha(parts[0]);
     tcNewFechaCompromiso.text = parts[0];
     tcNewHoraCompromiso.text = parts[1];
 
@@ -341,7 +360,7 @@ class AlarmasViewModel extends BaseViewModel {
                       child: TextFormField(
                         readOnly: true,
                         keyboardType: TextInputType.datetime,
-                        controller: tcNewFechaCompromiso,
+                        controller: tcNewFechaMostrar,
                         validator: (value) {
                           if (value!.trim() == '') {
                             return 'Seleccione una fecha';
@@ -358,6 +377,8 @@ class AlarmasViewModel extends BaseViewModel {
                             ? () async {
                                 tcNewFechaCompromiso.text =
                                     await Pickers.selectDate(context);
+                                tcNewFechaMostrar.text =
+                                    formatFecha(tcNewFechaCompromiso.text);
                               }
                             : () {},
                       ),
@@ -569,6 +590,7 @@ class AlarmasViewModel extends BaseViewModel {
     tcNewFechaCompromiso.clear();
     tcNewHoraCompromiso.clear();
     tcNewTitulo.clear();
+    tcNewFechaMostrar.clear();
     final GlobalKey<FormState> _formKey = GlobalKey();
     showDialog(
         context: ctx,
@@ -629,7 +651,7 @@ class AlarmasViewModel extends BaseViewModel {
                               child: TextFormField(
                                 keyboardType: TextInputType.datetime,
                                 readOnly: true,
-                                controller: tcNewFechaCompromiso,
+                                controller: tcNewFechaMostrar,
                                 validator: (value) {
                                   if (value!.trim() == '') {
                                     return 'Seleccione una fecha';
@@ -645,6 +667,8 @@ class AlarmasViewModel extends BaseViewModel {
                                 onTap: () async {
                                   tcNewFechaCompromiso.text =
                                       await Pickers.selectDate(context);
+                                  tcNewFechaMostrar.text =
+                                      formatFecha(tcNewFechaCompromiso.text);
                                 },
                               ),
                             ),
@@ -710,6 +734,7 @@ class AlarmasViewModel extends BaseViewModel {
                         tcNewDescription.clear();
                         tcNewFechaCompromiso.clear();
                         tcNewHoraCompromiso.clear();
+                        tcNewFechaMostrar.clear();
                         tcNewTitulo.clear();
                       }, // button pressed
                       child: Column(
@@ -749,6 +774,7 @@ class AlarmasViewModel extends BaseViewModel {
                             tcNewFechaCompromiso.clear();
                             tcNewHoraCompromiso.clear();
                             tcNewTitulo.clear();
+                            tcNewFechaMostrar.clear();
                           }
 
                           if (resp is Failure) {
@@ -791,6 +817,7 @@ class AlarmasViewModel extends BaseViewModel {
     tcNewFechaCompromiso.dispose();
     tcNewHoraCompromiso.dispose();
     tcNewTitulo.dispose();
+    tcNewFechaMostrar.dispose();
     tcBuscar.dispose();
     super.dispose();
   }

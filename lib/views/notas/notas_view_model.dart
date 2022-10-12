@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/notas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
@@ -26,6 +27,7 @@ class NotasViewModel extends BaseViewModel {
   TextEditingController tcNewTitulo = TextEditingController();
   TextEditingController tcNewFechaCompromiso = TextEditingController();
   TextEditingController tcNewHoraCompromiso = TextEditingController();
+  TextEditingController tcNewFechaMostrar = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
   List<NotasData> notas = [];
@@ -63,6 +65,22 @@ class NotasViewModel extends BaseViewModel {
     notas.sort((a, b) {
       return a.titulo.toLowerCase().compareTo(b.titulo.toLowerCase());
     });
+  }
+
+  String formatFecha(String fecha) {
+    var temp = DateTime.tryParse(fecha);
+
+    String r = temp!.day.toString() +
+        "-" +
+        DateFormat.MMM().format(temp) +
+        "-" +
+        temp.year.toString();
+    r = r.replaceAll("Jan", "Ene");
+    r = r.replaceAll("Apr", "Abr");
+    r = r.replaceAll("Aug", "Ago");
+    r = r.replaceAll("Apr", "Abr");
+    r = r.replaceAll("Dec", "Dic");
+    return r;
   }
 
   Future<void> onInit(BuildContext context) async {
@@ -275,6 +293,7 @@ class NotasViewModel extends BaseViewModel {
       nota.fechaHora.substring(0, idx).trim(),
       nota.fechaHora.substring(idx + 1).trim()
     ];
+    tcNewFechaMostrar.text = formatFecha(parts[0]);
     tcNewFechaCompromiso.text = parts[0];
     tcNewHoraCompromiso.text = parts[1];
 
@@ -336,7 +355,7 @@ class NotasViewModel extends BaseViewModel {
                       child: TextFormField(
                         keyboardType: TextInputType.datetime,
                         readOnly: true,
-                        controller: tcNewFechaCompromiso,
+                        controller: tcNewFechaMostrar,
                         validator: (value) {
                           if (value!.trim() == '') {
                             return 'Seleccione una fecha';
@@ -662,6 +681,7 @@ class NotasViewModel extends BaseViewModel {
                             }
                             tcNewDescription.clear();
                             tcNewFechaCompromiso.clear();
+                            tcNewFechaMostrar.clear();
                             tcNewHoraCompromiso.clear();
                             tcNewTitulo.clear();
                           }

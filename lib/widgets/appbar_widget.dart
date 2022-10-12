@@ -304,9 +304,8 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => AccionesSolicitudView(
-                                        idSolicitud: idSolicitud,
-                                        showCreate: true,
-                                      )),
+                                      idSolicitud: idSolicitud,
+                                      showCreate: true)),
                             );
                           },
                           icon: const Icon(

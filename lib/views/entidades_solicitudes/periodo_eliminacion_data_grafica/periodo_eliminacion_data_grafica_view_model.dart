@@ -300,7 +300,7 @@ class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
                             return 'Escriba una descripción';
                           } else {
                             if (int.parse(value.trim()) > 30) {
-                              return "No puede ser mayor a 30";
+                              return "No puede ser mayor a días 30";
                             }
                             return null;
                           }

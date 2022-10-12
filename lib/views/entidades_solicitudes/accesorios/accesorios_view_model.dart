@@ -274,7 +274,7 @@ class AccesoriosViewModel extends BaseViewModel {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      TextButton(
+                      /* TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                           Dialogs.confirm(ctx,
@@ -314,7 +314,7 @@ class AccesoriosViewModel extends BaseViewModel {
                             Text("Eliminar"), // text
                           ],
                         ),
-                      ),
+                      ), */
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();

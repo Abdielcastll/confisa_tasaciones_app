@@ -46,6 +46,28 @@ class AccionesSolicitudApi {
     }
   }
 
+  Future<Object> getTiposAccionesSolicitud() async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/tipo-acciones-solicitud/get',
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {
+          "PageSize": 10000,
+          "PageNumber": 1,
+        },
+        parser: (data) {
+          return TipoAccionesSolicitudResponse.fromJson(data);
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
   Future<Object> createAccionSolicitud({
     required int idSolicitud,
     required int tipo,
