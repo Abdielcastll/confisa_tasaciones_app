@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:money_formatter/money_formatter.dart';
 import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/facturacion/detalle_aprobacion_factura.dart';
@@ -23,7 +24,8 @@ class ColaFacturacionViewModel extends BaseViewModel {
   List<Factura> facturas = [];
   List<Factura> facturasData = [];
   TextEditingController tcBuscar = TextEditingController();
-  TextEditingController tcNCf = TextEditingController();
+  // TextEditingController tcNCf = TextEditingController();
+  MaskedTextController tcNCf = MaskedTextController(mask: 'A0000000000');
   bool isAprobTasacion = false;
   bool isAprobFacturas = false;
   bool _loading = true;
@@ -105,6 +107,7 @@ class ColaFacturacionViewModel extends BaseViewModel {
     var r = await _facturacionApi.getDetalleFactura(noFactura: f.noFactura!);
     if (r is Success<DetalleFactura>) {
       detalleFactura = r.response;
+      tcNCf.updateText(detalleFactura.ncf);
       var d =
           await _facturacionApi.getDetalleAprobacionFactura(idFactura: f.id!);
       if (d is Success<List<DetalleAprobacionFactura>>) {

@@ -58,7 +58,7 @@ class ValoracionForm extends StatelessWidget {
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Fecha de estimación',
-                    initialValue: DateFormat.yMMMMd('es')
+                    initialValue: DateFormat.yMMMd('es')
                         .format(vm.solicitud.fechaCreada!)
                         .toUpperCase(),
                   ),
@@ -73,7 +73,7 @@ class ValoracionForm extends StatelessWidget {
                   BaseTextFieldNoEdit(
                     label: 'Fecha de Anulación o Vencimiento',
                     initialValue: vm.solicitud.fechaVencimiento != null
-                        ? DateFormat.yMMMMd('es')
+                        ? DateFormat.yMMMd('es')
                             .format(vm.solicitud.fechaVencimiento!)
                             .toUpperCase()
                         : 'No disponible',
