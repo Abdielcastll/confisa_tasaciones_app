@@ -106,7 +106,7 @@ class _TarifarioTasacionMobile extends StatelessWidget {
                                             element.idSuplidor ==
                                             suplidor.codigoRelacionado)
                                         ? Text(
-                                            "Tarifa: ${vm.tarifarioTasacion.firstWhere((element) => element.idSuplidor == suplidor.codigoRelacionado).valor}",
+                                            "Tarifa: ${vm.fmf.copyWith(amount: double.tryParse(vm.tarifarioTasacion.firstWhere((element) => element.idSuplidor == suplidor.codigoRelacionado).valor)).output.symbolOnLeft}",
                                             style: const TextStyle(
                                                 color: AppColors.brownDark,
                                                 fontSize: 12),

@@ -335,8 +335,8 @@ class NotasViewModel extends BaseViewModel {
                         readOnly: !readOnly,
                         controller: tcNewTitulo,
                         validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un titulo';
+                          if (value!.trim() == '' || value.length > 50) {
+                            return 'Escriba un titulo válido';
                           } else {
                             return null;
                           }
@@ -400,9 +400,10 @@ class NotasViewModel extends BaseViewModel {
                       child: TextFormField(
                         controller: tcNewDescription,
                         readOnly: !readOnly,
+                        maxLines: 5,
                         validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
+                          if (value!.trim() == '' || value.length > 1500) {
+                            return 'Escriba una descripción válida';
                           } else {
                             return null;
                           }
@@ -599,8 +600,8 @@ class NotasViewModel extends BaseViewModel {
                       child: TextFormField(
                         controller: tcNewTitulo,
                         validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un titulo';
+                          if (value!.trim() == '' || value.length > 50) {
+                            return 'Escriba un titulo válido';
                           } else {
                             return null;
                           }
@@ -619,8 +620,8 @@ class NotasViewModel extends BaseViewModel {
                       child: TextFormField(
                         controller: tcNewDescription,
                         validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
+                          if (value!.trim() == '' || value.length > 1500) {
+                            return 'Escriba una descripción válida';
                           } else {
                             return null;
                           }

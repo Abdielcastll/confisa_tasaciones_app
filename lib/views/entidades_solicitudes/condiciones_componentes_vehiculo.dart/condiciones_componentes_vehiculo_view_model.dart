@@ -199,9 +199,10 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: tcNewDescripcion,
+                        maxLines: 2,
                         validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una descripción';
+                          if (value!.trim() == '' || value.length > 50) {
+                            return 'Escriba una descripción válida';
                           } else {
                             return null;
                           }
@@ -316,7 +317,7 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                         alignment: Alignment.center,
                         color: AppColors.brownLight,
                         child: const Text(
-                          'Crear Condición Vehiculo',
+                          'Crear Condición Vehículo',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -334,9 +335,11 @@ class CondicionesComponentesVehiculoViewModel extends BaseViewModel {
                                   padding: const EdgeInsets.all(8.0),
                                   child: TextFormField(
                                     controller: tcNewDescripcion,
+                                    maxLines: 2,
                                     validator: (value) {
-                                      if (value!.trim() == '') {
-                                        return 'Escriba una descripción';
+                                      if (value!.trim() == '' ||
+                                          value.length > 50) {
+                                        return 'Escriba una descripción válida';
                                       } else {
                                         return null;
                                       }

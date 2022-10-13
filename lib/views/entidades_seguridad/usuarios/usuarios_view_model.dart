@@ -861,8 +861,6 @@ class UsuariosViewModel extends BaseViewModel {
           roles = resp.response.data;
           roles.removeWhere(
               (element) => (element.typeRoleDescription != "Externo"));
-        } else {
-          roles = [];
         }
       }
 

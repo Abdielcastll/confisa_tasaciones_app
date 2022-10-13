@@ -146,8 +146,9 @@ Form dialogActualizarInformacion(
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||
-                                value.length < 4) {
-                              return 'Debe ingresar un no tasador';
+                                value.isEmpty ||
+                                value.length > 10) {
+                              return 'Debe ingresar un No tasador válido';
                             }
 
                             return null;

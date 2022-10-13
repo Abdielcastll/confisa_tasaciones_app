@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
 import 'package:tasaciones_app/core/api/seguridad_entidades_generales/suplidores_api.dart';
 import 'package:tasaciones_app/core/api/seguridad_facturacion/tarifario_tasacion_api.dart';
@@ -18,6 +19,7 @@ class TarifarioTasacionViewModel extends BaseViewModel {
   final _navigationService = locator<NavigatorService>();
   final listController = ScrollController();
   TextEditingController tcNewValor = TextEditingController();
+  TextEditingController tcNewValorMostrar = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
 
   List<TarifarioTasacionData> tarifarioTasacion = [];
@@ -56,6 +58,16 @@ class TarifarioTasacionViewModel extends BaseViewModel {
       return a.nombre.toLowerCase().compareTo(b.nombre.toLowerCase());
     });
   }
+
+  MoneyFormatter fmf = MoneyFormatter(
+      amount: 12345678.9012345,
+      settings: MoneyFormatterSettings(
+          symbol: 'RD\$',
+          thousandSeparator: ',',
+          decimalSeparator: '.',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 2,
+          compactFormatType: CompactFormatType.short));
 
   Future<void> onInit() async {
     cargando = true;
@@ -194,7 +206,6 @@ class TarifarioTasacionViewModel extends BaseViewModel {
     }
     if (resp2 is Failure) {
       Dialogs.error(msg: resp2.messages[0]);
-      return onRefresh();
     }
     if (resp2 is TokenFail) {
       _navigationService.navigateToPageAndRemoveUntil(LoginView.routeName);
@@ -207,6 +218,8 @@ class TarifarioTasacionViewModel extends BaseViewModel {
       BuildContext ctx, SuplidorData suplidor) async {
     bool tieneTarifario = false;
     String tarifa = "";
+    tcNewValor.clear();
+    tcNewValorMostrar.clear();
     tieneTarifario = tarifarioTasacion
         .any((element) => element.idSuplidor == suplidor.codigoRelacionado);
     tieneTarifario
@@ -215,7 +228,14 @@ class TarifarioTasacionViewModel extends BaseViewModel {
                 (element) => element.idSuplidor == suplidor.codigoRelacionado)
             .valor
         : tarifa = "";
+    tarifa = tarifa.replaceAll("RD\$ ", "");
+    tarifa = tarifa.replaceAll(" ", "");
+    tarifa = tarifa.replaceAll(",", "");
     tcNewValor.text = tarifa;
+    tcNewValorMostrar.text = fmf
+        .copyWith(amount: double.tryParse(tcNewValor.text))
+        .output
+        .symbolOnLeft;
     final GlobalKey<FormState> _formKey = GlobalKey();
 
     showDialog(
@@ -271,15 +291,25 @@ class TarifarioTasacionViewModel extends BaseViewModel {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
-                                controller: tcNewValor,
+                                controller: tcNewValorMostrar,
                                 keyboardType: TextInputType.number,
                                 validator: (value) {
-                                  if (value!.trim() == '') {
-                                    return 'Escriba un Valor';
+                                  value = value!.replaceAll("RD\$ ", "");
+                                  value = value.replaceAll(" ", "");
+                                  value = value.replaceAll(",", "");
+                                  if (value.trim() == '' ||
+                                      value.trim().length > 8) {
+                                    return 'Escriba un valor válido';
                                   } else {
                                     return null;
                                   }
                                 },
+                                onChanged: ((value) {
+                                  value = value.replaceAll("RD\$ ", "");
+                                  value = value.replaceAll(" ", "");
+                                  value = value.replaceAll(",", "");
+                                  tcNewValor.text = value;
+                                }),
                                 decoration: const InputDecoration(
                                   label: Text("Valor"),
                                   border: UnderlineInputBorder(),
@@ -298,6 +328,7 @@ class TarifarioTasacionViewModel extends BaseViewModel {
                         onPressed: () {
                           Navigator.of(context).pop();
                           tcNewValor.clear();
+                          tcNewValorMostrar.clear();
                         }, // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -341,6 +372,7 @@ class TarifarioTasacionViewModel extends BaseViewModel {
                                 Dialogs.error(msg: 'Sesión expirada');
                               }
                               tcNewValor.clear();
+                              tcNewValorMostrar.clear();
                             } else {
                               Dialogs.success(
                                   msg: 'Tarifario Tasación Actualizado');
@@ -376,6 +408,7 @@ class TarifarioTasacionViewModel extends BaseViewModel {
   void dispose() {
     listController.dispose();
     tcNewValor.dispose();
+    tcNewValorMostrar.clear();
     tcBuscar.dispose();
     super.dispose();
   }

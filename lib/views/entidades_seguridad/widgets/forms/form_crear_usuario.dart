@@ -124,7 +124,7 @@ Future<dynamic> dialogCrearUsuario(
                                         if (rol1["typeRolDescription"] ==
                                             "Externo") {
                                           for (var element in user.role) {
-                                            if (element ==
+                                            /* if (element ==
                                                 "Aprobador Tasaciones") {
                                               ProgressDialog.show(context);
                                               var resp = await _usuariosApi
@@ -152,7 +152,7 @@ Future<dynamic> dialogCrearUsuario(
                                                 Dialogs.error(
                                                     msg: resp.messages[0]);
                                               }
-                                            }
+                                            } */
                                             if (codSuplidor == 0) {
                                               ProgressDialog.show(context);
                                               var resp = await _suplidoresApi
@@ -266,8 +266,10 @@ Future<dynamic> dialogCrearUsuario(
                                                                         null ||
                                                                     value
                                                                         .isEmpty ||
-                                                                    value.length <
-                                                                        4) {
+                                                                    value
+                                                                        .isEmpty ||
+                                                                    value.length >
+                                                                        10) {
                                                                   return 'Debe ingresar un No tasador válido';
                                                                 }
                                                               }
@@ -420,10 +422,8 @@ Future<dynamic> dialogCrearUsuario(
                                                 Dialogs.error(
                                                     msg: resp.messages[0]);
                                               }
-                                            } else if (user.role.any(
-                                                (element) =>
-                                                    element ==
-                                                    "AprobadorTasaciones")) {
+                                            } else if (element ==
+                                                "AprobadorTasaciones") {
                                               ProgressDialog.show(context);
                                               var resp = await _suplidoresApi
                                                   .getSuplidoresPorId(
@@ -538,8 +538,10 @@ Future<dynamic> dialogCrearUsuario(
                                                                         null ||
                                                                     value
                                                                         .isEmpty ||
-                                                                    value.length <
-                                                                        4) {
+                                                                    value
+                                                                        .isEmpty ||
+                                                                    value.length >
+                                                                        10) {
                                                                   return 'Debe ingresar un No tasador válido';
                                                                 }
                                                               }

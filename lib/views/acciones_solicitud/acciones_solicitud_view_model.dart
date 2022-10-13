@@ -336,8 +336,8 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                         readOnly: !readOnly,
                         controller: tcNewNotas,
                         validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una nota';
+                          if (value!.trim() == '' || value.length > 1500) {
+                            return 'Escriba una nota válida';
                           } else {
                             return null;
                           }
@@ -669,8 +669,8 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                       child: TextFormField(
                         controller: tcNewNotas,
                         validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba una nota';
+                          if (value!.trim() == '' || value.length > 1500) {
+                            return 'Escriba una nota válida';
                           } else {
                             return null;
                           }
@@ -712,8 +712,8 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                       child: TextFormField(
                         controller: tcNewComentario,
                         validator: (value) {
-                          if (value!.trim() == '') {
-                            return 'Escriba un comentario';
+                          if (value!.trim() == '' || value.length > 1500) {
+                            return 'Escriba un comentario válido';
                           } else {
                             return null;
                           }
