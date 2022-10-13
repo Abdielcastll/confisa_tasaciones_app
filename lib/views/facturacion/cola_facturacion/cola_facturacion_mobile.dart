@@ -155,7 +155,7 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 3),
-                                    Column(
+                                    Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
@@ -167,13 +167,15 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
-                                        Text(
-                                          '${DateFormat.yMMMMd('es').format(s.periodoFacturacionInicial!).toUpperCase()} - ${DateFormat.yMMMMd('es').format(s.periodoFacturacionFinal!).toUpperCase()}',
-                                          // overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            color: AppColors.brownDark,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
+                                        Expanded(
+                                          child: Text(
+                                            '${DateFormat.yMMMd('es').format(s.periodoFacturacionInicial!).toUpperCase()} - ${DateFormat.yMMMd('es').format(s.periodoFacturacionFinal!).toUpperCase()}',
+                                            // overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: AppColors.brownDark,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ),
                                       ],

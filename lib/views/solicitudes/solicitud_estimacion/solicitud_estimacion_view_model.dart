@@ -174,6 +174,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   void solicitudDisponibleOnChanged(
       BuildContext context, SolicitudesDisponibles? v) {
     _solicitudDisponible = v;
+    resetData();
     solicitudCredito(context);
   }
 
@@ -429,7 +430,8 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
         }
 
         if (dataList.isEmpty) {
-          Dialogs.error(msg: 'Debes capturar por lo menos 1 foto');
+          Dialogs.error(
+              msg: 'La cantidad de fotos requeridas no se ha completado');
         } else {
           ProgressDialog.show(context);
 

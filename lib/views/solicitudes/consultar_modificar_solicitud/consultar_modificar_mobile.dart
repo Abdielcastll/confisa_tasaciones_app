@@ -41,7 +41,9 @@ class _ConsultarModificarMobile extends StatelessWidget {
     if (vm.solicitud.tipoTasacion == 23 && vm.solicitud.estadoTasacion == 9) {
       return false;
     }
-    if (vm.isOficial && vm.solicitud.estadoTasacion == 10) {
+    if (vm.isOficial &&
+        vm.solicitud.estadoTasacion == 10 &&
+        vm.solicitud.tipoTasacion != 21) {
       return false;
     }
     return true;
@@ -75,7 +77,9 @@ class _ConsultarModificarMobile extends StatelessWidget {
                 },
                 enviar: () => vm.enviarSolicitud(context),
               )
-            : ValoracionForm(vm);
+            : (vm.solicitud.estadoTasacion == 10 && vm.isAprobador)
+                ? AprobarForm(vm)
+                : ValoracionForm(vm);
 
       default:
         return Container();

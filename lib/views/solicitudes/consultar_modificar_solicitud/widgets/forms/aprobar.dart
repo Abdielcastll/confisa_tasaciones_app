@@ -22,7 +22,8 @@ class AprobarForm extends StatelessWidget {
       titleHeader: 'Valorar',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
-      onPressedBack: () => vm.currentForm = 3,
+      onPressedBack: () =>
+          vm.mostrarAccComp ? vm.currentForm = 5 : vm.currentForm = 3,
       iconNext: AppIcons.save,
       labelNext: '',
       isValoracion: true,
@@ -34,7 +35,7 @@ class AprobarForm extends StatelessWidget {
           children: [
             BaseTextFieldNoEdit(
               label: 'Consulta de salvamento',
-              initialValue: vm.isSalvage.toString().toUpperCase(),
+              initialValue: vm.isSalvageDesc?.toUpperCase() ?? 'NO',
             ),
             BaseTextFieldNoEdit(
               label: 'Tasación promedio',

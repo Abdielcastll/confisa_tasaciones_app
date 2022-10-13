@@ -199,7 +199,7 @@ class DetalleFacturaPage extends StatelessWidget {
             ...detalleAprobacionFactura.map((e) => builRow([
                   e.nombreAprobador ?? 'No disponible',
                   e.descripcionEstado ?? 'No disponible',
-                  DateFormat.yMMMMd('es').format(e.fecha!).toUpperCase()
+                  DateFormat.yMMMd('es').format(e.fecha!).toUpperCase()
                 ])),
           ],
         ),
@@ -216,9 +216,9 @@ class DetalleFacturaPage extends StatelessWidget {
             key: vm.formKey,
             child: BaseTextField(
               label: 'NCF',
-              maxLength: 10,
-              keyboardType: TextInputType.number,
-              initialValue: detalleFactura.ncf ?? '',
+              maxLength: 11,
+              controller: vm.tcNCf,
+              textCapitalization: TextCapitalization.characters,
               validator: (v) {
                 if (v!.trim() == '') {
                   return 'Ingrese NCF';
@@ -281,7 +281,7 @@ class DetalleFacturaPage extends StatelessWidget {
                       _itemTasacion('Id Crédito', t.idCredito.toString()),
                       _itemTasacion(
                           'Fecha',
-                          DateFormat.yMMMMd('es')
+                          DateFormat.yMMMd('es')
                               .format(t.fechaTransaccion!)
                               .toUpperCase()),
                       _itemTasacion('Cliente', t.nombreCliente ?? ''),
@@ -312,7 +312,7 @@ class DetalleFacturaPage extends StatelessWidget {
                       _itemTasacion('Id Crédito', t.idCredito.toString()),
                       _itemTasacion(
                           'Fecha',
-                          DateFormat.yMMMMd('es')
+                          DateFormat.yMMMd('es')
                               .format(t.fechaTransaccion!)
                               .toUpperCase()),
                       _itemTasacion('Cliente', t.nombreCliente ?? ''),

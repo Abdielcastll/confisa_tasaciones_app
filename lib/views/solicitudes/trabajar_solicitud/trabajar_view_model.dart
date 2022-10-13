@@ -99,6 +99,7 @@ class TrabajarViewModel extends BaseViewModel {
   List<AccesoriosSuplidor> accesorios = [];
   List<ReferenciaValoracion> referencias = [];
   late bool isSalvage;
+  String? isSalvageDesc;
   late double tasacionPromedio;
   List<SegmentoCondiciones> segmentoComponente = [];
   List<SegmentoCond> segmentoAccesorio = [];
@@ -450,11 +451,18 @@ class TrabajarViewModel extends BaseViewModel {
 
   Future goToFotos(BuildContext context) async {
     ProgressDialog.show(context);
+
+    List<ComponentePorSegmento> acc = [];
+    for (var e in segmentoAccesorio) {
+      acc.addAll(e.componentes);
+    }
+
     var accesoriosSeleccionados =
-        accesorios.where((e) => e.isSelected == true).toList();
+        acc.where((e) => e.isSelected == true).toList();
+
     Map<String, dynamic> data = {
       "accesorios": List.from(
-        accesoriosSeleccionados.map((x) => {"idAccesorio": x.idAccesorio}),
+        accesoriosSeleccionados.map((x) => {"idAccesorio": x.id}),
       ),
     };
     var updateResp = await _solicitudesApi.updateAccesoriosTasacion(
@@ -695,7 +703,8 @@ class TrabajarViewModel extends BaseViewModel {
           }
         }
         if (dataList.isEmpty) {
-          Dialogs.error(msg: 'Debes capturar por lo menos 1 foto');
+          Dialogs.error(
+              msg: 'La cantidad de fotos requeridas no se ha completado');
         } else {
           ProgressDialog.show(context);
           var resp = await _adjuntosApi.addFotosTasacion(
@@ -741,6 +750,7 @@ class TrabajarViewModel extends BaseViewModel {
             vin: solicitud.chasis ?? tcVIN.text);
     if (salvamentoResp is Success<Map<String, dynamic>>) {
       isSalvage = salvamentoResp.response['data']['is_salvage'];
+      isSalvageDesc = salvamentoResp.response['data']['resultado'];
       // notifyListeners();
     }
     if (salvamentoResp is Failure) {
@@ -813,6 +823,23 @@ class TrabajarViewModel extends BaseViewModel {
       // }
 
     }
+  }
+
+  void resetData() {
+    vinData = null;
+    tcVIN.clear();
+    tcPlaca.clear();
+    tcFuerzaMotriz.updateValue(0);
+    tcKilometraje.updateValue(0);
+    versionVehiculo = null;
+    edicionVehiculo = null;
+    tipoVehiculo = null;
+    transmision = null;
+    traccion = null;
+    nPuertas = null;
+    nCilindros = null;
+    colorVehiculo = null;
+    notifyListeners();
   }
 }
 

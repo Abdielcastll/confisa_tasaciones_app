@@ -43,17 +43,16 @@ class AccesoriosTasacionForm extends StatelessWidget {
               textColor: AppColors.brownDark,
               children: e.componentes.map((e) {
                 // e.isSelected = true;
-                vm.accesorios
-                    .firstWhere((d) => d.idAccesorio == e.id)
-                    .isSelected = e.isSelected;
+                // vm.accesorios
+                //     .firstWhere((d) => d.idAccesorio == e.id)
+                //     .isSelected = e.isSelected;
                 return CheckboxListTile(
-                  // selected: true,
                   value: e.isSelected,
                   onChanged: (s) {
-                    e.isSelected = s ?? false;
+                    e.isSelected = s!;
                     vm.accesorios
                         .firstWhere((d) => d.idAccesorio == e.id)
-                        .isSelected = s ?? false;
+                        .isSelected = s;
                     vm.notifyListeners();
                   },
                   title: Text(e.componente ?? ''),

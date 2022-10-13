@@ -35,7 +35,7 @@ class GeneralesTasacionForm extends StatelessWidget {
             ),
             BaseTextFieldNoEdit(
               label: 'Fecha de Solicitud',
-              initialValue: DateFormat.yMMMMd('es')
+              initialValue: DateFormat.yMMMd('es')
                   .format(vm.solicitud.fechaCreada!)
                   .toUpperCase(),
             ),

@@ -40,7 +40,7 @@ class ValoracionTasacionForm extends StatelessWidget {
           children: [
             BaseTextFieldNoEdit(
               label: 'Consulta de salvamento',
-              initialValue: vm.isSalvage.toString().toUpperCase(),
+              initialValue: vm.isSalvageDesc?.toUpperCase() ?? 'NO',
             ),
             BaseTextFieldNoEdit(
               label: 'Tasación promedio',

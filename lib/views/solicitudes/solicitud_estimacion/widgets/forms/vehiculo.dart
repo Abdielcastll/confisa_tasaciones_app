@@ -46,6 +46,7 @@ class VehiculoForm extends StatelessWidget {
                     key: vm.formKey2,
                     child: BaseTextField(
                       enabled: vm.vinData == null,
+                      textCapitalization: TextCapitalization.characters,
                       label: 'No. VIN',
                       hint: 'Ingrese el número VIN del vehículo',
                       validator: vm.noVINValidator,
@@ -564,6 +565,7 @@ class VehiculoForm extends StatelessWidget {
                             }),
                         BaseTextField(
                             label: 'Placa',
+                            textCapitalization: TextCapitalization.characters,
                             maxLength: 8,
                             controller: vm.tcPlaca,
                             validator: (v) {

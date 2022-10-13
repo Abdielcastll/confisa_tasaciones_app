@@ -15,6 +15,7 @@ class BaseTextField extends StatelessWidget {
     this.validator,
     this.controller,
     this.inputFormatters,
+    this.textCapitalization = TextCapitalization.none,
     Key? key,
   }) : super(key: key);
   final String? initialValue;
@@ -27,10 +28,12 @@ class BaseTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textCapitalization: textCapitalization,
       initialValue: initialValue,
       inputFormatters: inputFormatters,
       onChanged: onChanged,
