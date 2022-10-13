@@ -53,7 +53,8 @@ class VehiculoForm extends StatelessWidget {
                         child: Form(
                           key: vm.formKey2,
                           child: BaseTextField(
-                            enabled: vm.vinData == null,
+                            enabled:
+                                vm.vinData == null && vm.tcVIN.text.isEmpty,
                             label: 'No. VIN',
                             hint: 'Ingrese el número VIN del vehículo',
                             validator: vm.noVINValidator,
@@ -65,7 +66,7 @@ class VehiculoForm extends StatelessWidget {
                       IconButton(
                         iconSize: 50,
                         onPressed: () {
-                          if (vm.vinData == null) {
+                          if (vm.vinData == null && vm.tcVIN.text.isEmpty) {
                             vm.consultarVIN(context);
                           }
                         },
@@ -80,7 +81,7 @@ class VehiculoForm extends StatelessWidget {
                       IconButton(
                         iconSize: 50,
                         onPressed: () async {
-                          if (vm.vinData == null) {
+                          if (vm.vinData == null && vm.tcVIN.text.isEmpty) {
                             await vm.escanearVIN();
                           }
                         },

@@ -22,9 +22,8 @@ class ValoracionForm extends StatelessWidget {
           : 'Resumen de Tasación',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
-      onPressedBack: () => vm.isTasador && vm.mostrarAccComp
-          ? vm.currentForm = 5
-          : vm.currentForm = 3,
+      onPressedBack: () =>
+          vm.mostrarAccComp ? vm.currentForm = 5 : vm.currentForm = 3,
       iconNext: Icons.arrow_forward_ios,
       labelNext: 'Salir',
       // isValoracion: true,
@@ -38,8 +37,7 @@ class ValoracionForm extends StatelessWidget {
                 children: [
                   BaseTextFieldNoEdit(
                     label: 'Consulta de salvamento',
-                    initialValue:
-                        vm.solicitud.isSalvage.toString().toUpperCase(),
+                    initialValue: vm.solicitud.isSalvage ?? false ? 'SI' : 'NO',
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Valor Tasación',

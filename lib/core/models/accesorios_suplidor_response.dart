@@ -19,7 +19,7 @@ class AccesoriosSuplidor {
     this.suplidorNombre,
     this.accesorioDescripcion,
     this.estado,
-    this.isSelected = false,
+    this.isSelected = true,
   });
 
   int? id;

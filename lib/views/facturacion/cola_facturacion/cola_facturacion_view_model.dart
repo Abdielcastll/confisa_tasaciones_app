@@ -60,7 +60,6 @@ class ColaFacturacionViewModel extends BaseViewModel {
       Session session = _authenticationAPI.loadSession;
       isAprobTasacion = session.role.contains("AprobadorTasaciones");
       isAprobFacturas = session.role.contains("AprobadorFacturas");
-      print(isAprobTasacion);
     }
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
@@ -112,6 +111,7 @@ class ColaFacturacionViewModel extends BaseViewModel {
           await _facturacionApi.getDetalleAprobacionFactura(idFactura: f.id!);
       if (d is Success<List<DetalleAprobacionFactura>>) {
         detalleAprobacionFactura = d.response;
+
         _navigatorService.navigatorKey.currentState!
             .push(CupertinoPageRoute(builder: (_) {
           return DetalleFacturaPage(
@@ -149,10 +149,13 @@ class ColaFacturacionViewModel extends BaseViewModel {
           noFactura: noFactura, ncf: tcNCf.text.trim());
       if (resp is Failure) {
         Dialogs.error(msg: resp.messages[0]);
+        ProgressDialog.dissmiss(context);
       } else {
         Dialogs.success(msg: 'NCF Actualizado');
+        await onInit();
+        ProgressDialog.dissmiss(context);
+        Navigator.of(context).pop();
       }
-      Navigator.of(context).pop();
     }
   }
 
@@ -161,10 +164,13 @@ class ColaFacturacionViewModel extends BaseViewModel {
     var resp = await _facturacionApi.aprobar(noFactura: noFactura);
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+      ProgressDialog.dissmiss(context);
     } else {
       Dialogs.success(msg: 'Factura Aprobada');
+      await onInit();
+      ProgressDialog.dissmiss(context);
+      Navigator.of(context).pop();
     }
-    Navigator.of(context).pop();
   }
 
   void rechazarFactura(BuildContext context, {required int noFactura}) async {
@@ -172,10 +178,13 @@ class ColaFacturacionViewModel extends BaseViewModel {
     var resp = await _facturacionApi.rechazar(noFactura: noFactura);
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages[0]);
+      ProgressDialog.dissmiss(context);
     } else {
       Dialogs.success(msg: 'Factura Rechazada');
+      await onInit();
+      ProgressDialog.dissmiss(context);
+      Navigator.of(context).pop();
     }
-    Navigator.of(context).pop();
   }
 
   @override

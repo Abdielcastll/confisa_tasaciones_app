@@ -25,7 +25,7 @@ class FotosForm extends StatelessWidget {
       titleHeader: 'Fotos',
       iconBack: Icons.arrow_back_ios,
       labelBack: 'Anterior',
-      onPressedBack: () => vm.isTasador && vm.mostrarAccComp
+      onPressedBack: () => (vm.isTasador || vm.isOficial) && vm.mostrarAccComp
           ? vm.currentForm = 4
           : vm.currentForm = 2,
       iconNext: Icons.arrow_forward_ios,

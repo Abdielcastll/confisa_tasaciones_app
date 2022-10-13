@@ -25,7 +25,9 @@ class GeneralesA extends StatelessWidget {
       labelNext: 'Siguiente',
       isValoracion: (vm.solicitud.tipoTasacion != 21 &&
                   vm.solicitud.estadoTasacion == 9) ||
-              (vm.solicitud.estadoTasacion == 10 && vm.isOficial)
+              (vm.solicitud.estadoTasacion == 10 &&
+                  vm.isOficial &&
+                  vm.solicitud.tipoTasacion != 21)
           ? true
           : false,
       onPressedNext: () => vm.currentForm = 2,

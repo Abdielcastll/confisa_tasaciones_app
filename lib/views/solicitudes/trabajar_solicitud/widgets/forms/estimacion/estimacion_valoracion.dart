@@ -34,7 +34,7 @@ class ValoracionEstimacionForm extends StatelessWidget {
           children: [
             BaseTextFieldNoEdit(
               label: 'Consulta de salvamento',
-              initialValue: vm.solicitud.isSalvage.toString().toUpperCase(),
+              initialValue: vm.isSalvageDesc?.toUpperCase() ?? 'NO',
             ),
             BaseTextFieldNoEdit(
               label: 'Tasación promedio',

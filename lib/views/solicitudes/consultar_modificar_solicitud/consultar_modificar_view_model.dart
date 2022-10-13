@@ -57,6 +57,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
 
   late SolicitudesData solicitud;
   bool isSalvage = false;
+  String? isSalvageDesc;
   double tasacionPromedio = 0;
 
   SolicitudCreditoData? solicitudCreditoData;
@@ -160,7 +161,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     Session session = _authenticationAPI.loadSession;
     session.role.forEach((e) => print(e));
     isAprobador = session.role.contains("AprobadorTasaciones");
-    isTasador = session.role.contains("Tasador") && session.role.length == 1;
+    isTasador = session.role.contains("Tasador");
     isOficial = session.role.contains("OficialNegocios");
 
     mostrarAccComp = solicitud.estadoTasacion! >= 10 &&
@@ -550,7 +551,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
             }
             if (dataList.isEmpty) {
               // ProgressDialog.dissmiss(context);
-              Dialogs.error(msg: 'Debes capturar por lo menos 1 foto');
+              Dialogs.error(
+                  msg: 'La cantidad de fotos requeridas no se ha completado');
             } else {
               ProgressDialog.show(context);
               var resp = await _adjuntosApi.addFotosTasacion(
@@ -587,7 +589,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
         }
       }
     } else if (solicitud.estadoTasacion == 9 ||
-        solicitud.estadoTasacion == 10) {
+        (solicitud.estadoTasacion == 10 && isOficial)) {
       Navigator.of(context).pop();
     } else if (mostrarAccComp) {
       if (isAprobador) {
@@ -599,6 +601,8 @@ class ConsultarModificarViewModel extends BaseViewModel {
         // goToValorar(context);
         // Navigator.of(context).pop();
       }
+    } else if (isAprobador) {
+      goToAprobar(context);
     } else {
       goToValorar();
     }
@@ -612,6 +616,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
         await _solicitudesApi.getSalvamento(vin: solicitud.chasis ?? '');
     if (salvamentoResp is Success<Map<String, dynamic>>) {
       isSalvage = salvamentoResp.response['data']['is_salvage'];
+      isSalvageDesc = salvamentoResp.response['data']['resultado'];
     }
     if (salvamentoResp is Failure) {
       // Dialogs.error(msg: salvamentoResp.messages[0]);
@@ -650,7 +655,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
     }
     notifyListeners();
     ProgressDialog.dissmiss(context);
-    currentForm = 6;
+    mostrarAccComp ? currentForm = 6 : currentForm = 4;
   }
 
   Future<void> consultarVIN(BuildContext context) async {
@@ -761,8 +766,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
 
   Future<void> aprobar(BuildContext context) async {
     ProgressDialog.show(context);
-    print(solicitud.noSolicitudCredito ?? '');
-    print(solicitud.noTasacion ?? '');
+
     var aprobarResp = await _solicitudesApi.aprobarSolicitud(
         noSolicitud: solicitud.noSolicitudCredito!,
         noTasacion: solicitud.noTasacion!);
@@ -819,7 +823,7 @@ class ComponentePorSegmento {
   int? id;
 
   ComponentePorSegmento({
-    this.isSelected = false,
+    this.isSelected = true,
     this.segmento,
     this.componente,
     this.condicion,

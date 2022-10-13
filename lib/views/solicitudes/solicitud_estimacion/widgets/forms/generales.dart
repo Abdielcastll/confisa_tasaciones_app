@@ -52,6 +52,7 @@ class GeneralesForm extends StatelessWidget {
                         child: Expanded(
                           child: DropdownSearch<SolicitudesDisponibles>(
                             asyncItems: (text) => vm.getSolicitudes(),
+                            enabled: vm.solicitudCreada == null,
                             dropdownBuilder: (context, tipo) {
                               return Text(
                                 tipo == null
@@ -95,17 +96,6 @@ class GeneralesForm extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // IconButton(
-                      //   iconSize: 50,
-                      //   onPressed: () => vm.solicitudCredito(context),
-                      //   icon: const CircleAvatar(
-                      //     child: Icon(
-                      //       Icons.search,
-                      //       color: AppColors.white,
-                      //     ),
-                      //     backgroundColor: AppColors.brownDark,
-                      //   ),
-                      // ),
                     ],
                   ),
             if (vm.solicitud != null)

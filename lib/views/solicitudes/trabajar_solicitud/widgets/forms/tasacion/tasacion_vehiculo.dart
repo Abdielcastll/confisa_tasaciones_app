@@ -45,6 +45,8 @@ class VehiculoTasacionForm extends StatelessWidget {
                   child: Form(
                     key: vm.formKey2,
                     child: BaseTextField(
+                      enabled: vm.vinData == null,
+                      textCapitalization: TextCapitalization.characters,
                       label: 'No. VIN',
                       hint: 'Ingrese el número VIN del vehículo',
                       validator: vm.noVINValidator,
@@ -55,7 +57,11 @@ class VehiculoTasacionForm extends StatelessWidget {
                 ),
                 IconButton(
                   iconSize: 50,
-                  onPressed: () => vm.consultarVIN(context),
+                  onPressed: () {
+                    if (vm.vinData == null) {
+                      vm.consultarVIN(context);
+                    }
+                  },
                   icon: const CircleAvatar(
                     child: Icon(
                       Icons.search,
@@ -66,10 +72,27 @@ class VehiculoTasacionForm extends StatelessWidget {
                 ),
                 IconButton(
                   iconSize: 50,
-                  onPressed: () async => await vm.escanearVIN(),
+                  onPressed: () async {
+                    if (vm.vinData == null) {
+                      await vm.escanearVIN();
+                    }
+                  },
                   icon: const CircleAvatar(
                     child: Icon(
                       Icons.qr_code,
+                      color: AppColors.white,
+                    ),
+                    backgroundColor: AppColors.brownDark,
+                  ),
+                ),
+                IconButton(
+                  iconSize: 50,
+                  onPressed: () {
+                    vm.resetData();
+                  },
+                  icon: const CircleAvatar(
+                    child: Icon(
+                      Icons.restart_alt_rounded,
                       color: AppColors.white,
                     ),
                     backgroundColor: AppColors.brownDark,
@@ -514,6 +537,7 @@ class VehiculoTasacionForm extends StatelessWidget {
                             }),
                         BaseTextField(
                             label: 'Placa',
+                            textCapitalization: TextCapitalization.characters,
                             controller: vm.tcPlaca,
                             maxLength: 8,
                             validator: (v) {
