@@ -116,7 +116,7 @@ class _AccionesSolicitudMobile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                               child: Container(
                                 alignment: Alignment.centerLeft,
-                                height: 85,
+                                height: 95,
                                 padding: const EdgeInsets.all(10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -147,10 +147,19 @@ class _AccionesSolicitudMobile extends StatelessWidget {
                                     ),
                                     Text(
                                       "Fecha: " +
-                                          accionSolicitud.fechaHora
+                                          vm.formatFecha(accionSolicitud
+                                              .fechaHora
                                               .split("T")
-                                              .join(" Hora: ")
-                                              .toString(),
+                                              .first),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Hora: " +
+                                          DateFormat("h:mma").format(
+                                              DateTime.parse(
+                                                  accionSolicitud.fechaHora)),
                                       style: const TextStyle(
                                           color: AppColors.brownDark,
                                           fontSize: 12),

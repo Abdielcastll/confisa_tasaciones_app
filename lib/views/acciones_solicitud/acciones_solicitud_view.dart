@@ -1,6 +1,7 @@
 library acciones_solicitud_view;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';

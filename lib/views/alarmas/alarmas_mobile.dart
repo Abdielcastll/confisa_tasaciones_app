@@ -118,7 +118,7 @@ class _AlarmasMobile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(5)),
                               child: Container(
                                 alignment: Alignment.centerLeft,
-                                height: 85,
+                                height: 95,
                                 padding: const EdgeInsets.all(10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -147,11 +147,19 @@ class _AlarmasMobile extends StatelessWidget {
                                           fontSize: 12),
                                     ),
                                     Text(
-                                      "Fecha: " +
-                                          alarma.fechaCompromiso
+                                      "Fecha Compromiso: " +
+                                          vm.formatFecha(alarma.fechaCompromiso
                                               .split("T")
-                                              .join(" Hora: ")
-                                              .toString(),
+                                              .first),
+                                      style: const TextStyle(
+                                          color: AppColors.brownDark,
+                                          fontSize: 12),
+                                    ),
+                                    Text(
+                                      "Hora Compromiso: " +
+                                          DateFormat("h:mma").format(
+                                              DateTime.parse(
+                                                  alarma.fechaCompromiso)),
                                       style: const TextStyle(
                                           color: AppColors.brownDark,
                                           fontSize: 12),

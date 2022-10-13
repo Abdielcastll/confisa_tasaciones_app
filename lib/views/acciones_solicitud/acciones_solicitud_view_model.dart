@@ -1,5 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/acciones_solicitud_api.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
@@ -67,6 +68,22 @@ class AccionesSolicitudViewModel extends BaseViewModel {
       return a.fechaHora.toLowerCase().compareTo(b.fechaHora.toLowerCase());
     });
     accionesSolicitud = accionesSolicitud.reversed.toList();
+  }
+
+  String formatFecha(String fecha) {
+    var temp = DateTime.tryParse(fecha);
+
+    String r = temp!.day.toString() +
+        "-" +
+        DateFormat.MMM().format(temp) +
+        "-" +
+        temp.year.toString();
+    r = r.replaceAll("Jan", "Ene");
+    r = r.replaceAll("Apr", "Abr");
+    r = r.replaceAll("Aug", "Ago");
+    r = r.replaceAll("Apr", "Abr");
+    r = r.replaceAll("Dec", "Dic");
+    return r;
   }
 
   Future<void> onInit(BuildContext context) async {
@@ -389,6 +406,38 @@ class AccionesSolicitudViewModel extends BaseViewModel {
                         readOnly: true,
                         decoration: const InputDecoration(
                           label: Text("¿Listo?"),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.datetime,
+                        readOnly: true,
+                        initialValue: formatFecha(
+                            accionSolicitud.fechaHora.split("T").first),
+                        decoration: const InputDecoration(
+                          label: Text("Fecha"),
+                          suffixIcon: Icon(Icons.calendar_today),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.datetime,
+                        readOnly: true,
+                        initialValue: DateFormat("h:mma")
+                            .format(DateTime.parse(accionSolicitud.fechaHora)),
+                        decoration: const InputDecoration(
+                          label: Text("Hora"),
+                          suffixIcon: Icon(Icons.alarm),
                           border: UnderlineInputBorder(),
                         ),
                       ),

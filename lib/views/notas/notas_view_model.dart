@@ -377,7 +377,8 @@ class NotasViewModel extends BaseViewModel {
                       child: TextFormField(
                         keyboardType: TextInputType.datetime,
                         readOnly: true,
-                        controller: tcNewHoraCompromiso,
+                        initialValue: DateFormat("h:mma")
+                            .format(DateTime.parse("2012-02-27 " + parts[1])),
                         validator: (value) {
                           if (value!.trim() == '') {
                             return 'Seleccione una hora';

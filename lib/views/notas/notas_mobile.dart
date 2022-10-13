@@ -126,6 +126,7 @@ class _NotasMobile extends StatelessWidget {
                                     Text(
                                       nota.titulo,
                                       style: const TextStyle(
+                                        overflow: TextOverflow.ellipsis,
                                         color: AppColors.brownDark,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w800,

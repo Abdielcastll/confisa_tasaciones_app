@@ -25,6 +25,7 @@ class AlarmasViewModel extends BaseViewModel {
   TextEditingController tcNewDescription = TextEditingController();
   TextEditingController tcNewFechaCompromiso = TextEditingController();
   TextEditingController tcNewHoraCompromiso = TextEditingController();
+  TextEditingController tcNewHoraMostrar = TextEditingController();
   TextEditingController tcNewTitulo = TextEditingController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewFechaMostrar = TextEditingController();
@@ -292,14 +293,16 @@ class AlarmasViewModel extends BaseViewModel {
   Future<void> modificarAlarma(BuildContext ctx, AlarmasData alarma) async {
     tcNewDescription.text = alarma.descripcion;
     tcNewTitulo.text = alarma.titulo;
-    int idx = alarma.fechaHora.indexOf("T");
+    int idx = alarma.fechaCompromiso.indexOf("T");
     List parts = [
-      alarma.fechaHora.substring(0, idx).trim(),
-      alarma.fechaHora.substring(idx + 1).trim()
+      alarma.fechaCompromiso.substring(0, idx).trim(),
+      alarma.fechaCompromiso.substring(idx + 1).trim()
     ];
     tcNewFechaMostrar.text = formatFecha(parts[0]);
     tcNewFechaCompromiso.text = parts[0];
     tcNewHoraCompromiso.text = parts[1];
+    tcNewHoraMostrar.text = DateFormat("h:mma")
+        .format(DateTime.parse("2012-02-27 " + tcNewHoraCompromiso.text));
 
     bool readOnly = tienePermiso("Actualizar Alarmas");
     bool eliminar = tienePermiso("Eliminar Alarmas");
@@ -369,7 +372,7 @@ class AlarmasViewModel extends BaseViewModel {
                           }
                         },
                         decoration: const InputDecoration(
-                          label: Text("Fecha"),
+                          label: Text("Fecha Compromiso"),
                           suffixIcon: Icon(Icons.calendar_today),
                           border: UnderlineInputBorder(),
                         ),
@@ -390,7 +393,7 @@ class AlarmasViewModel extends BaseViewModel {
                       child: TextFormField(
                         readOnly: true,
                         keyboardType: TextInputType.datetime,
-                        controller: tcNewHoraCompromiso,
+                        controller: tcNewHoraMostrar,
                         validator: (value) {
                           if (value!.trim() == '') {
                             return 'Seleccione una hora';
@@ -399,7 +402,7 @@ class AlarmasViewModel extends BaseViewModel {
                           }
                         },
                         decoration: const InputDecoration(
-                          label: Text("Hora"),
+                          label: Text("Hora Compromiso"),
                           suffixIcon: Icon(Icons.alarm),
                           border: UnderlineInputBorder(),
                         ),
@@ -407,6 +410,9 @@ class AlarmasViewModel extends BaseViewModel {
                             ? () async {
                                 tcNewHoraCompromiso.text =
                                     await Pickers.selectTime(context);
+                                tcNewHoraMostrar.text = DateFormat("h:mma")
+                                    .format(DateTime.parse("2012-02-27 " +
+                                        tcNewHoraCompromiso.text));
                               }
                             : () {},
                       ),
@@ -589,6 +595,7 @@ class AlarmasViewModel extends BaseViewModel {
     tcNewDescription.clear();
     tcNewFechaCompromiso.clear();
     tcNewHoraCompromiso.clear();
+    tcNewHoraMostrar.clear();
     tcNewTitulo.clear();
     tcNewFechaMostrar.clear();
     final GlobalKey<FormState> _formKey = GlobalKey();
@@ -660,7 +667,7 @@ class AlarmasViewModel extends BaseViewModel {
                                   }
                                 },
                                 decoration: const InputDecoration(
-                                  label: Text("Fecha"),
+                                  label: Text("Fecha Compromiso"),
                                   suffixIcon: Icon(Icons.calendar_today),
                                   border: UnderlineInputBorder(),
                                 ),
@@ -679,7 +686,7 @@ class AlarmasViewModel extends BaseViewModel {
                               child: TextFormField(
                                 keyboardType: TextInputType.datetime,
                                 readOnly: true,
-                                controller: tcNewHoraCompromiso,
+                                controller: tcNewHoraMostrar,
                                 validator: (value) {
                                   if (value!.trim() == '') {
                                     return 'Seleccione una hora';
@@ -688,13 +695,16 @@ class AlarmasViewModel extends BaseViewModel {
                                   }
                                 },
                                 decoration: const InputDecoration(
-                                  label: Text("Hora"),
+                                  label: Text("Hora Compromiso"),
                                   suffixIcon: Icon(Icons.alarm),
                                   border: UnderlineInputBorder(),
                                 ),
                                 onTap: () async {
                                   tcNewHoraCompromiso.text =
                                       await Pickers.selectTime(context);
+                                  tcNewHoraMostrar.text = DateFormat("h:mma")
+                                      .format(DateTime.parse("2012-02-27 " +
+                                          tcNewHoraCompromiso.text));
                                 },
                               ),
                             ),
