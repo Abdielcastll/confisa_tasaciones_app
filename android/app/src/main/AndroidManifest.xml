@@ -39,13 +39,13 @@
               <category android:name="android.intent.category.BROWSABLE" />
               <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
               <data
-                android:scheme="http"
+                android:scheme="https"
                 android:pathPrefix="/reset-password"
-                android:host="prueba.com" />
+                android:host="apiconfisa.confisa.do:8097" />
               <data
-                android:scheme="http"
+                android:scheme="https"
                 android:pathPrefix="/activate-user"
-                android:host="prueba.com" />
+                android:host="apiconfisa.confisa.do:8097" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
@@ -58,7 +58,7 @@
 </manifest>
 
 
-<!-- http://192.168.100.133:8094/activate-user/{token}/{username}
 
-http://192.168.100.133:8094/reset-password/{token}/{username} -->
-                <!-- android:host="192.168.100.133:8094" /> -->
+
+
+                <!-- https://apiconfisa.confisa.do:8097 -->

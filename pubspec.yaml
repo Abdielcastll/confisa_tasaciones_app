@@ -43,6 +43,7 @@ dependencies:
   money_formatter: ^0.0.3
   flutter_masked_text: ^0.8.0
   photo_view: ^0.14.0
+  printing: ^5.9.3
   
 dev_dependencies:
   flutter_launcher_icons: ^0.9.3

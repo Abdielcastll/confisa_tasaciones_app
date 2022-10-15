@@ -17,6 +17,15 @@ class _ConsultarModificarMobile extends StatelessWidget {
             vmConsultarModificar: vm,
             esColaSolicitud: (vm.solicitud.id != null) ? false : true,
             idSolicitud: vm.solicitud.id ?? 0),
+        floatingActionButton: (vm.solicitud.tipoTasacion != 21 &&
+                vm.solicitud.estadoTasacion == 11)
+            ? FloatingActionButton.extended(
+                onPressed: () => vm.goToReporte(context),
+                label: const Text('Exportar pdf',
+                    style: TextStyle(color: Colors.white)),
+              )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Column(
           children: [
             const SizedBox(height: 10),

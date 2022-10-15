@@ -10,19 +10,29 @@ import '../../../../core/models/facturacion/detalle_factura.dart';
 import '../../../../theme/theme.dart';
 import '../../../solicitudes/trabajar_solicitud/widgets/forms/estimacion/estimacion_valoracion.dart';
 
-class DetalleFacturaPage extends StatelessWidget {
+class DetalleFacturaPage extends StatefulWidget {
   static const routeName = 'detalleFactura';
-  const DetalleFacturaPage(
-      {required this.detalleFactura,
-      required this.detalleAprobacionFactura,
-      required this.vm,
-      required this.estado,
-      Key? key})
+  const DetalleFacturaPage({required this.vm, required this.estado, Key? key})
       : super(key: key);
-  final DetalleFactura detalleFactura;
-  final List<DetalleAprobacionFactura> detalleAprobacionFactura;
   final ColaFacturacionViewModel vm;
   final int estado;
+
+  @override
+  State<DetalleFacturaPage> createState() => _DetalleFacturaPageState();
+}
+
+class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
+  bool pendienteAprobar = false;
+  @override
+  void initState() {
+    if (widget.vm.detalleAprobacionFactura
+            .firstWhere((e) => e.idAprobador == widget.vm.profile!.id)
+            .estadoAprobacion ==
+        119) {
+      pendienteAprobar = true;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +40,17 @@ class DetalleFacturaPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        appBar: AppBar(title: Text('Factura No. ${detalleFactura.noFactura}')),
+        appBar: AppBar(
+            title: Text('Factura No. ${widget.vm.detalleFactura.noFactura}')),
+        floatingActionButton: (widget.vm.detalleFactura.estadoFactura == 5)
+            ? FloatingActionButton.extended(
+                onPressed: () => widget.vm
+                    .goToReporte(context, widget.vm.detalleFactura.noFactura!),
+                label: const Text('Exportar pdf',
+                    style: TextStyle(color: Colors.white)),
+              )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         body: Card(
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
@@ -45,31 +65,31 @@ class DetalleFacturaPage extends StatelessWidget {
                 children: [
                   BaseTextFieldNoEdit(
                     label: 'Suplidor:',
-                    initialValue: detalleFactura.suplidor,
+                    initialValue: widget.vm.detalleFactura.suplidor,
                     border: false,
                   ),
                   BaseTextFieldNoEdit(
                     label: 'RNC:',
-                    initialValue: detalleFactura.rnc,
+                    initialValue: widget.vm.detalleFactura.rnc,
                     border: false,
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Dirección:',
-                    initialValue: detalleFactura.direccion,
+                    initialValue: widget.vm.detalleFactura.direccion,
                     border: false,
                   ),
                   BaseTextFieldNoEdit(
                     label: 'Entidad:',
-                    initialValue: detalleFactura.entidad,
+                    initialValue: widget.vm.detalleFactura.entidad,
                     border: false,
                   ),
                   BaseTextFieldNoEdit(
                     label: 'NCF:',
-                    initialValue: detalleFactura.ncf,
+                    initialValue: widget.vm.detalleFactura.ncf,
                     border: false,
                   ),
                   const SizedBox(height: 10),
-                  if (detalleFactura.detalleSucursales!.isNotEmpty)
+                  if (widget.vm.detalleFactura.detalleSucursales!.isNotEmpty)
                     _sucursales(),
                   // const SizedBox(height: 10),
                   Row(
@@ -78,9 +98,10 @@ class DetalleFacturaPage extends StatelessWidget {
                         child: BaseTextFieldNoEdit(
                           label: 'Itbis:',
                           initialValue:
-                              // '${NumberFormat('#,###.0#', 'es').format(detalleFactura.itbis)} RD\$',
-                              vm.fmf
-                                  .copyWith(amount: detalleFactura.itbis)
+                              // '${NumberFormat('#,###.0#', 'es').format(vm.detalleFactura.itbis)} RD\$',
+                              widget.vm.fmf
+                                  .copyWith(
+                                      amount: widget.vm.detalleFactura.itbis)
                                   .output
                                   .symbolOnLeft,
                           border: false,
@@ -90,9 +111,11 @@ class DetalleFacturaPage extends StatelessWidget {
                         child: BaseTextFieldNoEdit(
                           label: 'Honorarios:',
                           initialValue:
-                              // '${NumberFormat('#,###.0#', 'es').format(detalleFactura.honorarios)} RD\$',
-                              vm.fmf
-                                  .copyWith(amount: detalleFactura.honorarios)
+                              // '${NumberFormat('#,###.0#', 'es').format(vm.detalleFactura.honorarios)} RD\$',
+                              widget.vm.fmf
+                                  .copyWith(
+                                      amount:
+                                          widget.vm.detalleFactura.honorarios)
                                   .output
                                   .symbolOnLeft,
                           border: false,
@@ -106,9 +129,10 @@ class DetalleFacturaPage extends StatelessWidget {
                         child: BaseTextFieldNoEdit(
                           label: 'SubTotal:',
                           initialValue:
-                              // '${NumberFormat('#,###.0#', 'es').format(detalleFactura.subTotal)} RD\$',
-                              vm.fmf
-                                  .copyWith(amount: detalleFactura.subTotal)
+                              // '${NumberFormat('#,###.0#', 'es').format(vm.detalleFactura.subTotal)} RD\$',
+                              widget.vm.fmf
+                                  .copyWith(
+                                      amount: widget.vm.detalleFactura.subTotal)
                                   .output
                                   .symbolOnLeft,
                           border: false,
@@ -118,9 +142,11 @@ class DetalleFacturaPage extends StatelessWidget {
                         child: BaseTextFieldNoEdit(
                           label: 'Total General:',
                           initialValue:
-                              // '${NumberFormat('#,###.0#', 'es').format(detalleFactura.totalGeneral)} RD\$',
-                              vm.fmf
-                                  .copyWith(amount: detalleFactura.totalGeneral)
+                              // '${NumberFormat('#,###.0#', 'es').format(vm.detalleFactura.totalGeneral)} RD\$',
+                              widget.vm.fmf
+                                  .copyWith(
+                                      amount:
+                                          widget.vm.detalleFactura.totalGeneral)
                                   .output
                                   .symbolOnLeft,
                           border: false,
@@ -128,10 +154,13 @@ class DetalleFacturaPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (vm.isAprobTasacion && (estado == 117 || estado == 4))
+                  if (widget.vm.isAprobTasacion &&
+                      (widget.estado == 117 || widget.estado == 4))
                     _ncf(context),
-                  if (estado != 117) _historialAprobacion(),
-                  if (vm.isAprobFacturas && estado == 4)
+                  if (widget.estado != 117) _historialAprobacion(),
+                  if (widget.vm.isAprobFacturas &&
+                      widget.estado == 4 &&
+                      pendienteAprobar)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10, top: 15),
                       child: Row(
@@ -143,9 +172,13 @@ class DetalleFacturaPage extends StatelessWidget {
                                 Dialogs.confirm(context,
                                     tittle: 'Rechazar Factura',
                                     description:
-                                        '¿Está seguro de rechazar la factura No. ${detalleFactura.noFactura}?',
-                                    confirm: () => vm.rechazarFactura(context,
-                                        noFactura: detalleFactura.noFactura!));
+                                        '¿Está seguro de rechazar la factura No. ${widget.vm.detalleFactura.noFactura}?',
+                                    confirm: () async {
+                                  await widget.vm.rechazarFactura(context,
+                                      noFactura:
+                                          widget.vm.detalleFactura.noFactura!);
+                                  setState(() {});
+                                });
                               },
                               color: AppColors.brownDark),
                           AppButton(
@@ -154,9 +187,13 @@ class DetalleFacturaPage extends StatelessWidget {
                                 Dialogs.confirm(context,
                                     tittle: 'Aprobar Factura',
                                     description:
-                                        '¿Está seguro de aprobar la factura No. ${detalleFactura.noFactura}?',
-                                    confirm: () => vm.aprobarFactura(context,
-                                        noFactura: detalleFactura.noFactura!));
+                                        '¿Está seguro de aprobar la factura No. ${widget.vm.detalleFactura.noFactura}?',
+                                    confirm: () async {
+                                  await widget.vm.aprobarFactura(context,
+                                      noFactura:
+                                          widget.vm.detalleFactura.noFactura!);
+                                  setState(() {});
+                                });
                               },
                               color: AppColors.green),
                         ],
@@ -171,7 +208,7 @@ class DetalleFacturaPage extends StatelessWidget {
     );
   }
 
-  Column _historialAprobacion() {
+  Widget _historialAprobacion() {
     return Column(
       children: [
         const SizedBox(height: 15),
@@ -196,10 +233,12 @@ class DetalleFacturaPage extends StatelessWidget {
               ['Aprobador', 'Estado', 'Fecha'],
               isHeader: true,
             ),
-            ...detalleAprobacionFactura.map((e) => builRow([
+            ...widget.vm.detalleAprobacionFactura.map((e) => builRow([
                   e.nombreAprobador ?? 'No disponible',
                   e.descripcionEstado ?? 'No disponible',
-                  DateFormat.yMMMd('es').format(e.fecha!).toUpperCase()
+                  e.fecha?.year == 1
+                      ? '-'
+                      : DateFormat.yMMMd('es').format(e.fecha!).toUpperCase()
                 ])),
           ],
         ),
@@ -213,11 +252,11 @@ class DetalleFacturaPage extends StatelessWidget {
         SizedBox(
           width: MediaQuery.of(context).size.width * .60,
           child: Form(
-            key: vm.formKey,
+            key: widget.vm.formKey,
             child: BaseTextField(
               label: 'NCF',
               maxLength: 11,
-              controller: vm.tcNCf,
+              controller: widget.vm.tcNCf,
               textCapitalization: TextCapitalization.characters,
               validator: (v) {
                 if (v!.trim() == '') {
@@ -231,8 +270,8 @@ class DetalleFacturaPage extends StatelessWidget {
         ),
         AppButton(
             text: 'Actualizar NCF',
-            onPressed: () =>
-                vm.actualizarNCF(context, noFactura: detalleFactura.noFactura!),
+            onPressed: () => widget.vm.actualizarNCF(context,
+                noFactura: widget.vm.detalleFactura.noFactura!),
             color: AppColors.brownDark),
       ],
     );
@@ -249,7 +288,7 @@ class DetalleFacturaPage extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        ...detalleFactura.detalleSucursales!.map((e) {
+        ...widget.vm.detalleFactura.detalleSucursales!.map((e) {
           return Container(
             margin: const EdgeInsets.only(top: 5, bottom: 15),
             padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -288,7 +327,10 @@ class DetalleFacturaPage extends StatelessWidget {
                       _itemTasacion('Cédula', t.cedulaCliente ?? ''),
                       _itemTasacion(
                         'Costo',
-                        vm.fmf.copyWith(amount: t.costo).output.symbolOnLeft,
+                        widget.vm.fmf
+                            .copyWith(amount: t.costo)
+                            .output
+                            .symbolOnLeft,
                       ),
                       _divider(),
                     ],
@@ -317,8 +359,12 @@ class DetalleFacturaPage extends StatelessWidget {
                               .toUpperCase()),
                       _itemTasacion('Cliente', t.nombreCliente ?? ''),
                       _itemTasacion('Cédula', t.cedulaCliente ?? ''),
-                      _itemTasacion('Costo',
-                          vm.fmf.copyWith(amount: t.costo).output.symbolOnLeft),
+                      _itemTasacion(
+                          'Costo',
+                          widget.vm.fmf
+                              .copyWith(amount: t.costo)
+                              .output
+                              .symbolOnLeft),
                       _divider(),
                     ],
                   );
@@ -328,7 +374,7 @@ class DetalleFacturaPage extends StatelessWidget {
                     Expanded(
                       child: BaseTextFieldNoEdit(
                         label: 'Honorarios',
-                        initialValue: vm.fmf
+                        initialValue: widget.vm.fmf
                             .copyWith(amount: e.honorarios)
                             .output
                             .symbolOnLeft,
@@ -340,7 +386,7 @@ class DetalleFacturaPage extends StatelessWidget {
                         label: 'Total Reservas',
                         initialValue:
                             // '${NumberFormat('#,###.0#', 'es').format(e.totalReservas)} RD\$',
-                            vm.fmf
+                            widget.vm.fmf
                                 .copyWith(amount: e.totalReservas)
                                 .output
                                 .symbolOnLeft,
@@ -352,7 +398,7 @@ class DetalleFacturaPage extends StatelessWidget {
                         label: 'Total Gastos',
                         initialValue:
                             // '${NumberFormat('#,###.0#', 'es').format(e.totalGastos)} RD\$',
-                            vm.fmf
+                            widget.vm.fmf
                                 .copyWith(amount: e.totalGastos)
                                 .output
                                 .symbolOnLeft,

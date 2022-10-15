@@ -5,6 +5,7 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/facturacion/detalle_aprobacion_factura.dart';
 import 'package:tasaciones_app/core/models/facturacion/detalle_factura.dart';
 import 'package:tasaciones_app/core/models/facturacion/factura_response.dart';
+import 'package:tasaciones_app/core/models/profile_response.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/facturacion/cola_facturacion/widgets/detalle_factura.dart';
 
@@ -12,14 +13,19 @@ import '../../../core/api/api_status.dart';
 import '../../../core/api/facturaciones_api/facturacion_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
+import '../../../core/models/reporte_response.dart';
 import '../../../core/models/sign_in_response.dart';
 import '../../../core/services/navigator_service.dart';
+import '../../../core/user_client.dart';
 import '../../../widgets/app_dialogs.dart';
+import '../../../widgets/view_pdf.dart';
 
 class ColaFacturacionViewModel extends BaseViewModel {
   final _navigatorService = locator<NavigatorService>();
   final _facturacionApi = locator<FacturacionApi>();
   final _authenticationAPI = locator<AuthenticationClient>();
+  final _userClient = locator<UserClient>();
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<Factura> facturas = [];
   List<Factura> facturasData = [];
@@ -30,6 +36,10 @@ class ColaFacturacionViewModel extends BaseViewModel {
   bool isAprobFacturas = false;
   bool _loading = true;
   bool _busqueda = false;
+  Profile? profile;
+  late int idFactura;
+  late DetalleFactura detalleFactura;
+  late List<DetalleAprobacionFactura> detalleAprobacionFactura;
   bool get loading => _loading;
   set loading(bool value) {
     _loading = value;
@@ -53,6 +63,7 @@ class ColaFacturacionViewModel extends BaseViewModel {
           compactFormatType: CompactFormatType.short));
 
   Future<void> onInit() async {
+    profile = _userClient.loadProfile;
     var resp = await _facturacionApi.getFacturas();
     if (resp is Success<List<Factura>>) {
       facturas = resp.response;
@@ -101,8 +112,6 @@ class ColaFacturacionViewModel extends BaseViewModel {
 
   void goToFactura(Factura f) async {
     loading = true;
-    late DetalleFactura detalleFactura;
-    late List<DetalleAprobacionFactura> detalleAprobacionFactura;
     var r = await _facturacionApi.getDetalleFactura(noFactura: f.noFactura!);
     if (r is Success<DetalleFactura>) {
       detalleFactura = r.response;
@@ -111,12 +120,11 @@ class ColaFacturacionViewModel extends BaseViewModel {
           await _facturacionApi.getDetalleAprobacionFactura(idFactura: f.id!);
       if (d is Success<List<DetalleAprobacionFactura>>) {
         detalleAprobacionFactura = d.response;
+        idFactura = f.id!;
 
         _navigatorService.navigatorKey.currentState!
             .push(CupertinoPageRoute(builder: (_) {
           return DetalleFacturaPage(
-            detalleAprobacionFactura: detalleAprobacionFactura,
-            detalleFactura: detalleFactura,
             vm: this,
             estado: f.idEstado!,
           );
@@ -159,7 +167,8 @@ class ColaFacturacionViewModel extends BaseViewModel {
     }
   }
 
-  void aprobarFactura(BuildContext context, {required int noFactura}) async {
+  Future<void> aprobarFactura(BuildContext context,
+      {required int noFactura}) async {
     ProgressDialog.show(context);
     var resp = await _facturacionApi.aprobar(noFactura: noFactura);
     if (resp is Failure) {
@@ -167,13 +176,19 @@ class ColaFacturacionViewModel extends BaseViewModel {
       ProgressDialog.dissmiss(context);
     } else {
       Dialogs.success(msg: 'Factura Aprobada');
-      await onInit();
+      var d = await _facturacionApi.getDetalleAprobacionFactura(
+          idFactura: idFactura);
+      if (d is Success<List<DetalleAprobacionFactura>>) {
+        detalleAprobacionFactura = d.response;
+        notifyListeners();
+      }
       ProgressDialog.dissmiss(context);
-      Navigator.of(context).pop();
+      // await onInit();
     }
   }
 
-  void rechazarFactura(BuildContext context, {required int noFactura}) async {
+  Future<void> rechazarFactura(BuildContext context,
+      {required int noFactura}) async {
     ProgressDialog.show(context);
     var resp = await _facturacionApi.rechazar(noFactura: noFactura);
     if (resp is Failure) {
@@ -181,9 +196,34 @@ class ColaFacturacionViewModel extends BaseViewModel {
       ProgressDialog.dissmiss(context);
     } else {
       Dialogs.success(msg: 'Factura Rechazada');
-      await onInit();
+      var d = await _facturacionApi.getDetalleAprobacionFactura(
+          idFactura: idFactura);
+      if (d is Success<List<DetalleAprobacionFactura>>) {
+        detalleAprobacionFactura = d.response;
+        notifyListeners();
+      }
       ProgressDialog.dissmiss(context);
-      Navigator.of(context).pop();
+      // await onInit();
+    }
+  }
+
+  Future<void> goToReporte(BuildContext context, int idFactura) async {
+    ProgressDialog.show(context);
+    var resp = await _facturacionApi.reportesFactura(idFactura: idFactura);
+    if (resp is Success<Reporte>) {
+      ProgressDialog.dissmiss(context);
+      Navigator.push(context, CupertinoPageRoute(builder: (context) {
+        return AppPdfViewer(resp.response);
+      }));
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+      ProgressDialog.dissmiss(context);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 
