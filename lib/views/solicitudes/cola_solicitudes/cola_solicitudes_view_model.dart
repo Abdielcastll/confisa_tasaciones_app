@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'package:tasaciones_app/core/locator.dart';
 import 'package:tasaciones_app/core/models/alarma_response.dart';
 import 'package:tasaciones_app/core/models/menu_response.dart';
 import 'package:tasaciones_app/core/models/profile_response.dart';
+import 'package:tasaciones_app/core/models/reporte_response.dart';
 import 'package:tasaciones_app/core/models/roles_claims_response.dart';
 import 'package:tasaciones_app/core/models/sign_in_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitud_tipo_estado_response.dart';
@@ -20,6 +22,7 @@ import 'package:tasaciones_app/theme/theme.dart';
 import 'package:tasaciones_app/views/auth/login/login_view.dart';
 import 'package:tasaciones_app/views/entidades_seguridad/widgets/dialog_mostrar_informacion_permisos.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/consultar_modificar_view.dart';
+import 'package:tasaciones_app/widgets/view_pdf.dart';
 
 import '../../../core/api/api_status.dart';
 import '../../../core/api/roles_api.dart';
@@ -534,6 +537,27 @@ class ColaSolicitudesViewModel extends BaseViewModel {
           }
         });
       }
+    }
+  }
+
+  Future<void> goToReporte(BuildContext context, int idTasacion) async {
+    print('ID===============>>>>>>>>>>>>>>>>$idTasacion');
+    ProgressDialog.show(context);
+    var resp = await _solicitudesApi.reportesTasacion(idTasacion: idTasacion);
+    if (resp is Success<Reporte>) {
+      ProgressDialog.dissmiss(context);
+      Navigator.push(context, CupertinoPageRoute(builder: (context) {
+        return AppPdfViewer(resp.response);
+      }));
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+      ProgressDialog.dissmiss(context);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
   }
 }

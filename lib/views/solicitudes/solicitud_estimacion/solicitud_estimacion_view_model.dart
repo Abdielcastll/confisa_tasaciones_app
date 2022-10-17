@@ -283,7 +283,7 @@ class SolicitudEstimacionViewModel extends BaseViewModel {
   }
 
   String? noVINValidator(String? value) {
-    if (value?.trim() == '') {
+    if (value?.trim() == '' || value!.length < 11) {
       return 'Ingrese el número VIN';
     } else {
       return null;

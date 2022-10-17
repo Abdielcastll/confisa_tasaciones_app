@@ -70,6 +70,8 @@ Color colorFacturaByStatus(int statusId) {
 class AppIcons {
   static const paperPlane = FontAwesomeIcons.paperPlane;
   static const pencilAlt = FontAwesomeIcons.penToSquare;
+  static const pdf = FontAwesomeIcons.filePdf;
+
   static const closeCircle = Icons.cancel_outlined;
   static const accountOutline = Icons.account_circle_outlined;
   static const messageOutline = Icons.messenger_outline_sharp;

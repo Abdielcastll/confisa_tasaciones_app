@@ -5,6 +5,7 @@ import 'package:tasaciones_app/core/models/facturacion/factura_response.dart';
 import '../../authentication_client.dart';
 import '../../models/facturacion/detalle_aprobacion_factura.dart';
 import '../../models/facturacion/detalle_factura.dart';
+import '../../models/reporte_response.dart';
 import '../api_status.dart';
 import '../http.dart';
 
@@ -101,7 +102,7 @@ class FacturacionApi {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
-        '/api/facturaciontasacion/aprobar_factura/$noFactura',
+        '/api/facturaciontasacion/aprobar-factura/$noFactura',
         method: 'PUT',
         headers: {
           'Authorization': 'Bearer $_token',
@@ -118,10 +119,29 @@ class FacturacionApi {
     String? _token = await _authenticationClient.accessToken;
     if (_token != null) {
       return _http.request(
-        '/api/facturaciontasacion/rechazar_factura/$noFactura',
+        '/api/facturaciontasacion/rechazar-factura/$noFactura',
         method: 'PUT',
         headers: {
           'Authorization': 'Bearer $_token',
+        },
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> reportesFactura({required int idFactura}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/reportes/factura',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        data: {"idFactura": idFactura},
+        parser: (data) {
+          return Reporte.fromJson(data);
         },
       );
     } else {

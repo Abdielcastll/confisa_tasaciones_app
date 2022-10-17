@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -28,6 +29,7 @@ import '../../../core/models/componente_tasacion_response.dart';
 import '../../../core/models/descripcion_foto_vehiculo.dart';
 import '../../../core/models/ediciones_vehiculo_response.dart';
 import '../../../core/models/referencia_valoracion_response.dart';
+import '../../../core/models/reporte_response.dart';
 import '../../../core/models/seguridad_entidades_generales/adjuntos_response.dart';
 import '../../../core/models/tipo_vehiculo_response.dart';
 import '../../../core/models/tracciones_response.dart';
@@ -39,6 +41,7 @@ import '../../../core/providers/componentes_vehiculo_provider.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/escaner.dart';
+import '../../../widgets/view_pdf.dart';
 import '../../auth/login/login_view.dart';
 
 class ConsultarModificarViewModel extends BaseViewModel {
@@ -716,7 +719,7 @@ class ConsultarModificarViewModel extends BaseViewModel {
   }
 
   String? noVINValidator(String? value) {
-    if (value?.trim() == '') {
+    if (value?.trim() == '' || value!.length < 11) {
       return 'Ingrese el número VIN';
     } else {
       return null;
@@ -812,6 +815,27 @@ class ConsultarModificarViewModel extends BaseViewModel {
     solicitud.descripcionNuevoUsado = null;
     _estado = null;
     notifyListeners();
+  }
+
+  Future<void> goToReporte(BuildContext context) async {
+    ProgressDialog.show(context);
+    var resp =
+        await _solicitudesApi.reportesTasacion(idTasacion: solicitud.id!);
+    if (resp is Success<Reporte>) {
+      ProgressDialog.dissmiss(context);
+      Navigator.push(context, CupertinoPageRoute(builder: (context) {
+        return AppPdfViewer(resp.response);
+      }));
+    }
+    if (resp is Failure) {
+      Dialogs.error(msg: resp.messages[0]);
+      ProgressDialog.dissmiss(context);
+    }
+    if (resp is TokenFail) {
+      Dialogs.error(msg: 'su sesión a expirado');
+      ProgressDialog.dissmiss(context);
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    }
   }
 }
 

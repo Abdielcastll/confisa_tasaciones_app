@@ -7,6 +7,7 @@ import 'package:tasaciones_app/core/models/componente_condicion.dart';
 import 'package:tasaciones_app/core/models/componente_tasacion_response.dart';
 import 'package:tasaciones_app/core/models/ediciones_vehiculo_response.dart';
 import 'package:tasaciones_app/core/models/referencia_valoracion_response.dart';
+import 'package:tasaciones_app/core/models/reporte_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitud_tipo_estado_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_disponibles_response.dart';
 import 'package:tasaciones_app/core/models/solicitudes/solicitudes_get_response.dart';
@@ -879,6 +880,25 @@ class SolicitudesApi {
           'Authorization': 'Bearer $_token',
         },
         data: body,
+      );
+    } else {
+      return TokenFail();
+    }
+  }
+
+  Future<Object> reportesTasacion({required int idTasacion}) async {
+    String? _token = await _authenticationClient.accessToken;
+    if (_token != null) {
+      return _http.request(
+        '/api/reportes/tasacion',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        queryParameters: {"idSolicitud": idTasacion},
+        parser: (data) {
+          return Reporte.fromJson(data);
+        },
       );
     } else {
       return TokenFail();
