@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tasaciones_app/views/facturacion/cola_facturacion/cola_facturacion_view_model.dart';
 import 'package:tasaciones_app/views/solicitudes/base_widgets/base_text_field_widget.dart';
 import 'package:tasaciones_app/widgets/app_buttons.dart';
@@ -7,6 +8,8 @@ import 'package:tasaciones_app/widgets/app_dialogs.dart';
 
 import '../../../../core/models/facturacion/detalle_aprobacion_factura.dart';
 import '../../../../core/models/facturacion/detalle_factura.dart';
+import '../../../../core/providers/permisos_provider.dart';
+import '../../../../core/providers/profile_permisos_provider.dart';
 import '../../../../theme/theme.dart';
 import '../../../solicitudes/trabajar_solicitud/widgets/forms/estimacion/estimacion_valoracion.dart';
 
@@ -37,17 +40,21 @@ class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
   @override
   Widget build(BuildContext context) {
     final heightAppbar = MediaQuery.of(context).padding.top + kToolbarHeight;
+    final permisos = Provider.of<ProfilePermisosProvider>(context).permisos;
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
         appBar: AppBar(
             title: Text('Factura No. ${widget.vm.detalleFactura.noFactura}')),
         floatingActionButton: (widget.vm.detalleFactura.estadoFactura == 5)
-            ? FloatingActionButton.extended(
-                onPressed: () => widget.vm
-                    .goToReporte(context, widget.vm.detalleFactura.noFactura!),
-                label: const Text('Exportar pdf',
-                    style: TextStyle(color: Colors.white)),
+            ? Visibility(
+                visible: permisos.any((e) => e.id == 231),
+                child: FloatingActionButton.extended(
+                  onPressed: () => widget.vm.goToReporte(
+                      context, widget.vm.detalleFactura.noFactura!),
+                  label: const Text('Exportar pdf',
+                      style: TextStyle(color: Colors.white)),
+                ),
               )
             : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
@@ -166,36 +173,42 @@ class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          AppButton(
-                              text: 'Rechazar',
-                              onPressed: () {
-                                Dialogs.confirm(context,
-                                    tittle: 'Rechazar Factura',
-                                    description:
-                                        '¿Está seguro de rechazar la factura No. ${widget.vm.detalleFactura.noFactura}?',
-                                    confirm: () async {
-                                  await widget.vm.rechazarFactura(context,
-                                      noFactura:
-                                          widget.vm.detalleFactura.noFactura!);
-                                  setState(() {});
-                                });
-                              },
-                              color: AppColors.brownDark),
-                          AppButton(
-                              text: 'Aprobar',
-                              onPressed: () {
-                                Dialogs.confirm(context,
-                                    tittle: 'Aprobar Factura',
-                                    description:
-                                        '¿Está seguro de aprobar la factura No. ${widget.vm.detalleFactura.noFactura}?',
-                                    confirm: () async {
-                                  await widget.vm.aprobarFactura(context,
-                                      noFactura:
-                                          widget.vm.detalleFactura.noFactura!);
-                                  setState(() {});
-                                });
-                              },
-                              color: AppColors.green),
+                          Visibility(
+                            visible: permisos.any((e) => e.id == 362),
+                            child: AppButton(
+                                text: 'Rechazar',
+                                onPressed: () {
+                                  Dialogs.confirm(context,
+                                      tittle: 'Rechazar Factura',
+                                      description:
+                                          '¿Está seguro de rechazar la factura No. ${widget.vm.detalleFactura.noFactura}?',
+                                      confirm: () async {
+                                    await widget.vm.rechazarFactura(context,
+                                        noFactura: widget
+                                            .vm.detalleFactura.noFactura!);
+                                    setState(() {});
+                                  });
+                                },
+                                color: AppColors.brownDark),
+                          ),
+                          Visibility(
+                            visible: permisos.any((e) => e.id == 361),
+                            child: AppButton(
+                                text: 'Aprobar',
+                                onPressed: () {
+                                  Dialogs.confirm(context,
+                                      tittle: 'Aprobar Factura',
+                                      description:
+                                          '¿Está seguro de aprobar la factura No. ${widget.vm.detalleFactura.noFactura}?',
+                                      confirm: () async {
+                                    await widget.vm.aprobarFactura(context,
+                                        noFactura: widget
+                                            .vm.detalleFactura.noFactura!);
+                                    setState(() {});
+                                  });
+                                },
+                                color: AppColors.green),
+                          ),
                         ],
                       ),
                     )

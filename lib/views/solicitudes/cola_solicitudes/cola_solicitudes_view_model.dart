@@ -28,6 +28,7 @@ import '../../../core/api/api_status.dart';
 import '../../../core/api/roles_api.dart';
 import '../../../core/authentication_client.dart';
 import '../../../core/base/base_view_model.dart';
+import '../../../core/models/permisos_response.dart';
 import '../../../core/providers/accesorios_provider.dart';
 import '../../../core/services/navigator_service.dart';
 import '../../../widgets/app_dialogs.dart';
@@ -77,6 +78,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
   final logger = Logger();
   final List<RolClaimsData> _permisos;
   final MenuResponse _menu;
+  List<PermisosData> permisosRol = [];
 
   ColaSolicitudesViewModel(this._permisos, this._menu) {
     listController.addListener(() {
@@ -331,6 +333,29 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     loading = true;
     user = _authenticationClient.loadSession;
     userData = _userClient.loadProfile;
+
+    var resp1 = await _personalApi.getPermisos();
+    if (resp1 is Success<ProfilePermisoResponse>) {
+      List<PermisosData> listTemp = [];
+      for (var e in resp1.response.data) {
+        listTemp.addAll(e.permisos!);
+      }
+
+      Provider.of<ProfilePermisosProvider>(context, listen: false)
+          .profilePermisos = resp1.response;
+      Provider.of<ProfilePermisosProvider>(context, listen: false).permisos =
+          listTemp;
+
+      permisosRol = listTemp;
+    } else if (resp1 is Failure) {
+      Dialogs.error(msg: resp1.messages.first);
+      // loading = false;
+      // _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+    } else if (resp1 is TokenFail) {
+      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
+      Dialogs.error(msg: 'Sesión expirada');
+    }
+
     var resp = await _solicitudesApi.getTiposTasacion();
     if (resp is Success<TipoTasacionResponse>) {
       tiposTasacion = resp.response.data;
@@ -349,18 +374,7 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     } else if (resp2 is Failure) {
       Dialogs.error(msg: resp2.messages.first);
     }
-    var resp1 = await _personalApi.getPermisos();
-    if (resp1 is Success<ProfilePermisoResponse>) {
-      Provider.of<ProfilePermisosProvider>(context, listen: false)
-          .profilePermisos = resp1.response;
-    } else if (resp1 is Failure) {
-      Dialogs.error(msg: resp1.messages.first);
-      // loading = false;
-      // _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-    } else if (resp1 is TokenFail) {
-      _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
-      Dialogs.error(msg: 'Sesión expirada');
-    }
+
     getAlarma(context);
     await onRefresh();
     loading = false;

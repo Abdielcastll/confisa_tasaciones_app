@@ -7,6 +7,8 @@ class _ConsultarModificarMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final permisos = Provider.of<ProfilePermisosProvider>(context).permisos;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
@@ -19,10 +21,13 @@ class _ConsultarModificarMobile extends StatelessWidget {
             idSolicitud: vm.solicitud.id ?? 0),
         floatingActionButton: (vm.solicitud.tipoTasacion != 21 &&
                 vm.solicitud.estadoTasacion == 11)
-            ? FloatingActionButton.extended(
-                onPressed: () => vm.goToReporte(context),
-                label: const Text('Exportar pdf',
-                    style: TextStyle(color: Colors.white)),
+            ? Visibility(
+                visible: permisos.any((e) => e.id == 363),
+                child: FloatingActionButton.extended(
+                  onPressed: () => vm.goToReporte(context),
+                  label: const Text('Exportar pdf',
+                      style: TextStyle(color: Colors.white)),
+                ),
               )
             : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

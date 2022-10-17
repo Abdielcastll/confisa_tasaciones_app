@@ -23,6 +23,8 @@ class _ColaFacturacionMobile extends StatelessWidget {
   }
 
   Widget _home(BuildContext context) {
+    final permisos = Provider.of<ProfilePermisosProvider>(context).permisos;
+
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -238,19 +240,22 @@ class _ColaFacturacionMobile extends StatelessWidget {
                                 ),
                               ),
                               if (s.idEstado == 5)
-                                Positioned(
-                                    // top: 5,
-                                    right: 0,
-                                    bottom: 5,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        vm.goToReporte(context, s.id!);
-                                      },
-                                      icon: const Icon(
-                                        AppIcons.pdf,
-                                        color: AppColors.brownDark,
-                                      ),
-                                    ))
+                                Visibility(
+                                  visible: permisos.any((e) => e.id == 231),
+                                  child: Positioned(
+                                      // top: 5,
+                                      right: 0,
+                                      bottom: 5,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          vm.goToReporte(context, s.id!);
+                                        },
+                                        icon: const Icon(
+                                          AppIcons.pdf,
+                                          color: AppColors.brownDark,
+                                        ),
+                                      )),
+                                )
                             ],
                           ),
                         ),
