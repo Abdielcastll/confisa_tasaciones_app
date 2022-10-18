@@ -181,18 +181,22 @@ class _ColaSolicitudesMobile extends StatelessWidget {
                               ),
                               if (s.tipoTasacion != 21 &&
                                   s.estadoTasacion == 11)
-                                Positioned(
-                                    top: 5,
-                                    right: 0,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        vm.goToReporte(context, s.id!);
-                                      },
-                                      icon: const Icon(
-                                        AppIcons.pdf,
-                                        color: AppColors.brownDark,
-                                      ),
-                                    ))
+                                Visibility(
+                                  visible:
+                                      vm.permisosRol.any((e) => e.id == 363),
+                                  child: Positioned(
+                                      top: 5,
+                                      right: 0,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          vm.goToReporte(context, s.id!);
+                                        },
+                                        icon: const Icon(
+                                          AppIcons.pdf,
+                                          color: AppColors.brownDark,
+                                        ),
+                                      )),
+                                )
                             ],
                           ),
                         ),

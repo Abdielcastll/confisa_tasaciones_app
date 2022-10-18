@@ -1,6 +1,7 @@
 library consultar_modificar_view;
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/widgets/forms/accesorios.dart';
 import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/widgets/forms/aprobar.dart';
@@ -9,6 +10,8 @@ import 'package:tasaciones_app/views/solicitudes/consultar_modificar_solicitud/w
 import 'package:tasaciones_app/widgets/app_dialogs.dart';
 import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import '../../../core/models/solicitudes/solicitudes_get_response.dart';
+import '../../../core/providers/permisos_provider.dart';
+import '../../../core/providers/profile_permisos_provider.dart';
 import '../../../widgets/app_progress_widget.dart';
 import '../solicitud_estimacion/widgets/forms/enviar.dart';
 import 'consultar_modificar_view_model.dart';

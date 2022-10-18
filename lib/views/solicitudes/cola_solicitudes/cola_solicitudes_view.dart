@@ -9,6 +9,7 @@ import 'package:tasaciones_app/core/providers/permisos_provider.dart';
 import 'package:tasaciones_app/widgets/appbar_widget.dart';
 import 'package:tasaciones_app/widgets/global_drawer_widget.dart';
 import 'package:tasaciones_app/widgets/progress_widget.dart';
+import '../../../core/providers/profile_permisos_provider.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/refresh_widget.dart';
 import 'cola_solicitudes_view_model.dart';
