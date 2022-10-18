@@ -66,7 +66,7 @@ class VehiculoForm extends StatelessWidget {
                       IconButton(
                         iconSize: 50,
                         onPressed: () {
-                          if (vm.vinData == null && vm.tcVIN.text.isEmpty) {
+                          if (vm.vinData == null && vm.tcVIN.text.length > 10) {
                             vm.consultarVIN(context);
                           }
                         },
@@ -81,7 +81,7 @@ class VehiculoForm extends StatelessWidget {
                       IconButton(
                         iconSize: 50,
                         onPressed: () async {
-                          if (vm.vinData == null && vm.tcVIN.text.isEmpty) {
+                          if (vm.vinData == null && vm.tcVIN.text.length > 10) {
                             await vm.escanearVIN();
                           }
                         },

@@ -65,7 +65,7 @@ abstract class DependencyInjection {
   static Future<void> initialize() async {
     final Dio dio = Dio(BaseOptions(baseUrl: server));
     Logger logger = Logger();
-    Http http = Http(dio: dio, logger: logger, logsEnabled: false);
+    Http http = Http(dio: dio, logger: logger, logsEnabled: true);
     final storage = await SharedPreferences.getInstance();
 
     final authenticationAPI = AuthenticationAPI(http);

@@ -103,19 +103,6 @@ class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
                     children: [
                       Expanded(
                         child: BaseTextFieldNoEdit(
-                          label: 'Itbis:',
-                          initialValue:
-                              // '${NumberFormat('#,###.0#', 'es').format(vm.detalleFactura.itbis)} RD\$',
-                              widget.vm.fmf
-                                  .copyWith(
-                                      amount: widget.vm.detalleFactura.itbis)
-                                  .output
-                                  .symbolOnLeft,
-                          border: false,
-                        ),
-                      ),
-                      Expanded(
-                        child: BaseTextFieldNoEdit(
                           label: 'Honorarios:',
                           initialValue:
                               // '${NumberFormat('#,###.0#', 'es').format(vm.detalleFactura.honorarios)} RD\$',
@@ -128,10 +115,6 @@ class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
                           border: false,
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
                       Expanded(
                         child: BaseTextFieldNoEdit(
                           label: 'SubTotal:',
@@ -140,6 +123,23 @@ class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
                               widget.vm.fmf
                                   .copyWith(
                                       amount: widget.vm.detalleFactura.subTotal)
+                                  .output
+                                  .symbolOnLeft,
+                          border: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: BaseTextFieldNoEdit(
+                          label: 'Itbis:',
+                          initialValue:
+                              // '${NumberFormat('#,###.0#', 'es').format(vm.detalleFactura.itbis)} RD\$',
+                              widget.vm.fmf
+                                  .copyWith(
+                                      amount: widget.vm.detalleFactura.itbis)
                                   .output
                                   .symbolOnLeft,
                           border: false,
