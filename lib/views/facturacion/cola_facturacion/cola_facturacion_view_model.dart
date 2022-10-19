@@ -207,9 +207,10 @@ class ColaFacturacionViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> goToReporte(BuildContext context, int idFactura) async {
+  Future<void> goToReporte(BuildContext context, int id) async {
+    print('REPORTE==============>>>>>>>>>>>$id');
     ProgressDialog.show(context);
-    var resp = await _facturacionApi.reportesFactura(idFactura: idFactura);
+    var resp = await _facturacionApi.reportesFactura(idFactura: id);
     if (resp is Success<Reporte>) {
       ProgressDialog.dissmiss(context);
       Navigator.push(context, CupertinoPageRoute(builder: (context) {
