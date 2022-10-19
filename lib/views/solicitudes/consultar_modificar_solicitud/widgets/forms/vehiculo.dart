@@ -208,6 +208,7 @@ class VehiculoForm extends StatelessWidget {
                               },
                       ),
                       //  EDICIONES
+
                       DropdownSearch<EdicionVehiculo>(
                         asyncItems: (text) => vm.getEdiciones(text),
                         enabled: vm.solicitud.estadoTasacion == 34,
@@ -239,15 +240,17 @@ class VehiculoForm extends StatelessWidget {
                             child: Text('No hay resultados'),
                           ),
                         ),
-                        validator: (v) {
-                          if (v == null &&
-                              vm.solicitud.edicion == null &&
-                              vm.edicionVehiculo == null) {
-                            return 'Seleccione una edición';
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: vm.solicitud.estadoTasacion != 34
+                            ? null
+                            : (v) {
+                                if (v == null &&
+                                    vm.solicitud.edicion == null &&
+                                    vm.edicionVehiculo == null) {
+                                  return 'Seleccione una edición';
+                                } else {
+                                  return null;
+                                }
+                              },
                       ),
                       // TIPO DE VEHICULO
 

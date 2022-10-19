@@ -535,7 +535,6 @@ class ConsultarModificarViewModel extends BaseViewModel {
       if (fotosCompletas &&
           !fotos.any((e) => e.id == null && e.adjunto != null)) {
         currentForm = 4;
-        // Dialogs.error(msg: 'Debes enviar por lo menos 1 foto');
       } else {
         if (formKeyFotos.currentState!.validate()) {
           if (fotos.any((e) => e.nueva)) {
@@ -615,14 +614,12 @@ class ConsultarModificarViewModel extends BaseViewModel {
     ProgressDialog.show(context);
 
     var salvamentoResp =
-        // valorConsultaSalvamento
         await _solicitudesApi.getSalvamento(vin: solicitud.chasis ?? '');
     if (salvamentoResp is Success<Map<String, dynamic>>) {
       isSalvage = salvamentoResp.response['data']['is_salvage'];
       isSalvageDesc = salvamentoResp.response['data']['resultado'];
     }
     if (salvamentoResp is Failure) {
-      // Dialogs.error(msg: salvamentoResp.messages[0]);
       isSalvage = false;
     }
     if (salvamentoResp is TokenFail) {
@@ -630,25 +627,17 @@ class ConsultarModificarViewModel extends BaseViewModel {
       ProgressDialog.dissmiss(context);
       _navigatorService.navigateToPageAndRemoveUntil(LoginView.routeName);
     }
-    // ProgressDialog.dissmiss(context);
-    // }
+
     var tasacionPromedioResp = await _solicitudesApi.getTasacionCreditoAverage(
       chasis: solicitud.chasis ?? tcVIN.text,
       periodoMeses: 3,
     );
     if (tasacionPromedioResp is Success<Map<String, dynamic>>) {
       tasacionPromedio = tasacionPromedioResp.response['data'];
-      // notifyListeners();
     }
     if (tasacionPromedioResp is Failure) {
-      // Dialogs.error(msg: tasacionPromedioResp.messages[0]);
       tasacionPromedio = 0;
-      // notifyListeners();
     }
-    // valorUltimaEstimacion
-    // var resp =
-    //     await _solicitudesApi.getTasacionCreditoLast(chasis: solicitud.chasis!);
-    // valorCarrosRD
     var referenceResp = await _solicitudesApi.getReference(
         chasis: solicitud.chasis ?? tcVIN.text,
         noTasacion: solicitud.noTasacion!);

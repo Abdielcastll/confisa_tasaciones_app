@@ -35,7 +35,9 @@ class FotosForm extends StatelessWidget {
               ? vm.fotos.any((e) => e.adjunto == null)
                   ? 'Guardar'
                   : vm.isOficial
-                      ? 'Salir'
+                      ? vm.solicitud.estadoTasacion == 34
+                          ? 'Siguiente'
+                          : 'Salir'
                       : 'Siguiente'
               : 'Salir',
       onPressedNext: () => vm.subirFotos(context),

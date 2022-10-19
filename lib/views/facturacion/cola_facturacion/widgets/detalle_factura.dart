@@ -134,7 +134,7 @@ class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
                     children: [
                       Expanded(
                         child: BaseTextFieldNoEdit(
-                          label: 'Itbis:',
+                          label: 'Total ITBIS:',
                           initialValue:
                               // '${NumberFormat('#,###.0#', 'es').format(vm.detalleFactura.itbis)} RD\$',
                               widget.vm.fmf
@@ -397,24 +397,54 @@ class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
                     Expanded(
                       child: BaseTextFieldNoEdit(
                         label: 'Total Reservas',
-                        initialValue:
-                            // '${NumberFormat('#,###.0#', 'es').format(e.totalReservas)} RD\$',
-                            widget.vm.fmf
-                                .copyWith(amount: e.totalReservas)
-                                .output
-                                .symbolOnLeft,
+                        initialValue: widget.vm.fmf
+                            .copyWith(amount: e.totalReservas)
+                            .output
+                            .symbolOnLeft,
+                        border: false,
+                      ),
+                    ),
+                    Expanded(
+                      child: BaseTextFieldNoEdit(
+                        label: 'Sub Total',
+                        initialValue: widget.vm.fmf
+                            .copyWith(amount: e.subTotalSucursal)
+                            .output
+                            .symbolOnLeft,
+                        border: false,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: BaseTextFieldNoEdit(
+                        label: 'Total ITBIS',
+                        initialValue: widget.vm.fmf
+                            .copyWith(amount: e.itbisSucursal)
+                            .output
+                            .symbolOnLeft,
                         border: false,
                       ),
                     ),
                     Expanded(
                       child: BaseTextFieldNoEdit(
                         label: 'Total Gastos',
-                        initialValue:
-                            // '${NumberFormat('#,###.0#', 'es').format(e.totalGastos)} RD\$',
-                            widget.vm.fmf
-                                .copyWith(amount: e.totalGastos)
-                                .output
-                                .symbolOnLeft,
+                        initialValue: widget.vm.fmf
+                            .copyWith(amount: e.totalGastos)
+                            .output
+                            .symbolOnLeft,
+                        border: false,
+                      ),
+                    ),
+                    Expanded(
+                      child: BaseTextFieldNoEdit(
+                        label: 'Total General',
+                        initialValue: widget.vm.fmf
+                            .copyWith(amount: e.totalGeneralSucursal)
+                            .output
+                            .symbolOnLeft,
                         border: false,
                       ),
                     ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:money_formatter/money_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:tasaciones_app/core/api/alarmas.dart';
 import 'package:tasaciones_app/core/api/api_status.dart';
@@ -105,6 +106,16 @@ class TrabajarViewModel extends BaseViewModel {
   List<SegmentoCond> segmentoAccesorio = [];
 
   List<CondicionComponente> condicionesComponentesAll = [];
+
+  MoneyFormatter fmf = MoneyFormatter(
+      amount: 12345678.9012345,
+      settings: MoneyFormatterSettings(
+          symbol: 'RD\$',
+          thousandSeparator: ',',
+          decimalSeparator: '.',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 2,
+          compactFormatType: CompactFormatType.short));
 
   @override
   void dispose() {

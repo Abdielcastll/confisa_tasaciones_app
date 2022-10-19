@@ -52,22 +52,51 @@ class ValoracionTasacionForm extends StatelessWidget {
               style: TextStyle(color: AppColors.brownDark, fontSize: 16),
             ),
             const SizedBox(height: 10),
-            Table(
-              border: TableBorder.all(color: AppColors.brownDark),
-              columnWidths: const {
-                0: FractionColumnWidth(0.50),
-                1: FractionColumnWidth(0.50),
-              },
-              children: [
-                builRow(
-                  ['Fuente', 'Valor'],
-                  isHeader: true,
-                ),
-                ...vm.referencias.map((e) => builRow([
-                      '${e.fuente}',
-                      e.resultado! ? '${e.valor}' : '${e.mensaje}'
-                    ])),
-              ],
+            SizedBox(
+              height: 195,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 1.6,
+                    child: Table(
+                      border: TableBorder.all(color: AppColors.brownDark),
+                      columnWidths: const {
+                        0: FractionColumnWidth(0.13),
+                        1: FractionColumnWidth(0.13),
+                        2: FractionColumnWidth(0.13),
+                        3: FractionColumnWidth(0.305),
+                        4: FractionColumnWidth(0.305),
+                      },
+                      children: [
+                        builRow(
+                          [
+                            'No. Tasación',
+                            'No. Solicitud',
+                            'Fecha',
+                            'Fuente',
+                            'Valor'
+                          ],
+                          isHeader: true,
+                        ),
+                        ...vm.referencias.map((e) => builRow([
+                              '${e.noTasacion ?? '-'}',
+                              '${e.noSolicitud ?? '-'}',
+                              '${e.fecha ?? '-'}',
+                              '${e.fuente}',
+                              e.resultado!
+                                  ? vm.fmf
+                                      .copyWith(amount: e.valor)
+                                      .output
+                                      .symbolOnLeft
+                                  : '${e.mensaje}'
+                            ])),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             Row(
