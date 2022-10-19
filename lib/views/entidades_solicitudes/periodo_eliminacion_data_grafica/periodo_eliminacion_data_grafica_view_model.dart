@@ -15,8 +15,6 @@ class PeriodoEliminacionDataGraficaViewModel extends BaseViewModel {
   final _periodoEliminacionDataGraficaApi =
       locator<PeriodoEliminacionDataGraficaApi>();
   final _navigationService = locator<NavigatorService>();
-  /* final _segmentosPeriodoEliminacionDataGraficaVehiculosApi =
-      locator<SegmentosPeriodoEliminacionDataGraficaVehiculosApi>(); */
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewDescripcion = TextEditingController();

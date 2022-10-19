@@ -43,24 +43,6 @@ class AccesoriosSuplidorApi {
     }
   }
 
-  /* Future<Object> updateAccesoriosSuplidor(
-      {required int id,
-      required String descripcion,
-      required int idSegmento}) async {
-    String? _token = await _authenticationClient.accessToken;
-    return _http.request(
-      '/api/accesoriosSuplidor/update',
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer $_token',
-      },
-      data: {"id": id, "descripcion": descripcion, "idSegmento": idSegmento},
-      parser: (data) {
-        return AccesoriosSuplidorPOSTResponse.fromJson(data);
-      },
-    );
-  } */
-
   Future<Object> createAccesoriosSuplidor(
       {required int idSuplidor, required List<int> idAccesorios}) async {
     String? _token = await _authenticationClient.accessToken;

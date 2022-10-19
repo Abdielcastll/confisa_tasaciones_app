@@ -14,8 +14,6 @@ import '../../../core/locator.dart';
 class VencimientoEstadosViewModel extends BaseViewModel {
   final _vencimientoEstadosApi = locator<VencimientoEstadosApi>();
   final _navigationService = locator<NavigatorService>();
-  /* final _segmentosVencimientoEstadosVehiculosApi =
-      locator<SegmentosVencimientoEstadosVehiculosApi>(); */
   final listController = ScrollController();
   TextEditingController tcBuscar = TextEditingController();
   TextEditingController tcNewPeriodo = TextEditingController();
