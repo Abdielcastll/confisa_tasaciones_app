@@ -527,17 +527,25 @@ class ColaSolicitudesViewModel extends BaseViewModel {
     if (roles.contains("Tasador") || roles.contains("AprobadorTasaciones")) {
       if (s.estadoTasacion == 9) {
         print('Trabajar No.${s.noTasacion}');
-        _navigatorService
-            .navigateToPage(
-          TrabajarView.routeName,
-          arguments: s,
-        )
-            .then((v) {
+        _navigatorService.navigatorKey.currentState!
+            .push(CupertinoPageRoute(builder: (context) {
+          return TrabajarView(solicitudData: s);
+        })).then((v) {
           getAlarma(context);
-          if (v != null) {
-            onRefresh();
-          }
+          onRefresh();
         });
+
+        // _navigatorService
+        //     .navigateToPage(
+        //   TrabajarView.routeName,
+        //   arguments: s,
+        // )
+        //     .then((v) {
+        //   getAlarma(context);
+        //   if (v != null) {
+        //     onRefresh();
+        //   }
+        // });
       } else {
         print('Consultar No.${s.noTasacion}');
         _navigatorService

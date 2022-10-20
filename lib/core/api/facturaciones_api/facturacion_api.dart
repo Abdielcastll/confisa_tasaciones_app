@@ -139,7 +139,7 @@ class FacturacionApi {
         headers: {
           'Authorization': 'Bearer $_token',
         },
-        data: {"idFactura": idFactura},
+        queryParameters: {"idFactura": idFactura},
         parser: (data) {
           return Reporte.fromJson(data);
         },

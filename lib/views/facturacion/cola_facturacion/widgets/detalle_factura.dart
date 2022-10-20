@@ -50,8 +50,8 @@ class _DetalleFacturaPageState extends State<DetalleFacturaPage> {
             ? Visibility(
                 visible: permisos.any((e) => e.id == 231),
                 child: FloatingActionButton.extended(
-                  onPressed: () => widget.vm.goToReporte(
-                      context, widget.vm.detalleFactura.noFactura!),
+                  onPressed: () =>
+                      widget.vm.goToReporte(context, widget.vm.idFactura),
                   label: const Text('Exportar pdf',
                       style: TextStyle(color: Colors.white)),
                 ),

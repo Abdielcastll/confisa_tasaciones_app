@@ -94,6 +94,15 @@ class AprobarForm extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            Visibility(
+              visible: vm.solicitud.observacion != null &&
+                  vm.solicitud.observacion != '',
+              child: BaseTextFieldNoEdit(
+                label: 'Observaciones',
+                initialValue: vm.solicitud.observacion ?? '',
+              ),
+            ),
+            const SizedBox(height: 10),
             Form(
                 // key: vm.formKeyValor,
                 child: BaseTextFieldNoEdit(

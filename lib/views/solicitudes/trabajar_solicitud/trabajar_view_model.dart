@@ -104,6 +104,8 @@ class TrabajarViewModel extends BaseViewModel {
   late double tasacionPromedio;
   List<SegmentoCondiciones> segmentoComponente = [];
   List<SegmentoCond> segmentoAccesorio = [];
+  bool isNewVin = true;
+  bool showForm = false;
 
   List<CondicionComponente> condicionesComponentesAll = [];
 
@@ -209,6 +211,23 @@ class TrabajarViewModel extends BaseViewModel {
     roles = data.role;
     if (arg != null) {
       solicitud = arg;
+      tcVIN.text = solicitud.chasis ?? '';
+      tcFuerzaMotriz.updateValue(solicitud.fuerzaMotriz?.toDouble() ?? 0);
+      tcKilometraje.updateValue(solicitud.kilometraje?.toDouble() ?? 0);
+      tcPlaca.updateText(solicitud.placa);
+      int currentYear = DateTime.now().year;
+      if (currentYear <= solicitud.ano!) {
+        _estado = 'NUEVO';
+        _estadoID = 1;
+      } else {
+        _estadoID = 2;
+        _estado = 'USADO';
+      }
+      if (solicitud.chasis != null) {
+        isNewVin = false;
+        showForm = true;
+      }
+      notifyListeners();
     }
     await cargarComponentes();
   }
@@ -221,13 +240,11 @@ class TrabajarViewModel extends BaseViewModel {
     if (resp is Failure) {
       Dialogs.error(msg: resp.messages.first);
     }
-    // getAlarmas(context);
   }
 
   Future<List<EdicionVehiculo>> getEdiciones(String text) async {
     var resp = await _solicitudesApi.getEdicionesVehiculos(
-        modeloid: vinData?.codigoModelo ?? 0);
-    // modeloid: 2016);
+        modeloid: vinData?.codigoModelo ?? solicitud.modelo ?? 0);
     if (resp is Success<List<EdicionVehiculo>>) {
       return resp.response;
     } else {
@@ -263,6 +280,7 @@ class TrabajarViewModel extends BaseViewModel {
       if (resp is Success) {
         var data = resp.response as VinDecoderResponse;
         vinData = data.data;
+        showForm = true;
         int currentYear = DateTime.now().year;
         if (data.data.ano != null) {
           int anio = data.data.ano!;
@@ -300,29 +318,32 @@ class TrabajarViewModel extends BaseViewModel {
 
   Future goToCondiciones(BuildContext context) async {
     if (formKey3.currentState!.validate()) {
-      if (vinData == null) {
+      if (vinData == null && tcVIN.text == '') {
         Dialogs.error(msg: 'Debe consultar el No. VIN');
       } else {
         ProgressDialog.show(context);
         var upResp = await _solicitudesApi.updateTasacion(
           id: solicitud.id!,
-          ano: vinData?.ano ?? 0,
+          ano: vinData?.ano ?? solicitud.ano ?? 0,
           chasis: tcVIN.text,
-          color: colorVehiculo!.id,
-          edicion: edicionVehiculo!.id!,
+          color: colorVehiculo?.id ?? solicitud.color ?? 0,
+          edicion: edicionVehiculo?.id ?? solicitud.edicion ?? 0,
           fuerzaMotriz: tcFuerzaMotriz.numberValue.toInt(),
           kilometraje: tcKilometraje.numberValue.toInt(),
-          marca: solicitudData?.idMarcaTasaciones ?? vinData?.codigoMarca ?? 0,
-          modelo:
-              solicitudData?.idModeloTasaciones ?? vinData?.codigoModelo ?? 0,
-          noCilindros: nCilindros!,
-          noPuertas: nPuertas!,
+          marca: solicitud.marca ?? vinData?.codigoMarca ?? 0,
+          modelo: solicitud.modelo ?? vinData?.codigoModelo ?? 0,
+          noCilindros: nCilindros ?? solicitud.noCilindros ?? 0,
+          noPuertas: nPuertas ?? solicitud.noPuertas ?? 0,
           nuevoUsado: _estadoID!,
           placa: tcPlaca.text.trim(),
-          tipoVehiculoLocal: tipoVehiculo!.id,
-          traccion: traccion?.id ?? vinData!.idTraccion!,
-          versionLocal: versionVehiculo?.id ?? 0,
-          sistemaTransmision: transmision?.id ?? vinData!.idSistemaCambio!,
+          tipoVehiculoLocal:
+              tipoVehiculo?.id ?? solicitud.tipoVehiculoLocal ?? 0,
+          traccion:
+              traccion?.id ?? solicitud.traccion ?? vinData?.idTraccion ?? 0,
+          versionLocal: versionVehiculo?.id ?? solicitud.versionLocal ?? 0,
+          sistemaTransmision: transmision?.id ??
+              solicitud.sistemaTransmision ??
+              vinData!.idSistemaCambio!,
         );
         if (upResp is Success) {
           Dialogs.success(msg: 'Datos actualizados');
@@ -836,10 +857,28 @@ class TrabajarViewModel extends BaseViewModel {
     }
   }
 
+  // void resetData() {
+  //   vinData = null;
+  //   tcVIN.clear();
+  //   tcPlaca.clear();
+  //   tcFuerzaMotriz.updateValue(0);
+  //   tcKilometraje.updateValue(0);
+  //   versionVehiculo = null;
+  //   edicionVehiculo = null;
+  //   tipoVehiculo = null;
+  //   transmision = null;
+  //   traccion = null;
+  //   nPuertas = null;
+  //   nCilindros = null;
+  //   colorVehiculo = null;
+  //   notifyListeners();
+  // }
+
   void resetData() {
     vinData = null;
     tcVIN.clear();
     tcPlaca.clear();
+    // tcNoSolicitud.clear();
     tcFuerzaMotriz.updateValue(0);
     tcKilometraje.updateValue(0);
     versionVehiculo = null;
@@ -850,6 +889,18 @@ class TrabajarViewModel extends BaseViewModel {
     nPuertas = null;
     nCilindros = null;
     colorVehiculo = null;
+    solicitud.descripcionVersion = null;
+    solicitud.descripcionSistemaTransmision = null;
+    solicitud.descripcionTraccion = null;
+    solicitud.descripcionEdicion = null;
+    solicitud.descripcionTipoVehiculoLocal = null;
+    solicitud.noPuertas = null;
+    solicitud.noCilindros = null;
+    solicitud.descripcionColor = null;
+    solicitud.descripcionNuevoUsado = null;
+    _estado = null;
+    isNewVin = true;
+    showForm = false;
     notifyListeners();
   }
 }
