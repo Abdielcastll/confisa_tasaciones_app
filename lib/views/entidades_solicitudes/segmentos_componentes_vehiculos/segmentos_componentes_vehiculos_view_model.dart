@@ -217,49 +217,6 @@ class SegmentosComponentesVehiculosViewModel extends BaseViewModel {
                     children: [
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context);
-                          Dialogs.confirm(ctx,
-                              tittle: 'Eliminar Segmento Componente Vehículo',
-                              description:
-                                  '¿Esta seguro de eliminar el segmento componente vehículo ${componenteVehiculo.descripcion}?',
-                              confirm: () async {
-                            ProgressDialog.show(ctx);
-                            var resp = await _segmentosComponentesVehiculosApi
-                                .deleteSegmentosComponentesVehiculos(
-                                    id: componenteVehiculo.id);
-                            ProgressDialog.dissmiss(ctx);
-                            if (resp is Failure) {
-                              Dialogs.error(msg: resp.messages[0]);
-                            }
-                            if (resp is TokenFail) {
-                              _navigationService.navigateToPageAndRemoveUntil(
-                                  LoginView.routeName);
-                              Dialogs.error(msg: 'Sesión expirada');
-                            }
-                            if (resp is Success) {
-                              Dialogs.success(
-                                  msg:
-                                      'Segmento componente vehículo eliminado');
-                              await onRefresh();
-                            }
-                          });
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            Icon(
-                              AppIcons.trash,
-                              color: AppColors.grey,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ), // icon
-                            Text("Eliminar"), // text
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
                           Navigator.of(context).pop();
                           tcNewDescripcion.clear();
                         }, // button pressed
