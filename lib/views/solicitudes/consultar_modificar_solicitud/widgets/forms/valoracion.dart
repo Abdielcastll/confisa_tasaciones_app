@@ -60,6 +60,14 @@ class ValoracionForm extends StatelessWidget {
                         .format(vm.solicitud.fechaCreada!)
                         .toUpperCase(),
                   ),
+                  Visibility(
+                    visible: vm.solicitud.observacion != null &&
+                        vm.solicitud.observacion != '',
+                    child: BaseTextFieldNoEdit(
+                      label: 'Observaciones',
+                      initialValue: vm.solicitud.observacion ?? '',
+                    ),
+                  ),
                 ],
               )
             : Column(
