@@ -422,6 +422,7 @@ Future<dynamic> dialogCrearUsuario(
                                                 Dialogs.error(
                                                     msg: resp.messages[0]);
                                               }
+                                              break;
                                             } else if (element ==
                                                 "AprobadorTasaciones") {
                                               ProgressDialog.show(context);
